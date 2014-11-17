@@ -1,0 +1,39 @@
+<!-- Input form -->
+<section class="form search">
+	<span class="title">The book of Native tongues.</span>
+	<form name="search" onsubmit="return Form.doLookup(this);">
+		<div class="wrapper">
+			<input class="remove-btn-style" name="clear" type="button" value="&#10005;" />
+			<input name="q" type="text" placeholder="start here" autocomplete="off" />
+			<input class="remove-btn-style" name="submit" type="button" value="&#10163;" />
+			<div class="clr"></div>
+		</div>
+		<input name="[i:token]" type="hidden" value="1" />
+	</form>
+	<div id="results">
+		<div class="notice">
+			<i>Word of the day:</i><br />
+			 [i:wotd] 
+		</div>
+	</div>
+</section>
+
+<script type="text/javascript">
+$(document).ready(function()
+{
+	// Clear button
+	$('input[name=clear]').click(function() {
+		document.search.q.value	= '';
+		$('#results').html('');
+		$('input[name=q]').focus();
+	});
+	
+	// Submit button
+	$('input[name=submit]').click(function() {
+		Form.doLookup(document.search);
+	});
+	
+	// Input keyboard
+	//Form.setupKeyboard(document.search.q, document.search);
+});
+</script>

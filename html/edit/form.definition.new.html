@@ -1,0 +1,57 @@
+<section>
+	<h1>
+		Suggest a new <i>definition</i><br />
+		<small>
+			<a href="edit?what=lang">
+				&rarr; or click here to suggest a language
+			</a>
+		</small>
+	</h1>
+	<form class="form edit" method="post" action="edit">
+	
+		<!-- Word -->
+		<div class="row">
+			<input type="text" name="word" class="text-input" placeholder="e.g. k&#603;se" value="[def:word]" />
+			<label for="word">Word</label>
+		</div>
+		
+		<!-- Alternate spellings -->
+		<div class="row">
+			<input type="text" name="alt" class="text-input" placeholder="e.g. kese, kesie" value="[def:alt]" />
+			<label for="alt">Alternate spellings (seperated by ",")</label>
+		</div>
+		
+		<fieldset>
+			<legend>TODO: Group these in tabs for ENG, FRA, ESP, POR</legend>
+			
+			<!-- Translation -->
+			<div class="row">
+				<input type="text" name="translation[eng]" value="[def:tr:eng]" />
+				<label for="translation[eng]">Translation (English)</label>
+			</div>
+			
+			<!-- Meaning -->
+			<div class="row">
+				<input type="text" name="meaning[eng]" value="[def:meaning:eng]" />
+				<label for="meaning[eng]">Meaning (English)</label>
+			</div>
+		</fieldset>
+		
+		<!-- Language -->
+		<div class="row">
+			<input type="text" name="language" class="text-input" value="[def:lang]" />
+			<label for="language">Languages (seperated by ",")</label>
+		</div>
+		
+		<!-- Form actions -->
+		<div class="row center">
+			<input type="button" name="cancel" value="cancel" onclick="return App.redirect();" />
+			<input type="submit" name="submit" value="save" />
+		</div>
+		
+		<input type="hidden" name="[i:token]" value="1" />
+		<input type="hidden" name="what" value="save-definition" />
+		<input type="hidden" name="def" value="" />
+		<input type="hidden" name="isnew" value="1" />
+	</form>
+</section>
