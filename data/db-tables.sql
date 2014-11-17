@@ -1,9 +1,10 @@
-/*
+/**
  *
  * @author		Francis Amankrah <frank@frnk.ca>
  * @copyright	Copyright 2014 Francis Amankrah
  * @license		http://www.gnu.org/licenses/gpl.html GNU General Public License version 3 or later (see LICENSE.txt)
  */
+
 
 /*
 	Languages table
@@ -32,4 +33,20 @@ CREATE TABLE IF NOT EXISTS `definitions` (
 	`id` char(32) not null default '',
 	primary key (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- Fix database charset
+ALTER DATABASE dinkomo CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- Fix table charsets
+ALTER TABLE languages CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE definitions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Fix columns charsets
+ALTER TABLE languages MODIFY name VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE languages MODIFY params TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE definitions MODIFY word VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE definitions MODIFY `translation` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE definitions MODIFY meaning TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE definitions MODIFY params TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

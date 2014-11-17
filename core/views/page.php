@@ -69,11 +69,18 @@ class ViewPage extends View
 		// Add entries
 		foreach ($defs as $def)
 		{
+			// Fill in template
 			$entry	= $tmpl;
 			$entry	= str_replace('[def:word]', $def->getWord(), $entry);
 			$entry	= str_replace('[def:language]', $def->language, $entry);
 			$entry	= str_replace('[def:tr:eng]', $def->getTranslation('eng'), $entry);
 			$entry	= str_replace('[def:edit-uri]', $def->getEditURI(), $entry);
+			
+			// Add more info, if we have any
+			$meaning	= $def->getMeaning('eng');
+			$meaning	= strlen($meaning) ? '<br />'. $meaning : '';
+			$entry	= str_replace('[def:mean:eng]', $meaning, $entry);
+			
 			$list	.= $entry;
 		}
 		

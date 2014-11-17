@@ -37,7 +37,7 @@ class Log
 		$mark	.= sprintf('%.2fms', self::getTime() - self::$_time);
 		
 		// Add memory usage
-		$mark	.= ' - '. sprintf('%0.2f', memory_get_usage() / 1048576) .' MB';
+		$mark	.= ', '. sprintf('%0.2f', memory_get_usage() / 1048576) .'MB';
 		
 		// Add event
 		if (empty( $event )) {
@@ -45,9 +45,9 @@ class Log
 			$tfile	= array_shift($trace);
 			$tclass	= array_shift($trace);
 			$file	= str_ireplace(NKOMO_DIR, '', $tfile['file']);
-			$mark	.= ' - '. $tclass['class'] .'::'. $tclass['function'] .'() in '. $file .' on line '. $tfile['line'];
+			$mark	.= ', '. $tclass['class'] .'::'. $tclass['function'] .'() in '. $file .' on line '. $tfile['line'];
 		} else {
-			$mark	.= ' - '. $event;
+			$mark	.= ', '. $event;
 		}
 		
 		self::$_buffer[]	= $mark;

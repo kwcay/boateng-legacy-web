@@ -71,6 +71,9 @@ h3 {
 	font: 1.2em;
 	letter-spacing: 1.5px;
 }
+pre {
+	font: normal 16px/1.618 monospace;
+}
 section, header, footer {
 	width: 550px;
 	margin: 0 auto 0;

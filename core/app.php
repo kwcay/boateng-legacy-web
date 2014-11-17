@@ -159,8 +159,7 @@ class App
 		// Connect to database
 		Log::mark('Creating database object...');
 		try {
-			//self::$_db	= new \PDO('mysql:host='. Config::DBHOST .';dbname='. Config::DBNAME, Config::DBUSER, Config::DBPASSWORD);
-			self::$_db	= new \PDO('mysql:host=127.0.0.1;dbname=dinkomo', 'root', '1234567');
+			self::$_db	= new \PDO('mysql:host='. Config::DBHOST .';dbname='. Config::DBNAME, Config::DBUSER, Config::DBPASSWORD);
 		} catch (PDOException $error) {
 			Error::raiseError(Error::EC_SERVER_ERROR, $error->getMessage());
 		}
