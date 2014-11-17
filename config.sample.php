@@ -13,6 +13,29 @@ defined('_NKOMO_INC') or die;
  */
 class Config
 {
+	/**
+	 *
+	 */
+	const DEBUG			= 1;
 	
+	/**
+	 *
+	 */
+	const DBHOST		= '127.0.0.1';
+	
+	/**
+	 *
+	 */
+	const DBNAME		= 'dinkomo';
+	
+	/**
+	 *
+	 */
+	const DBUSER		= 'root';
+	
+	/**
+	 *
+	 */
+	const DBPASSWORD	= '';
 }
 

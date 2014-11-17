@@ -24,3 +24,5 @@ require_once NKOMO_DIR.DS.'core'.DS.'framework.php';
 
 // Execute application
 \Nkomo\App::run();
+
+// This is it. Let's now tap ourselves on the back :)

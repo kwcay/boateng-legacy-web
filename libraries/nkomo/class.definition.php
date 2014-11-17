@@ -61,7 +61,7 @@ class Definition extends Generic
 		$db		= App::getDatabase();
 		$query	= $db->prepare('SELECT * FROM definitions WHERE id = :id');
 		if ($query->execute(array(':id' => $id))) {
-			$this->setProperties($query->fetch(PDO::FETCH_ASSOC));
+			$this->setProperties($query->fetch(\PDO::FETCH_ASSOC));
 		} else {
 			$error	= $query->errorInfo();
 			return $this->setError('class.def.load ('. $id .'): '. $error[2]);
@@ -306,10 +306,10 @@ class Definition extends Generic
 		$this->params		= '';
 		
 		$this->_words		= array();
-		$this->_language	= new stdClass;
-		$this->_translation	= new stdClass;
-		$this->_meaning		= new stdClass;
-		$this->_params		= new stdClass;
+		$this->_language	= new \stdClass;
+		$this->_translation	= new \stdClass;
+		$this->_meaning		= new \stdClass;
+		$this->_params		= new \stdClass;
 	}
 }
 

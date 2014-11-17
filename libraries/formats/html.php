@@ -1,9 +1,11 @@
 <?php
+namespace Nkomo;
+defined('_NKOMO_INC') or die;
 /**
- * @author Francis Amankrah <frank@frnk.ca>
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+ * @author		Francis Amankrah <frank@frnk.ca>
+ * @copyright	Copyright 2014 Francis Amankrah
+ * @license		http://www.gnu.org/licenses/gpl.html GNU General Public License version 3 or later (see LICENSE.txt)
  */
-defined('_AD_INC') or die;
 
 
 Library::import('formats:abstract.renderer');
@@ -79,7 +81,7 @@ class RendererHTML extends Renderer
 		$html	= $this->getContents('html');
 		$html	= str_replace('[i:head]', $this->getHeader(), $html);
 		$html	= str_replace('[i:body]', $this->body, $html);
-		$html	= str_replace('[i:log]', Log::dump(), $html);
+		$html	= str_replace('[i:log]', '<pre>'. Log::dump() .'</pre>', $html);
 		
 		// General formatting
 		return parent::format($html);
@@ -119,13 +121,13 @@ class RendererHTML extends Renderer
 		// Raise error if file doesn't exist
 		else {
 			Log::mark('Missing HTML file "'. $file .'"');
-			Error::raiseError(EC_ERROR_CODE, 'Missing HTML file');
+			Error::raiseError(Error::EC_ERROR_CODE, 'Missing HTML file');
 		}
 		
 		// Check for errors
 		if ($output === false) {
 			Log::mark('Error loading HTML file "'. $file .'"');
-			Error::raiseError(EC_ERROR_CODE, 'Error loading HTML file');
+			Error::raiseError(Error::EC_ERROR_CODE, 'Error loading HTML file');
 		}
 		
 		return $output;

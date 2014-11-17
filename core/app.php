@@ -38,7 +38,7 @@ class App
 		// ...
 		
 		// Start session
-		Library::import('session');
+		require_once(PATH_CORE.DS.'session.php');
 		Session::init();
 		
 		// MVC architecture
@@ -63,33 +63,20 @@ class App
 	{
 		Log::mark('Running App...');
 		
-		
-		
-		Log::mark('TODO: finish refactoring');
-		Log::dumpAndExit();
-	}
-	
-	public static function oldRunMethod()
-	{
-		Log::mark('Running App...');
-		
 		// Route request
-		Library::import('router');
+		require_once(PATH_CORE.DS.'router.php');
 		Router::init();
 		
 		// Let the controller make all the decisions
 		$controller	= self::getController();
 		$controller->execute();
-		Log::mark('Running App... Done.');
-	}
-	
-	public static function render()
-	{
-		Log::mark('Rendering App...');
 		
-		// Render page in requested format
+		// Render the document (if applicable)
+		Log::mark('Rendering App...');
 		$view	= self::getView();
-		return $view->render();
+		echo $view->render();
+		
+		exit();
 	}
 	
 	public static function getFrameworkComponent($mvc, $name)
@@ -105,17 +92,24 @@ class App
 			case 'model':
 			case 'view':
 			case 'controller':
-				Library::import('arch:'. $mvc .'s:'. $name);
-				$class	= ucfirst($mvc) . ucfirst($name);
+				$file	= PATH_CORE .DS. $mvc.'s' .DS. $name .'.php';
+				$class	= '\Nkomo\\'. ucfirst($mvc) . ucfirst($name);
 				break;
 			
 			default:
-				Error::raiseError(EC_ERROR_CODE, 'Invalid architecture component.');
+				Error::raiseError(Error::EC_ERROR_CODE, 'Invalid architecture component.');
 		}
 		
-		// More checks
+		// Include framework component file
+		if (is_file($file)) {
+			require_once $file;
+		} else {
+			Error::raiseError(Error::EC_ERROR_CODE, 'Couldn\'t load framework component.');
+		}
+		
+		// Check that class name is well formatted
 		if (!class_exists($class)) {
-			Error::raiseError(EC_ERROR_CODE, 'Couldn\'t load framework component.');
+			Error::raiseError(Error::EC_ERROR_CODE, 'Couldn\'t load framework component.');
 		}
 		
 		// Instantiate object
@@ -162,28 +156,17 @@ class App
 			return self::$_db;
 		}
 		
-		Log::mark('Creating database object...');
-		
-		// Database login info
-		if (self::isLocal()) {
-			$dbname		= 'dinkomo';
-			$user		= 'root';
-			$password	= '1234567';
-		} else {
-			$dbname		= 'l33pcom_dinkomo';
-			$user		= 'l33pcom_dinkomo';
-			$password	= 'wDT2rP3hzV7HvFf0J';
-		}
-		
 		// Connect to database
+		Log::mark('Creating database object...');
 		try {
-			self::$_db	= new PDO('mysql:host=127.0.0.1;dbname='. $dbname, $user, $password);
+			//self::$_db	= new \PDO('mysql:host='. Config::DBHOST .';dbname='. Config::DBNAME, Config::DBUSER, Config::DBPASSWORD);
+			self::$_db	= new \PDO('mysql:host=127.0.0.1;dbname=dinkomo', 'root', '1234567');
 		} catch (PDOException $error) {
-			return Error::raiseError(EC_SERVER_ERROR, $error->getMessage());
+			Error::raiseError(Error::EC_SERVER_ERROR, $error->getMessage());
 		}
 		
-		if (DEBUG && App::isLocal()) {
-			self::$_db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		if (Config::DEBUG && IS_LOCAL) {
+			self::$_db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		}
 		
 		// Return database object

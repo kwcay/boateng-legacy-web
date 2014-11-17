@@ -1,6 +1,7 @@
 /**
- * @author Francis Amankrah <frank@frnk.ca>
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License
+ * @author		Francis Amankrah <frank@frnk.ca>
+ * @copyright	Copyright 2014 Francis Amankrah
+ * @license		http://www.gnu.org/licenses/gpl.html GNU General Public License version 3 or later (see LICENSE.txt)
  */
 
 var App =

@@ -44,7 +44,7 @@ class Log
 			$trace	= debug_backtrace();
 			$tfile	= array_shift($trace);
 			$tclass	= array_shift($trace);
-			$file	= str_ireplace(PATH_BASE, '', $tfile['file']);
+			$file	= str_ireplace(NKOMO_DIR, '', $tfile['file']);
 			$mark	.= ' - '. $tclass['class'] .'::'. $tclass['function'] .'() in '. $file .' on line '. $tfile['line'];
 		} else {
 			$mark	.= ' - '. $event;
