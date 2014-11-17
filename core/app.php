@@ -54,6 +54,9 @@ class App
 		Library::import('nkomo:class.generic');
 		Library::import('nkomo:*');
 		
+		// Register shutdown method
+		register_shutdown_function(array('\Nkomo\App', 'shutdown'));
+		
 		// Initialise variables
 		Request::fetch();
 		Log::mark('Initializing App... Done.');
@@ -212,8 +215,5 @@ class App
 		Session::close();
 	}
 }
-
-// Register shutdown method
-register_shutdown_function(array('\Nkomo\App', 'shutdown'));
 
 
