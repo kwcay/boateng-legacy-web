@@ -2,7 +2,7 @@
 /**
  * Di Nkomo App
  *
- * Nice description... 
+ * Nice description...
  *
  * @author		Francis Amankrah <frank@frnk.ca>
  * @copyright	Copyright 2014 Francis Amankrah
