@@ -78,8 +78,11 @@ class ViewPage extends View
 			
 			// Add more info, if we have any
 			$meaning	= $def->getMeaning('eng');
-			$meaning	= strlen($meaning) ? '<br />'. $meaning : '';
+			$meaning	= strlen($meaning) ? ' &ndash; '. $meaning .'.' : '';
 			$entry	= str_replace('[def:mean:eng]', $meaning, $entry);
+			$alt	= $def->getAltSpellings();
+			$alt	= strlen($alt) ? '<br />Alternate spellings: <i>'. $alt .'</i>' : '';
+			$entry	= str_replace('[def:alt]', $alt, $entry);
 			
 			$list	.= $entry;
 		}
