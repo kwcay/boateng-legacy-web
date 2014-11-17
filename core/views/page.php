@@ -88,8 +88,10 @@ class ViewPage extends View
 		}
 		
 		// Return HTML
+		$lang	= $defs[0]->language;
+		$lang	= '<a href="'. $lang .'">'. $lang .'</a>';
 		$contents	= str_replace('[i:word]', $this->word, $contents);
-		$contents	= str_replace('[i:lang]', $defs[0]->language, $contents);
+		$contents	= str_replace('[i:lang]', $lang, $contents);
 		$contents	= str_replace('[i:def-list]', $list, $contents);
 		return $contents;
 	}
