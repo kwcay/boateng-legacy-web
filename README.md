@@ -1,4 +1,4 @@
-Di Nkomo
+Di Nkɔmɔ
 ======
 
 The book of Native tongues.
