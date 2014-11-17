@@ -1,6 +1,6 @@
 <?php
 /**
- * Nyansa App
+ * Di Nkomo App
  *
  * Nice description...
  *
@@ -9,18 +9,18 @@
  * @license		http://www.gnu.org/licenses/gpl.html GNU General Public License version 3 or later (see LICENSE.txt)
  */
 
-const _NYANSA_INC	= 1;
-const NYANSA_APP	= __DIR__;
+const _NKOMO_INC	= 1;
+const NKOMO_DIR		= __DIR__;
 const DS	= DIRECTORY_SEPARATOR;
 
 // Specify the path to your configuration file
-require_once NYANSA_APP.DS.'config.php';
+require_once NKOMO_DIR.DS.'config.php';
 
 // Include framework setup file
-require_once NYANSA_APP.DS.'core'.DS.'framework.php';
+require_once NKOMO_DIR.DS.'core'.DS.'framework.php';
 
 // Initialize App
-\Nyansa\App::init();
+\Nkomo\App::init();
 
 // Execute application
-\Nyansa\App::run();
+\Nkomo\App::run();

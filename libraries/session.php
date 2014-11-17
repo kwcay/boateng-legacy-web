@@ -1,6 +1,6 @@
 <?php
-namespace Nyansa;
-defined('_NYANSA_INC') or die;
+namespace Nkomo;
+defined('_NKOMO_INC') or die;
 /**
  * @author		Francis Amankrah <frank@frnk.ca>
  * @copyright	Copyright 2014 Francis Amankrah

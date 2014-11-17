@@ -1,6 +1,6 @@
 <?php
-namespace Nyansa;
-defined('_NYANSA_INC') or die;
+namespace Nkomo;
+defined('_NKOMO_INC') or die;
 /**
  * @author		Francis Amankrah <frank@frnk.ca>
  * @copyright	Copyright 2014 Francis Amankrah
@@ -32,7 +32,7 @@ class App
 		require_once(PATH_LIB.DS.'library.php');
 		
 		// Start profiler
-		Log::mark('Initializing App...');
+		Log::mark('Initializing Di Nkomo...');
 		
 		// Run some checks
 		// ...
@@ -51,8 +51,8 @@ class App
 		Library::import('environment:uri');
 		Library::import('environment:request');
 		Library::import('environment:response');
-		Library::import('nyansa:class.generic');
-		Library::import('nyansa:*');
+		Library::import('nkomo:class.generic');
+		Library::import('nkomo:*');
 		
 		// Initialise variables
 		Request::fetch();
@@ -232,6 +232,6 @@ class App
 }
 
 // Register shutdown method
-register_shutdown_function(array('\Nyansa\App', 'shutdown'));
+register_shutdown_function(array('\Nkomo\App', 'shutdown'));
 
 

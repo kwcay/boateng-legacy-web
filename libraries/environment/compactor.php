@@ -1,5 +1,5 @@
 <?php
-defined('_NYANSA_INC') or die;
+defined('_NKOMO_INC') or die;
 
 /**
  * @author Oliver Lillie (aka buggedcom) <publicmail@buggedcom.co.uk>

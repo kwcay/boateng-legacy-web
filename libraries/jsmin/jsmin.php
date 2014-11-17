@@ -1,5 +1,5 @@
 <?php
-defined('_NYANSA_INC') or die;
+defined('_NKOMO_INC') or die;
 /**
  * jsmin.php - PHP implementation of Douglas Crockford's JSMin.
  *
