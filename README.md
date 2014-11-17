@@ -1,6 +1,8 @@
 Di Nkɔmɔ
 ======
-The book of Native tongues.
+*"The book of Native tongues."*  
+  
+Di Nkɔmɔ is a multilingual dictionary focused on indigenous languages from around the world. Di Nkomo is Twi (or Akan) for chat, or converse.
 
 Dependencies
 ---
@@ -8,4 +10,4 @@ Dependencies
 
 Licence
 ---
-[GNU GPL v3 or later](http://www.gnu.org/copyleft/gpl.html)
+[GNU General Public License v3 or later](http://www.gnu.org/copyleft/gpl.html)
