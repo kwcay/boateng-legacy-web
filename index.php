@@ -11,18 +11,28 @@
 
 const _NKOMO_INC	= 1;
 const NKOMO_DIR		= __DIR__;
-const DS	= DIRECTORY_SEPARATOR;
+const DS			= DIRECTORY_SEPARATOR;
 
-// Specify the path to your configuration file
+/**
+ * Specify the path to your configuration file
+ */
 require_once NKOMO_DIR.DS.'config.php';
 
-// Include framework setup file
+/**
+ * Include framework setup file
+ */
 require_once NKOMO_DIR.DS.'core'.DS.'framework.php';
 
-// Initialize App
+/**
+ * Initialize App
+ */
 \Nkomo\App::init();
 
-// Execute application
+/**
+ * Execute application
+ */
 \Nkomo\App::run();
 
+
 // This is it. Let's now tap ourselves on the back :)
+

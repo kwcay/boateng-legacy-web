@@ -14,7 +14,7 @@ defined('_NKOMO_INC') or die;
 const VER	= '0.0.1';
 
 // Runtime constants
-define('IS_LOCAL', ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == '127.0.0.1') ? 1 : 0);
+define('IS_LOCAL', ($_SERVER['HTTP_HOST'] == 'localhost' || $_SERVER['HTTP_HOST'] == Config::LOCALHOST) ? 1 : 0);
 define('INC_VER', IS_LOCAL ? time() : VER);
 define('PATH_CORE', \NKOMO_DIR.DS.'core');
 define('PATH_LIB', \NKOMO_DIR.DS.'libraries');

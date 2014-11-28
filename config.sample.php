@@ -21,6 +21,11 @@ class Config
 	/**
 	 *
 	 */
+	const LOCALHOST		= '127.0.0.1';
+	
+	/**
+	 *
+	 */
 	const DBHOST		= '127.0.0.1';
 	
 	/**
