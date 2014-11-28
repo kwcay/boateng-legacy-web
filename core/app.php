@@ -89,34 +89,21 @@ class App
 			return self::$_mvc[$mvc][$name];
 		}
 		
-		// Some checks...
+		// Determine class name
 		switch ($mvc)
 		{
 			case 'model':
 			case 'view':
 			case 'controller':
-				$file	= PATH_CORE .DS. $mvc.'s' .DS. $name .'.php';
-				$class	= '\Nkomo\\'. ucfirst($mvc) . ucfirst($name);
+				$className	= '\Nkomo\\'. ucfirst($mvc) . ucfirst($name);
 				break;
 			
 			default:
 				Error::raiseError(Error::EC_ERROR_CODE, 'Invalid architecture component.');
 		}
 		
-		// Include framework component file
-		if (is_file($file)) {
-			require_once $file;
-		} else {
-			Error::raiseError(Error::EC_ERROR_CODE, 'Couldn\'t load framework component.');
-		}
-		
-		// Check that class name is well formatted
-		if (!class_exists($class)) {
-			Error::raiseError(Error::EC_ERROR_CODE, 'Couldn\'t load framework component.');
-		}
-		
-		// Instantiate object
-		self::$_mvc[$mvc][$name]	= new $class();
+		// Instantiate object (class file will be autoloaded)
+		self::$_mvc[$mvc][$name]	= new $className;
 		
 		Log::mark(ucfirst($mvc) .' for '. $name .' loaded.');
 		
@@ -204,6 +191,42 @@ class App
 		return self::$_local;
 	}
 	
+	/**
+	 * Class autoloader.
+	 * See: http://php.net/manual/en/function.spl-autoload-register.php
+	 * 
+	 * @param string $className	Name of class to be autoloaded.
+	 * @return boolean			True if class has been successfully loaded, false otherwise.
+	 */
+	public static function autoload($className)
+	{
+		// Nkomo namespaced classes
+		if (strpos($className, 'Nkomo\\') === 0)
+		{
+			$subs		= explode('\\', $className);
+			
+			// Models
+			if (strpos($subs[1], 'Model') === 0) {
+				include PATH_CORE.DS.'models'.DS.substr($subs[1], 5) .'.php';
+			}
+			
+			// Views
+			elseif (strpos($subs[1], 'View') === 0) {
+				include PATH_CORE.DS.'views'.DS.substr($subs[1], 4) .'.php';
+			}
+			
+			// Controllers
+			elseif (strpos($subs[1], 'Controller') === 0) {
+				include PATH_CORE.DS.'controllers'.DS.substr($subs[1], 10) .'.php';
+			}
+		}
+		
+		return class_exists($className, false);
+	}
+	
+	/**
+	 *
+	 */
 	public static function shutdown()
 	{
 		// Unset database object
@@ -215,5 +238,8 @@ class App
 		Session::close();
 	}
 }
+
+// Register the autoload method
+spl_autoload_register('\Nkomo\App::autoload');
 
 
