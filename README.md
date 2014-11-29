@@ -7,6 +7,7 @@ Di Nkɔmɔ is a multilingual dictionary focused on indigenous languages from aro
 Dependencies
 ---
 * PHP 5.3.0 or later
+* MySQL 5.5 or later
 
 Licence
 ---
