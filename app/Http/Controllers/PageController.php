@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use \App\Models\Definition;
 
 /**
  *
@@ -10,7 +11,9 @@ class PageController extends Controller
 	 * Main landing page.
 	 */
 	public function home() {
-		return view('pages.home');
+		return view('pages.home', [
+            'wordOfTheDay' => Definition::where('state', '>', '0')->orderByRaw('RAND()')->first()
+        ]);
 	}
 
 	/**

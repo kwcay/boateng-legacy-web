@@ -14,10 +14,10 @@
 			</div>
 		</form>
 		<div id="results">
-            @if ($def = Definition::where('state', '>', '0')->orderByRaw('RAND()')->first())
+            @if ($wordOfTheDay)
 			<div class="emphasis" style="margin-top: 60px;">
 				<i>Word of the day:</i><br />
-				<em>&ldquo; <a href="{{ $def->getWordUri() }}">{{ $def->getWord() }}</a> &rdquo;</em>
+				<em>&ldquo; <a href="{{ $wordOfTheDay->getWordUri() }}">{{ $wordOfTheDay->getWord() }}</a> &rdquo;</em>
 			</div>
             @endif
 		</div>

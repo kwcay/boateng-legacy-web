@@ -1,7 +1,7 @@
-<?php namespace App;
-
+<?php
+namespace App;
 use Illuminate\Database\Eloquent\Model;
-require 'Base.php';
+//require 'Base.php';
 
 //class Language extends NkomoBaseModel {
 class Language extends Model {
