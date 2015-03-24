@@ -18,17 +18,12 @@
 		<meta property="og:desc" content="The dictionary of Native tongues." />
 		<meta property="og:type" content="website" />
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
-		<?php // <script src="{{ Nkomo::getMinified('js') }}" type="text/javascript"></script> ?>
+		<script src="{{ elixir('assets/scripts.js') }}" type="text/javascript"></script>
 		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" type="text/css" href="assets/fonts/sinanova.css" />
 		<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Gentium+Basic" />
-        <link rel="stylesheet" type="text/css" href="temp/base.css" />
-        <link rel="stylesheet" type="text/css" href="temp/dialogs.css" />
-        <link rel="stylesheet" type="text/css" href="temp/footer.css" />
-        <link rel="stylesheet" type="text/css" href="temp/forms.css" />
-        <link rel="stylesheet" type="text/css" href="temp/selectize.css" />
-		<?php // <link rel="stylesheet" type="text/css" href="{{ Nkomo::getMinified('css') }}" /> ?>
+		<link rel="stylesheet" type="text/css" href="{{ elixir('assets/styles.css') }}" />
 	@show
 </head>
 <body>
