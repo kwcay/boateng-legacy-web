@@ -5,17 +5,18 @@ Route::pattern('id',    '[0-9A-Za-z]+');
 Route::pattern('lang',  '[a-z]{3}|[a-z]{3}-[a-z]{3}');
 
 // Simple pages
-Route::get('/',         'PageController@home');
-Route::get('/about',    'PageController@getAboutPage');
-Route::get('/stats',    'PageController@getStatsPage');
-Route::get('/api',      'PageController@getApiPage');
+Route::get('/',         'SimplePage@home');
+Route::get('/about',    'SimplePage@about');
+Route::get('/stats',    'SimplePage@stats');
+Route::get('/api',      'SimplePage@api');
+Route::get('/hello',    'SimplePage@welcome');
 
 // User pages
 Route::get('/login',    'PageController@showLoginForm');
 
 // Forms
-Route::get('/edit',     'PageController@showEditPage');
-Route::get('/edit/{id?}',   'PageController@showEditPage');
+// Route::get('/edit',     'PageController@showEditPage');
+// Route::get('/edit/{id?}',   'PageController@showEditPage');
 
 Route::post('/save/{what?}','EditController@saveRes');
 
@@ -32,10 +33,6 @@ Route::group(array('prefix' => 'api', 'before' => 'api'), function()
     Route::get('/definition/search/{query?}', 'DefinitionController@search');
     
 });
-
-// Testing
-Route::get('/dev',              'DevController@landing');
-Route::get('/hello',            'HomeController@showWelcome');
 
 // Dictionary pages
 Route::get('/{lang}',           'PageController@showLangPage');

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Laravel PHP Framework</title>
+	<title>Di Nkomo</title>
 	<style>
 		@import url(//fonts.googleapis.com/css?family=Lato:700);
 
