@@ -144,6 +144,7 @@ return [
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
+        'Collective\Html\HtmlServiceProvider',
 
 	],
 
@@ -173,7 +174,9 @@ return [
 		'Eloquent'  => 'Illuminate\Database\Eloquent\Model',
 		'Event'     => 'Illuminate\Support\Facades\Event',
 		'File'      => 'Illuminate\Support\Facades\File',
+        'Form'      => 'Collective\Html\FormFacade',
 		'Hash'      => 'Illuminate\Support\Facades\Hash',
+        'Html'      => 'Collective\Html\HtmlFacade',
 		'Input'     => 'Illuminate\Support\Facades\Input',
 		'Inspiring' => 'Illuminate\Foundation\Inspiring',
 		'Lang'      => 'Illuminate\Support\Facades\Lang',

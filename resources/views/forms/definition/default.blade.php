@@ -12,10 +12,10 @@
             @endif
             <br /><em>definition</em><br />
 			<small>
-				<a href="edit?what=lang">&rarr; or click here to suggest a language</a>
+				<a href="edit/lang">&rarr; or click here to suggest a language</a>
 			</small>
 		</h1>
-		<form class="form edit" method="post" action="{{ URL::to('save/def') }}">
+		<form class="form edit" method="post" action="{{ URL::to('api/def') }}">
 		
 			<!-- Word -->
 			<div class="row">
@@ -31,7 +31,7 @@
 			
 			<!-- Type -->
 			<div class="row">
-                {{ Form::select('type', Definition::$wordTypes, $def->getParam('type'), array('class' => 'en-text-input')) }}
+                {!! Form::select('type', $wordTypes, $def->getParam('type'), array('class' => 'en-text-input')) !!}
 				<label for="type">Word type</label>
 			</div>
 			
@@ -60,7 +60,7 @@
 				<input type="button" name="new" value="create another" onclick="return App.redirect('edit')" />
 			</div>
 			
-			{{ Form::token() }}
+			{!! Form::token() !!}
 			@if ($def->exists)
             <input type="hidden" name="id" value="{{ $def->getId() }}" />
             @endif

@@ -10,15 +10,19 @@ Route::get('/hello',    'SimplePage@welcome');
 // User pages
 Route::get('/login',    'PageController@showLoginForm');
 
-// Forms
-// Route::get('/edit',     'PageController@showEditPage');
-// Route::get('/edit/{id?}',   'PageController@showEditPage');
+// Resource editing
+Route::group(['prefix' => 'edit'], function()
+{
+    Route::get('/def',  'DefinitionController@showEditForm');
+    Route::get('/lang',  'LanguageController@showEditForm');
+
+});
 
 Route::post('/save/{what?}','EditController@saveRes');
 
 // API
 Route::filter('api', 'ApiController');
-Route::group(array('prefix' => 'api', 'before' => 'api'), function()
+Route::group(array('prefix' => 'res', 'before' => 'api'), function()
 {
     // Language methods
     Route::resource('language', 'LanguageController');

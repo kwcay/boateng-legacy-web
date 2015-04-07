@@ -1,10 +1,12 @@
-<?php namespace App;
+<?php namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Base class for Di Nkomo objects.
  */
-abstract class NkomoBaseModel extends \Illuminate\Database\Eloquent\Model
-{
+abstract class BaseResource extends Model {
+
     /**
      * Alternate spellings
      */
@@ -18,26 +20,23 @@ abstract class NkomoBaseModel extends \Illuminate\Database\Eloquent\Model
     /**
      * List of main spellings
      */
-    protected $_altMain     = array();
+    protected $_altMain     = [];
     
     /**
      * List of arrays containing alternate spellings
      */
-    protected $_altOthers   = array();
+    protected $_altOthers   = [];
     
-    protected $_params      = array();
-    protected $_jsons       = array();
+    protected $_params      = [];
+    protected $_jsons       = [];
     protected $_encodedId;
     protected $isOrganized  = false;
     
-    public function __construct(array $attributes = array())
+    public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
     }
-    
-    /**
-     * TODO: can't be called in constructor, too complicated to call in boot, so where do we call this?
-     */
+
     public function organize()
     {
         if (!$this->isOrganized)
@@ -157,6 +156,8 @@ abstract class NkomoBaseModel extends \Illuminate\Database\Eloquent\Model
                 }
             }
         }
+
+        return true;
     }
 
     /**
@@ -207,7 +208,8 @@ abstract class NkomoBaseModel extends \Illuminate\Database\Eloquent\Model
     public function getId()
     {
         if (is_null($this->_encodedId)) {
-            $this->_encodedId   = $this->id > 0 ? Nkomo::encodeId($this->id) : 0;
+            //$this->_encodedId   = $this->id > 0 ? Nkomo::encodeId($this->id) : 0;
+            $this->_encodedId   = $this->id > 0 ? 'todo-encoded-id-'. $this->id : 0;
         }
         
         return $this->_encodedId;
@@ -224,7 +226,8 @@ abstract class NkomoBaseModel extends \Illuminate\Database\Eloquent\Model
 	{
         // Un-obfuscate ID
         if (is_string($id) && strlen($id) >= 8 && !is_numeric($id)) {
-            $id = Nkomo::decodeId($id);
+            //$id = Nkomo::decodeId($id);
+            $id = str_replace('todo-encoded-id-', '', $id);
         }
         
         return parent::find($id, $columns);

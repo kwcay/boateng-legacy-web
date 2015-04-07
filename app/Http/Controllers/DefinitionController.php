@@ -1,15 +1,86 @@
-<?php
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
+
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Definition;
+use App\Models\Language;
+use \Input;
 
 /**
  *
  */
 class DefinitionController extends Controller {
 
-	//
+    /**
+     * @param string $id    Definition ID
+     */
+    public function showEditForm($id = '')
+    {
+        // Existing definition
+        if (strlen($id) >= 8)
+        {
+            $def	= Definition::findOrFail($id);
+
+            // Create languages options for selectize
+            $lso = [];
+            $langs  = Language::whereIn('code', explode(',', $def->language))->get();
+            foreach ($langs as $lang) {
+                $obj = new stdClass;
+                $obj->code = $lang->code;
+                $obj->name = $lang->getName();
+                $lso[] = $obj;
+            }
+
+            // Set proper layout
+            $form	= 'forms.definition.default';
+        }
+
+        // New definition
+        elseif (empty($id))
+        {
+            $def	= new Definition;
+            $lso    = [];
+
+            // Set some defaults
+            if ($word = Input::get('word', Input::old('word'))) {
+                $def->setWord($word);
+            }
+            if ($alt = Input::old('alt')) {
+                $def->setAltWord($alt);
+            }
+            if ($type = Input::old('type')) {
+                $def->setParam('type', $type);
+            }
+            if ($lang = Input::get('lang', Input::old('lang'))) {
+                $def->language  = preg_replace('/[^a-z, ]/', '', $lang);
+            }
+            if ($translation = Input::old('translation')) {
+                foreach ($translation as $lang => $trans) {
+                    $def->setTranslation($lang, $trans);
+                }
+            }
+            if ($meaning = Input::old('meaning')) {
+                foreach ($meaning as $lang => $mean) {
+                    $def->setMeaning($lang, $mean);
+                }
+            }
+
+            //$form	= 'forms.definition-walkthrough';
+            $form	= 'forms.definition.default';
+        }
+
+        //
+        else {
+            throw new \LogicException('Invalid identifier');
+        }
+
+        return view($form, array(
+            'def'       => $def,
+            'options'   => $lso,
+            'wordTypes' => Definition::$wordTypes
+        ));
+    }
     
     /**
      * Word page
