@@ -1,9 +1,5 @@
 <?php
 
-// Global rounting patterns.
-Route::pattern('id',    '[0-9A-Za-z]+');
-Route::pattern('lang',  '[a-z]{3}|[a-z]{3}-[a-z]{3}');
-
 // Simple pages
 Route::get('/',         'SimplePage@home');
 Route::get('/about',    'SimplePage@about');
