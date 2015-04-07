@@ -1,4 +1,5 @@
 /vendor
+!/vendor/autoload.php
 /node_modules
 .env
 .idea
