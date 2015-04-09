@@ -11,3 +11,7 @@ Dependencies
 ---
 - PHP 5.4.0+
 - MySQL 5.5+
+
+Other notes
+---
+Running artisan on Site5: `/usr/local/php54/bin/php artisan migrate`
