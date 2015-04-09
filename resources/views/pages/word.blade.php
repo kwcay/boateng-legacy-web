@@ -23,10 +23,10 @@
                 <span class="edit-res">
                     <a href="{{ $words[$i]->getEditUri() }}" class="fa fa-pencil"></a>
                 </span>
-                &ldquo; {{ $words[$i]->getTranslation('eng') }} &rdquo;
+                &ldquo; {{ $words[$i]->getTranslation('en') }} &rdquo;
             </h3>
-            @if (strlen($words[$i]->getMeaning('eng')))
-                &mdash; {{ $words[$i]->getMeaning('eng') }}
+            @if (strlen($words[$i]->getMeaning('en')))
+                &mdash; {{ $words[$i]->getMeaning('en') }}
             @endif
             @if (strlen($words[$i]->getAltWords()))
                 Alternate spellings: {{ $words[$i]->getAltWords() }}

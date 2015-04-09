@@ -12,10 +12,16 @@
             @endif
             <br /><em>definition</em><br />
 			<small>
-				<a href="edit/lang">&rarr; or click here to suggest a language</a>
+				<a href="{{ route('language.create')  }}">&rarr; or click here to suggest a language</a>
 			</small>
 		</h1>
-		<form class="form edit" method="post" action="{{ URL::to('api/def') }}">
+
+        @if ($def->exists)
+            <form class="form edit" method="post" action="{{ route('definition.update', ['id' => $def->getId()]) }}">
+                <input type="hidden" name="_method" value="PUT">
+        @else
+            <form class="form edit" method="post" action="{{ route('definition.store') }}">
+        @endif
 		
 			<!-- Word -->
 			<div class="row">
@@ -31,20 +37,20 @@
 			
 			<!-- Type -->
 			<div class="row">
-                {!! Form::select('type', $wordTypes, $def->getParam('type'), array('class' => 'en-text-input')) !!}
+                {!! Form::select('type', $def->wordTypes, $def->getParam('type'), array('class' => 'en-text-input')) !!}
 				<label for="type">Word type</label>
 			</div>
 			
             <!-- Translation -->
             <div class="row">
-                <input type="text" name="translation[eng]" class="en-text-input" placeholder="e.g. love" value="{{ $def->getTranslation('eng') }}" />
-                <label for="translation[eng]">English translation</label>
+                <input type="text" name="translation[en]" class="en-text-input" placeholder="e.g. love" value="{{ $def->getTranslation('en') }}" />
+                <label for="translation[en]">English translation</label>
             </div>
             
             <!-- Meaning -->
             <div class="row">
-                <input type="text" name="meaning[eng]" class="en-text-input" placeholder="e.g. an intense feeling of deep affection." value="{{ $def->getMeaning('eng') }}" />
-                <label for="meaning[eng]">English meaning</label>
+                <input type="text" name="meaning[en]" class="en-text-input" placeholder="e.g. an intense feeling of deep affection." value="{{ $def->getMeaning('en') }}" />
+                <label for="meaning[en]">English meaning</label>
             </div>
 			
 			<!-- Language -->
@@ -57,13 +63,10 @@
 			<div class="row center">
 				<input type="button" name="cancel" value="cancel" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
 				<input type="submit" name="submit" value="save" />
-				<input type="button" name="new" value="create another" onclick="return App.redirect('edit')" />
+				<input type="button" name="new" value="create another" onclick="return App.redirect('{{ route('definition.create')  }}')" />
 			</div>
 			
 			{!! Form::token() !!}
-			@if ($def->exists)
-            <input type="hidden" name="id" value="{{ $def->getId() }}" />
-            @endif
 		</form>
 	</section>
     
@@ -73,7 +76,7 @@
     //$('select[name="type"]').selectize();
     
     // Setup language search for "lanuguage" field
-    Forms.setupLangSearch('input[name="language"]', {{ json_encode($options) }}, 20, ['remove_button', 'drag_drop']);
+    Forms.setupLangSearch('input[name="language"]', {!! json_encode($options) !!}, 20, ['remove_button', 'drag_drop']);
     
     $(document).ready(function() { $('input[name="word"]').focus(); });
     

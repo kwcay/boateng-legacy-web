@@ -1,5 +1,6 @@
 <?php namespace App\Models;
 
+use App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,6 +17,8 @@ abstract class BaseResource extends Model {
      * Other JSON objects to process
      */
     public $jsonObjects     = false;
+
+    protected static $obfuscator;
     
     /**
      * List of main spellings
@@ -35,6 +38,18 @@ abstract class BaseResource extends Model {
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+
+        // Save instance of Obfuscator within our object.
+        //$this->obfuscator = App::make('Obfuscator');
+    }
+
+    public static function getObfuscator()
+    {
+        if (!isset(static::$obfuscator)) {
+            static::$obfuscator = App::make('Obfuscator');
+        }
+
+        return static::$obfuscator;
     }
 
     public function organize()
@@ -208,8 +223,8 @@ abstract class BaseResource extends Model {
     public function getId()
     {
         if (is_null($this->_encodedId)) {
-            //$this->_encodedId   = $this->id > 0 ? Nkomo::encodeId($this->id) : 0;
-            $this->_encodedId   = $this->id > 0 ? 'todo-encoded-id-'. $this->id : 0;
+            //$this->_encodedId   = $this->id > 0 ? $this->obfuscator->encode($this->id) : 0;
+            $this->_encodedId   = $this->id > 0 ? static::getObfuscator()->encode($this->id) : 0;
         }
         
         return $this->_encodedId;
@@ -222,16 +237,33 @@ abstract class BaseResource extends Model {
 	 * @param  array  $columns
 	 * @return \Illuminate\Support\Collection|static|null
 	 */
-	public static function find($id, $columns = array('*'))
+	public static function find($id, $columns = ['*'])
 	{
         // Un-obfuscate ID
         if (is_string($id) && strlen($id) >= 8 && !is_numeric($id)) {
-            //$id = Nkomo::decodeId($id);
-            $id = str_replace('todo-encoded-id-', '', $id);
+            $id = static::getObfuscator()->decode($id)[0];
         }
         
         return parent::find($id, $columns);
 	}
+    public static function findOrNew($id, $columns = ['*'])
+    {
+        // Un-obfuscate ID
+        if (is_string($id) && strlen($id) >= 8 && !is_numeric($id)) {
+            $id = static::getObfuscator()->decode($id)[0];
+        }
+
+        return parent::findOrNew($id, $columns);
+    }
+    public static function findOrFail($id, $columns = ['*'])
+    {
+        // Un-obfuscate ID
+        if (is_string($id) && strlen($id) >= 8 && !is_numeric($id)) {
+            $id = static::getObfuscator()->decode($id)[0];
+        }
+
+        return parent::findOrFail($id, $columns);
+    }
 
     public static function boot()
     {

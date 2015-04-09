@@ -7,41 +7,31 @@ Route::get('/stats',    'SimplePage@stats');
 Route::get('/api',      'SimplePage@api');
 Route::get('/hello',    'SimplePage@welcome');
 
+// Resources
+Route::get('/language/search/{query?}', 'LanguageController@search');
+Route::get('/definition/search/{query?}', 'DefinitionController@search');
+Route::post('/language/search/{query?}', 'LanguageController@search');
+Route::post('/definition/search/{query?}', 'DefinitionController@search');
+Route::resource('language', 'LanguageController');
+Route::resource('definition', 'DefinitionController');
+
 // User pages
 Route::get('/login',    'PageController@showLoginForm');
 
-// Resource editing
-Route::group(['prefix' => 'edit'], function()
-{
-    Route::get('/def',  'DefinitionController@showEditForm');
-    Route::get('/lang',  'LanguageController@showEditForm');
-
-});
-
 Route::post('/save/{what?}','EditController@saveRes');
 
-// API
-Route::filter('api', 'ApiController');
-Route::group(array('prefix' => 'res', 'before' => 'api'), function()
-{
-    // Language methods
-    Route::resource('language', 'LanguageController');
-    Route::get('/language/search/{query?}', 'LanguageController@search');
-    
-    // Definition methods
-    Route::resource('definition', 'DefinitionController');
-    Route::get('/definition/search/{query?}', 'DefinitionController@search');
-    
+Route::group(['prefix' => 'dev'], function() {
+
+    Route::get('/lang', function () {
+        return App\Models\Language::all();
+    });
+
+    Route::get('/def', function () {
+        return App\Models\Definition::all();
+    });
 });
 
 // Dictionary pages
-Route::get('/{lang}',           'PageController@showLangPage');
-Route::get('/{lang}/{word}',    'PageController@showWordPage');
+Route::get('/{lang}',           'LanguageController@show');
+Route::get('/{lang}/{word}',    'DefinitionController@show');
 
-
-
-
-Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
-]);

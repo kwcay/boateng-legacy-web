@@ -1,13 +1,13 @@
 
 var App =
 {
-    
-    _token: '',
+
     _kbFocus: null,
     
 	init: function()
 	{
-		// 
+		//
+        this.root = $('base').attr('href');
 	},
     
     /**
@@ -87,4 +87,11 @@ $(document).ready(function(event)
     
     // Make keyboard draggable
     $('#keyboard').draggable();
+
+    // Setup AJAX headers
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 });

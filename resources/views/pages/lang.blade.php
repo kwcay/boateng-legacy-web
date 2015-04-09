@@ -15,19 +15,19 @@
             {{ $lang->getName() }}
         </h1>
         
-        @if ($random = Definition::where('language', 'LIKE', '%'. $lang->code .'%')->first())
+        @if ($random)
         <br />
         <div class="emphasis">
             <i>A random word in {{ $lang->getName() }}:</i><br />
             <em>&ldquo; <a href="{{ $random->getWordUri() }}">{{ $random->getWord() }}</a> &rdquo;</em><br />
-            <small><a href="{{ URL::current() }}">more</a></small>
+            <small><a href="{{ route('language.show', ['code' => $lang->code]) }}">more</a></small>
         </div>
         <br />
         
         @else
         <div class="center">
             We have no words in this language yet.<br />
-            <em><a href="{{ URL::to('edit?lang='. $lang->code) }}">Be the first to add one!</a></em>
+            <em><a href="{{ route('definition.create', ['lang' => $lang->code]) }}">Be the first to add one!</a></em>
         </div>
         @endif
         

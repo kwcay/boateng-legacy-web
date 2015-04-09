@@ -142,7 +142,8 @@ return [
 		'App\Providers\AppServiceProvider',
 		'App\Providers\BusServiceProvider',
 		'App\Providers\ConfigServiceProvider',
-		'App\Providers\EventServiceProvider',
+        'App\Providers\EventServiceProvider',
+        'App\Providers\ObfuscatorServiceProvider',
 		'App\Providers\RouteServiceProvider',
         'Collective\Html\HtmlServiceProvider',
 

@@ -14,6 +14,7 @@
 		<meta name="description" content="The book of Native tongues." />
 		<meta name="keywords" content="dictionary, bilingual, multilingual, translation, twi, ewe, ga, wa, dagbani, igbo" />
 		<meta name="robots" content="noindex, nofollow" />
+		<meta name="csrf-token" content="{{ csrf_token() }}" />
 		<meta property="og:title" content="Di Nkomo: the book of Native tongues." />
 		<meta property="og:desc" content="The dictionary of Native tongues." />
 		<meta property="og:type" content="website" />
@@ -28,6 +29,5 @@
 </head>
 <body>
 	@yield('body')
-    <script type="text/javascript">App.root='{{ Request::root() }}';App.token='{{ Session::token() }}';</script>
 </body>
 </html>

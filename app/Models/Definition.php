@@ -1,5 +1,6 @@
 <?php namespace App\Models;
 
+use URL;
 use App\Models\BaseResource as Res;
 
 class Definition extends Res {
@@ -17,13 +18,13 @@ class Definition extends Res {
     /**
      * Array to help validate input data
      */
-    public static $validationRules = [
+    public $validationRules = [
         'word'      => 'required|min:2',
         'language'  => 'required|min:2|regex:/^([a-z, ]+)$/',
         'type'      => 'in:adj,adv,conn,pro,n,v'
     ];
 
-    public static $wordTypes = [
+    public $wordTypes = [
         'adj'   => 'adjective',
         'adv'   => 'adverb',
         'conn'  => 'connective',
@@ -87,8 +88,7 @@ class Definition extends Res {
     }
 
     public function getUri($full = true) {
-        $path   = 'res/'. $this->getId();
-        return $full ? URL::to($path) : $path;
+        return route('definition.show', ['id' => $this->getId()], $full);
     }
 
     public function getWordUri($full = true) {
@@ -97,8 +97,7 @@ class Definition extends Res {
     }
 
     public function getEditUri($full = true) {
-        $path   = 'edit/def/'. $this->getId();
-        return $full ? URL::to($path) : $path;
+        return route('definition.edit', ['id' => $this->getId()], $full);
     }
 
 }

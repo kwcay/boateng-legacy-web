@@ -12,16 +12,20 @@
             @endif
             <br /><em>language</em><br />
 			<small>
-				<a href="edit">
-					&rarr; or click here to suggest a new definition
-				</a>
+				<a href="{{ route('definition.create')  }}">&rarr; or click here to suggest a new definition</a>
 			</small>
 		</h1>
-		<form class="form edit" action="{{ URL::to('save/lang') }}" method="post">
+
+        @if ($lang->exists)
+            <form class="form edit" method="post" action="{{ route('language.update', ['code' => $lang->code]) }}">
+                <input type="hidden" name="_method" value="PUT">
+        @else
+            <form class="form edit" method="post" action="{{ route('language.store') }}">
+        @endif
 		
 			<!-- Title -->
 			<div class="row">
-				<input type="text" name="name" class="text-input" placeholder="e.g. Swahili" value="{{ $lang->getName() }}" />
+				<input type="text" name="name" class="text-input" placeholder="e.g. Swahili" value="{{ $lang->getName() }}" required />
 				<label for="name">Name</label>
 			</div>
 			
@@ -33,7 +37,7 @@
 			
 			<!-- ISO-639-3 -->
 			<div class="row">
-				<input type="text" name="code" class="en-text-input" placeholder="e.g. swa" value="{{ $lang->code }}" {{ $lang->exists ? 'disabled' : '' }} />
+				<input type="text" name="code" class="en-text-input" placeholder="e.g. swa" value="{{ $lang->code }}" {{ $lang->exists ? 'disabled' : 'required' }} />
 				<label for="code"><a href="http://en.wikipedia.org/wiki/ISO_639-3" target="_blank">ISO-639-3</a> language code</label>
 			</div>
 			
@@ -45,15 +49,15 @@
 			
 			<!-- Countries -->
 			<div class="row">
-                {{ Form::select(
+                {!! Form::select(
                     'countries[]',
-                    Nkomo::getCountryList(),
+                    $lang->getCountryList(),
                     explode(',', $lang->countries),
-                    array(
+                    [
                         'class' => 'en-text-input',
                         'multiple' => 'multiple'
-                    )
-                ) }}
+                    ]
+                ) !!}
 				<label for="countries[]">Countries in which language is spoken</label>
 			</div>
 			
@@ -69,10 +73,8 @@
 				<input type="submit" name="submit" value="save" />
 			</div>
 			
-			{{ Form::token() }}
-			@if ($lang->exists)
-            <input type="hidden" name="id" value="{{ $lang->getId() }}" />
-            @endif
+			{!! Form::token() !!}
+			<!-- {{ $lang->getId() }} -->
 		</form>
 	</section>
     

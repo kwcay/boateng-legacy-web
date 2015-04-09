@@ -42,9 +42,8 @@ var Forms =
             load: function(query, callback) {
                 if (!query.trim().length) return callback();
                 $.ajax({
-                    url: App.root +'/api/language/search/' + App.urlencode(query.trim()),
-                    data: {_token: App.token},
-                    type: 'GET',
+                    url: App.root +'language/search/' + App.urlencode(query.trim()),
+                    type: 'POST',
                     error: function() {
                         callback();
                     },

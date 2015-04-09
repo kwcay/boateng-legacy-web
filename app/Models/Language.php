@@ -1,5 +1,6 @@
 <?php namespace App\Models;
 
+use URL;
 use App\Models\BaseResource as Res;
 
 class Language extends Res {
@@ -12,7 +13,7 @@ class Language extends Res {
     /**
      * Array to help validate input data
      */
-    public static $validationRules  = []
+    public $validationRules  = [
         'code'      => 'sometimes|required|min:3|max:7|unique:languages',
         'parent'    => 'min:3|max:7',
         'name'      => 'required|min:2',
@@ -57,12 +58,26 @@ class Language extends Res {
     }
 
     public function getUri($full = true) {
-        return $full ? URL::to($this->code) : $this->code;
+        return $full ? URL::to('/'. $this->code) : $this->code;
     }
 
     public function getEditUri($full = true) {
-        $path   = 'edit/lang/'. $this->code;
-        return $full ? URL::to($path) : $path;
+        return route('language.edit', ['code' => $this->code], $full);
+    }
+
+    /**
+     * Retrieves country list (compiled with umpirsky/country-list library).
+     * @param string $locale    Language in which to retrieve country names
+     * @return array            List of countries
+     */
+    public function getCountryList($locale = 'en')
+    {
+        $locale = preg_replace('/[^a-z_]/', '', $locale);
+        $list   = file_exists(base_path() .'/resources/countries/'. $locale .'.php') ?
+            include base_path() .'/resources/countries/'. $locale .'.php' :
+            include base_path() .'/resources/countries/en.php';
+
+        return $list;
     }
 
 }
