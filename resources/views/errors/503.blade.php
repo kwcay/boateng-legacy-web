@@ -1,41 +1,45 @@
-<html>
-	<head>
-		<link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
-
-		<style>
-			body {
-				margin: 0;
-				padding: 0;
-				width: 100%;
-				height: 100%;
-				color: #B0BEC5;
-				display: table;
-				font-weight: 100;
-				font-family: 'Lato';
-			}
-
-			.container {
-				text-align: center;
-				display: table-cell;
-				vertical-align: middle;
-			}
-
-			.content {
-				text-align: center;
-				display: inline-block;
-			}
-
-			.title {
-				font-size: 72px;
-				margin-bottom: 40px;
-			}
-		</style>
-	</head>
-	<body>
-		<div class="container">
-			<div class="content">
-				<div class="title">Be right back.</div>
-			</div>
-		</div>
-	</body>
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <title>Di Nkomo: the book of native tongues.</title>
+    <meta http-equiv="expires" content="-1">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache" />
+	<meta name="robots" content="noindex, nofollow" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type="text/css">
+    html, body {
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        color: #333;
+        font: normal 21px/1.618 'sinanova', Serif;
+        background-color: #f7f7f7;
+    }
+    header {
+        width: 100%;
+        display: block;
+        letter-spacing: 10px;
+        text-align: center;
+        font-size: 36px;
+        color: #aaa;
+    }
+    section {
+        width: 50%;
+        margin: 50px auto 0;
+    }
+    .large {
+        font-size: 1.2em;
+    }
+    </style>
+</head>
+<body>
+	<header>~·~</header>
+    <section>
+        <div class="large">Di Nkomo is temporarily offline for maintenance.</div>
+        Please check back soon!
+    </section>
+</body>
 </html>
