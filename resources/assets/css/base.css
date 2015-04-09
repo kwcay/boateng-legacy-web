@@ -76,19 +76,9 @@ pre {
 }
 section, header, footer {
 	width: 550px;
-	margin: 0 auto 0;
 }
 small {
 	font-size: 0.5em;
-}
-
-header .header {
-	width: 100%;
-	display: block;
-	letter-spacing: 10px;
-	text-align: center;
-	font-size: 36px;
-	color: #aaa;
 }
 
 .center {
@@ -116,6 +106,10 @@ header .header {
 		visibility: hidden;
 		transform: scaleX(0);
 	}
+
+    h1, h2, h3 {
+        text-align: center;
+    }
 	
 	section, header, footer {
 		margin: 0 auto 0;

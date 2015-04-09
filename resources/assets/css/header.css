@@ -1,0 +1,16 @@
+header {
+    margin: 0 auto 0;
+}
+header .header {
+    width: 100%;
+    display: block;
+    letter-spacing: 10px;
+    text-align: center;
+    font-size: 36px;
+    color: #aaa;
+}
+
+@media only screen and (max-width: 600px) {
+
+    
+}

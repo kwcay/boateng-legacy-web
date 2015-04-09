@@ -17,12 +17,6 @@
 /*
  * Search form
  */
-.form.search .title {
-	margin: 5px auto 30px auto;
-	width: 100%;
-	text-align: center;
-	font-size: 1.3em;
-}
 .form.search .container {
 	position: relative;
 	margin: 5px auto;
@@ -163,11 +157,6 @@ a.button:after {
 
 @media only screen and (max-width: 600px) {
 
-    .form.search .title {
-        height: auto;
-        font-size: 1.15em;
-    }
-    
     .form.search .container {
         width: 100%;
         position: relative;

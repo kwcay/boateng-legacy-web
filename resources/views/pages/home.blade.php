@@ -2,9 +2,13 @@
 
 @section('body')
 	@include('layouts.header')
-    
+
+    <div class="title">
+        Di Nkɔmɔ
+        <br />
+        <small>The book of Native tongues.</small>
+    </div>
 	<section class="form search">
-		<div class="title">The book of Native tongues.</div>
 		<form name="search">
 			<div class="container">
 				<input class="remove-btn-style" name="clear" type="button" value="&#10005;" />
@@ -14,12 +18,7 @@
 			</div>
 		</form>
 		<div id="results">
-            @if ($wordOfTheDay)
-			<div class="emphasis" style="margin-top: 60px;">
-				<i>Word of the day:</i><br />
-				<em>&ldquo; <a href="{{ $wordOfTheDay->getWordUri() }}">{{ $wordOfTheDay->getWord() }}</a> &rdquo;</em>
-			</div>
-            @endif
+		    <div class="center">Use this <em>&#10548;</em> to lookup words<br />in a foreign language.</div>
 		</div>
 	</section>
 
@@ -79,7 +78,7 @@
     
     $('input[name=clear]').click(function() {
         document.search.q.value	= '';
-        $('#results').html('Use that box up there <em>&#10548;</em> to lookup some words.');
+        $('#results').html('<div class="center">Use this <em>&#10548;</em> to lookup words<br />in a foreign language.</div>');
         document.search.q.focus();
     });
     

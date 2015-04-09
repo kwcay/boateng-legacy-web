@@ -1,0 +1,45 @@
+/**
+ * General
+ */
+section {
+    margin: 0 auto 0;
+}
+
+/**
+ * Homepage
+ */
+.title {
+    margin: 5px auto 30px;
+    width: 100%;
+    text-align: center;
+    font-size: 1.3em;
+}
+.title small {
+    font-size: 0.7em;
+    letter-spacing: 2.5px;
+}
+
+/**
+ * Language page
+ */
+
+
+/**
+ * Word page
+ */
+.definitions {}
+.definition {
+    position: relative;
+    margin: 10px 0 10px 20px;
+    padding-left: 20px;
+    border-left: 1px solid #aaa;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .title {
+        height: auto;
+        font-size: 1.15em;
+    }
+
+}

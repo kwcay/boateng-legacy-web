@@ -39,7 +39,7 @@ elixir(function(mix) {
     mix.stylesIn('resources/assets/css', 'public/assets/styles.css');
     
     // Combine scripts
-    mix.checks();
+    //mix.checks();
     mix.scriptsIn('resources/assets/js', 'public/assets/scripts.js');
     
     // Create a unique filename for each script version.

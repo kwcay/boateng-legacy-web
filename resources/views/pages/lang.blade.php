@@ -30,11 +30,17 @@
             <em><a href="{{ route('definition.create', ['lang' => $lang->code]) }}">Be the first to add one!</a></em>
         </div>
         @endif
-        
-        @if (strlen($lang->desc))
-        <h2>A little background</h2>
+
+        @if ($random)
+        <h2>A little background...</h2>
         <div class="center">
-            {{ $lang->getDescription() }}
+            The first word that was added to Di Nkɔmɔ for <em>{{ $lang->getName() }}</em> is : [to do].
+            The latest word to be added was: [to do].
+            <br /><br />
+
+            @if (strlen($lang->desc))
+                {{ $lang->getDescription() }}
+            @endif
         </div>
         @endif
 		

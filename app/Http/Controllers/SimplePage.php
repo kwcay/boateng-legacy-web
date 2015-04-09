@@ -12,11 +12,7 @@ class SimplePage extends Controller
 	 * Displays main landing page.
 	 */
 	public function home() {
-        
-        // Word of the day
-        $word   = Definition::where('state', '>', '0')->orderByRaw('RAND()')->first();
-        
-		return view('pages.home', ['wordOfTheDay' => $word]);
+		return view('pages.home');
 	}
 
 	/**

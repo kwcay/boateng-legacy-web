@@ -10,14 +10,14 @@
                 onclick="alert('To do: learning games'); return false;"></a>
             <a title="Settings" href="#" class="fa fa-wrench"
                 onclick="return App.openDialog('settings');"></a>
-            <a title="Suggest a new word" href="{{ URL::to('edit') }}" class="fa fa-pencil"></a>
+            <a title="Suggest a new word" href="{{ route('definition.create') }}" class="fa fa-pencil"></a>
         </div>
     </div>
 	<div class="credits">
 		<small>
-			<a href="{{ URL::to('about') }}">Made with <span class="fa fa-heart fa-fw"></span> in Montréal</a>
-            &nbsp;
             &copy; {{ date('Y') }}
+            &nbsp;
+			<a href="{{ URL::to('about') }}">Product of Ghana <span class="fa fa-heart fa-fw"></span></a>
 		</small>
 	</div>
 </footer>

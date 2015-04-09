@@ -83,7 +83,7 @@ class LanguageController extends Controller {
 
         return view('pages.lang', [
             'lang' => $lang,
-            'random' => Definition::where('language', 'LIKE', '%'. $lang->code .'%')->first()
+            'random' => Definition::where('language', 'LIKE', '%'. $lang->code .'%')->orderByRaw('RAND()')->first()
         ]);
 	}
 

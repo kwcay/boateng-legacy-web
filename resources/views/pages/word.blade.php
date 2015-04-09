@@ -14,25 +14,27 @@
             Is a word in <em><a href="{{ $lang->getUri() }}">{{ $lang->getName() }}</a></em> that could translate to:
         </div>
         
-        @for ($i = 0; $i < count($words); $i++)
-        <div style="position: relative; margin-left: 30px;">
-            @if ($i > 0)
-                <i style="position: absolute; left: -40px; top: 4px">or</i>
-            @endif
-            <h3>
-                <span class="edit-res">
-                    <a href="{{ $words[$i]->getEditUri() }}" class="fa fa-pencil"></a>
-                </span>
-                &ldquo; {{ $words[$i]->getTranslation('en') }} &rdquo;
-            </h3>
-            @if (strlen($words[$i]->getMeaning('en')))
-                &mdash; {{ $words[$i]->getMeaning('en') }}
-            @endif
-            @if (strlen($words[$i]->getAltWords()))
-                Alternate spellings: {{ $words[$i]->getAltWords() }}
-            @endif
+        <div class="definitions">
+            @for ($i = 0; $i < count($words); $i++)
+                <div class="definition">
+                    @if ($i > 0)
+                        <i style="position: absolute; left: -40px; top: 4px">or</i>
+                    @endif
+                    <h3>
+                        <span class="edit-res">
+                            <a href="{{ $words[$i]->getEditUri() }}" class="fa fa-pencil"></a>
+                        </span>
+                        &ldquo; {{ $words[$i]->getTranslation('en') }} &rdquo;
+                    </h3>
+                    @if (strlen($words[$i]->getMeaning('en')))
+                        {{ $words[$i]->getMeaning('en') }}.
+                    @endif
+                    @if (strlen($words[$i]->getAltWords()))
+                        Alternatively: {{ $words[$i]->getAltWords() }}
+                    @endif
+                </div>
+            @endfor
         </div>
-        @endfor
         
 	</section>
 
