@@ -1,6 +1,7 @@
 html, body, a, div, header, input, label, section {
 	margin: 0;
 	padding: 0;
+    position: inherit;
 }
 
 body {
@@ -126,3 +127,4 @@ small {
     }
 
 }
+
