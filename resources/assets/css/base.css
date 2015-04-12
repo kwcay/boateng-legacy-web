@@ -6,7 +6,7 @@ html, body, a, div, header, input, label, section {
 body {
     position: relative;
 	color: #333;
-	font: normal 21px/1.618 'Gentium Basic', 'sinanova', Serif;
+	font: normal 21px/1.618 'sinanova', Serif;
 	background-color: #f7f7f7;
 }
 a, a:visited {
