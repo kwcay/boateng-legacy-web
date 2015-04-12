@@ -18,7 +18,7 @@
             @for ($i = 0; $i < count($words); $i++)
                 <div class="definition">
                     @if ($i > 0)
-                        <i style="position: absolute; left: -40px; top: 4px">or</i>
+                        <span class="or">or</span>
                     @endif
                     <h3>
                         <span class="edit-res">

@@ -254,9 +254,11 @@ class DefinitionController extends Controller {
         }
 
         $def->save();
+        $rdir = $data['more'] ?
+            route('definition.create', ['lang' => $def->getMainLanguage(true)], false) : $def->getWordUri(false);
 
         Session::push('messages', 'The details for <em>'. $def->getWord() .'</em> were successfully saved, thanks :)');
-        return Redirect::to($def->getWordUri(false));
+        return Redirect::to($rdir);
     }
 
     /**

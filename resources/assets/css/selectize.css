@@ -341,7 +341,7 @@ right: 0;
     right: 34px;
     width: 16px;
     height: 16px;
-    background: url(http://l33p.com/apps/dinkomo/assets/img/spinner.gif);
+    background: url('../../assets/img/spinner.gif');
     background-size: 16px 16px;
     opacity: 0;
 }

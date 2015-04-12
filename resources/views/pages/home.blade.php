@@ -37,9 +37,8 @@
         
         // Start ajax request
         $.ajax({
-            url: App.root +'/api/definition/search/' + App.urlencode(query),
-            data: {_token: App.token},
-            type: 'GET',
+            url: App.root +'/definition/search/' + App.urlencode(query),
+            type: 'POST',
             error: function(xhr, status, error) {
                 App.log('XHR error on search form: '+ xhr.status +' ('+ error +')');
                 $('#results').html('<div class="center">Seems like we ran into a snag <span class="fa fa-frown-o"></span> try again?</div>');
@@ -59,7 +58,7 @@
                         '<li>'+
                             '<a href="'+ def.uri +'">'+ def.word +'</a>'+
                             ' <small>('+ def.type +')</small>'+
-                            ' is a word that means <i>'+ def.translation.eng +'</i> in '+
+                            ' is a word that means <i>'+ def.translation.en +'</i> in '+
                             ' <a href="'+ def.language.uri +'">'+ def.language.name +'</a>'+
                         '</li>';
                     });

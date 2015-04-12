@@ -17,10 +17,10 @@
 		</h1>
 
         @if ($def->exists)
-            <form class="form edit" method="post" action="{{ route('definition.update', ['id' => $def->getId()]) }}">
+            <form class="form edit" method="post" name="definition" action="{{ route('definition.update', ['id' => $def->getId()]) }}">
                 <input type="hidden" name="_method" value="PUT">
         @else
-            <form class="form edit" method="post" action="{{ route('definition.store') }}">
+            <form class="form edit" method="post" name="definition" action="{{ route('definition.store') }}">
         @endif
 		
 			<!-- Word -->
@@ -61,12 +61,13 @@
 			
 			<!-- Form actions -->
 			<div class="row center">
-				<input type="button" name="cancel" value="cancel" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
-				<input type="submit" name="submit" value="save" />
-				<input type="button" name="new" value="create another" onclick="return App.redirect('{{ route('definition.create')  }}')" />
+				<input type="submit" name="finish" value="done !" />
+				<input type="submit" name="new" value="save + add" onclick="return saveAndNew();" />
+				<input type="button" name="cancel" value="return" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
 			</div>
 			
 			{!! Form::token() !!}
+			<input type="hidden" name="more" value="0" />
 		</form>
 	</section>
     
@@ -77,8 +78,13 @@
     
     // Setup language search for "lanuguage" field
     Forms.setupLangSearch('input[name="language"]', {!! json_encode($options) !!}, 20, ['remove_button', 'drag_drop']);
+
+    var saveAndNew = function() {
+        document.definition.more.value = 1;
+        document.definition.submit();
+    };
     
-    $(document).ready(function() { $('input[name="word"]').focus(); });
+    //$(document).ready(function() { $('input[name="word"]').focus(); });
     
     </script>
 

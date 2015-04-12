@@ -6,7 +6,7 @@ html, body, a, div, header, input, label, section {
 body {
     position: relative;
 	color: #333;
-	font: normal 21px/1.618 'sinanova', 'Gentium Basic', Serif;
+	font: normal 21px/1.618 'Gentium Basic', 'sinanova', Serif;
 	background-color: #f7f7f7;
 }
 a, a:visited {
@@ -107,7 +107,7 @@ small {
 		transform: scaleX(0);
 	}
 
-    h1, h2, h3 {
+    h1, h2 {
         text-align: center;
     }
 	
