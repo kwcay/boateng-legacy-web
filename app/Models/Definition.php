@@ -21,7 +21,7 @@ class Definition extends Res {
     public $validationRules = [
         'word'      => 'required|min:2',
         'language'  => 'required|min:2|regex:/^([a-z, ]+)$/',
-        'type'      => 'in:adj,adv,conn,pro,n,v'
+        'type'      => 'in:adj,adv,conn,ex,pre,pro,n,v'
     ];
 
     public $wordTypes = [
