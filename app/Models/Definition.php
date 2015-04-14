@@ -28,9 +28,11 @@ class Definition extends Res {
         'adj'   => 'adjective',
         'adv'   => 'adverb',
         'conn'  => 'connective',
+        'ex'    => 'exclamation',
+        'pre'   => 'preposition',
         'pro'   => 'pronoun',
         'n'     => 'noun',
-        'v'     => 'verb'
+        'v'     => 'verb',
     ];
 
     public function getWord() {

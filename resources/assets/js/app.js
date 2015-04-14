@@ -78,13 +78,13 @@ $(document).ready(function(event)
         App.setKeyboardFocus(this);
         $('#keyboard').fadeIn(300);
     });
-	
+
     // Remove helper keyboard when focus is lost
     $('.en-text-input').focus(function() {
         App.setKeyboardFocus(null);
         $('#keyboard').fadeOut(300);
     });
-    
+
     // Make keyboard draggable
     $('#keyboard').draggable();
 
