@@ -82,6 +82,12 @@ small {
 	font-size: 0.5em;
 }
 
+.left {
+    text-align: left;
+}
+.right {
+    text-align: right;
+}
 .center {
 	text-align: center;
 }

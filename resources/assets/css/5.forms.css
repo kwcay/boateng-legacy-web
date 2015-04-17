@@ -1,6 +1,4 @@
-.form {
 
-}
 .form input, .form textarea, .form select {
 	border: none;
 	background-color: transparent;
@@ -12,6 +10,9 @@
 .form input:focus {
 	outline: none;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+}
+.form input[type="button"], .form input[type="submit"] {
+    cursor: pointer;
 }
 
 /*
@@ -29,7 +30,6 @@
 }
 .form.search .container input[type="button"], .form.search .container input[type="submit"] {
 	display: block;
-	cursor: pointer;
 	width: 40px;
 	margin: 0;
 	padding: 12.5px;

@@ -17,8 +17,10 @@ Route::resource('definition', 'DefinitionController');
 
 // User pages
 Route::get('/login',    'PageController@showLoginForm');
-
-Route::post('/save/{what?}','EditController@saveRes');
+Route::controllers([
+    'auth' => 'Auth\AuthController',
+    'password' => 'Auth\PasswordController',
+]);
 
 Route::group(['prefix' => 'dev'], function() {
 

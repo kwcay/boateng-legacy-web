@@ -41,7 +41,28 @@
 	<div>
 		<a href="#" class="close">&#10005;</a>
 		<h1>Login</h1>
-		<div>...</div>
+		<div class="center">
+
+		    <br />
+		    <a href="#" class="fa fa-lg fa-fw fa-linkedin" onclick="return alert('To do: LinkedIn login')"></a>
+		    <a href="#" class="fa fa-lg fa-fw fa-github" onclick="return alert('To do: Github login')"></a>
+		    <a href="#" class="fa fa-lg fa-fw fa-reddit" onclick="return alert('To do: Reddit login')"></a>
+		    <a href="#" class="fa fa-lg fa-fw fa-twitter" onclick="return alert('To do: Twitter login')"></a>
+		    <a href="#" class="fa fa-lg fa-fw fa-facebook" onclick="return alert('To do: Facebook login')"></a>
+		    <a href="#" class="fa fa-lg fa-fw fa-google-plus" onclick="return alert('To do: G+ login')"></a>
+		    <br /><br />
+
+		    <em>~ or ~</em>
+		    <br /><br />
+
+		    <form class="form" action="{{ url('/auth/login') }}">
+		        <input class="single" type="email" name="email" placeholder="email" />
+		        <input class="single" type="password" name="password" placeholder="password" />
+		        <input type="submit" value="sign in" style="width:75px;margin:0 auto;" />
+		        <input type="hidden" name="remember" value="true" />
+		        {!! Form::token() !!}
+		    </form>
+		</div>
 	</div>
 </div>
 

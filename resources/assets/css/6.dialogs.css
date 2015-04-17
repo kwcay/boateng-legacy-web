@@ -45,6 +45,23 @@
 	width: 100%;
 	overflow: scroll;
 }
+.dialog .form {
+
+}
+.dialog .form input {
+    color: #fff;
+    display: block;
+}
+.dialog .form input.single {
+    margin: 0 auto;
+    width: 80%;
+    text-align: center;
+}
+.dialog .form input[type="submit"], .dialog .form input[type="button"] {
+    font-weight: bold;
+    border-bottom: 2px solid #fff;
+    margin: 0 20px;
+}
 
 .notices {
 	height: auto;

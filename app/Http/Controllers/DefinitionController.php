@@ -13,19 +13,12 @@ use App\Http\Controllers\Controller;
 class DefinitionController extends Controller {
 
 	/**
-	 * Display a listing of the resource.
+	 * Disable index view.
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{
-        $test = new Definition;
-
-        return [
-            99, $test->obfuscator->encode(99)
-        ];
-
-        abort(501, 'Not Implemented');
+	public function index() {
+        return Redirect::to('');
 	}
 
 	/**
@@ -48,7 +41,7 @@ class DefinitionController extends Controller {
             $def->setParam('type', $type);
         }
         if ($lang = Input::get('lang', Input::old('lang'))) {
-            $def->language  = preg_replace('/[^a-z, ]/', '', $lang);
+            $def->language  = preg_replace('/[^a-z, -]/', '', $lang);
 
             if ($lang = Language::findByCode($def->language)) {
                 $lso[] = [
@@ -79,8 +72,7 @@ class DefinitionController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
-	{
+	public function store() {
         return $this->save(new Definition, Input::all(), route('definition.create', [], false));
 	}
 
@@ -167,31 +159,42 @@ class DefinitionController extends Controller {
         ]);
 	}
 
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int $id
+     * @throws \Exception
+     * @return Response
+     */
 	public function update($id)
 	{
         // Retrieve the definition object.
         if (!$def = Definition::find($id)) {
-            abort(404, 'Can\'t find that definition :( [todo: throw exception]');
+            throw new \Exception('Can\'t find that definition :(', 404);
         }
 
         return $this->save($def, Input::all(), $def->getEditUri(false));
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @throws \Exception
+     * @return Response
+     */
 	public function destroy($id)
 	{
-        abort(501, 'Not Implemented');
+        // Retrieve the definition object.
+        if (!$def = Definition::find($id)) {
+            throw new \Exception('Can\'t find that definition :(', 404);
+        }
+
+        // Delete record
+        Session::push('messages', '<em>'. $def->getWord() .'</em> has been succesfully deleted.');
+        $def->delete();
+
+        return Redirect::to('');
 	}
 
     /**

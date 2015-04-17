@@ -11,6 +11,13 @@
                 Suggest a <i>new</i>
             @endif
             <br /><em>definition</em><br />
+            @if ($def->exists)
+                <small>
+                    <a href="#" onclick="return App.openDialog('del');">
+                        <span class="fa fa-trash-o"></span> click here to delete it
+                    </a>
+                </small><br />
+            @endif
 			<small>
 				<a href="{{ route('language.create')  }}">&rarr; or click here to suggest a language</a>
 			</small>
@@ -70,6 +77,27 @@
 			<input type="hidden" name="more" value="0" />
 		</form>
 	</section>
+
+    @if ($def->exists)
+        <!-- Delete confirmation -->
+        <div class="dialog del">
+            <div>
+                <a href="#" class="close">&#10005;</a>
+                <h1>Really?</h1>
+                <div class="center">
+                    Are you sure you want to delete the definition for
+                    <h2>&ldquo; {{ $def->getWord() }} &rdquo;</h2>
+                    for ever and ever?<br /><br />
+                    <form class="form" method="post" name="delete" action="{{ route('definition.destroy', ['id' => $def->getId()]) }}">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="submit" name="confirm" value="yes, delete {{ $def->getWord() }}" />
+                        <input type="button" name="cancel" value="no, return" onclick="return App.closeDialogs()" />
+			            {!! Form::token() !!}
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endif
     
     <script type="text/javascript">
     

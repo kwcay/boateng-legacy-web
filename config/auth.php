@@ -28,7 +28,7 @@ return [
 	|
 	*/
 
-	'model' => 'App\User',
+	'model' => 'App\Models\User',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -63,5 +63,7 @@ return [
 		'table' => 'password_resets',
 		'expire' => 60,
 	],
+
+    'salt' => env('APP_SALT', 'SomeRandomString')
 
 ];
