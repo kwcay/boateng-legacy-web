@@ -55,7 +55,7 @@
 		    <em>~ or ~</em>
 		    <br /><br />
 
-		    <form class="form" action="{{ url('/auth/login') }}">
+		    <form class="form" action="{{ url('/auth/login') }}" method="POST">
 		        <input class="single" type="email" name="email" placeholder="email" />
 		        <input class="single" type="password" name="password" placeholder="password" />
 		        <input type="submit" value="sign in" style="width:75px;margin:0 auto;" />
