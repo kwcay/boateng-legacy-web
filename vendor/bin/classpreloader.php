@@ -1,11 +1,7 @@
-#! /usr/bin/env php
-<?php
-
-if (file_exists($autoloadPath = __DIR__ . '/../../autoload.php')) {
-    require_once $autoloadPath;
-} else {
-    require_once __DIR__ . '/vendor/autoload.php';
-}
-
-$application = new ClassPreloader\Application();
-$application->run();
+#!/usr/bin/env sh
+SRC_DIR="`pwd`"
+cd "`dirname "$0"`"
+cd "../classpreloader/classpreloader"
+BIN_TARGET="`pwd`/classpreloader.php"
+cd "$SRC_DIR"
+"$BIN_TARGET" "$@"

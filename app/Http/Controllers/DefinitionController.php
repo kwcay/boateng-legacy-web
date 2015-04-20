@@ -9,8 +9,13 @@ use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Http\Controllers\Controller;
+use App\Traits\ExportableResourceTrait;
+use App\Traits\ImportableResourceTrait;
+use Illuminate\Http\Request;
 
 class DefinitionController extends Controller {
+
+    use ExportableResourceTrait, ImportableResourceTrait;
 
 	/**
 	 * Disable index view.
@@ -303,6 +308,22 @@ class DefinitionController extends Controller {
         }
 
         return $this->send(['query' => $query, 'definitions' => $results]);
+    }
+
+    /**
+     * @param $format
+     * @return mixed
+     */
+    public static function export($format = 'yaml')
+    {
+        $data = Definition::all();
+        $formatted = [];
+
+        foreach ($data as $item) {
+            $formatted[] = $item->toArray();
+        }
+
+        return static::exportToFormat($formatted, $format, false);
     }
 
 }

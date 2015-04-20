@@ -1,7 +1,10 @@
-<?php
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
+
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Traits\ExportableResourceTrait;
+use App\Traits\ImportableResourceTrait;
 use Illuminate\Http\Request;
 
 /**
@@ -9,17 +12,21 @@ use Illuminate\Http\Request;
  */
 class UserController extends Controller {
 
-    
+    use ExportableResourceTrait, ImportableResourceTrait;
+
     /**
-     * Login form
+     * @param $format
+     * @return mixed
      */
-    public function __TO_BE_RE_WORKED__showLoginForm()
+    public static function export($format = 'yaml')
     {
-        // Check if user is already logged in
-        if (false) {
-        
+        $data = User::all();
+        $formatted = [];
+
+        foreach ($data as $item) {
+            $formatted[] = $item->toArray();
         }
-        
-        return view('forms.login');
+
+        return static::exportToFormat($formatted, $format, false);
     }
 }

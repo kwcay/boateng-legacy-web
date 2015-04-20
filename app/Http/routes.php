@@ -22,15 +22,16 @@ Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
 
-Route::group(['prefix' => 'dev'], function() {
+// Admin stuff
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
 
-    Route::get('/lang', function () {
-        return App\Models\Language::all();
-    });
+    Route::get('/', 'AdminController@index');
 
-    Route::get('/def', function () {
-        return App\Models\Definition::all();
-    });
+    // Resource export
+    Route::get('/export/language/{format?}', ['as' => 'export.language', 'uses' => 'LanguageController@export']);
+    Route::get('/export/definition/{format?}', ['as' => 'export.definition', 'uses' => 'DefinitionController@export']);
+    Route::get('/export/user/{format?}', ['as' => 'export.user', 'uses' => 'UserController@export']);
+
 });
 
 // Dictionary pages
