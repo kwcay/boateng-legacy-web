@@ -1,6 +1,8 @@
 !/vendor/autoload.php
 /node_modules
 .env
+.htaccess
 .idea
-Thumbs.db
 Desktop.ini
+error_log
+Thumbs.db
