@@ -3,6 +3,7 @@
 use Input;
 use Session;
 use Redirect;
+use Request;
 use Validator;
 use App\Http\Requests;
 use App\Models\Language;
@@ -10,7 +11,6 @@ use App\Models\Definition;
 use App\Http\Controllers\Controller;
 use App\Traits\ExportableResourceTrait;
 use App\Traits\ImportableResourceTrait;
-use Illuminate\Http\Request;
 
 class LanguageController extends Controller {
 
@@ -84,6 +84,11 @@ class LanguageController extends Controller {
         // Retrieve the language object.
         if (!$lang = $this->getLanguage($id)) {
             abort(404, 'Can\'t find that languge :(');
+        }
+
+        // Redirect if accessing language directly.
+        if (Request::path() != $lang->getUri(false)) {
+            return Redirect::to($lang->getUri(false));
         }
 
         return view('pages.lang', [

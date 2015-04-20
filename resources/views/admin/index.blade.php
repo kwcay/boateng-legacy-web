@@ -13,7 +13,9 @@
 
 		Export definitions:
 		    <a href="{{ route('export.definition', ['format' => 'json']) }}">json</a> /
-		    <a href="{{ route('export.definition', ['format' => 'yaml']) }}">yaml</a>
+		    <a href="{{ route('export.definition', ['format' => 'yaml']) }}">yaml</a> /
+		    <a href="{{ route('export.definition', ['format' => 'bgl']) }}">Babylon</a> /
+		    <a href="{{ route('export.definition', ['format' => 'dict']) }}">StarDict (or Dictd)</a>
 		<br />
 
 		Export users:

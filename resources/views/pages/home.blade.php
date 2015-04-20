@@ -27,7 +27,7 @@
     {
 		// Performance check
 		var query	= document.search.q.value.trim();
-		if (query.length < 3) {
+		if (query.length < 2) {
 			document.search.q.focus();
 			return false;
 		}

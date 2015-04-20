@@ -277,7 +277,7 @@ class DefinitionController extends Controller {
     {
         // Performance check
         $query  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $query)));
-        if (strlen($query) < 3) {
+        if (strlen($query) < 2) {
             return $this->abort(400, 'Query too short');
         }
 
