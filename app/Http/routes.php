@@ -34,6 +34,8 @@ Route::group(['prefix' => 'admin'], function() {
     Route::get('/export/user/{format?}', ['as' => 'export.user', 'uses' => 'UserController@export']);
 
 });
+Route::get('import', 'AdminController@importPage');
+Route::post('import', 'DataController@import');
 
 // Dictionary pages
 Route::get('/{lang}',           'LanguageController@show');

@@ -13,12 +13,13 @@ trait ImportableResourceTrait {
                 $result = static::importFromJson($data);
                 break;
 
+            case 'yml':
             case 'yaml':
                 $result = static::importFromYaml($data);
                 break;
 
             default:
-                throw new \Exception('Invalid import format.');
+                throw new \Exception('Unsupported import format.');
         }
 
         return $result;

@@ -236,6 +236,11 @@ class LanguageController extends Controller {
         return static::exportToFormat($formatted, $format, false);
     }
 
+    public function import($data)
+    {
+
+    }
+
     /**
      * Shortcut to retrieve a language object.
      *
