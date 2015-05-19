@@ -2,10 +2,10 @@
 
 // Simple pages
 Route::get('/',         'SimplePage@home');
-Route::get('/about',    'SimplePage@about');
-Route::get('/stats',    'SimplePage@stats');
-Route::get('/api',      'SimplePage@api');
-Route::get('/hello',    'SimplePage@welcome');
+Route::get('about',     'SimplePage@about');
+Route::get('stats',     'SimplePage@stats');
+Route::get('api',       'SimplePage@api');
+Route::get('hello',     'SimplePage@welcome');
 
 // Resources
 Route::get('/language/search/{query?}', 'LanguageController@search');
@@ -23,7 +23,8 @@ Route::controllers([
 ]);
 
 // Admin stuff
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
+//Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
+Route::group(['prefix' => 'admin'], function() {
 
     Route::get('/', 'AdminController@index');
 
@@ -36,5 +37,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
 
 // Dictionary pages
 Route::get('/{lang}',           'LanguageController@show');
+Route::get('/{lang}/+edit',     'LanguageController@edit');
+Route::get('/{lang}/+add',      'DefinitionController@create');
 Route::get('/{lang}/{word}',    'DefinitionController@show');
 
