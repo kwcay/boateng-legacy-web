@@ -37,10 +37,18 @@ abstract class BaseResource extends Model {
     
     public function __construct(array $attributes = [])
     {
+        // Register model events.
+//        static::creating();
+
         parent::__construct($attributes);
 
         // Save instance of Obfuscator within our object.
         //$this->obfuscator = App::make('Obfuscator');
+    }
+
+    public static function validate($data) {
+        $obj = new static;
+        return \Validator::make($data, $obj->validationRules);
     }
 
     public static function getObfuscator()
@@ -52,6 +60,11 @@ abstract class BaseResource extends Model {
         return static::$obfuscator;
     }
 
+    /**
+     * Prepares the model to be used in the application.
+     *
+     * @return $this
+     */
     public function organize()
     {
         if (!$this->isOrganized)
@@ -304,5 +317,46 @@ abstract class BaseResource extends Model {
 
             return true;
         });
+    }
+
+    /**
+     * Prepares model for database storage.
+     *
+     * @param $obj
+     * @return bool
+     */
+    public function onSave($obj)
+    {
+        // Performance check
+        if (!$obj->isOrganized) {
+            return true;
+        }
+
+        // Convert params string
+        $obj->params = json_encode($obj->_params);
+
+        // Encode extra parameters
+        if ($obj->jsonObjects)
+        {
+            foreach ($obj->jsonObjects as $prop)
+            {
+                $obj->{$prop} = json_encode($obj->_jsons[$prop]);
+            }
+        }
+
+        // Combine main, alternate spellings
+        if ($obj->altSpellings)
+        {
+            foreach ($obj->altSpellings as $prop)
+            {
+                $obj->{$prop} = $obj->_altMain[$prop];
+
+                if (count($obj->_altOthers[$prop])) {
+                    $obj->{$prop} .= ', '. implode(', ', $obj->_altOthers[$prop]);
+                }
+            }
+        }
+
+        return true;
     }
 }

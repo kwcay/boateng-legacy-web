@@ -2,9 +2,10 @@
 
 use Symfony\Component\Yaml\Yaml;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 
-trait ImportableResourceTrait {
-
+trait ImportableResourceTrait
+{
     public static function importFromFormat($data, $format)
     {
         switch ($format)

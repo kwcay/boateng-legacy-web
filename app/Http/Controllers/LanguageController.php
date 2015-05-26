@@ -9,12 +9,8 @@ use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Http\Controllers\Controller;
-use App\Traits\ExportableResourceTrait;
-use App\Traits\ImportableResourceTrait;
 
 class LanguageController extends Controller {
-
-    use ExportableResourceTrait, ImportableResourceTrait;
 
 	/**
 	 * Display a listing of the resource.
@@ -233,7 +229,7 @@ class LanguageController extends Controller {
             $formatted[] = $item->toArray();
         }
 
-        return static::exportToFormat($formatted, $format, false);
+        return Language::exportToFormat($formatted, $format, false);
     }
 
     public function import($data)

@@ -3,11 +3,24 @@
 use App\Traits\ExportableResourceTrait;
 use App\Traits\ImportableResourceTrait;
 use URL;
-use Illuminate\Database\Eloquent\Model;
 
-class Language extends Model {
+class Language extends BaseResource {
 
     use ExportableResourceTrait, ImportableResourceTrait;
+
+    /**
+     * Properties with alternate spellings.
+     *
+     * @var array
+     */
+    public $altSpellings    = ['name'];
+
+    /**
+     * JSONable properties.
+     *
+     * @var array
+     */
+    public $jsonObjects = ['params'];
 
     /**
      * Validation rules.
@@ -32,41 +45,25 @@ class Language extends Model {
      * Shortcut to retrieve language name.
      *
      * @return string
-     *
-     * @deprecated
      */
     public function getName() {
-        return $this->name;
+        return parent::getMainAlt('name');
     }
 
-    /**
-     * @param $name
-     * @return mixed
-     *
-     * @deprecated
-     */
     public function setName($name) {
-        $this->name = $name;
-        return true;
+        return parent::setMainAlt('name', $name);
     }
 
-    /**
-     * @param bool $toArray
-     * @return mixed
-     *
-     * @deprecated
-     */
     public function getAltNames($toArray = false) {
-        return $toArray ? explode(', ', $this->alt) : $this->alt;
+        return parent::getOtherAlts('name', $toArray);
     }
 
     public function setAltName($name) {
-        $this->alt .= ', '. $name;
-        return true;
+        return parent::setOtherAlt('name', $name);
     }
 
     public function removeAltName($name) {
-        return false;
+        return parent::unsetOtherAlt('name', $name);
     }
 
     public function getDescription() {

@@ -24,11 +24,11 @@
 		</form>
 
 		<form class="form edit" method="post" action="/import">
-		    <textarea placeholder="Or paste plain text here (still YAML)"></textarea><br />
+		    <textarea name="data" placeholder="Or paste plain text here (still YAML)"></textarea><br />
 
 		    <select name="resource">
-		        <option value="def" selected>Definitions</option>
-		        <option value="lang">Languages</option>
+		        <option value="definition">Definitions</option>
+		        <option value="language" selected>Languages</option>
 		    </select>
 
 		    <input type="submit" value="Send plain text" />

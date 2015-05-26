@@ -7,7 +7,23 @@ Di Nkɔmɔ is a multilingual dictionary focused on indigenous languages from aro
 Todos
 ---
 
-Dependencies
+Pushing to production
+===
+Optimize autoloader using `composer dump-autoload --optimize`
+
+Dev environment
+===
+Pull the documents (TODO: double check commands)
+
+    git clone https://bitbucket.org/frnkly/dinkomo.git
+    cd dinkomo
+
+Install dependencies (TODO: double check cmmands)
+
+    composer update
+    npm install
+
+Requires
 ---
 - PHP 5.4.0+
 - MySQL 5.5+
