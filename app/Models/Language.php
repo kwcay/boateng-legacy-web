@@ -1,23 +1,23 @@
 <?php namespace App\Models;
 
+use URL;
+
 use App\Traits\ExportableResourceTrait;
 use App\Traits\ImportableResourceTrait;
-use URL;
 use Illuminate\Database\Eloquent\Model;
 
-class Language extends Model {
-
+class Language extends Model
+{
     use ExportableResourceTrait, ImportableResourceTrait;
 
     /**
-     * Validation rules.
-     *
-     * @var array
+     * @var array   Validation rules.
      */
     public $validationRules  = [
-        'code'      => 'sometimes|required|min:3|max:7|unique:languages',
+        'code'      => 'required|min:3|max:7|unique:languages',
         'parent'    => 'min:3|max:7',
         'name'      => 'required|min:2',
+        'alt_names' => 'min:2',
         'countries' => 'array'
     ];
 
@@ -26,7 +26,7 @@ class Language extends Model {
      *
      * @var array
      */
-    public $fillable    = ['code'];
+    public $fillable    = ['code', 'parent', 'name', 'alt_names'];
 
     /**
      * Shortcut to retrieve language name.

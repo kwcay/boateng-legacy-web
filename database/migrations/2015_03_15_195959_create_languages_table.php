@@ -19,7 +19,8 @@ class CreateLanguagesTable extends Migration {
 			$table->increments('id')->length(6)->unsigned();
             $table->string('code', 7)->unique();
             $table->string('parent', 7);
-            $table->string('name', 300);
+            $table->string('name', 100);
+            $table->string('alt_names', 300);
             $table->string('countries', 60);
             $table->text('desc');
             $table->text('params');

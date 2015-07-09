@@ -1,11 +1,11 @@
 <?php
 
-// Simple pages
+// General pages
 Route::get('/',         'SimplePage@home');
-Route::get('about',     'SimplePage@about');
-Route::get('stats',     'SimplePage@stats');
-Route::get('api',       'SimplePage@api');
-Route::get('hello',     'SimplePage@welcome');
+Route::get('/about',     'SimplePage@about');
+Route::get('/stats',     'SimplePage@stats');
+Route::get('/api',       'SimplePage@api');
+Route::get('/hello',     'SimplePage@welcome');
 
 // Resources
 Route::get('/language/search/{query?}', 'LanguageController@search');
