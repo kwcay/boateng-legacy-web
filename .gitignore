@@ -1,8 +1,18 @@
-!/vendor/autoload.php
+# Ignore vendor directory.
+/vendor
+
+# Ignore npm modules.
 /node_modules
+
+# Ignore Homestead.yaml file (keep only the generated Vagrantfile).
+Homestead.yaml
+
+# Ignore the Laravel environment variables.
 .env
-.htaccess
+
+# Ignore phpStorm project files.
 .idea
+
+# Ignore OSX & Windows generated files.
 Desktop.ini
-error_log
 Thumbs.db
