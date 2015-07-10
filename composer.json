@@ -5,7 +5,7 @@
 	"license": "Private",
 	"type": "project",
 	"require": {
-		"laravel/framework": "5.0.*",
+		"laravel/framework": "5.1.*",
 		"hashids/hashids": "1.0.*",
 		"laravelcollective/html": "~5.0",
 		"symfony/yaml": "~2.6"
