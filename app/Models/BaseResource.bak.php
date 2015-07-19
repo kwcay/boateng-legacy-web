@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Base class for Di Nkomo objects.
  */
-abstract class BaseResource extends Model {
-
+abstract class BaseResource extends Model
+{
     /**
      * Alternate spellings
      */

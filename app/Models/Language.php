@@ -2,13 +2,71 @@
 
 use URL;
 
-use App\Traits\ExportableResourceTrait;
-use App\Traits\ImportableResourceTrait;
+use App\Traits\ValidatableResourceTrait as Validatable;
+use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+use App\Traits\ExportableResourceTrait as Exportable;
+use App\Traits\ImportableResourceTrait as Importable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Language extends Model
 {
-    use ExportableResourceTrait, ImportableResourceTrait;
+    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes;
+
+    /**
+     * @var int     Internal identifier.
+     */
+    public $id = 0;
+
+    /**
+     * @var string
+     */
+    public $code = '';
+
+    /**
+     * @var string
+     */
+    public $parent = '';
+
+    /**
+     * @var string
+     */
+    public $name = '';
+
+    /**
+     * @var string
+     */
+    public $alt_names = '';
+
+    /**
+     * @var string
+     */
+    public $countries = '';
+
+    /**
+     * @var string
+     */
+    public $desc = '';
+
+    /**
+     * @var int
+     */
+    public $state = -1;
+
+    /**
+     * @var string
+     */
+    public $params = '';
+
+    /**
+     * @var array   Attributes which aren't mass-assignable.
+     */
+    protected $guarded = ['id'];
+
+    /**
+     * @var array   Attributes that should be mutated to dates.
+     */
+    protected $dates = ['deleted_at'];
 
     /**
      * @var array   Validation rules.
@@ -17,16 +75,8 @@ class Language extends Model
         'code'      => 'required|min:3|max:7|unique:languages',
         'parent'    => 'min:3|max:7',
         'name'      => 'required|min:2',
-        'alt_names' => 'min:2',
-        'countries' => 'array'
+        'alt_names' => 'min:2'
     ];
-
-    /**
-     * Allow only the code field to be populated on instantiation.
-     *
-     * @var array
-     */
-    public $fillable    = ['code', 'parent', 'name', 'alt_names'];
 
     public function getDescription() {
         return strlen($this->desc) ? preg_replace('/(\r\n|\n|\r)/', '<br />', $this->desc) : '';

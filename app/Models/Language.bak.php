@@ -4,7 +4,7 @@ use App\Traits\ExportableResourceTrait;
 use App\Traits\ImportableResourceTrait;
 use URL;
 
-class Language extends BaseResource {
+class LanguageBACKUP extends BaseResource {
 
     use ExportableResourceTrait, ImportableResourceTrait;
 

@@ -3,7 +3,7 @@
 use URL;
 use App\Models\BaseResource as Res;
 
-class Definition extends Res {
+class DefinitionBACKUP extends Res {
 
     /**
      *

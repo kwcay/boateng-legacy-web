@@ -3,8 +3,8 @@
 use Symfony\Component\Yaml\Yaml;
 use Illuminate\Http\JsonResponse;
 
-trait ExportableResourceTrait {
-
+trait ExportableResourceTrait
+{
     /**
      * @param $data
      * @param string $format
