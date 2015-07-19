@@ -1,7 +1,7 @@
 <?php
 
 // General pages
-Route::get('/',         'SimplePage@home');
+Route::get('/',          'SimplePage@home');
 Route::get('/about',     'SimplePage@about');
 Route::get('/stats',     'SimplePage@stats');
 Route::get('/api',       'SimplePage@api');
@@ -23,8 +23,8 @@ Route::controllers([
 ]);
 
 // Admin stuff
-//Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
-Route::group(['prefix' => 'admin'], function() {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
+//Route::group(['prefix' => 'admin'], function() {
 
     Route::get('/', 'AdminController@index');
 
