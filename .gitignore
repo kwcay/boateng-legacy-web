@@ -2,7 +2,7 @@
 /vendor
 
 # Ignore Node package manager files.
-#/node_modules
+/node_modules
 npm-debug.log
 
 # Ignore Homestead.yaml file (keep only the generated Vagrantfile).
