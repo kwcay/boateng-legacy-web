@@ -23,8 +23,10 @@ class CreateLanguagesTable extends Migration {
             $table->string('alt_names', 300);
             $table->string('countries', 60);
             $table->text('desc');
+            $table->tinyInteger('state');
             $table->text('params');
 			$table->timestamps();
+            $table->softDeletes();
 		});
 	}
 
