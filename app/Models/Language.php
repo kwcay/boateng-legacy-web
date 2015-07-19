@@ -28,59 +28,30 @@ class Language extends Model
      */
     public $fillable    = ['code', 'parent', 'name', 'alt_names'];
 
-    /**
-     * Shortcut to retrieve language name.
-     *
-     * @return string
-     *
-     * @deprecated
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    /**
-     * @param $name
-     * @return mixed
-     *
-     * @deprecated
-     */
-    public function setName($name) {
-        $this->name = $name;
-        return true;
-    }
-
-    /**
-     * @param bool $toArray
-     * @return mixed
-     *
-     * @deprecated
-     */
-    public function getAltNames($toArray = false) {
-        return $toArray ? explode(', ', $this->alt) : $this->alt;
-    }
-
-    public function setAltName($name) {
-        $this->alt .= ', '. $name;
-        return true;
-    }
-
-    public function removeAltName($name) {
-        return false;
-    }
-
     public function getDescription() {
         return strlen($this->desc) ? preg_replace('/(\r\n|\n|\r)/', '<br />', $this->desc) : '';
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     public static function findByCode($code) {
         return self::where(['code' => $code])->first();
     }
 
+    /**
+     * @param bool $full
+     * @return string
+     */
     public function getUri($full = true) {
-        return $full ? URL::to('/'. $this->code) : $this->code;
+        return route('language', ['code' => $this->code], $full);
     }
 
+    /**
+     * @param bool $full
+     * @return string
+     */
     public function getEditUri($full = true) {
         return route('language.edit', ['code' => $this->code], $full);
     }
@@ -91,7 +62,7 @@ class Language extends Model
      * @param string $locale    Language in which to retrieve country names
      * @return array            List of countries
      */
-    public function getCountryList($locale = 'en')
+    public static function getCountryList($locale = 'en')
     {
         $locale = preg_replace('/[^a-z_]/', '', $locale);
         $list   = file_exists(base_path() .'/resources/countries/'. $locale .'.php') ?
@@ -100,5 +71,5 @@ class Language extends Model
 
         return $list;
     }
-
 }
+
