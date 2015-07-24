@@ -20,9 +20,9 @@ class CreateDefinitionsTable extends Migration {
             $table->tinyInteger('type')->unsigned();
             $table->string('data', 200);
             $table->string('alt_data', 400);
-            $table->string('language', 70);
-            $table->text('translation');
-            $table->text('meaning');
+            $table->string('languages', 70);
+            $table->text('translations');
+            $table->text('meanings');
             $table->string('source', 40);
             $table->text('tags');
             $table->tinyInteger('state');
