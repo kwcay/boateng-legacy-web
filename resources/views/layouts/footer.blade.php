@@ -17,7 +17,7 @@
 		<small>
             &copy; {{ date('Y') }}
             &nbsp;
-			<a href="{{ URL::to('about') }}">Product of Ghana <span class="fa fa-heart fa-fw"></span></a>
+			<a href="{{ URL::to('about') }}">A Ghanaian product :)</a>
 		</small>
 	</div>
 </footer>

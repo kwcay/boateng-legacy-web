@@ -1,12 +1,12 @@
-<?php
-namespace App\Http\Controllers;
-use \App\Models\Language;
-use \App\Models\Definition;
+<?php namespace App\Http\Controllers;
+
+use App\Models\Language;
+use App\Models\Definition;
 
 /**
  *
  */
-class SimplePage extends Controller
+class SimplePageController extends Controller
 {
 	/**
 	 * Displays main landing page.

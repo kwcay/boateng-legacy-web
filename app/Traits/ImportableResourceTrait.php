@@ -1,36 +1,36 @@
 <?php namespace App\Traits;
 
-use Symfony\Component\Yaml\Yaml;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 
 trait ImportableResourceTrait
 {
-    public static function importFromFormat($data, $format)
+    public static function import(array $data)
     {
-        switch ($format)
+        $results = [
+            'total' => count($data),
+            'imported' => 0,
+            'skipped' => 0
+        ];
+
+        foreach ($data as $resource)
         {
-            case 'json':
-                $result = static::importFromJson($data);
-                break;
+            // Performance check.
+            if (!$resource instanceof static) {
+                $results['skipped']++;
+                continue;
+            }
 
-            case 'yml':
-            case 'yaml':
-                $result = static::importFromYaml($data);
-                break;
+            // Validate.
+            $test = static::validate($resource->attributesToArray());
+            if ($test->fails()) {
+                $results['skipped']++;
+                continue;
+            }
 
-            default:
-                throw new \Exception('Unsupported import format.');
+            // Import resource.
+            $resource->save() ? $results['imported']++ : $results['skipped']++;
         }
 
-        return $result;
-    }
-
-    public static function importFromJson($data) {
-        return JsonResponse::create($data)->getData();
-    }
-
-    public static function importFromYaml($data) {
-        return Yaml::parse($data);
+        return $results;
     }
 }
+

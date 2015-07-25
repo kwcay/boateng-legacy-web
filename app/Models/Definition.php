@@ -61,7 +61,7 @@ class Definition extends Model
     /**
      * @var int     State of data.
      */
-    public $state = -1;
+    public $state = 1;
 
     /**
      * @var string  JSON-encoded parameters.
@@ -82,8 +82,8 @@ class Definition extends Model
      * @var array  Array to help validate input data
      */
     public $validationRules = [
-        'word'      => 'required|min:2',
-        'language'  => 'required|min:2|regex:/^([a-z, ]+)$/',
+        'data'      => 'required|min:2',
+        'languages' => 'required|min:2|regex:/^([a-z, ]+)$/',
 //        'type'      => 'in:adj,adv,conn,ex,pre,pro,n,v'
     ];
 

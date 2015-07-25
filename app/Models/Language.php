@@ -51,7 +51,7 @@ class Language extends Model
     /**
      * @var int
      */
-    public $state = -1;
+    public $state = 1;
 
     /**
      * @var string
