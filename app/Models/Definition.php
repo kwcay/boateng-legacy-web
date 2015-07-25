@@ -88,6 +88,11 @@ class Definition extends Model
     ];
 
     /**
+     * @var array
+     */
+    public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
+
+    /**
      * See: http://www.edb.utexas.edu/minliu/pbl/ESOL/help/libry/speech.htm
      * See: http://www.aims.edu/student/online-writing-lab/grammar/parts-of-speech
      *

@@ -74,6 +74,40 @@ class DataController extends Controller
         return redirect(route('admin.import'))->withMessages([$message]);
     }
 
+    public function export($resourceType, $format = 'yaml')
+    {
+        // Performance check.
+        if (!in_array($resourceType, ['language', 'definition'])) {
+            return redirect(route('admin.export'))->withMessages(['Invalid resource type.']);
+        }
+
+        // Retrieve data.
+        $className = 'App\\Models\\'. ucfirst($resourceType);
+        $data = $className::all();
+
+        // Double-check data format.
+        if (!in_array($format, $className::getExportFormats())) {
+            return redirect(route('admin.export'))->withMessages(['Invalid format.']);
+        }
+
+        // Start building export data.
+        $export = [
+            'meta' => [
+                'type' => $resourceType,
+                'total' => count($data)
+            ],
+            'data' => []
+        ];
+
+        foreach ($data as $resource) {
+            $export['data'][] = Arr::except($resource->attributesToArray(), ['id']);
+        }
+
+        $export['meta']['checksum'] = md5(json_encode($export['data']));
+
+        die($className::export($export, $format));
+    }
+
     private function getDataFromRequest()
     {
         // Retrieve raw data from file.

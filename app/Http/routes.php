@@ -46,10 +46,7 @@ Route::group(['prefix' => 'admin'], function()
     Route::post('/import',  ['as' => 'admin.import.action', 'uses' => 'DataController@import']);
 
     // Resource export
-    Route::get('/export/language/{format?}',    ['as' => 'export.language', 'uses' => 'LanguageController@export']);
-    Route::get('/export/definition/{format?}',  ['as' => 'export.definition', 'uses' => 'DefinitionController@export']);
-    Route::get('/export/user/{format?}',        ['as' => 'export.user', 'uses' => 'UserController@export']);
-
+    Route::get('/export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'DataController@export']);
 });
 
 // Dictionary pages

@@ -10,8 +10,8 @@ use App\Models\Language;
 use App\Models\Definition;
 use App\Http\Controllers\Controller;
 
-class LanguageController extends Controller {
-
+class LanguageController extends Controller
+{
 	/**
 	 * Display a listing of the resource.
 	 *
