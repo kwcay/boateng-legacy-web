@@ -4,6 +4,12 @@ use Symfony\Component\Yaml\Yaml;
 
 trait ExportableResourceTrait
 {
+    public static $contentTypes = [
+        'json' => 'application/json',
+        'yaml' => 'text/x-yaml',
+        'yml' => 'text/x-yaml'
+    ];
+
     /**
      * @param $data
      * @param string $format
@@ -33,6 +39,15 @@ trait ExportableResourceTrait
     public static function getExportFormats() {
         $static = new static;
         return isset($static->exportFormats) ? $static->exportFormats : ['yml', 'yaml', 'json'];
+    }
+
+    public static function getContentType($format) {
+        return isset(static::$contentTypes[$format]) ? static::$contentTypes[$format] : 'text/plain';
+    }
+
+    public static function getExportFileName($format = '') {
+        $className = explode('\\', get_called_class());
+        return 'Di Nkomo_'. date('Y-m-d') .'_'. array_pop($className) .'s'. (strlen($format) ? '.'. $format : '');
     }
 }
 

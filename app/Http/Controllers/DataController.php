@@ -7,6 +7,7 @@ use App\Models\Language;
 use App\Models\Definition;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Symfony\Component\Yaml\Yaml;
 use App\Http\Controllers\Controller;
 
@@ -28,10 +29,10 @@ class DataController extends Controller
 
     private $error = '';
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, Response $response)
     {
-        //
         $this->request = $request;
+        $this->response = $response;
 
         // Define the directory to upload data.
         $this->dataPath = storage_path() . DIRECTORY_SEPARATOR .'app'. DIRECTORY_SEPARATOR .'data';
@@ -83,14 +84,14 @@ class DataController extends Controller
 
         // Retrieve data.
         $className = 'App\\Models\\'. ucfirst($resourceType);
-        $data = $className::all();
 
         // Double-check data format.
         if (!in_array($format, $className::getExportFormats())) {
             return redirect(route('admin.export'))->withMessages(['Invalid format.']);
         }
 
-        // Start building export data.
+        // Format the data to be exported.
+        $data = $className::all();
         $export = [
             'meta' => [
                 'type' => $resourceType,
@@ -105,7 +106,19 @@ class DataController extends Controller
 
         $export['meta']['checksum'] = md5(json_encode($export['data']));
 
-        die($className::export($export, $format));
+        // Disable compression.
+        @\ini_set('zlib.output_compression', 'Off');
+
+        // Set some cache-busting headers, set the response content, and send everything to client.
+        return $this->response
+            ->header('Pragma', 'public')
+            ->header('Expires', '-1')
+            ->header('Cache-Control', 'public, must-revalidate, post-check=0, pre-check=0')
+            ->header('Content-Type', $className::getContentType($format))
+            ->header('Content-Disposition',
+                $this->response->headers->makeDisposition('attachment', $className::getExportFileName($format)))
+            ->setContent($className::export($export, $format))
+            ->send();
     }
 
     private function getDataFromRequest()
