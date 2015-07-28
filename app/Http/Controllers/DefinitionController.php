@@ -282,27 +282,27 @@ class DefinitionController extends Controller {
         }
 
         // Query the database
-        $defs = Definition::where('word', 'LIKE', '%'. $query .'%')
-            ->orWhere('translation', 'LIKE', '%'. $query .'%')
-            ->orWhere('meaning', 'LIKE', '%'. $query .'%')->get();
+        $defs = Definition::where('data', 'LIKE', '%'. $query .'%')
+            ->orWhere('translations', 'LIKE', '%'. $query .'%')
+            ->orWhere('meanings', 'LIKE', '%'. $query .'%')->get();
 
         // Format results
         $results  = [];
         if (count($defs)) {
             foreach ($defs as $def) {
                 $results[]  = [
-                    'word'          => $def->getWord(),
-                    'type'          => ($def->getParam('type') .'.'),
-                    'alt'           => $def->getAltWords(true),
-                    'translation'   => ['en' => $def->getTranslation('en')],
-                    'meaning'       => ['en' => $def->getMeaning('en')],
+                    'data'          => $def->getAttribute('data'),
+                    'type'          => $def->getParam('type'),
+                    'alt'           => $def->alt_data,
+                    'translations'  => ['en' => $def->getTranslation('en')],
+                    'meanings'      => ['en' => $def->getMeaning('en')],
                     'language'      => [
-                        'code'  => $def->getMainLanguage(true),
-                        'name'  => $def->getMainLanguage(),
-                        'uri'   => URL::to($def->getMainLanguage(true)),
-                        'all'   => $def->language
+                        'code'  => $def->mainLanguage->getAttribute('code'),
+                        'name'  => $def->mainLanguage->getAttribute('name'),
+                        'uri'   => $def->mainLanguage->getUri(),
+                        'all'   => $def->languages
                     ],
-                    'uri'           => $def->getWordUri()
+                    'uri'           => $def->getUri()
                 ];
             }
         }

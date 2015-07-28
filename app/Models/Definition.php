@@ -2,6 +2,8 @@
 
 use URL;
 
+use App\Models\Language;
+use Illuminate\Support\Arr;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 use App\Traits\ExportableResourceTrait as Exportable;
@@ -78,6 +80,12 @@ class Definition extends Model
      */
     protected $dates = ['deleted_at'];
 
+    protected $casts = [
+        'translations' => 'array',
+        'meanings' => 'array',
+        'params' => 'array'
+    ];
+
     /**
      * @var array  Array to help validate input data
      */
@@ -109,12 +117,35 @@ class Definition extends Model
         'v'     => 'verb',
     ];
 
-    public function getUri($full = true) {
-        return route('definition.show', ['id' => $this->getId()], $full);
+    public function getLanguagesAttribute($str) {
+        return explode(',', $str);
     }
 
-    public function getWordUri($full = true) {
-        $path   = $this->getMainLanguage(true) .'/'. str_replace(' ', '_', $this->getWord());
+    public function getMainLanguageAttribute($str)
+    {
+        static $lang = false;
+
+        if ($lang === false) {
+            $lang = Language::findByCode($this->getAttribute('languages')[0]);
+        }
+
+        return $lang;
+    }
+
+    public function getTranslation($lang = 'en') {
+        return Arr::get($this->getAttribute('translations'), $lang, '');
+    }
+
+    public function getMeaning($lang = 'en') {
+        return Arr::get($this->getAttribute('meanings'), $lang, '');
+    }
+
+    public function getParam($key, $default = null) {
+        return Arr::get($this->getAttribute('params'), $key, $default);
+    }
+
+    public function getUri($full = true) {
+        $path   = $this->mainLanguage->getAttribute('code') .'/'. str_replace(' ', '_', $this->getAttribute('data'));
         return $full ? URL::to($path) : $path;
     }
 

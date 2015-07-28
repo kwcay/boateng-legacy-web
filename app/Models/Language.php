@@ -95,7 +95,7 @@ class Language extends Model
      * @return string
      */
     public function getUri($full = true) {
-        return route('language', ['code' => $this->code], $full);
+        return url($this->getAttribute('code'));
     }
 
     /**

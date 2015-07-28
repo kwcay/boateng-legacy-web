@@ -6,6 +6,10 @@ var Forms =
      */
     _def: {},
 
+    getDefinitionForm: function(name) {
+        return this._def[name]
+    },
+
     /**
      * Prepares a language search input for AJAX calls.
      *
@@ -78,26 +82,81 @@ var Forms =
     {
         // Retrieve form elements.
         name = name || 'search';
-        console.log(typeof document[name]);
-        if (!document[name] || !resultsDiv) return;
-        var resultsDiv = options.results || $('#results'),
-            langCode = options.langCode || false,
-            langName = options.langName || false,
-            clearInput = options.clear || $('input[name=clear]'),
-            form = document[name];
+        options = options || {};
 
         this._def[name] = {
             form: $(document[name]),
             results: options.results || $('#results'),
             query: options.query || $(document[name].q),
+            clear:  options.clear || $('input[name=clear]'),
             language: {
                 code: options.langCode || false,
                 name: options.langName || 'another language'
             }
         };
 
-        // TODO: document onSubmit function.
-        $(form).submit();
+        // Form submit function.
+        $(document[name]).submit([this._def[name]], function(event)
+        {
+            event.preventDefault();
+            var form = event.data[0];
+
+            // Performance check
+            var query	= form.query.val().trim();
+            if (query.length < 2) {
+                form.query.focus();
+                return false;
+            }
+
+            // Display loading message
+            form.results.html('<div class="center">looking up '+ query +'...</div>');
+
+            // Start ajax request
+            $.ajax({
+                url: App.root +'/definition/search/' + App.urlencode(query),
+                type: 'POST',
+                error: function(xhr, status, error) {
+                    App.log('XHR error on search form: '+ xhr.status +' ('+ error +')');
+                    form.results.html('<div class="center">Seems like we ran into a snag <span class="fa fa-frown-o"></span> try again?</div>');
+                },
+                success: function(obj)
+                {
+                    if (obj.results.definitions.length > 0)
+                    {
+                        var html	=
+                            '<div class="center">'+
+                            'we found <em>'+ obj.results.definitions.length +'</em> definitions'+
+                            ' for <i>'+ obj.results.query +'</i>.'+
+                            '</div><ol>';
+
+                        $.each(obj.results.definitions, function(i, def) {
+                            html +=
+                                '<li>'+
+                                '<a href="'+ def.uri +'">'+ def.data +'</a>'+
+                                ' <small>('+ def.type +')</small>'+
+                                ' is a word that means <i>'+ def.translations.en +'</i> in '+
+                                ' <a href="'+ def.language.uri +'">'+ def.language.name +'</a>'+
+                                '</li>';
+                        });
+
+                        form.results.html(html +'</ol>');
+                    }
+
+                    else {
+                        form.results.html('<div class="center">we couldn\'t find anything matching that query <span class="fa fa-frown-o"></span></div>');
+                    }
+                }
+            });
+
+            //return false;
+        });
+
+        // Form clearing.
+        //this._def[name].clear.click(function() {
+        //    form.q.value	= '';
+        //    resultsDiv.html('<div class="center">Use this <em>&#10548;</em> to lookup words<br />in a another language.</div>');
+        //    form.q.focus();
+        //});
     },
 
     /**
@@ -166,7 +225,7 @@ var Forms =
                     {
                         html +=
                             '<li>'+
-                                '<a href="'+ def.uri +'">'+ def.word +'</a>'+
+                                '<a href="'+ def.uri +'">'+ def.data +'</a>'+
                                 ' <small>('+ def.type +')</small>'+
                                 ' is a word that means <i>'+ def.translation.en +'</i> in '+
                                 ' <a href="'+ def.language.uri +'">'+ def.language.name +'</a>'+
