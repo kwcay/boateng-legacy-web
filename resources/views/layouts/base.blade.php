@@ -2,10 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-
-	@section('head.title')
-		<title>Di Nkomo: the book of native tongues.</title>
-	@show
+    <title>@yield('title', 'Di Nkomo: the book of native tongues.')</title>
 
 	@section('head')
         <base href="{{ Request::root() }}/">

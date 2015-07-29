@@ -12,15 +12,29 @@ use App\Http\Controllers\Controller;
 
 class LanguageController extends Controller
 {
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		abort(501, 'Not Implemented');
-	}
+    /**
+     * Display the language page.
+     *
+     * @param string $id    Either the ISO 639-3 language code or language ID.
+     * @return Response
+     */
+    public function show($id)
+    {
+        // Retrieve the language object.
+        if (!$lang = $this->getLanguage($id)) {
+            abort(404, 'Can\'t find that languge :(');
+        }
+
+        // Redirect if accessing language directly.
+        if (Request::path() != $lang->getUri(false)) {
+            return redirect($lang->getUri(false));
+        }
+
+        return view('pages.lang', [
+            'lang' => $lang,
+            'random' => Definition::random($lang->code)
+        ]);
+    }
 
 	/**
 	 * Displays the form to add a new language.
@@ -67,30 +81,6 @@ class LanguageController extends Controller
         $data['code'] = isset($data['code']) ? $data['code'] : '';
 
         return $this->save(new Language($data), $data, route('language.create', [], false));
-	}
-
-	/**
-	 * Display the language page.
-	 *
-     * @param string $id    Either the ISO 639-3 language code or language ID.
-	 * @return Response
-	 */
-	public function show($id)
-	{
-        // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
-            abort(404, 'Can\'t find that languge :(');
-        }
-
-        // Redirect if accessing language directly.
-        if (Request::path() != $lang->getUri(false)) {
-            return Redirect::to($lang->getUri(false));
-        }
-
-        return view('pages.lang', [
-            'lang' => $lang,
-            'random' => Definition::where('language', 'LIKE', '%'. $lang->code .'%')->orderByRaw('RAND()')->first()
-        ]);
 	}
 
 	/**
@@ -215,33 +205,11 @@ class LanguageController extends Controller
 
         return $this->send(['query' => $query, 'languages' => $results]);
     }
-
-    /**
-     * @param $format
-     * @return mixed
-     */
-    public static function export($format = 'yaml')
-    {
-        $data = Language::all();
-        $formatted = [];
-
-        foreach ($data as $item) {
-            $formatted[] = $item->toArray();
-        }
-
-        return Language::exportToFormat($formatted, $format, false);
-    }
-
-    public function import($data)
-    {
-
-    }
-
     /**
      * Shortcut to retrieve a language object.
      *
-     * @param string $id    Either the ISO 639-3 language code or language ID.
-     * @return mixed        Language object or NULL.
+     * @param string $id        Either the ISO 639-3 language code or language ID.
+     * @return object|null
      */
     private function getLanguage($id)
     {
@@ -254,5 +222,5 @@ class LanguageController extends Controller
 
         return $lang;
     }
-
 }
+

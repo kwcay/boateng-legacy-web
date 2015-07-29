@@ -1,8 +1,6 @@
 @extends('layouts.base')
 
-@section('head.title')
-	<title>Di Nkomo: in numbers.</title>
-@stop
+@section('title', 'Di Nkomo: in numbers.')
 
 @section('body')
 	@include('layouts.header')

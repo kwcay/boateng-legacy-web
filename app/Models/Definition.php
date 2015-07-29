@@ -16,61 +16,6 @@ class Definition extends Model
     use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes;
 
     /**
-     * @var int     Internal identifier.
-     */
-    public $id = 0;
-
-    /**
-     * @var int     Data type.
-     */
-    public $type = 0;
-
-    /**
-     * @var string  Data.
-     */
-    public $data = '';
-
-    /**
-     * @var string  Alternate forms of the data.
-     */
-    public $alt_data = '';
-
-    /**
-     * @var string  Comma-separated languages.
-     */
-    public $languages = '';
-
-    /**
-     * @var string  JSON-encoded translations.
-     */
-    public $translations = '';
-
-    /**
-     * @var string  JSON-encoded meanings.
-     */
-    public $meanings = '';
-
-    /**
-     * @var string  Source of data.
-     */
-    public $source = '';
-
-    /**
-     * @var string  Tags.
-     */
-    public $tags = '';
-
-    /**
-     * @var int     State of data.
-     */
-    public $state = 1;
-
-    /**
-     * @var string  JSON-encoded parameters.
-     */
-    public $params = '';
-
-    /**
      * @var array   Attributes which aren't mass-assignable.
      */
     protected $guarded = ['id'];
@@ -132,25 +77,88 @@ class Definition extends Model
         return $lang;
     }
 
-    public function getTranslation($lang = 'en') {
-        return Arr::get($this->getAttribute('translations'), $lang, '');
-    }
-
-    public function getMeaning($lang = 'en') {
-        return Arr::get($this->getAttribute('meanings'), $lang, '');
-    }
-
-    public function getParam($key, $default = null) {
-        return Arr::get($this->getAttribute('params'), $key, $default);
-    }
-
+    /**
+     * @param bool $full
+     * @return string
+     */
     public function getUri($full = true) {
         $path   = $this->mainLanguage->getAttribute('code') .'/'. str_replace(' ', '_', $this->getAttribute('data'));
         return $full ? URL::to($path) : $path;
     }
 
+    /**
+     * @param bool $full
+     * @return string
+     */
     public function getEditUri($full = true) {
         return route('definition.edit', ['id' => $this->getId()], $full);
+    }
+
+    /**
+     * @param string $lang
+     * @return mixed
+     */
+    public static function random($lang = '') {
+        return strlen($lang) ?
+            static::where('languages', 'LIKE', '%'. $lang .'%')->orderByRaw('RAND()')->first() :
+            static::orderByRaw('RAND()')->first();
+    }
+
+    //
+    // Methods dealing with translations.
+    //
+
+    public function hasTranslation($lang) {
+        return Arr::has($this->translations, $lang);
+    }
+
+    public function getTranslation($lang = 'en') {
+        return Arr::get($this->translations, $lang, '');
+    }
+
+    public function setTranslation($lang, $translation)
+    {
+        $translations = $this->translations;
+        Arr::set($translations, $lang, $translation);
+        $this->translations = $translations;
+    }
+
+    //
+    // Methods dealing with detailed meanings.
+    //
+
+    public function hasMeaning($lang) {
+        return Arr::has($this->meanings, $lang);
+    }
+
+    public function getMeaning($lang = 'en') {
+        return Arr::get($this->meanings, $lang, '');
+    }
+
+    public function setMeaning($lang, $meaning)
+    {
+        $meanings = $this->translations;
+        Arr::set($meanings, $lang, $meaning);
+        $this->translations = $meanings;
+    }
+
+    //
+    // Definition parameters.
+    //
+
+    public function hasParam($key) {
+        return Arr::has($this->params, $key);
+    }
+
+    public function getParam($key, $default = '') {
+        return Arr::get($this->params, $key, $default);
+    }
+
+    public function setParam($key, $value)
+    {
+        $params = $this->params;
+        Arr::set($params, $key, $value);
+        $this->params = $params;
     }
 }
 

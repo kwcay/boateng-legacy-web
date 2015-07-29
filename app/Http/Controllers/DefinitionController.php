@@ -9,23 +9,10 @@ use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Http\Controllers\Controller;
-use App\Traits\ExportableResourceTrait;
-use App\Traits\ImportableResourceTrait;
 use Illuminate\Http\Request;
 
-class DefinitionController extends Controller {
-
-    use ExportableResourceTrait, ImportableResourceTrait;
-
-	/**
-	 * Disable index view.
-	 *
-	 * @return Response
-	 */
-	public function index() {
-        return Redirect::to('');
-	}
-
+class DefinitionController extends Controller
+{
 	/**
 	 * Displays the form to add a new definition.
 	 *

@@ -1,8 +1,6 @@
 @extends('layouts.base')
 
-@section('head.title')
-	<title>{{ $query }} is a word in {{ $lang->getName() }} - Di Nkomo: the book of native tongues.</title>
-@stop
+@section('title', '[QUERY] is a word in [LANG] - Di Nkomo: the book of native tongues.')
 
 @section('body')
 	@include('layouts.header')

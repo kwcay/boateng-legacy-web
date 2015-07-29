@@ -3,7 +3,7 @@
 // General pages.
 Route::get('/',          'SimplePageController@home');
 Route::get('/about',     'SimplePageController@about');
-Route::get('/stats',     'SimplePageController@stats');
+Route::get('/in-numbers',   ['as' => 'stats', 'uses' => 'SimplePageController@stats']);
 Route::get('/api',       'SimplePageController@api');
 Route::get('/hello',     'SimplePageController@welcome');
 
@@ -17,12 +17,12 @@ Route::get('signup',    ['as' => 'auth.register', 'uses' => 'Auth\AuthController
 Route::post('signup',   ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
 
 // Language endpoints.
-Route::resource('language',                 'LanguageController');
+Route::resource('language',                 'LanguageController', ['except' => ['index']]);
 Route::get('/language/search/{query?}',     'LanguageController@search');
 Route::post('/language/search/{query?}',    'LanguageController@search');
 
 // Definition endpoints.
-Route::resource('definition',               'DefinitionController');
+Route::resource('definition',               'DefinitionController', ['except' => ['index']]);
 Route::get('/definition/search/{query?}',   'DefinitionController@search');
 Route::post('/definition/search/{query?}',  'DefinitionController@search');
 
@@ -32,6 +32,11 @@ Route::controllers([
 //    'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
+
+// Redirects.
+Route::get('stats', function() {
+    return redirect(route('stats'));
+});
 
 // Admin stuff
 //Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()

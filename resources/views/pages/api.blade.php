@@ -1,8 +1,6 @@
 @extends('layouts.base')
 
-@section('head.title')
-	<title>Di Nkomo API</title>
-@stop
+@section('title', 'Di Nkomo API')
 
 @section('body')
 	@include('layouts.header')

@@ -15,7 +15,7 @@
 			<div class="container">
 				<input class="remove-btn-style" name="clear" type="button" value="&#10005;" />
 				<input name="q" type="text" placeholder="start here" value="{{ Input::get('q') }}" autocomplete="off" />
-				<input class="remove-btn-style" name="submit" type="submit" value="&#10163;" />
+				<input class="remove-btn-style" type="submit" value="&#10163;" />
 				<div class="clr"></div>
 			</div>
 		</form>
@@ -29,7 +29,7 @@
 	<script type="text/javascript">
 	Forms.setupDefinitionLookup('search');
     
-    $(document).ready(function() { $(document.search).submit(); });
+    //$(document).ready(function() { $(document.search).submit(); });
     
 	</script>
 

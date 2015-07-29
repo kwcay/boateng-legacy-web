@@ -2,6 +2,7 @@
 
 use URL;
 
+use Illuminate\Support\Arr;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 use App\Traits\ExportableResourceTrait as Exportable;
@@ -14,51 +15,6 @@ class Language extends Model
     use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes;
 
     /**
-     * @var int     Internal identifier.
-     */
-    public $id = 0;
-
-    /**
-     * @var string
-     */
-    public $code = '';
-
-    /**
-     * @var string
-     */
-    public $parent = '';
-
-    /**
-     * @var string
-     */
-    public $name = '';
-
-    /**
-     * @var string
-     */
-    public $alt_names = '';
-
-    /**
-     * @var string
-     */
-    public $countries = '';
-
-    /**
-     * @var string
-     */
-    public $desc = '';
-
-    /**
-     * @var int
-     */
-    public $state = 1;
-
-    /**
-     * @var string
-     */
-    public $params = '';
-
-    /**
      * @var array   Attributes which aren't mass-assignable.
      */
     protected $guarded = ['id'];
@@ -67,6 +23,13 @@ class Language extends Model
      * @var array   Attributes that should be mutated to dates.
      */
     protected $dates = ['deleted_at'];
+
+    /**
+     * @var array
+     */
+    protected $casts = [
+        'params' => 'array'
+    ];
 
     /**
      * @var array   Validation rules.
@@ -78,16 +41,16 @@ class Language extends Model
         'alt_names' => 'min:2'
     ];
 
-    public function getDescription() {
-        return strlen($this->desc) ? preg_replace('/(\r\n|\n|\r)/', '<br />', $this->desc) : '';
-    }
-
     /**
      * @param $code
      * @return mixed
      */
     public static function findByCode($code) {
-        return self::where(['code' => $code])->first();
+        return static::where(['code' => $code])->first();
+    }
+
+    public function getDescription() {
+        return strlen($this->desc) ? preg_replace('/(\r\n|\n|\r)/', '<br />', $this->desc) : '';
     }
 
     /**
@@ -95,7 +58,7 @@ class Language extends Model
      * @return string
      */
     public function getUri($full = true) {
-        return url($this->getAttribute('code'));
+        return $full ? url($this->code) : $this->code;
     }
 
     /**
@@ -120,6 +83,25 @@ class Language extends Model
             include base_path() .'/resources/countries/en.php';
 
         return $list;
+    }
+
+    //
+    // Definition parameters.
+    //
+
+    public function hasParam($key) {
+        return Arr::has($this->params, $key);
+    }
+
+    public function getParam($key, $default = '') {
+        return Arr::get($this->params, $key, $default);
+    }
+
+    public function setParam($key, $value)
+    {
+        $params = $this->params;
+        Arr::set($params, $key, $value);
+        $this->params = $params;
     }
 }
 
