@@ -1,8 +1,8 @@
 <footer>
     <div class="shortcuts-wrap">
         <div class="shortcuts collapsed">
-            <a title="Home" href="{{ URL::to('') }}" class="fa fa-home"></a>
-            <a title="Info" href="{{ URL::to('about') }}" class="fa fa-info"
+            <a title="Home" href="{{ route('home') }}" class="fa fa-home"></a>
+            <a title="Info" href="{{ route('about') }}" class="fa fa-info"
                 onclick="return App.openDialog('info');"></a>
             <a title="Login" href="{{ URL::to('login') }}" class="fa fa-unlock-alt"
                 onclick="return App.openDialog('login');"></a>
@@ -16,34 +16,40 @@
 	<div class="credits">
 		<small>
             &copy; {{ date('Y') }}
-            &nbsp;
-			<a href="{{ URL::to('about') }}">A Ghanaian product :)</a>
+            &nbsp;&ndash;&nbsp;
+			<a href="{{ route('about') }}">A Ghanaian product</a>
 		</small>
 	</div>
 </footer>
 
-<!-- Info dialog -->
+{{-- Info dialog --}}
 <div class="dialog info">
 	<div>
 		<a href="#" class="close">&#10005;</a>
+
 		<h1>What is this?</h1>
 		<div class="center" style="margin-bottom: 20px;">
-            This is a <em>multilingual dictionary</em> focused on <em>indigenous languages</em> from around the world. Or at least, that's what we're trying to make it. <a href="about">Find out more</a>.
+            This is a <em>multilingual dictionary</em> focused on <em>indigenous languages</em> from around the world.
+            Or at least, that's what we're trying to make it. <a href="{{ route('about') }}">Find out more</a>.
         </div>
+
         <div class="center">
-            There are over 7,000 languages spoken around the world today, and our web app is slowly growing to match that&mdash;one word at a time. <a href="stats">Check out the stats</a>.
+            There are over 7,000 languages spoken around the world today, and our web app is slowly growing to match
+            that&mdash;one word at a time. <a href="{{ route('stats') }}">Check out the stats</a>.
         </div>
+
 	</div>
 </div>
 
-<!-- Login form dialog -->
+{{-- Login form dialog --}}
 <div class="dialog login">
 	<div>
 		<a href="#" class="close">&#10005;</a>
+
 		<h1>Login</h1>
 		<div class="center">
-
 		    <br />
+
 		    <a href="#" class="fa fa-lg fa-fw fa-linkedin" onclick="return alert('To do: LinkedIn login')"></a>
 		    <a href="#" class="fa fa-lg fa-fw fa-github" onclick="return alert('To do: Github login')"></a>
 		    <a href="#" class="fa fa-lg fa-fw fa-reddit" onclick="return alert('To do: Reddit login')"></a>
@@ -63,19 +69,22 @@
 		        {!! Form::token() !!}
 		    </form>
 		</div>
+
 	</div>
 </div>
 
-<!-- Settings dialog -->
+{{-- Settings dialog --}}
 <div class="dialog settings">
 	<div>
 		<a href="#" class="close">&#10005;</a>
+
 		<h1>Settings</h1>
 		<div>Target language, ...</div>
+
 	</div>
 </div>
 
-<!-- Helper keyboard -->
+{{-- Helper keyboard --}}
 <div id="keyboard">
     <span class="move fa fa-arrows"></span>
     <span class="close fa fa-times" onclick="$('#keyboard').fadeOut(300)"></span>

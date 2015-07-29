@@ -1,10 +1,12 @@
 <?php namespace App\Http\Controllers;
 
 use URL;
+use Lang;
 use Input;
 use Session;
 use Redirect;
 use Validator;
+
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
@@ -13,6 +15,60 @@ use Illuminate\Http\Request;
 
 class DefinitionController extends Controller
 {
+    /**
+     * Displays the word page, with similar definitions.
+     *
+     * @param string $code  ISO 639-3 language code.
+     * @param string $raw   Word to be defined.
+     * @return mixed
+     */
+    public function show($code, $raw = null)
+    {
+        // Redirect if accessing definition directly.
+        if (!$raw) {
+            $def = Definition::find($code);
+            return $def ? redirect($def->getUri(false)) : abort(404);
+        }
+
+        // Retrieve language object
+        if (!$lang = Language::findByCode($code)) {
+            abort(404, Lang::get('errors.resource_not_found'));
+        }
+
+        // Check user input.
+        $data   = trim(preg_replace('/[\s]+/', '_', strip_tags($raw)));
+        if (strlen($data) < 2) {
+            abort(404, Lang::get('errors.resource_not_found'));
+        } elseif ($data != $raw) {
+            return redirect($lang->code .'/'. $data);
+        }
+
+        // Find definitions matching the query
+        $data   = str_replace('_', ' ', $data);
+        $wData  = '(data = :a OR data LIKE :b or data LIKE :c or data LIKE :d)';
+        $wLang  = '(languages = :w OR languages LIKE :x or languages LIKE :y or languages LIKE :z)';
+        $definitions = Definition::whereRaw($wData .' AND '. $wLang, [
+            ':a' => $data,
+            ':b' => $data .',%',
+            ':c' => '%,'. $data .',%',
+            ':d' => '%,'. $data,
+            ':w' => $lang->code,
+            ':x' => $lang->code .',%',
+            ':y' => '%,'. $lang->code .',%',
+            ':z' => '%,'. $lang->code
+        ])->get();
+
+        if (!count($definitions)) {
+            abort(404, Lang::get('errors.resource_not_found'));
+        }
+
+        return view('pages.def', array(
+            'lang'  => $lang,
+            'query' => $data,
+            'definitions' => $definitions
+        ));
+    }
+
 	/**
 	 * Displays the form to add a new definition.
 	 *
@@ -66,60 +122,6 @@ class DefinitionController extends Controller
 	 */
 	public function store() {
         return $this->save(new Definition, Input::all(), route('definition.create', [], false));
-	}
-
-    /**
-     * Displays the word page, with similar definitions.
-     *
-     * @param string $code  ISO 639-3 language code.
-     * @param string $raw   Word to be defined.
-     * @return mixed
-     */
-	public function show($code, $raw = null)
-	{
-        // Redirect if accessing definition directly.
-        if (!$raw) {
-            $def = Definition::find($code);
-            return $def ? Redirect::to($def->getWordUri(false)) : abort(404);
-        }
-
-        // Retrieve language object
-        if (!$lang = Language::findByCode($code)) {
-            abort(404, 'Can\'t find that language :(');
-        }
-
-        // Check user input.
-        $word   = trim(preg_replace('/[\s]+/', '_', strip_tags($raw)));
-        if (strlen($word) < 2) {
-            abort(404, 'Can\'t find that word :(');
-        } elseif ($word != $raw) {
-            return Redirect::to($lang->code .'/'. $word);
-        }
-
-        // Find words matching the query
-        $word   = str_replace('_', ' ', $word);
-        $wWord  = '(word = :a OR word LIKE :b or word LIKE :c or word LIKE :d)';
-        $wLang  = '(language = :w OR language LIKE :x or language LIKE :y or language LIKE :z)';
-        $words  = Definition::whereRaw($wWord .' AND '. $wLang, array(
-            ':a' => $word,
-            ':b' => $word .',%',
-            ':c' => '%,'. $word .',%',
-            ':d' => '%,'. $word,
-            ':w' => $lang->code,
-            ':x' => $lang->code .',%',
-            ':y' => '%,'. $lang->code .',%',
-            ':z' => '%,'. $lang->code
-        ))->get();
-
-        if (!count($words)) {
-            abort(404, 'Can\'t find that word :(');
-        }
-
-        return view('pages.word', array(
-            'lang'  => $lang,
-            'query' => $word,
-            'words' => $words
-        ));
 	}
 
 	/**

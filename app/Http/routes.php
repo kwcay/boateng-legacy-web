@@ -1,8 +1,8 @@
 <?php
 
 // General pages.
-Route::get('/',          'SimplePageController@home');
-Route::get('/about',     'SimplePageController@about');
+Route::get('/',             ['as' => 'home', 'uses' => 'SimplePageController@home']);
+Route::get('/about',        ['as' => 'about', 'uses' => 'SimplePageController@about']);
 Route::get('/in-numbers',   ['as' => 'stats', 'uses' => 'SimplePageController@stats']);
 Route::get('/api',       'SimplePageController@api');
 Route::get('/hello',     'SimplePageController@welcome');

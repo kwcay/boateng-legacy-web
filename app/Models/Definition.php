@@ -81,9 +81,9 @@ class Definition extends Model
      * @param bool $full
      * @return string
      */
-    public function getUri($full = true) {
-        $path   = $this->mainLanguage->getAttribute('code') .'/'. str_replace(' ', '_', $this->getAttribute('data'));
-        return $full ? URL::to($path) : $path;
+    public function getUri($full = false) {
+        $path   = $this->mainLanguage->code .'/'. str_replace(' ', '_', $this->data);
+        return $full ? url($path) : $path;
     }
 
     /**
@@ -109,7 +109,7 @@ class Definition extends Model
     //
 
     public function hasTranslation($lang) {
-        return Arr::has($this->translations, $lang);
+        return Arr::has($this->translations, $lang) && strlen(Arr::get($this->translations, $lang));
     }
 
     public function getTranslation($lang = 'en') {
@@ -128,7 +128,7 @@ class Definition extends Model
     //
 
     public function hasMeaning($lang) {
-        return Arr::has($this->meanings, $lang);
+        return Arr::has($this->meanings, $lang) && strlen(Arr::get($this->meanings, $lang));
     }
 
     public function getMeaning($lang = 'en') {
