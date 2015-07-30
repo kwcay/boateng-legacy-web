@@ -19,8 +19,6 @@ class DataController extends Controller
 
     private $dataType;
 
-    private $dataMeta;
-
     private $dataSet;
 
     private $dataObject;
@@ -154,7 +152,7 @@ class DataController extends Controller
             $this->rawData = $this->request->input('data');
 
             // Save the data format.
-            $this->dataFormat = preg_replace('/[^a-z]/i', '', $this->request->input('format'));
+            $this->dataFormat = $this->request->input('format');
         }
 
         // Quickly sanitize our data.
@@ -219,8 +217,24 @@ class DataController extends Controller
         // Well formatted data files.
         if (isset($this->dataObject['meta']) && isset($this->dataObject['data']))
         {
-            // TODO
-            $this->error = 'We have a well formatted data set.';
+            $meta = $this->dataObject['meta'];
+            $data = $this->dataObject['data'];
+
+            // Data integrity check.
+            if (!isset($meta['checksum']) || $meta['checksum'] != md5(json_encode($data))) {
+                $this->error = 'Checksum failed.';
+            }
+
+            //
+            elseif (!is_array($data) || empty($data)) {
+                $this->error = 'No data found.';
+            }
+
+            else
+            {
+                $this->dataType = $meta['type'];
+                $this->dataSet = $data;
+            }
         }
 
         // Pure array.
