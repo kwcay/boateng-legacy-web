@@ -15,15 +15,22 @@ class CreateLanguagesTable extends Migration {
 		Schema::create('languages', function(Blueprint $table)
 		{
             $table->engine = 'InnoDB';
-            
+
+            // Internal ID.
 			$table->increments('id')->length(6)->unsigned();
+            $table->primary('id');
+
+            // Language codes.
             $table->string('code', 7)->unique();
-            $table->string('parent', 7);
-            $table->string('name', 100);
-            $table->string('alt_names', 300);
-            $table->string('countries', 60);
-            $table->text('desc');
-            $table->tinyInteger('state');
+            $table->primary('code');
+            $table->string('parent', 7)->nullable();
+
+            // Language details.
+            $table->string('name', 100);                    // Name of language.
+            $table->string('alt_names', 300)->nullable();   // Alternate names or spellings.
+            $table->string('countries', 60)->nullable();    // Countries language is spoken in.
+
+            //
             $table->text('params');
 			$table->timestamps();
             $table->softDeletes();

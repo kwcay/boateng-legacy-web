@@ -15,7 +15,8 @@
 		<meta property="og:title" content="Di Nkomo: the book of Native tongues." />
 		<meta property="og:desc" content="The dictionary of Native tongues." />
 		<meta property="og:type" content="website" />
-		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+		{{-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script> --}}
+		<script src="{{ asset('assets/jquery-2.1.4.min.js') }}" type="text/javascript"></script>
 		<script src="{{ elixir('assets/scripts.js') }}" type="text/javascript"></script>
 		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 		<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />

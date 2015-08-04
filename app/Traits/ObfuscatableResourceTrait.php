@@ -36,8 +36,8 @@ trait ObfuscatableResourceTrait
     /**
      * Find a model by its primary key.
      *
-     * @param  mixed  $id
-     * @param  array  $columns
+     * @param int|string $id
+     * @param array $columns
      * @return \Illuminate\Support\Collection|static|null
      */
     public static function find($id, $columns = ['*'])
@@ -51,7 +51,7 @@ trait ObfuscatableResourceTrait
     }
 
     /**
-     * @param $id
+     * @param int|string $id
      * @param array $columns
      * @return mixed
      */
@@ -66,7 +66,7 @@ trait ObfuscatableResourceTrait
     }
 
     /**
-     * @param $id
+     * @param int|string $id
      * @param array $columns
      * @return mixed
      */

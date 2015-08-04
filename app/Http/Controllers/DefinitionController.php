@@ -2,7 +2,7 @@
 
 use URL;
 use Lang;
-use Input;
+use Request;
 use Session;
 use Redirect;
 use Validator;
@@ -10,8 +10,6 @@ use Validator;
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class DefinitionController extends Controller
 {
@@ -27,7 +25,7 @@ class DefinitionController extends Controller
         // Redirect if accessing definition directly.
         if (!$raw) {
             $def = Definition::find($code);
-            return $def ? redirect($def->getUri(false)) : abort(404);
+            return $def ? redirect($def->getUri(false)) : redirect(route('home'))->withMessages([Lang::get('errors.resource_not_found')]);
         }
 
         // Retrieve language object
@@ -78,34 +76,26 @@ class DefinitionController extends Controller
 	{
         $lso    = [];
 
-        // Set some defaults
-        if ($word = Input::get('word', Input::old('word'))) {
-            $def->setWord($word);
-        }
-        if ($alt = Input::old('alt')) {
-            $def->setAltWord($alt);
-        }
-        if ($type = Input::old('type')) {
-            $def->setParam('type', $type);
-        }
-        if ($lang = Input::get('lang', Input::old('lang'))) {
+        // Set some defaults.
+        $def->data = Request::get('data', Request::old('data', ''));
+        $def->altData = Request::get('alt_data', Request::old('alt_data', ''));
+        $def->type = (int) Request::get('type', Request::old('type', 0));
+        $def->translations = (array) Request::get('translations', Request::old('translations', []));
+        $def->literalTranslations = (array) Request::get('literal_translations', Request::old('literal_translations', []));
+        $def->meanings = (array) Request::get('meanings', Request::old('meanings', []));
+        $def->source = Request::get('source', Request::old('source', ''));
+        $def->tags = Request::get('tags', Request::old('tags', ''));
+
+        // Retrieve language data.
+        if ($lang = Request::get('lang', Request::old('lang')))
+        {
             $def->language  = preg_replace('/[^a-z, -]/', '', $lang);
 
             if ($lang = Language::findByCode($def->language)) {
                 $lso[] = [
                     'code' => $lang->code,
-                    'name' =>$lang->getName()
+                    'name' =>$lang->name
                 ];
-            }
-        }
-        if ($translation = Input::old('translation')) {
-            foreach ($translation as $lang => $trans) {
-                $def->setTranslation($lang, $trans);
-            }
-        }
-        if ($meaning = Input::old('meaning')) {
-            foreach ($meaning as $lang => $mean) {
-                $def->setMeaning($lang, $mean);
             }
         }
 
@@ -121,7 +111,7 @@ class DefinitionController extends Controller
 	 * @return Response
 	 */
 	public function store() {
-        return $this->save(new Definition, Input::all(), route('definition.create', [], false));
+        return $this->save(new Definition, Request::all(), route('definition.create', [], false));
 	}
 
 	/**
@@ -134,16 +124,16 @@ class DefinitionController extends Controller
 	{
         // Retrieve the definition object.
         if (!$def = Definition::find($id)) {
-            abort(404, 'Definition not found :(');
+            abort(404, Lang::get('errors.resource_not_found'));
         }
 
         // Create language options for selectize plugin.
         $lso = [];
-        $langs  = Language::whereIn('code', explode(',', $def->language))->get();
+        $langs  = Language::whereIn('code', $def->languages)->get();
         foreach ($langs as $lang) {
             $lso[] = [
                 'code' => $lang->code,
-                'name' => $lang->getName()
+                'name' => $lang->name
             ];
         }
 
@@ -164,10 +154,10 @@ class DefinitionController extends Controller
 	{
         // Retrieve the definition object.
         if (!$def = Definition::find($id)) {
-            throw new \Exception('Can\'t find that definition :(', 404);
+            throw new \Exception(Lang::get('errors.resource_not_found'), 404);
         }
 
-        return $this->save($def, Input::all(), $def->getEditUri(false));
+        return $this->save($def, Request::all(), $def->getEditUri(false));
 	}
 
     /**
@@ -181,14 +171,14 @@ class DefinitionController extends Controller
 	{
         // Retrieve the definition object.
         if (!$def = Definition::find($id)) {
-            throw new \Exception('Can\'t find that definition :(', 404);
+            throw new \Exception(Lang::get('errors.resource_not_found'), 404);
         }
 
         // Delete record
-        Session::push('messages', '<em>'. $def->getWord() .'</em> has been succesfully deleted.');
+        Session::push('messages', '<em>'. $def->data .'</em> has been succesfully deleted.');
         $def->delete();
 
-        return Redirect::to('');
+        return redirect(route('home'));
 	}
 
     /**
@@ -206,10 +196,10 @@ class DefinitionController extends Controller
         if ($test->fails())
         {
             // Flash input data to session
-            Input::flashExcept('_token');
+            Request::flashExcept('_token');
 
             // Return to form
-            return Redirect::to($return)->withErrors($test);
+            return redirect($return)->withErrors($test);
         }
 
         // Check languages, suggest other languages (esp. parents)
@@ -227,34 +217,21 @@ class DefinitionController extends Controller
                     // Notify the user of the change
                     Session::push('messages',
                         '<em>'. $lang->getParam('parentName') .'</em> is the parent language for <em>'.
-                        $lang->getName() .'</em>, and was added to the list of languages the word <em>'.
-                        $data['word'] .'</em> exists in.');
+                        $lang->name .'</em>, and was added to the list of languages the word <em>'.
+                        $data['data'] .'</em> exists in.');
                 }
             }
         }
 
-        // Main details
-        $def->setWord($data['word']);
-        $def->setAltWord($data['alt']);
-        $def->language  = implode(',', $codes);
-        $def->setParam('type', $data['type']);
+        $def->fill($data);
+
         $def->state     = 1;
-
-        // Translations
-        foreach ($data['translation'] as $lang => $translation) {
-            $def->setTranslation($lang, trim($translation));
-        }
-
-        // Meanings
-        foreach ($data['meaning'] as $lang => $meaning) {
-            $def->setMeaning($lang, trim($meaning));
-        }
 
         $def->save();
         $rdir = $data['more'] ?
-            route('definition.create', ['lang' => $def->getMainLanguage(true)], false) : $def->getWordUri(false);
+            route('definition.create', ['lang' => $def->getMainLanguage(true)], false) : $def->getUri(false);
 
-        Session::push('messages', 'The details for <em>'. $def->getWord() .'</em> were successfully saved, thanks :)');
+        Session::push('messages', 'The details for <em>'. $def->data .'</em> were successfully saved, thanks :)');
         return Redirect::to($rdir);
     }
 
@@ -270,10 +247,16 @@ class DefinitionController extends Controller
             return $this->abort(400, 'Query too short');
         }
 
+        $offset = min(0, (int) Request::get('offset', 0));
+        $limit = min(1, max(100, (int) Request::get('limit', 100)));
+
         // Query the database
         $defs = Definition::where('data', 'LIKE', '%'. $query .'%')
+            ->orWhere('alt_data', 'LIKE', '%'. $query .'%')
             ->orWhere('translations', 'LIKE', '%'. $query .'%')
-            ->orWhere('meanings', 'LIKE', '%'. $query .'%')->get();
+            ->orWhere('literal_translations', 'LIKE', '%'. $query .'%')
+            ->orWhere('meanings', 'LIKE', '%'. $query .'%')
+            ->skip($offset)->take($limit)->get();
 
         // Format results
         $results  = [];
@@ -298,21 +281,5 @@ class DefinitionController extends Controller
 
         return $this->send(['query' => $query, 'definitions' => $results]);
     }
-
-    /**
-     * @param $format
-     * @return mixed
-     */
-    public static function export($format = 'yaml')
-    {
-        $data = Definition::all();
-        $formatted = [];
-
-        foreach ($data as $item) {
-            $formatted[] = $item->toArray();
-        }
-
-        return static::exportToFormat($formatted, $format, false);
-    }
-
 }
+

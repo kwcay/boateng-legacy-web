@@ -4,6 +4,8 @@
 	@include('layouts.header')
     
 	<section>
+
+	    {{-- Page title --}}
 		<h1>
             @if ($lang->exists)
                 Edit an <i>existing</i>
@@ -16,6 +18,7 @@
 			</small>
 		</h1>
 
+        {{-- Form begins --}}
         @if ($lang->exists)
             <form class="form edit" method="post" action="{{ route('language.update', ['code' => $lang->code]) }}">
                 <input type="hidden" name="_method" value="PUT">
@@ -23,31 +26,31 @@
             <form class="form edit" method="post" action="{{ route('language.store') }}">
         @endif
 		
-			<!-- Title -->
+			{{-- Title row --}}
 			<div class="row">
-				<input type="text" name="name" class="text-input" placeholder="e.g. Swahili" value="{{ $lang->getName() }}" required />
+				<input type="text" name="name" class="text-input" placeholder="e.g. Swahili" value="{{ $lang->name }}" required />
 				<label for="name">Name</label>
 			</div>
 			
-			<!-- Alternate spellings -->
+			{{-- Alternate spellings & names --}}
 			<div class="row">
-				<input type="text" name="alt" class="text-input" placeholder="e.g. Kiswahili" value="{{ $lang->getAltNames() }}" />
+				<input type="text" name="alt_names" class="text-input" placeholder="e.g. Kiswahili" value="{{ $lang->alt_names }}" />
 				<label for="alt">Alternate names or spellings (seperated by ",")</label>
 			</div>
 			
-			<!-- ISO-639-3 -->
+			{{-- ISO-639-3 --}}
 			<div class="row">
 				<input type="text" name="code" class="en-text-input" placeholder="e.g. swa" value="{{ $lang->code }}" {{ $lang->exists ? 'disabled' : 'required' }} />
 				<label for="code"><a href="http://en.wikipedia.org/wiki/ISO_639-3" target="_blank">ISO-639-3</a> language code</label>
 			</div>
 			
-			<!-- Parent language -->
+			{{-- Parent language --}}
 			<div class="row">
 				<input type="text" name="parent" class="text-input remote" value="{{ $lang->parent }}" />
 				<label for="parent">Parent language (if applicable)</label>
 			</div>
 			
-			<!-- Countries -->
+			{{-- Country list --}}
 			<div class="row">
                 {!! Form::select(
                     'countries[]',
@@ -61,16 +64,16 @@
 				<label for="countries[]">Countries in which language is spoken</label>
 			</div>
 			
-            <!-- Language notes -->
+            {{-- Language notes --}}
 			<div class="row">
-                <textarea name="desc" class="en-text-input" data-provide="markdown" placeholder="This language is so interesting because...">{{ $lang->desc }}</textarea>
+                <textarea name="desc[en]" class="en-text-input" placeholder="This language is so interesting because...">{{ $lang->getDescription('en') }}</textarea>
 				<label for="desc">Fun facts!</label>
 			</div>
 			
-			<!-- Form actions -->
+			{{-- Form actions --}}
 			<div class="row center">
-				<input type="button" name="cancel" value="cancel" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
-				<input type="submit" name="submit" value="save" />
+				<input type="button" value="cancel" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
+				<input type="submit" value="save" />
 			</div>
 			
 			{!! Form::token() !!}

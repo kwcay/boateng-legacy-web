@@ -1,17 +1,21 @@
 <?php namespace App\Models;
 
+use URL;
+
+use Illuminate\Support\Arr;
 use cebe\markdown\MarkdownExtra;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ImportableResourceTrait as Importable;
-use App\Traits\HasParamsTrait as HasParams;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Language extends Model
+class LanguageBACKUP_V2 extends Model
 {
-    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
+    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes;
+
+    // TODO: on save, strip tags from desc[lang] attribute.
 
     private $markdown;
 
@@ -34,6 +38,8 @@ class Language extends Model
         'name' => 'string',
         'alt_names' => 'string',
         'countries' => 'string',
+        'desc' => 'array',
+        'state' => 'integer',
         'params' => 'array'
     ];
 
@@ -47,15 +53,12 @@ class Language extends Model
         'alt_names' => 'min:2'
     ];
 
-    /**
-     * @param array $attributes
-     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
-        // Check attributes when saving the model.
-        static::saving([$this, 'checkAttributes']);
+        //
+        static::saving([$this, 'onSave']);
 
         // Markdown parser.
         $this->markdown = new MarkdownExtra;
@@ -63,18 +66,33 @@ class Language extends Model
     }
 
     /**
-     * Looks up a language model by code.
-     *
-     * @param string $code
-     * @return \App\Models\Language
+     * @param $code
+     * @return mixed
      */
     public static function findByCode($code) {
         return static::where(['code' => $code])->first();
     }
 
+    //
+    // Methods dealing with descriptions.
+    //
+
+    public function hasDescription($lang) {
+        return Arr::has($this->desc, $lang) && strlen(Arr::get($this->lang, $lang));
+    }
+
+    public function getDescription($lang = 'en') {
+        return $this->hasDescription($lang) ? $this->markdown->parse(Arr::get($this->desc, $lang)) : '';
+    }
+
+    public function setDescription($lang, $desc)
+    {
+        $descArray = $this->desc;
+        Arr::set($descArray, $lang, $desc);
+        $this->desc = $descArray;
+    }
+
     /**
-     * Gets the URI for the language.
-     *
      * @param bool $full
      * @return string
      */
@@ -83,8 +101,6 @@ class Language extends Model
     }
 
     /**
-     * Gets the URI to the language edit form.
-     *
      * @param bool $full
      * @return string
      */
@@ -108,20 +124,52 @@ class Language extends Model
         return $list;
     }
 
-    /**
-     * Checks language properties before saving to database.
-     *
-     * @param \App\Models\Language $lang
-     * @return bool
-     */
-    public function checkAttributes($lang)
+    public function onSave($lang)
     {
-        // Make sure state is valid.
+        // Sanitize some properties
+//        foreach ($lang->desc as $loc => $desc) {
+//            $lang->desc[$loc] = strip_tags($desc);
+//        }
+
         if (!is_int($lang->state)) {
             $lang->state = 1;
         }
 
         return true;
+    }
+
+    //
+    // Definition parameters.
+    //
+
+    public function hasParam($key) {
+        return Arr::has($this->params, $key);
+    }
+
+    public function getParam($key, $default = '') {
+        return Arr::get($this->params, $key, $default);
+    }
+
+    public function setParam($key, $value)
+    {
+        $params = $this->params;
+        Arr::set($params, $key, $value);
+        $this->params = $params;
+    }
+
+    /**
+     * Mutator for $this->desc.
+     *
+     * @param $desc
+     */
+    public function setDescAttribute($desc)
+    {
+        // Sanitize.
+        foreach ($desc as $key => $val) {
+            $desc[$key] = strip_tags($val);
+        }
+
+        $this->desc = $desc;
     }
 }
 

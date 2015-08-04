@@ -15,16 +15,19 @@ class CreateDefinitionsTable extends Migration {
 		Schema::create('definitions', function(Blueprint $table)
 		{
             $table->engine = 'InnoDB';
-            
+
+            // Internal ID.
 			$table->increments('id')->length(9)->unsigned();
-            $table->tinyInteger('type')->unsigned();
-            $table->string('data', 200);
-            $table->string('alt_data', 400);
-            $table->string('languages', 70);
-            $table->text('translations');
-            $table->text('meanings');
-            $table->string('source', 40);
-            $table->text('tags');
+            $table->primary('id');
+
+            // Definition details.
+            $table->string('title', 400);                   // e.g. word, title of a poem, etc.
+            $table->text('extra_data')->nullable();         // Alternate spellings, poem, etc.
+            $table->tinyInteger('type')->unsigned();        // Data type.
+            $table->string('source', 40)->nullable();       // Data source.
+            $table->text('tags')->nullable();               // Descriptive tags.
+            $table->string('langauage');                    // TODO
+
             $table->tinyInteger('state');
             $table->text('params');
 			$table->timestamps();
@@ -41,5 +44,5 @@ class CreateDefinitionsTable extends Migration {
 	{
 		Schema::drop('definitions');
 	}
-
 }
+

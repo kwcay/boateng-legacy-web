@@ -1,17 +1,19 @@
 <?php namespace App\Models;
 
+use URL;
+
 use App\Models\Language;
+use Illuminate\Support\Arr;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ImportableResourceTrait as Importable;
-use App\Traits\HasParamsTrait as HasParams;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Definition extends Model
+class DefinitionBACKUP_V2 extends Model
 {
-    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
+    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
     CONST TYPE_PHRASE = 1;      // Proverbs, sayings, etc.
@@ -32,9 +34,13 @@ class Definition extends Model
      * @var array   Attribute types
      */
     protected $casts = [
-        'title' => 'string',
-        'extra_data' => 'string',
+        'data' => 'string',
+        'alt_data' => 'string',
         'type' => 'integer',
+        'languages' => 'string',
+        'translations' => 'array',
+        'literal_translations' => 'array',
+        'meanings' => 'array',
         'source' => 'string',
         'tags' => 'string',
         'state' => 'integer',
@@ -45,9 +51,10 @@ class Definition extends Model
      * @var array   Validation rules.
      */
     public $validationRules = [
-        'title' => 'required|min:2',
-        'type' => 'required',
-        'tags' => 'min:2|regex:/^([a-z, \-]+)$/i',
+        'data' => 'required|min:2',
+        'alt_data' => 'min:2',
+        'languages' => 'required|min:2|regex:/^([a-z, \-]+)$/',
+//        'type'      => 'in:adj,adv,conn,ex,pre,pro,n,v'
     ];
 
     /**
@@ -56,8 +63,6 @@ class Definition extends Model
     public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
 
     /**
-     * Parts of speech. Used for "word" type.
-     *
      * See: http://www.edb.utexas.edu/minliu/pbl/ESOL/help/libry/speech.htm
      * See: http://www.aims.edu/student/online-writing-lab/grammar/parts-of-speech
      *
@@ -78,9 +83,12 @@ class Definition extends Model
     {
         parent::__construct($attributes);
 
-        // Markdown parser.
-        $this->markdown = new MarkdownExtra;
-        $this->markdown->html5 = true;
+//        //
+//        static::saving([$this, 'onSave']);
+//
+//        // Markdown parser.
+//        $this->markdown = new MarkdownExtra;
+//        $this->markdown->html5 = true;
     }
 
     /**

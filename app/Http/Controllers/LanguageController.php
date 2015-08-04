@@ -1,10 +1,11 @@
 <?php namespace App\Http\Controllers;
 
-use Input;
+use Lang;
 use Session;
 use Redirect;
 use Request;
 use Validator;
+
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
@@ -44,27 +45,12 @@ class LanguageController extends Controller
 	public function create(Language $lang)
 	{
         // Set some defaults
-        if ($name = Input::get('name', Input::old('name'))) {
-            $lang->setName($name);
-        }
-        if ($alt = Input::old('alt')) {
-            $lang->setAltName($alt);
-        }
-        if ($code = Input::get('code', Input::old('code'))) {
-            $lang->code     = preg_replace('/[^a-z\-]/', '', $code);
-        }
-        if ($parent = Input::get('parent', Input::old('parent'))) {
-            if ($parentObj = Language::findByCode($parent)) {
-                $lang->parent   = $parentObj->code;
-                $lang->setParam('parentName', $parentObj->getName());
-            }
-        }
-        if ($countries = Input::old('countries')) {
-            $lang->countries    = preg_replace('/[^a-z,]/', '', $countries);
-        }
-        if ($desc = Input::old('desc')) {
-            $lang->desc     = strip_tags($desc);
-        }
+        $lang->code = preg_replace('/[^a-z\-]/', '', Request::get('code', Request::old('code', '')));
+        $lang->parent = preg_replace('/[^a-z\-]/', '', Request::get('parent', Request::old('parent', '')));
+        $lang->name = Request::get('name', Request::old('name', ''));
+        $lang->alt_names = Request::get('alt_names', Request::old('alt_names', ''));
+        $lang->countries = preg_replace('/[^a-z,]/', '', Request::get('countries', Request::old('countries', '')));
+        $lang->desc = Request::get('desc', Request::old('desc', []));
 
         return view('forms.language.default')->withLang($lang);
 	}
@@ -77,7 +63,7 @@ class LanguageController extends Controller
 	public function store()
 	{
         // Make sure we have a 'code' index.
-        $data = Input::all();
+        $data = Request::all();
         $data['code'] = isset($data['code']) ? $data['code'] : '';
 
         return $this->save(new Language($data), $data, route('language.create', [], false));
@@ -93,7 +79,7 @@ class LanguageController extends Controller
 	{
         // Retrieve the language object.
         if (!$lang = $this->getLanguage($id)) {
-            abort(404, 'Can\'t find that languge :(');
+            abort(404, Lang::get('errors.resource_not_foud'));
         }
 
         return view('forms.language.default')->withLang($lang);
@@ -112,7 +98,7 @@ class LanguageController extends Controller
             abort(404, 'Can\'t find that languge :( [todo: throw exception]');
         }
 
-        return $this->save($lang, Input::all(), $lang->getEditUri(false));
+        return $this->save($lang, Request::all(), $lang->getEditUri(false));
 	}
 
 	/**
@@ -128,6 +114,7 @@ class LanguageController extends Controller
 
     /**
      * Shortcut to create a new language or save an existing one.
+     * 
      * @param object $lang      Language object.
      * @param array $data       Language details to update.
      * @param string $return    Relative URI to redirect to.
@@ -135,31 +122,30 @@ class LanguageController extends Controller
      */
     public function save($lang, $data, $return)
     {
+
+        // ...
+        if (isset($data['countries']) && is_array($data['countries'])) {
+            $data['countries'] = implode(',', $data['countries']);
+        }
+
         // Validate input data
         $test   = Validator::make($data, $lang->validationRules);
         if ($test->fails())
         {
             // Flash input data to session
-            Input::flashExcept('_token');
+            Request::flashExcept('_token');
 
             // Return to form
-            return Redirect::to($return)->withErrors($test);
+            return redirect($return)->withErrors($test);
         }
 
-        // Quick checks.
-        $data['countries'] = isset($data['countries']) ? $data['countries'] : [];
-
-        // Main details
-        $lang->setName($data['name']);
-        $lang->setAltName($data['alt']);
-        $lang->countries    = implode(',', $data['countries']);
-        $lang->countries    = preg_replace('/[^A-Z,]/', '', $lang->countries);
-        $lang->desc         = trim(strip_tags($data['desc']));
+        // Update language object.
+        $lang->fill($data);
 
         // Parent language details
         if (strlen($data['parent']) >= 3 && $parent = Language::findByCode($data['parent'])) {
             $lang->parent   = $parent->code;
-            $lang->setParam('parentName', $parent->getName());
+            $lang->setParam('parentName', $parent->name);
         } else {
             $lang->parent   = '';
             $lang->setParam('parentName', '');
@@ -167,8 +153,8 @@ class LanguageController extends Controller
 
         $lang->save();
 
-        Session::push('messages', 'The details for <em>'. $lang->getName() .'</em> were successfully saved, thanks :)');
-        return Redirect::to($lang->getUri(false));
+        Session::push('messages', 'The details for <em>'. $lang->name .'</em> were successfully saved, thanks :)');
+        return redirect($lang->getUri(false));
     }
 
     /**
@@ -185,6 +171,8 @@ class LanguageController extends Controller
 
         // Query the database
         $langs = Language::where('name', 'LIKE', '%'. $query .'%')
+            ->orWhere('alt_name', 'LIKE', '%'. $query .'%')
+            ->orWhere('desc', 'LIKE', '%'. $query .'%')
             ->orWhere('code', 'LIKE', '%'. $query .'%')
             ->orWhere('parent', 'LIKE', '%'. $query .'%')->get();
 
@@ -194,8 +182,8 @@ class LanguageController extends Controller
             foreach ($langs as $lang) {
                 $results[]  = [
                     'code'          => $lang->code,
-                    'name'          => $lang->getName(),
-                    'altNames'      => $lang->getAltNames(true),
+                    'name'          => $lang->name,
+                    'altNames'      => $lang->alt_name,
                     'parentCode'    => $lang->parent,
                     'parentName'    => $lang->getParam('parentName', ''),
                     'uri'           => $lang->getUri()
