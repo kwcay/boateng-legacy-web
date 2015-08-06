@@ -17,13 +17,11 @@ class CreateLanguagesTable extends Migration {
             $table->engine = 'InnoDB';
 
             // Internal ID.
-			$table->increments('id')->length(6)->unsigned();
-            $table->primary('id');
+			$table->increments('id')->length(6)->primary();
 
             // Language codes.
             $table->string('code', 7)->unique();
-            $table->primary('code');
-            $table->string('parent', 7)->nullable();
+            $table->string('parent_code', 7)->nullable()->index();
 
             // Language details.
             $table->string('name', 100);                    // Name of language.
@@ -46,5 +44,5 @@ class CreateLanguagesTable extends Migration {
 	{
 		Schema::drop('languages');
 	}
-
 }
+

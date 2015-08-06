@@ -1,6 +1,7 @@
 <?php namespace App\Models;
 
 use App\Models\Language;
+use Illuminate\Support\Arr;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 use App\Traits\ExportableResourceTrait as Exportable;
@@ -19,6 +20,16 @@ class Definition extends Model
     CONST TYPE_STORY = 3;       // Short stories.
 
     /**
+     * @var array
+     */
+    public $types = [
+        0 => 'word',
+        1 => 'phrase',
+        2 => 'poem',
+        3 => 'story',
+    ];
+
+    /**
      * @var array   Attributes which aren't mass-assignable.
      */
     protected $guarded = ['id'];
@@ -35,19 +46,19 @@ class Definition extends Model
         'title' => 'string',
         'extra_data' => 'string',
         'type' => 'integer',
-        'source' => 'string',
         'tags' => 'string',
         'state' => 'integer',
-        'params' => 'array'
+        'params' => 'array',
     ];
 
     /**
      * @var array   Validation rules.
      */
     public $validationRules = [
-        'title' => 'required|min:2',
-        'type' => 'required',
-        'tags' => 'min:2|regex:/^([a-z, \-]+)$/i',
+        'title' => 'required|string|min:2',
+        'type' => 'required|integer',
+        'tags' => 'string|min:2|regex:/^([a-z, \-]+)$/i',
+        'languages' => 'required'
     ];
 
     /**
@@ -74,6 +85,15 @@ class Definition extends Model
         'v'     => 'verb',
     ];
 
+    /**
+     * @var array
+     */
+    public $typesOfPhrases = [
+        'ex'    => 'expression',
+        'prov'  => 'proverb',
+        'say'   => 'saying',
+    ];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -81,6 +101,24 @@ class Definition extends Model
         // Markdown parser.
         $this->markdown = new MarkdownExtra;
         $this->markdown->html5 = true;
+    }
+
+    public function translations() {
+        return $this->hasMany('App\Models\Translations');
+    }
+
+    public function languages() {
+        return $this->belongsToMany('App\Models\Languages');
+    }
+
+    /**
+     * @param string $lang
+     * @return mixed
+     */
+    public static function random($lang = '') {
+        return strlen($lang) ?
+            static::where('languages', 'LIKE', '%'. $lang .'%')->orderByRaw('RAND()')->first() :
+            static::orderByRaw('RAND()')->first();
     }
 
     /**
@@ -98,92 +136,6 @@ class Definition extends Model
      */
     public function getEditUri($full = true) {
         return route('definition.edit', ['id' => $this->getId()], $full);
-    }
-
-    /**
-     * @param string $lang
-     * @return mixed
-     */
-    public static function random($lang = '') {
-        return strlen($lang) ?
-            static::where('languages', 'LIKE', '%'. $lang .'%')->orderByRaw('RAND()')->first() :
-            static::orderByRaw('RAND()')->first();
-    }
-
-    //
-    // Methods dealing with translations.
-    //
-
-    public function hasTranslation($lang) {
-        return Arr::has($this->translations, $lang) && strlen(Arr::get($this->translations, $lang));
-    }
-
-    public function getTranslation($lang = 'en') {
-        return Arr::get($this->translations, $lang, '');
-    }
-
-    public function setTranslation($lang, $translation)
-    {
-        $translations = $this->translations;
-        Arr::set($translations, $lang, $translation);
-        $this->translations = $translations;
-    }
-
-    //
-    // Methods dealing with literal translations.
-    //
-
-    public function hasLiteralTranslation($lang) {
-        return Arr::has($this->literalTranslations, $lang) && strlen(Arr::get($this->literalTranslations, $lang));
-    }
-
-    public function getLiteralTranslation($lang = 'en') {
-        return Arr::get($this->literalTranslations, $lang, '');
-    }
-
-    public function setLiteralTranslation($lang, $translation)
-    {
-        $translations = $this->literalTranslations;
-        Arr::set($translations, $lang, $translation);
-        $this->literalTranslations = $translations;
-    }
-
-    //
-    // Methods dealing with detailed meanings.
-    //
-
-    public function hasMeaning($lang) {
-        return Arr::has($this->meanings, $lang) && strlen(Arr::get($this->meanings, $lang));
-    }
-
-    public function getMeaning($lang = 'en') {
-        return Arr::get($this->meanings, $lang, '');
-    }
-
-    public function setMeaning($lang, $meaning)
-    {
-        $meanings = $this->translations;
-        Arr::set($meanings, $lang, $meaning);
-        $this->translations = $meanings;
-    }
-
-    //
-    // Definition parameters.
-    //
-
-    public function hasParam($key) {
-        return Arr::has($this->params, $key);
-    }
-
-    public function getParam($key, $default = '') {
-        return Arr::get($this->params, $key, $default);
-    }
-
-    public function setParam($key, $value)
-    {
-        $params = $this->params;
-        Arr::set($params, $key, $value);
-        $this->params = $params;
     }
 
     /**

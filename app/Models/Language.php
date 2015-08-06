@@ -30,7 +30,7 @@ class Language extends Model
      */
     protected $casts = [
         'code' => 'string',
-        'parent' => 'string',
+        'parent_code' => 'string',
         'name' => 'string',
         'alt_names' => 'string',
         'countries' => 'string',
@@ -63,13 +63,40 @@ class Language extends Model
     }
 
     /**
+     * Parent relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function parent() {
+        return $this->belongsTo('App\Models\Language', 'parent_code', 'code');
+    }
+
+    /**
+     * Children relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function children() {
+        return $this->hasMany('App\Models\Language', 'parent_code', 'code');
+    }
+
+    /**
+     * Definitions relation.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function definitions() {
+        return $this->belongsToMany('App\Models\Definition');
+    }
+
+    /**
      * Looks up a language model by code.
      *
      * @param string $code
      * @return \App\Models\Language
      */
     public static function findByCode($code) {
-        return static::where(['code' => $code])->first();
+        return static::where(['code', $code])->first();
     }
 
     /**

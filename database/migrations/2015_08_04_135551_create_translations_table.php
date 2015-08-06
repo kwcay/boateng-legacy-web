@@ -14,24 +14,27 @@ class CreateTranslationsTable extends Migration
     {
         Schema::create('translations', function(Blueprint $table)
         {
-            $table->engine = 'InnoDB';
+            $table->engine = 'MyISAM';
 
             // Primary key.
-            $table->increments('id')->unsigned();
-            $table->primary('id');
+            $table->increments('id')->primary();
 
             // Related definition.
             $table->integer('definition_id')->length(9)->unsigned();
-            $table->foreign('definition_id')->references('id')->on('definitions');
+            $table->foreign('definition_id')
+                ->references('id')->on('definitions')
+                ->onDelete('cascade');
 
             // Translations
-            $table->string('language', 3);      // Main language (not expecting sub-languages here).
-            $table->text('translation');        // Actual translation.
-            $table->text('literal');            // Literal translation.
-            $table->text('meaning');            // Elaboration on the meaning of the definition.
+            $table->string('language', 3)->index(); // Main language (not expecting sub-languages here).
+            $table->text('translation');            // Actual translation.
+            $table->text('literal');                // Literal translation.
+            $table->text('meaning');                // Elaboration on the meaning of the definition.
 
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE translations ADD FULLTEXT idx_fulltext(translation, literal, meaning)');
     }
 
     /**
