@@ -14,10 +14,10 @@ class CreateTranslationsTable extends Migration
     {
         Schema::create('translations', function(Blueprint $table)
         {
-            $table->engine = 'MyISAM';
+            $table->engine = 'InnoDB';
 
             // Primary key.
-            $table->increments('id')->primary();
+            $table->increments('id');
 
             // Related definition.
             $table->integer('definition_id')->length(9)->unsigned();
@@ -33,8 +33,6 @@ class CreateTranslationsTable extends Migration
 
             $table->timestamps();
         });
-
-        DB::statement('ALTER TABLE translations ADD FULLTEXT idx_fulltext(translation, literal, meaning)');
     }
 
     /**
@@ -47,4 +45,3 @@ class CreateTranslationsTable extends Migration
         Schema::drop('translations');
     }
 }
-

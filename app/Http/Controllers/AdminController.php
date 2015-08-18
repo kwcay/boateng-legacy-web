@@ -1,23 +1,26 @@
-<?php namespace App\Http\Controllers;
+<?php
+namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use App\Models\Language;
+use App\Models\Definition;
 
-use Illuminate\Http\Request;
-
-class AdminController extends Controller {
-
+/**
+ *
+ */
+class AdminController extends Controller
+{
 	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
+	 * Displays main landing page.
 	 */
-	public function index() {
-		return view('admin.index');
-	}
-
-    public function importPage() {
-        return view('forms.import');
+    public function index() {
+        return view('admin.index');
     }
 
+    public function import() {
+        return view('admin.import');
+    }
+
+    public function export() {
+        return view('admin.export');
+    }
 }

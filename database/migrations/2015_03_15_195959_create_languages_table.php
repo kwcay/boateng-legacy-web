@@ -3,8 +3,8 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLanguagesTable extends Migration {
-
+class CreateLanguagesTable extends Migration
+{
 	/**
 	 * Run the migrations.
 	 *
@@ -17,7 +17,7 @@ class CreateLanguagesTable extends Migration {
             $table->engine = 'InnoDB';
 
             // Internal ID.
-			$table->increments('id')->length(6)->primary();
+			$table->increments('id')->length(6);
 
             // Language codes.
             $table->string('code', 7)->unique();
@@ -45,4 +45,3 @@ class CreateLanguagesTable extends Migration {
 		Schema::drop('languages');
 	}
 }
-

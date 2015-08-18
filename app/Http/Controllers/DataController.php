@@ -44,12 +44,16 @@ class DataController extends Controller
     public function import()
     {
         // Retrieve data.
-        $this->getDataFromRequest();
+        if (!$this->getDataFromRequest()) {
+            return redirect(route('admin.import'))->withMessages(['Couldn\'t parse data.']);
+        }
 
         // Parse data.
         if (!$this->parseData() || !$this->analyzeData()) {
             return redirect(route('admin.import'))->withMessages([$this->error]);
         }
+
+        dd($this->dataSet);
 
         // Import data.
         $success = '%d of %d %s were imported into the database.';
@@ -232,6 +236,7 @@ class DataController extends Controller
 
             else
             {
+                // TODO: convert each data type to an instance of its model.
                 $this->dataType = $meta['type'];
                 $this->dataSet = $data;
             }

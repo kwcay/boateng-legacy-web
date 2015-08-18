@@ -43,9 +43,9 @@ Route::get('stats', function() {
 Route::group(['prefix' => 'admin'], function()
 {
     // General pages
-    Route::get('/',         ['as' => 'admin', 'uses' => 'AdminPageController@index']);
-    Route::get('/import',   ['as' => 'admin.import', 'uses' => 'AdminPageController@import']);
-    Route::get('/export',   ['as' => 'admin.export', 'uses' => 'AdminPageController@export']);
+    Route::get('/',         ['as' => 'admin', 'uses' => 'AdminController@index']);
+    Route::get('/import',   ['as' => 'admin.import', 'uses' => 'AdminController@import']);
+    Route::get('/export',   ['as' => 'admin.export', 'uses' => 'AdminController@export']);
 
     // Resource import.
     Route::post('/import',  ['as' => 'admin.import.action', 'uses' => 'DataController@import']);
@@ -59,4 +59,3 @@ Route::get('/{lang}',           'LanguageController@show');
 Route::get('/{lang}/+edit',     'LanguageController@edit');
 Route::get('/{lang}/+add',      'DefinitionController@create');
 Route::get('/{lang}/{word}',    'DefinitionController@show');
-

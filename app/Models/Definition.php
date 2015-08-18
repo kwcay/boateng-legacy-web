@@ -2,14 +2,19 @@
 
 use App\Models\Language;
 use Illuminate\Support\Arr;
-use App\Traits\ValidatableResourceTrait as Validatable;
-use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
-use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ImportableResourceTrait as Importable;
-use App\Traits\HasParamsTrait as HasParams;
+use cebe\markdown\MarkdownExtra;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Traits\HasParamsTrait as HasParams;
+use App\Traits\ExportableResourceTrait as Exportable;
+use App\Traits\ImportableResourceTrait as Importable;
+use App\Traits\ValidatableResourceTrait as Validatable;
+use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+
+/**
+ *
+ */
 class Definition extends Model
 {
     use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
@@ -18,6 +23,8 @@ class Definition extends Model
     CONST TYPE_PHRASE = 1;      // Proverbs, sayings, etc.
     CONST TYPE_POEM = 2;        // Poems, songs, etc.
     CONST TYPE_STORY = 3;       // Short stories.
+
+    private $markdown;
 
     /**
      * @var array
@@ -30,17 +37,21 @@ class Definition extends Model
     ];
 
     /**
-     * @var array   Attributes which aren't mass-assignable.
+     * Attributes which aren't mass-assignable.
+     *
+     * @var array
      */
     protected $guarded = ['id'];
 
     /**
-     * @var array   Attributes that should be mutated to dates.
+     * Attributes that should be mutated to dates.
+     *
+     * @var array
      */
     protected $dates = ['deleted_at'];
 
     /**
-     * @var array   Attribute types
+     * Attributes that should be cast when assigned.
      */
     protected $casts = [
         'title' => 'string',
@@ -51,9 +62,6 @@ class Definition extends Model
         'params' => 'array',
     ];
 
-    /**
-     * @var array   Validation rules.
-     */
     public $validationRules = [
         'title' => 'required|string|min:2',
         'type' => 'required|integer',
@@ -61,9 +69,6 @@ class Definition extends Model
         'languages' => 'required'
     ];
 
-    /**
-     * @var array
-     */
     public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
 
     /**
@@ -165,4 +170,3 @@ class Definition extends Model
         return $lang;
     }
 }
-
