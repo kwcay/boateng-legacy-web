@@ -77,7 +77,7 @@ class DataController extends Controller
             return redirect(route('admin.import'))->withMessages([$this->error]);
         }
 
-        dd($this->dataSet);
+        // dd($this->dataSet);
 
         // Import data.
         $success = '%d of %d %s were imported into the database.';
@@ -323,9 +323,6 @@ class DataController extends Controller
                 $lang->setParam('desc', $oldLang['desc']);
             }
 
-            // State
-            $lang->state = 1;
-
             $data[] = $lang;
         }
 
@@ -338,24 +335,29 @@ class DataController extends Controller
 
         foreach ($oldFormat as $oldDef)
         {
-            $def = new Definition(Arr::only($oldDef, ['source', 'params', 'created_at']));
+            $def = new Definition(Arr::only($oldDef, ['created_at']));
+            $def->setAttribute('type', Definition::TYPE_WORD);
 
             // Definition data.
             if (strpos($oldDef['word'], ',')) {
-                $names = @explode(',', $oldDef['word']);
-                $def->setAttribute('data', Arr::pull($names, 0));
-                $def->setAttribute('alt_data', implode(', ', $names));
+                $titles = @explode(',', $oldDef['word']);
+                $def->setAttribute('title', Arr::pull($titles, 0));
+                $def->setAttribute('alt_titles', implode(', ', $titles));
             } else {
-                $def->setAttribute('data', $oldDef['word']);
+                $def->setAttribute('title', $oldDef['word']);
             }
 
             // Other attributes.
-            $def->setAttribute('languages', $oldDef['language']);
-            $def->setAttribute('translations', $oldDef['translation']);
-            $def->setAttribute('meanings', $oldDef['meaning']);
+            $def->setRelationToBeImported('languages', @explode(',', $oldDef['language']));
+            $def->setRelationToBeImported('translations', json_decode($oldDef['translation'], true));
+            $def->setRelationToBeImported('meanings', json_decode($oldDef['meaning'], true));
+
+            if ($params = json_decode($oldDef['params'], true)) {
+                $def->setAttribute('sub_type', $params['type']);
+            }
 
             // State
-            $def->state = 1;
+            $def->setAttribute('state', Definition::STATE_DEFAULT);
 
             $data[] = $def;
         }

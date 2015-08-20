@@ -24,6 +24,8 @@ class Definition extends Model
     CONST TYPE_POEM = 2;        // Poems, songs, etc.
     CONST TYPE_STORY = 3;       // Short stories.
 
+    CONST STATE_DEFAULT = 1;
+
     private $markdown;
 
     /**
@@ -55,8 +57,9 @@ class Definition extends Model
      */
     protected $casts = [
         'title' => 'string',
-        'extra_data' => 'string',
+        'alt_titles' => 'string',
         'type' => 'integer',
+        'data' => 'string',
         'tags' => 'string',
         'state' => 'integer',
         'params' => 'array',
@@ -64,9 +67,11 @@ class Definition extends Model
 
     public $validationRules = [
         'title' => 'required|string|min:2',
+        'alt_titles' => 'string|min:2',
+        'data' => 'string',
         'type' => 'required|integer',
         'tags' => 'string|min:2|regex:/^([a-z, \-]+)$/i',
-        'languages' => 'required'
+        'state' => 'required|integer'
     ];
 
     public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
@@ -99,6 +104,11 @@ class Definition extends Model
         'say'   => 'saying',
     ];
 
+    /**
+     * Relations to be created when importing this definition.
+     */
+    private $relationsToBeImported = [];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -106,6 +116,10 @@ class Definition extends Model
         // Markdown parser.
         $this->markdown = new MarkdownExtra;
         $this->markdown->html5 = true;
+
+        // Try to import relations when saving an imported definition.
+        static::saving([$this, 'checkAttributes']);
+        static::saved([$this, 'importRelations']);
     }
 
     public function translations() {
@@ -168,5 +182,66 @@ class Definition extends Model
         }
 
         return $lang;
+    }
+
+    public function setRelationToBeImported($relation, $data) {
+        $this->relationsToBeImported[$relation] = $data;
+    }
+
+    public function getRelationsToBeImported() {
+        return $this->relationsToBeImported;
+    }
+
+    /**
+     * Checks Definition properties before saving to database.
+     *
+     * @param \App\Models\Definition $def
+     * @return bool
+     */
+    public function checkAttributes($def)
+    {
+        // Check relations to be imported, if any.
+        $relations = $def->getRelationsToBeImported();
+        if (count($relations))
+        {
+            // This definition must exist in some language.
+            if (!isset($relations['languages']) || !count($relations['languages'])) {
+                return false;
+            }
+
+            // Check that languages exist in our database.
+            foreach ($relations['languages'] as $code) {
+                if (!Language::where('code', $code)->exists()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Tries to import relations when importing a definition.
+     *
+     * @param \App\Models\Definition $def
+     * @return bool
+     */
+    public function importRelations($def)
+    {
+        $relations = $def->getRelationsToBeImported();
+        if (!count($relations)) {
+            return true;
+        }
+
+        // Update languagee relations.
+        foreach ($relations['languages'] as $code) {
+            if (!Language::addRelatedDefinition($code, $def)) {
+                return false;
+            }
+        }
+
+        // TODO: add translations.
+
+        return true;
     }
 }

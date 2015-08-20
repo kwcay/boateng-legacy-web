@@ -96,7 +96,7 @@ class Language extends Model
      * @return \App\Models\Language
      */
     public static function findByCode($code) {
-        return static::where(['code', $code])->first();
+        return static::where(['code' => $code])->first();
     }
 
     /**
@@ -118,6 +118,36 @@ class Language extends Model
     public function getEditUri($full = true) {
         return route('language.edit', ['code' => $this->code], $full);
     }
+
+    /**
+     * Creates the relation between an language and a definition.
+     */
+     public static function addRelatedDefinition($code, $def)
+     {
+         // Keep a static array of languages so that we don't have to
+         // retrieve them again and again from the database.
+         static $languages;
+
+         // Performance check.
+         if (!strlen($code) || !$def instanceof Definition) {
+             return false;
+         }
+
+         // Retrieve language object.
+         if (!isset($languages[$code]))
+         {
+             $languages[$code] = static::findByCode($code);
+
+             if (!$languages[$code]) {
+                 return false;
+             }
+         }
+
+         // Add relation.
+         isset($def->id) && $def->id > 0
+            ? $languages[$code]->definitions()->attach($def)
+            : $languages[$code]->definitions()->save($def);
+     }
 
     /**
      * Retrieves country list (compiled with umpirsky/country-list library).
@@ -143,12 +173,7 @@ class Language extends Model
      */
     public function checkAttributes($lang)
     {
-        // Make sure state is valid.
-        if (!is_int($lang->state)) {
-            $lang->state = 1;
-        }
 
         return true;
     }
 }
-
