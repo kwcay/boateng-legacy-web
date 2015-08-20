@@ -33,12 +33,11 @@ trait HasParamsTrait
      */
     public function setParam($key, $value)
     {
-        $old = Arr::get($this->params, $key, null);
         $params = $this->params;
+        $old = Arr::get($params, $key, null);
         Arr::set($params, $key, $value);
         $this->params = $params;
 
         return $old;
     }
 }
-

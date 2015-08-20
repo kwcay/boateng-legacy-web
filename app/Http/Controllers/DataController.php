@@ -13,20 +13,44 @@ use App\Http\Controllers\Controller;
 
 class DataController extends Controller
 {
+    /**
+     * Directory to temporarily store data files.
+     */
     private $dataPath;
 
+    /**
+     * Original format of data (e.g. YAML, JSON, etc.)
+     */
     private $dataFormat;
 
-    private $dataType;
-
-    private $dataSet;
-
-    private $dataObject;
-
+    /**
+     * Stores the raw data file to be parsed.
+     */
     private $rawData;
 
+    /**
+     * Model associated with data.
+     */
+    private $dataType;
+
+    /**
+     * Fully parsed data object.
+     */
+    private $dataObject;
+
+    /**
+     * Array containing a set of data.
+     */
+    private $dataSet;
+
+    /**
+     * Error message.
+     */
     private $error = '';
 
+    /**
+     *
+     */
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
@@ -236,9 +260,15 @@ class DataController extends Controller
 
             else
             {
-                // TODO: convert each data type to an instance of its model.
+
+                $this->error = 'TODO: import and validate well formatted data.';
+
+                $this->dataSet = [];
                 $this->dataType = $meta['type'];
-                $this->dataSet = $data;
+                // foreach ($data as $item)
+                // {
+                //
+                // }
             }
         }
 
@@ -272,7 +302,12 @@ class DataController extends Controller
 
         foreach($oldFormat as $oldLang)
         {
-            $lang = new Language(Arr::only($oldLang, ['code', 'parent', 'countries', 'desc', 'params', 'created_at']));
+            $lang = new Language(Arr::only($oldLang, ['code', 'countries', 'created_at']));
+
+            // Parent language.
+            if (isset($oldLang['parent'])) {
+                $lang->setAttribute('parent_code', $oldLang['parent']);
+            }
 
             // Language name.
             if (strpos($oldLang['name'], ',')) {
@@ -281,6 +316,11 @@ class DataController extends Controller
                 $lang->setAttribute('alt_names', implode(', ', $names));
             } else {
                 $lang->setAttribute('name', $oldLang['name']);
+            }
+
+            // Description.
+            if (isset($oldLang['desc'])) {
+                $lang->setParam('desc', $oldLang['desc']);
             }
 
             // State

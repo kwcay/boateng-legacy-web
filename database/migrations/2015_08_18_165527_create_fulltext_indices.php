@@ -32,6 +32,10 @@ class CreateFulltextIndices extends Migration
      */
     public function down()
     {
-        // TODO: how to drop a fulltext index.
+        DB::statement('ALTER TABLE languages DROP INDEX idx_name');
+        DB::statement('ALTER TABLE definitions DROP INDEX idx_title');
+        DB::statement('ALTER TABLE definitions DROP INDEX idx_data');
+        DB::statement('ALTER TABLE definitions DROP INDEX idx_tags');
+        DB::statement('ALTER TABLE translations DROP INDEX idx_translation');
     }
 }
