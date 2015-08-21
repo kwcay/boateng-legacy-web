@@ -1,6 +1,9 @@
 <?php namespace App\Models;
 
+use Log;
+
 use App\Models\Language;
+use App\Models\Translation;
 use Illuminate\Support\Arr;
 use cebe\markdown\MarkdownExtra;
 use Illuminate\Database\Eloquent\Model;
@@ -24,12 +27,11 @@ class Definition extends Model
     CONST TYPE_POEM = 2;        // Poems, songs, etc.
     CONST TYPE_STORY = 3;       // Short stories.
 
-    CONST STATE_DEFAULT = 1;
-
-    private $markdown;
+    CONST STATE_HIDDEN = 0;     // Hidden definition.
+    CONST STATE_VISIBLE = 1;    // Default state.
 
     /**
-     * @var array
+     * Definition types.
      */
     public $types = [
         0 => 'word',
@@ -39,16 +41,72 @@ class Definition extends Model
     ];
 
     /**
+     * Definition sub-types.
+     */
+    public $subTypes = [
+
+        // Parts of speech.
+        // See: http://www.edb.utexas.edu/minliu/pbl/ESOL/help/libry/speech.htm
+        // See: http://www.aims.edu/student/online-writing-lab/grammar/parts-of-speech
+        0 => [
+            'adj'   => 'adjective',
+            'adv'   => 'adverb',
+            'conn'  => 'connective',
+            'ex'    => 'exclamation',
+            'pre'   => 'preposition',
+            'pro'   => 'pronoun',
+            'n'     => 'noun',
+            'v'     => 'verb',
+        ],
+
+        // Types of phrases.
+        1 => [
+            'ex'    => 'expression',
+            'prov'  => 'proverb',
+            'say'   => 'saying',
+        ],
+
+        //
+        2 => [
+
+        ],
+
+        //
+        3 => [
+
+        ]
+    ];
+
+    /**
+     * Definition states.
+     */
+    public $states = [
+        0 => 'hidden',
+        1 => 'visible'
+    ];
+
+    /**
+     * The Markdown parser.
+     */
+    private $markdown;
+
+    /**
      * Attributes which aren't mass-assignable.
-     *
-     * @var array
      */
     protected $guarded = ['id'];
 
     /**
+    * The attributes that should be hidden for arrays.
+    */
+    protected $hidden = ['id', 'state', 'params', 'created_at', 'updated_at', 'deleted_at', 'languages'];
+
+    /**
+     * The accessors to append to the model's array form.
+     */
+    protected $appends = ['language', 'uri'];
+
+    /**
      * Attributes that should be mutated to dates.
-     *
-     * @var array
      */
     protected $dates = ['deleted_at'];
 
@@ -70,39 +128,12 @@ class Definition extends Model
         'alt_titles' => 'string|min:2',
         'data' => 'string',
         'type' => 'required|integer',
+        'sub_type' => 'string',
         'tags' => 'string|min:2|regex:/^([a-z, \-]+)$/i',
         'state' => 'required|integer'
     ];
 
     public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
-
-    /**
-     * Parts of speech. Used for "word" type.
-     *
-     * See: http://www.edb.utexas.edu/minliu/pbl/ESOL/help/libry/speech.htm
-     * See: http://www.aims.edu/student/online-writing-lab/grammar/parts-of-speech
-     *
-     * @var array   Parts of speech.
-     */
-    public $partsOfSpeech = [
-        'adj'   => 'adjective',
-        'adv'   => 'adverb',
-        'conn'  => 'connective',
-        'ex'    => 'exclamation',
-        'pre'   => 'preposition',
-        'pro'   => 'pronoun',
-        'n'     => 'noun',
-        'v'     => 'verb',
-    ];
-
-    /**
-     * @var array
-     */
-    public $typesOfPhrases = [
-        'ex'    => 'expression',
-        'prov'  => 'proverb',
-        'say'   => 'saying',
-    ];
 
     /**
      * Relations to be created when importing this definition.
@@ -116,18 +147,14 @@ class Definition extends Model
         // Markdown parser.
         $this->markdown = new MarkdownExtra;
         $this->markdown->html5 = true;
-
-        // Try to import relations when saving an imported definition.
-        static::saving([$this, 'checkAttributes']);
-        static::saved([$this, 'importRelations']);
     }
 
     public function translations() {
-        return $this->hasMany('App\Models\Translations');
+        return $this->hasMany('App\Models\Translation');
     }
 
     public function languages() {
-        return $this->belongsToMany('App\Models\Languages');
+        return $this->belongsToMany('App\Models\Language');
     }
 
     /**
@@ -145,7 +172,7 @@ class Definition extends Model
      * @return string
      */
     public function getUri($full = false) {
-        $path   = $this->mainLanguage->code .'/'. str_replace(' ', '_', $this->data);
+        $path   = $this->mainLanguage->code .'/'. str_replace(' ', '_', $this->title);
         return $full ? url($path) : $path;
     }
 
@@ -158,30 +185,113 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->languages.
-     *
-     * @param $str
-     * @return array
-     */
-    public function getLanguagesAttribute($str) {
-        return explode(',', $str);
-    }
-
-    /**
      * Accessor for $this->mainLanguage.
      *
      * @param $str
      * @return \App\Models\Language
      */
-    public function getMainLanguageAttribute($str = null)
+    public function getMainLanguageAttribute()
     {
-        static $lang = false;
+        static $main = false;
 
-        if ($lang === false) {
-            $lang = Language::findByCode($this->languages[0]);
+        if ($main === false)
+        {
+            // Loop through related languages.
+            if ($code = $this->getParam('mainLang', false))
+            {
+                foreach ($this->languages as $lang)
+                {
+                    if ($lang->code == $code)
+                    {
+                        $main = $lang;
+                        break;
+                    }
+                }
+            }
+
+            // Or pick first language as a default.
+            if ($main === false) {
+                $main = $this->languages[0];
+            }
         }
 
-        return $lang;
+        return $main;
+    }
+
+    /**
+     * Accessor for $this->type.
+     *
+     * @param int $type
+     * @return string
+     */
+    public function getTypeAttribute($type = 0) {
+        return Arr::get($this->types, $type, $this->types[0]);
+    }
+
+    /**
+     * Accessor for $this->sub_type.
+     *
+     * @param string $subType
+     * @return string
+     */
+    public function getSubTypeAttribute($subType = '')
+    {
+        foreach ($this->types as $index => $type) {
+            if (Arr::has($this->subTypes[$index], $subType)) {
+                return Arr::get($this->subTypes[$index], $subType);
+            }
+        }
+
+        return $subType;
+    }
+
+    /**
+     * Mutator for $this->sub_type.
+     *
+     * @param string $subType
+     * @return void
+     */
+    public function setSubTypeAttribute($subType)
+    {
+        // Try to find the right key for this sub-type.
+        $typeKey = $this->attributes['type'];
+        if (in_array(strtolower($subType), $this->subTypes[$typeKey])) {
+            $subType = array_keys($this->subTypes[$typeKey], strtolower($subType))[0];
+        }
+
+        $this->attributes['sub_type'] = $subType;
+    }
+
+    /**
+     * Accessor for $this->state.
+     *
+     * @param int $state
+     * @return string
+     */
+    public function getStateAttribute($state = 0) {
+        return Arr::get($this->states, $state, $this->states[1]);
+    }
+
+    /**
+     * Accessor for $this->language.
+     *
+     * @return string
+     */
+    public function getLanguageAttribute() {
+        return [
+            'code' => $this->mainLanguage->code,
+            'name' => $this->mainLanguage->name,
+            'uri' => $this->mainLanguage->getUri(true)
+        ];
+    }
+
+    /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return $this->getUri(true);
     }
 
     public function setRelationToBeImported($relation, $data) {
@@ -198,7 +308,7 @@ class Definition extends Model
      * @param \App\Models\Definition $def
      * @return bool
      */
-    public function checkAttributes($def)
+    public static function checkAttributes($def)
     {
         // Check relations to be imported, if any.
         $relations = $def->getRelationsToBeImported();
@@ -226,21 +336,32 @@ class Definition extends Model
      * @param \App\Models\Definition $def
      * @return bool
      */
-    public function importRelations($def)
+    public static function importRelations($def)
     {
         $relations = $def->getRelationsToBeImported();
         if (!count($relations)) {
             return true;
         }
 
-        // Update languagee relations.
+        // Update language relations.
         foreach ($relations['languages'] as $code) {
             if (!Language::addRelatedDefinition($code, $def)) {
                 return false;
             }
         }
 
-        // TODO: add translations.
+        // Update translations relations.
+        if (isset($relations['translations']) && count($relations['translations']))
+        {
+            foreach ($relations['translations'] as $lang => $translation)
+            {
+                $def->translations()->save(new Translation([
+                    'language' => $lang,
+                    'translation' => $translation,
+                    'meaning' => Arr::get($relations['meanings'], $lang, '')
+                ]));
+            }
+        }
 
         return true;
     }

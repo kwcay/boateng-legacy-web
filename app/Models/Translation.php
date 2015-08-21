@@ -21,6 +21,11 @@ class Translation extends Model
     protected $guarded = ['id'];
 
     /**
+    * The attributes that should be hidden for arrays.
+    */
+    protected $hidden = ['id', 'definition_id', 'created_at', 'updated_at', 'deleted_at'];
+
+    /**
      * @var array   Attributes that should be mutated to dates.
      */
     protected $dates = ['deleted_at'];
@@ -58,4 +63,3 @@ class Translation extends Model
         return $this->belongsTo('App\Models\Definition');
     }
 }
-

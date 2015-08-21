@@ -77,8 +77,6 @@ class DataController extends Controller
             return redirect(route('admin.import'))->withMessages([$this->error]);
         }
 
-        // dd($this->dataSet);
-
         // Import data.
         $success = '%d of %d %s were imported into the database.';
         switch ($this->dataType)
@@ -353,11 +351,11 @@ class DataController extends Controller
             $def->setRelationToBeImported('meanings', json_decode($oldDef['meaning'], true));
 
             if ($params = json_decode($oldDef['params'], true)) {
-                $def->setAttribute('sub_type', $params['type']);
+                $def->subType = $params['type'];
             }
 
             // State
-            $def->setAttribute('state', Definition::STATE_DEFAULT);
+            $def->setAttribute('state', Definition::STATE_VISIBLE);
 
             $data[] = $def;
         }

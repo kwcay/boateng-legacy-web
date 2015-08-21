@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use DB;
 use URL;
 use Lang;
 use Request;
@@ -239,11 +240,11 @@ class DefinitionController extends Controller
      * @param string $query
      * @return string
      */
-    public function search($query = '')
+    public function search($search = '')
     {
         // Performance check
-        $query  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $query)));
-        if (strlen($query) < 2) {
+        $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
+        if (strlen($search) < 2) {
             return $this->abort(400, 'Query too short');
         }
 
@@ -251,35 +252,59 @@ class DefinitionController extends Controller
         $limit = min(1, max(100, (int) Request::get('limit', 100)));
 
         // Query the database
-        $defs = Definition::where('data', 'LIKE', '%'. $query .'%')
-            ->orWhere('alt_data', 'LIKE', '%'. $query .'%')
-            ->orWhere('translations', 'LIKE', '%'. $query .'%')
-            ->orWhere('literal_translations', 'LIKE', '%'. $query .'%')
-            ->orWhere('meanings', 'LIKE', '%'. $query .'%')
-            ->skip($offset)->take($limit)->get();
+        $IDs = DB::table('definitions AS d')
+
+            // Create a temporary score column so we can sort the IDs.
+            ->selectRaw(
+                'd.id, '.
+                'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
+                'MATCH(t.translation, t.meaning, t.literal) AGAINST(?) * 9 AS tran_score, '.
+                'MATCH(d.data) AGAINST(?) * 8 AS data_score, '.
+                'MATCH(d.tags) AGAINST(?) * 5 AS tags_score ',
+                [$search, $search, $search, $search])
+
+            // Join the translations table so we can search its columns.
+            ->leftJoin('translations AS t', 't.definition_id', '=', 'd.id')
+
+            //
+            ->whereRaw(
+                'MATCH(d.title, d.alt_titles) AGAINST(?) '.
+                'OR MATCH(t.translation, t.meaning, t.literal) AGAINST(?) '.
+                'OR MATCH(d.data) AGAINST(?) '.
+                'OR MATCH(d.tags) AGAINST(?) ',
+                [$search, $search, $search, $search])
+
+            //
+            ->orderByraw('(title_score + tran_score + data_score + tags_score) DESC')
+
+            //
+            ->distinct()->skip($offset)->take($limit)->lists('d.id');
+
+        // Retrieve results.
+        $defs = count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : [];
 
         // Format results
         $results  = [];
         if (count($defs)) {
             foreach ($defs as $def) {
-                $results[]  = [
-                    'data'          => $def->getAttribute('data'),
-                    'type'          => $def->getParam('type'),
-                    'alt'           => $def->alt_data,
-                    'translations'  => ['en' => $def->getTranslation('en')],
-                    'meanings'      => ['en' => $def->getMeaning('en')],
-                    'language'      => [
-                        'code'  => $def->mainLanguage->getAttribute('code'),
-                        'name'  => $def->mainLanguage->getAttribute('name'),
-                        'uri'   => $def->mainLanguage->getUri(),
-                        'all'   => $def->languages
-                    ],
-                    'uri'           => $def->getUri()
-                ];
+                $results[] = $def->toArray();
+                // $results[]  = [
+                //     'title'         => $def->title,
+                //     'type'          => $def->types[$def->type],
+                //     'alt'           => $def->alt_titles,
+                //     'translations'  => ['en' => $def->translations['en']->translation],
+                //     'meanings'      => ['en' => $def->translations['en']->meaning],
+                //     'language'      => [
+                //         'code'  => $def->mainLanguage->code,
+                //         'name'  => $def->mainLanguage->name,
+                //         'uri'   => $def->mainLanguage->getUri(),
+                //         'all'   => $def->languages
+                //     ],
+                //     'uri'           => $def->getUri()
+                // ];
             }
         }
 
-        return $this->send(['query' => $query, 'definitions' => $results]);
+        return $this->send(['query' => $search, 'definitions' => $results]);
     }
 }
-

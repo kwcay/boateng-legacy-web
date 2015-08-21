@@ -20,7 +20,7 @@ trait ImportableResourceTrait
             }
 
             // Validate.
-            $test = static::validate($resource->attributesToArray());
+            $test = static::validate($resource->getArrayableAttributes());
             if ($test->fails()) {
                 $results['skipped']++;
                 continue;
@@ -33,4 +33,3 @@ trait ImportableResourceTrait
         return $results;
     }
 }
-

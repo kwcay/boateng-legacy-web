@@ -32,6 +32,7 @@ class CreateTranslationsTable extends Migration
             $table->text('meaning');                // Elaboration on the meaning of the definition.
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

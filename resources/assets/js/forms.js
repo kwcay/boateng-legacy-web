@@ -44,12 +44,12 @@ var Forms =
                     var title   = item.name;
                     if (item.parentName && item.parentName.length)
                         title += ' (a sub-language of '+ item.parentName +')';
-                    
+
                     // Add a short desciption
                     var hint = '';
                     if (item.altNames && item.altNames.length)
                         hint = '<span class="hint"> &mdash; Also known as '+ item.altNames.join(', ') + '</span>';
-                    
+
                     // Return formatted HTML
                     return  '<div>' +
                                 '<span class="label">' + escape(title) + '</span>' + hint +
@@ -132,9 +132,9 @@ var Forms =
                         $.each(obj.results.definitions, function(i, def) {
                             html +=
                                 '<li>'+
-                                '<a href="'+ def.uri +'">'+ def.data +'</a>'+
-                                ' <small>('+ def.type +')</small>'+
-                                ' is a word that means <i>'+ def.translations.en +'</i> in '+
+                                '<a href="'+ def.uri +'">'+ def.title +'</a>'+
+                                ' <small>('+ def.sub_type +')</small>'+
+                                ' is a '+ def.type +' that means <i>'+ def.translations[0].translation +'</i> in '+
                                 ' <a href="'+ def.language.uri +'">'+ def.language.name +'</a>'+
                                 '</li>';
                         });
@@ -255,7 +255,7 @@ var Forms =
 
         this._def[name].results.html(html);
     },
-	
+
 	log: function(msg) {
 		if (console) console.log('Forms.js - '+ msg);
 	}

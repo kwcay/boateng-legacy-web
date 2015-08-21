@@ -1,5 +1,7 @@
 <?php namespace App\Models;
 
+use Log;
+
 use cebe\markdown\MarkdownExtra;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
@@ -130,6 +132,7 @@ class Language extends Model
 
          // Performance check.
          if (!strlen($code) || !$def instanceof Definition) {
+             Log::debug('Language::addRelatedDefinition - Invalid code or definition object.');
              return false;
          }
 
@@ -139,6 +142,7 @@ class Language extends Model
              $languages[$code] = static::findByCode($code);
 
              if (!$languages[$code]) {
+                 Log::debug('Language::addRelatedDefinition - Could not retrieve language object.');
                  return false;
              }
          }
@@ -147,6 +151,8 @@ class Language extends Model
          isset($def->id) && $def->id > 0
             ? $languages[$code]->definitions()->attach($def)
             : $languages[$code]->definitions()->save($def);
+        
+        return true;
      }
 
     /**
