@@ -1,19 +1,12 @@
-# Ignore vendor directory.
-/vendor
-
-# Ignore Node package manager files.
+# Laravel & vendor stuff.
 /node_modules
-npm-debug.log
-
-# Ignore Homestead.yaml file (keep only the generated Vagrantfile).
-Homestead.yaml
-
-# Ignore the Laravel environment variables.
+/vendor
 .env
-
-# Ignore phpStorm project files.
-.idea
+npm-debug.log
 
 # Ignore OSX & Windows generated files.
 Desktop.ini
 Thumbs.db
+
+# Other stuff.
+.tags_swap
