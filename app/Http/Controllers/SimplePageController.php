@@ -12,7 +12,7 @@ class SimplePageController extends Controller
 	 * Displays main landing page.
 	 */
 	public function home() {
-		return view('pages.home');
+		return view('static.home');
 	}
 
 	/**
@@ -38,7 +38,7 @@ class SimplePageController extends Controller
 	public function api() {
 		return view('pages.api');
 	}
-    
+
     /**
      * Displays Laravel's welcome page.
      */

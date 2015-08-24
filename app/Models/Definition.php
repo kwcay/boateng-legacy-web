@@ -167,23 +167,68 @@ class Definition extends Model
             static::orderByRaw('RAND()')->first();
     }
 
+    /**
+     * Retrieves a translation relation.
+     */
+    public function getTranslationRelation($lang)
+    {
+        $found = Arr::where($this->translations, function($key, $translation) use($lang) {
+            return $translation->language == $lang;
+        });
+
+        return count($found) == 1 ? $found[0] : false;
+    }
+
+    /**
+     * Checks whether the attribute of a translation is empty or not.
+     */
+    protected function hasTranslationAttribute($lang, $attribute)
+    {
+        if ($translation = $this->getTranslationRelation($lang)) {
+            return strlen($translation->$attribute);
+        }
+
+        return false;
+    }
+
+    /**
+     * Retrieves a translation attribute.
+     */
+    protected function getTranslationAttribute($lang, $attribute, $default = null)
+    {
+        if ($translation = $this->getTranslationRelation($lang)) {
+            return strlen($translation->$attribute) ? $translation->$attribute : $default;
+        }
+
+        return $default;
+    }
+
+    /**
+     * Sets a translation attribute.
+     */
+    protected function setTranslationAttribute($lang, $attribute, $data)
+    {
+        if ($translation = $this->getTranslationRelation($lang))
+        {
+            $translation->$attribute = $data;
+            $translation->save();
+        }
+    }
+
     //
     // Methods dealing with translations.
     //
 
     public function hasTranslation($lang) {
-        return Arr::has($this->translations, $lang) && strlen(Arr::get($this->translations, $lang));
+        return $this->hasTranslationAttribute($lang, 'translation');
     }
 
     public function getTranslation($lang = 'en') {
-        return Arr::get($this->translations, $lang, '');
+        return $this->getTranslationAttribute($lang, 'translation');
     }
 
-    public function setTranslation($lang, $translation)
-    {
-        $translations = $this->translations;
-        Arr::set($translations, $lang, $translation);
-        $this->translations = $translations;
+    public function setTranslation($lang, $translation) {
+        return $this->setTranslationAttribute($lang, 'translation', $translation);
     }
 
     //
@@ -191,18 +236,15 @@ class Definition extends Model
     //
 
     public function hasLiteralTranslation($lang) {
-        return Arr::has($this->literalTranslations, $lang) && strlen(Arr::get($this->literalTranslations, $lang));
+        return $this->hasTranslationAttribute($lang, 'literal');
     }
 
     public function getLiteralTranslation($lang = 'en') {
-        return Arr::get($this->literalTranslations, $lang, '');
+        return $this->getTranslationAttribute($lang, 'literal');
     }
 
-    public function setLiteralTranslation($lang, $translation)
-    {
-        $translations = $this->literalTranslations;
-        Arr::set($translations, $lang, $translation);
-        $this->literalTranslations = $translations;
+    public function setLiteralTranslation($lang, $translation) {
+        return $this->setTranslationAttribute($lang, 'literal', $translation);
     }
 
     //
@@ -210,18 +252,15 @@ class Definition extends Model
     //
 
     public function hasMeaning($lang) {
-        return Arr::has($this->meanings, $lang) && strlen(Arr::get($this->meanings, $lang));
+        return $this->hasTranslationAttribute($lang, 'meaning');
     }
 
     public function getMeaning($lang = 'en') {
-        return Arr::get($this->meanings, $lang, '');
+        return $this->getTranslationAttribute($lang, 'meaning');
     }
 
-    public function setMeaning($lang, $meaning)
-    {
-        $meanings = $this->translations;
-        Arr::set($meanings, $lang, $meaning);
-        $this->translations = $meanings;
+    public function setMeaning($lang, $meaning) {
+        return $this->setTranslationAttribute($lang, 'meaning', $meaning);
     }
 
     /**
