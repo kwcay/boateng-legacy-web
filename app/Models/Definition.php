@@ -167,6 +167,63 @@ class Definition extends Model
             static::orderByRaw('RAND()')->first();
     }
 
+    //
+    // Methods dealing with translations.
+    //
+
+    public function hasTranslation($lang) {
+        return Arr::has($this->translations, $lang) && strlen(Arr::get($this->translations, $lang));
+    }
+
+    public function getTranslation($lang = 'en') {
+        return Arr::get($this->translations, $lang, '');
+    }
+
+    public function setTranslation($lang, $translation)
+    {
+        $translations = $this->translations;
+        Arr::set($translations, $lang, $translation);
+        $this->translations = $translations;
+    }
+
+    //
+    // Methods dealing with literal translations.
+    //
+
+    public function hasLiteralTranslation($lang) {
+        return Arr::has($this->literalTranslations, $lang) && strlen(Arr::get($this->literalTranslations, $lang));
+    }
+
+    public function getLiteralTranslation($lang = 'en') {
+        return Arr::get($this->literalTranslations, $lang, '');
+    }
+
+    public function setLiteralTranslation($lang, $translation)
+    {
+        $translations = $this->literalTranslations;
+        Arr::set($translations, $lang, $translation);
+        $this->literalTranslations = $translations;
+    }
+
+    //
+    // Methods dealing with detailed meanings.
+    //
+
+    public function hasMeaning($lang) {
+        return Arr::has($this->meanings, $lang) && strlen(Arr::get($this->meanings, $lang));
+    }
+
+    public function getMeaning($lang = 'en') {
+        return Arr::get($this->meanings, $lang, '');
+    }
+
+    public function setMeaning($lang, $meaning)
+    {
+        $meanings = $this->translations;
+        Arr::set($meanings, $lang, $meaning);
+        $this->translations = $meanings;
+    }
+
     /**
      * @param bool $full
      * @return string
