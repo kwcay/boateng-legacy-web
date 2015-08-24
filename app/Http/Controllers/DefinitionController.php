@@ -42,20 +42,27 @@ class DefinitionController extends Controller
             return redirect($lang->code .'/'. $data);
         }
 
+        $test = Definition::with('languages')
+            ->where('language.code', 'twi')
+            ->get();
+
+        dd($test);
+
         // Find definitions matching the query
         $data   = str_replace('_', ' ', $data);
-        $wData  = '(data = :a OR data LIKE :b or data LIKE :c or data LIKE :d)';
+        $wData  = '(title = :a OR alt_titles LIKE :b or alt_titles LIKE :c or alt_titles LIKE :d)';
         $wLang  = '(languages = :w OR languages LIKE :x or languages LIKE :y or languages LIKE :z)';
-        $definitions = Definition::whereRaw($wData .' AND '. $wLang, [
-            ':a' => $data,
-            ':b' => $data .',%',
-            ':c' => '%,'. $data .',%',
-            ':d' => '%,'. $data,
-            ':w' => $lang->code,
-            ':x' => $lang->code .',%',
-            ':y' => '%,'. $lang->code .',%',
-            ':z' => '%,'. $lang->code
-        ])->get();
+        $definitions = Definition::with('languages', 'translations')
+            ->whereRaw($wData .' AND '. $wLang, [
+                ':a' => $data,
+                ':b' => $data .',%',
+                ':c' => '%,'. $data .',%',
+                ':d' => '%,'. $data,
+                ':w' => $lang->code,
+                ':x' => $lang->code .',%',
+                ':y' => '%,'. $lang->code .',%',
+                ':z' => '%,'. $lang->code
+            ])->get();
 
         if (!count($definitions)) {
             abort(404, Lang::get('errors.resource_not_found'));
