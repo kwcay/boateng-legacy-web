@@ -50,7 +50,14 @@ class DefinitionController extends Controller
             ->where('title', $data)
             ->get();
 
-        if (!count($definitions)) {
+        if (!count($definitions))
+        {
+            // If no definitions were found, check alternate titles...
+            $alts = Definition::search($data, 0, 1);
+            if (count($alts)) {
+                return redirect($alts[0]->getUri(false));
+            }
+
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
@@ -244,57 +251,13 @@ class DefinitionController extends Controller
         $offset = min(0, (int) Request::get('offset', 0));
         $limit = min(1, max(100, (int) Request::get('limit', 100)));
 
-        // Query the database
-        $IDs = DB::table('definitions AS d')
-
-            // Create a temporary score column so we can sort the IDs.
-            ->selectRaw(
-                'd.id, '.
-                'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
-                'MATCH(t.translation, t.meaning, t.literal) AGAINST(?) * 9 AS tran_score, '.
-                'MATCH(d.data) AGAINST(?) * 8 AS data_score, '.
-                'MATCH(d.tags) AGAINST(?) * 5 AS tags_score ',
-                [$search, $search, $search, $search])
-
-            // Join the translations table so we can search its columns.
-            ->leftJoin('translations AS t', 't.definition_id', '=', 'd.id')
-
-            //
-            ->whereRaw(
-                'MATCH(d.title, d.alt_titles) AGAINST(?) '.
-                'OR MATCH(t.translation, t.meaning, t.literal) AGAINST(?) '.
-                'OR MATCH(d.data) AGAINST(?) '.
-                'OR MATCH(d.tags) AGAINST(?) ',
-                [$search, $search, $search, $search])
-
-            //
-            ->orderByraw('(title_score + tran_score + data_score + tags_score) DESC')
-
-            //
-            ->distinct()->skip($offset)->take($limit)->lists('d.id');
-
-        // Retrieve results.
-        $defs = count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : [];
+        $defs = Definition::search($search, $offset, $limit);
 
         // Format results
         $results  = [];
         if (count($defs)) {
             foreach ($defs as $def) {
                 $results[] = $def->toArray();
-                // $results[]  = [
-                //     'title'         => $def->title,
-                //     'type'          => $def->types[$def->type],
-                //     'alt'           => $def->alt_titles,
-                //     'translations'  => ['en' => $def->translations['en']->translation],
-                //     'meanings'      => ['en' => $def->translations['en']->meaning],
-                //     'language'      => [
-                //         'code'  => $def->mainLanguage->code,
-                //         'name'  => $def->mainLanguage->name,
-                //         'uri'   => $def->mainLanguage->getUri(),
-                //         'all'   => $def->languages
-                //     ],
-                //     'uri'           => $def->getUri()
-                // ];
             }
         }
 
