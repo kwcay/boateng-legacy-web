@@ -161,10 +161,13 @@ class Definition extends Model
      * @param string $lang
      * @return mixed
      */
-    public static function random($lang = '') {
-        return strlen($lang) ?
-            static::where('languages', 'LIKE', '%'. $lang .'%')->orderByRaw('RAND()')->first() :
-            static::orderByRaw('RAND()')->first();
+    public static function random($lang = null)
+    {
+        // Get query builder.
+        $query = $lang instanceof Language ? $lang->definitions() : static::query();
+
+        // Return a random definition.
+        return $query->with('languages', 'translations')->orderByRaw('RAND()')->first();
     }
 
     /**

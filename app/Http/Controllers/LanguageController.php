@@ -31,7 +31,7 @@ class LanguageController extends Controller
             return redirect($lang->getUri(false));
         }
 
-        return view('pages.lang', [
+        return view('static.language', [
             'lang' => $lang,
             'random' => Definition::random($lang->code)
         ]);
@@ -114,7 +114,7 @@ class LanguageController extends Controller
 
     /**
      * Shortcut to create a new language or save an existing one.
-     * 
+     *
      * @param object $lang      Language object.
      * @param array $data       Language details to update.
      * @param string $return    Relative URI to redirect to.
@@ -211,4 +211,3 @@ class LanguageController extends Controller
         return $lang;
     }
 }
-

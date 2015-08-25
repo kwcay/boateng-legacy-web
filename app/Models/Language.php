@@ -3,13 +3,15 @@
 use Log;
 
 use cebe\markdown\MarkdownExtra;
-use App\Traits\ValidatableResourceTrait as Validatable;
-use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
-use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ImportableResourceTrait as Importable;
-use App\Traits\HasParamsTrait as HasParams;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Traits\HasParamsTrait as HasParams;
+use App\Traits\ExportableResourceTrait as Exportable;
+use App\Traits\ImportableResourceTrait as Importable;
+use App\Traits\ValidatableResourceTrait as Validatable;
+use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+
 
 class Language extends Model
 {
@@ -55,9 +57,6 @@ class Language extends Model
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
-
-        // Check attributes when saving the model.
-        static::saving([$this, 'checkAttributes']);
 
         // Markdown parser.
         $this->markdown = new MarkdownExtra;
@@ -151,7 +150,7 @@ class Language extends Model
          isset($def->id) && $def->id > 0
             ? $languages[$code]->definitions()->attach($def)
             : $languages[$code]->definitions()->save($def);
-        
+
         return true;
      }
 

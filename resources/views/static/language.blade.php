@@ -4,7 +4,7 @@
 
 @section('body')
 	@include('layouts.header')
-	
+
 	<section>
 		<h1>
             <span class="edit-res">
@@ -12,16 +12,16 @@
             </span>
             {{ $lang->name }}
         </h1>
-        
+
         @if ($random)
         <br />
         <div class="emphasis">
             <i>A random word in {{ $lang->name }}:</i><br />
-            <em>&ldquo; <a href="{{ $random->getUri() }}">{{ $random->data }}</a> &rdquo;</em><br />
+            <em>&ldquo; <a href="{{ $random->getUri() }}">{{ $random->title }}</a> &rdquo;</em><br />
             <small><a href="{{ route('language.show', ['code' => $lang->code]) }}">more</a></small>
         </div>
         <br />
-        
+
         @else
         <div class="center">
             We have no words in this language yet.<br />
@@ -35,13 +35,9 @@
             The first word that was added to Di Nkɔmɔ for <em>{{ $lang->name }}</em> is : [to do].
             The latest word to be added was: [to do].
             <br /><br />
-
-            @if (strlen($lang->desc))
-                {{ $lang->getDescription() }}
-            @endif
         </div>
         @endif
-		
+
 	</section>
 
 	@include('layouts.footer')
