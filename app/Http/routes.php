@@ -25,6 +25,12 @@ Route::resource('definition',               'DefinitionController', ['except' =>
 Route::get('/definition/search/{query?}',   'DefinitionController@search');
 Route::post('/definition/search/{query?}',  'DefinitionController@search');
 
+// Translation endpoints.
+Route::resource('translation',  'TranslationController');
+
+// Audio endpoints.
+Route::resource('audio',        'AudioController');
+
 // User pages
 //Route::get('/login',    'PageController@showLoginForm');
 Route::controllers([

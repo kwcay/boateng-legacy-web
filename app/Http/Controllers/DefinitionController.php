@@ -24,6 +24,8 @@ class DefinitionController extends Controller
      * @param string $code  ISO 639-3 language code.
      * @param string $raw   Word to be defined.
      * @return mixed
+     *
+     * TODO: handle different definition types.
      */
     public function show($code, $raw = null)
     {
@@ -65,7 +67,8 @@ class DefinitionController extends Controller
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
-        return view('pages.definition', [
+        // TODO: the view will depend on the definition type.
+        return view('pages.words', [
             'lang'  => $lang,
             'query' => $data,
             'definitions' => $definitions
