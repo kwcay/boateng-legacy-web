@@ -12,6 +12,10 @@ use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 
+
+/**
+ *
+ */
 class DefinitionController extends Controller
 {
     /**
@@ -47,7 +51,7 @@ class DefinitionController extends Controller
         $wData  = '(title = :a OR alt_titles LIKE :b or alt_titles LIKE :c or alt_titles LIKE :d)';
         $definitions = $lang->definitions()
             ->with('languages', 'translations')
-            ->where('title', $data)
+            ->where('title', '=', $data)
             ->get();
 
         if (!count($definitions))
@@ -61,11 +65,11 @@ class DefinitionController extends Controller
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
-        return view('static.definition', array(
+        return view('pages.definition', [
             'lang'  => $lang,
             'query' => $data,
             'definitions' => $definitions
-        ));
+        ]);
     }
 
 	/**

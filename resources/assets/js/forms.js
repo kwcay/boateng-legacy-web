@@ -78,7 +78,7 @@ var Forms =
      * @param options
      * @param lang
      */
-    setupDefinitionLookup: function(name, options, lang)
+    setupDefinitionLookup: function(name, options)
     {
         // Retrieve form elements.
         name = name || 'search';
@@ -152,11 +152,11 @@ var Forms =
         });
 
         // Form clearing.
-        //this._def[name].clear.click(function() {
-        //    form.q.value	= '';
-        //    resultsDiv.html('<div class="center">Use this <em>&#10548;</em> to lookup words<br />in a another language.</div>');
-        //    form.q.focus();
-        //});
+        this._def[name].clear.click(function() {
+           this.query.val('');
+           this.results.html('<div class="center">Use this <em>&#10548;</em> to lookup words<br />in '+ this.language.name +'.</div>');
+           this.query.focus();
+       }.bind(this._def[name]));
     },
 
     /**

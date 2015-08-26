@@ -3,7 +3,7 @@
 @section('title', 'Di Nkomo API')
 
 @section('body')
-	@include('layouts.header')
+	@include('partials.header')
 	
 	<section>
 		<h1>Application Program Interface</h1>
@@ -16,5 +16,5 @@
         <code>{{ URL::route('api.definition.index') }}</code>
 	</section>
 
-	@include('layouts.footer')
+	@include('partials.footer')
 @stop

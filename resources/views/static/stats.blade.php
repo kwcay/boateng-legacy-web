@@ -3,7 +3,7 @@
 @section('title', 'Di Nkomo: in numbers.')
 
 @section('body')
-	@include('layouts.header')
+	@include('partials.header')
 	
 	<section>
 		<h1>Some stats</h1>
@@ -18,5 +18,5 @@
 		</div>
 	</section>
 
-	@include('layouts.footer')
+	@include('partials.footer')
 @stop

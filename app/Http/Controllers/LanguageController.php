@@ -11,6 +11,9 @@ use App\Models\Language;
 use App\Models\Definition;
 use App\Http\Controllers\Controller;
 
+/**
+ *
+ */
 class LanguageController extends Controller
 {
     /**
@@ -31,9 +34,11 @@ class LanguageController extends Controller
             return redirect($lang->getUri(false));
         }
 
-        return view('static.language', [
+        return view('pages.language', [
             'lang' => $lang,
-            'random' => Definition::random($lang->code)
+            'random' => Definition::random($lang->code),
+            'first' => $lang->definitions()->orderBy('created_at', 'asc')->first(),
+            'latest' => $lang->definitions()->orderBy('created_at', 'desc')->first()
         ]);
     }
 

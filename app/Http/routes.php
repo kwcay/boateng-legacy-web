@@ -1,11 +1,10 @@
 <?php
 
-// General pages.
-Route::get('/',             ['as' => 'home', 'uses' => 'SimplePageController@home']);
-Route::get('/about',        ['as' => 'about', 'uses' => 'SimplePageController@about']);
-Route::get('/in-numbers',   ['as' => 'stats', 'uses' => 'SimplePageController@stats']);
-Route::get('/api',       'SimplePageController@api');
-Route::get('/hello',     'SimplePageController@welcome');
+// Static pages.
+Route::get('/',             ['as' => 'home', 'uses' => 'StaticPageController@home']);
+Route::get('/about',        ['as' => 'about', 'uses' => 'StaticPageController@about']);
+Route::get('/in-numbers',   ['as' => 'stats', 'uses' => 'StaticPageController@stats']);
+Route::get('/api',       'StaticPageController@api');
 
 // Authentication routes.
 Route::get('login',     ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
@@ -34,9 +33,7 @@ Route::controllers([
 ]);
 
 // Redirects.
-Route::get('stats', function() {
-    return redirect(route('stats'));
-});
+Route::get('stats', function() { return redirect(route('stats')); });
 
 // Admin stuff
 //Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()

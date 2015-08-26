@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('body')
-	@include('layouts.header')
+	@include('partials.header')
 
     <div class="title">
         Di Nkɔmɔ
@@ -33,5 +33,5 @@
 
 	</script>
 
-	@include('layouts.footer')
+	@include('partials.footer')
 @stop
