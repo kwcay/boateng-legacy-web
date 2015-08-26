@@ -21,7 +21,7 @@ Route::get('/language/search/{query?}',     'LanguageController@search');
 Route::post('/language/search/{query?}',    'LanguageController@search');
 
 // Definition endpoints.
-Route::resource('definition',               'DefinitionController', ['except' => ['index']]);
+Route::resource('definition',               'DefinitionController', ['only' => ['create', 'store', 'update', 'delete']]);
 Route::get('/definition/search/{query?}',   'DefinitionController@search');
 Route::post('/definition/search/{query?}',  'DefinitionController@search');
 
@@ -60,5 +60,8 @@ Route::group(['prefix' => 'admin'], function()
 // Dictionary pages
 Route::get('/{lang}',           'LanguageController@show');
 Route::get('/{lang}/+edit',     'LanguageController@edit');
-Route::get('/{lang}/+add',      'DefinitionController@create');
+Route::get('/{lang}/+word',     ['as' => 'definition.create.word', 'uses' => 'DefinitionController@createWord']);
+Route::get('/{lang}/+phrase',   ['as' => 'definition.create.phrase', 'uses' => 'DefinitionController@createPhrase']);
+Route::get('/{lang}/+poem',     ['as' => 'definition.create.poem', 'uses' => 'DefinitionController@createPoem']);
+Route::get('/{lang}/+story',    ['as' => 'definition.create.story', 'uses' => 'DefinitionController@createStory']);
 Route::get('/{lang}/{word}',    'DefinitionController@show');

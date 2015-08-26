@@ -80,6 +80,49 @@ class DefinitionController extends Controller
 	 *
 	 * @return Response
 	 */
+    private function createType($type, $langCode)
+    {
+        // ...
+        switch ($type)
+        {
+            case Definition::TYPE_WORD:
+                $template = 'forms.definition.new-word';
+                break;
+
+            default:
+                abort(501);
+        }
+
+        // Retrieve language object.
+        if (!$lang = Language::findByCode($langCode)) {
+            abort(404, Lang::get('errors.resource_not_found'));
+        }
+
+        return view($template, [
+                'lang' => $lang
+            ]);
+    }
+    public function createWord($langCode) {
+        return $this->createType(Definition::TYPE_WORD, $langCode);
+    }
+
+    public function createPhrase($langCode) {
+        return $this->createType(Definition::TYPE_PHRASE, $langCode);
+    }
+
+    public function createPoem($langCode) {
+        return $this->createType(Definition::TYPE_POEM, $langCode);
+    }
+
+    public function createStory($langCode) {
+        return $this->createType(Definition::TYPE_STORY, $langCode);
+    }
+
+	/**
+	 * Displays the form to add a new definition.
+	 *
+	 * @return Response
+	 */
 	public function create(Definition $def)
 	{
         $lso    = [];
