@@ -2,6 +2,7 @@
 
 use DB;
 use URL;
+use Arr;
 use Lang;
 use Request;
 use Session;
@@ -82,7 +83,7 @@ class DefinitionController extends Controller
 	 */
     private function createType($type, $langCode)
     {
-        // ...
+        // Define the template to use.
         switch ($type)
         {
             case Definition::TYPE_WORD:
@@ -128,21 +129,22 @@ class DefinitionController extends Controller
         $lso    = [];
 
         // Set some defaults.
-        $def->data = Request::get('data', Request::old('data', ''));
-        $def->altData = Request::get('alt_data', Request::old('alt_data', ''));
-        $def->type = (int) Request::get('type', Request::old('type', 0));
-        $def->translations = (array) Request::get('translations', Request::old('translations', []));
-        $def->literalTranslations = (array) Request::get('literal_translations', Request::old('literal_translations', []));
-        $def->meanings = (array) Request::get('meanings', Request::old('meanings', []));
-        $def->source = Request::get('source', Request::old('source', ''));
+        $def->title = Request::get('title', Request::old('title', ''));
+        $def->alt_titles = Request::get('alt_titles', Request::old('alt_titles', ''));
+        $def->type = (int) Request::get('type', Request::old('type', Definition::TYPE_WORD));
+        $def->sub_type = Request::get('sub_type', Request::old('sub_type', 'n'));
         $def->tags = Request::get('tags', Request::old('tags', ''));
 
-        // Retrieve language data.
-        if ($lang = Request::get('lang', Request::old('lang')))
-        {
-            $def->language  = preg_replace('/[^a-z, -]/', '', $lang);
+        $translations = (array) Request::get('translations', Request::old('translations', []));
+        $literalTranslations = (array) Request::get('literal_translations', Request::old('literal_translations', []));
+        $meanings = (array) Request::get('meanings', Request::old('meanings', []));
 
-            if ($lang = Language::findByCode($def->language)) {
+        // Retrieve language data.
+        if ($langCode = Request::get('lang', Request::old('lang')))
+        {
+            $langCode = preg_replace('/[^a-z-]/', '', $langCode);
+
+            if ($lang = Language::findByCode($langCode)) {
                 $lso[] = [
                     'code' => $lang->code,
                     'name' =>$lang->name
@@ -180,8 +182,7 @@ class DefinitionController extends Controller
 
         // Create language options for selectize plugin.
         $lso = [];
-        $langs  = Language::whereIn('code', $def->languages)->get();
-        foreach ($langs as $lang) {
+        foreach ($def->languages as $lang) {
             $lso[] = [
                 'code' => $lang->code,
                 'name' => $lang->name
@@ -226,7 +227,7 @@ class DefinitionController extends Controller
         }
 
         // Delete record
-        Session::push('messages', '<em>'. $def->data .'</em> has been succesfully deleted.');
+        Session::push('messages', '<em>'. $def->title .'</em> has been succesfully deleted.');
         $def->delete();
 
         return redirect(route('home'));
@@ -240,10 +241,10 @@ class DefinitionController extends Controller
      * @param string $return    Relative URI to redirect to.
      * @return mixed
      */
-    public function save($def, $data, $return)
+    public function save(Definition $def, array $data, $return)
     {
         // Validate input data
-        $test = Validator::make($data, $def->validationRules);
+        $test = Definition::validate($data);
         if ($test->fails())
         {
             // Flash input data to session
@@ -253,8 +254,13 @@ class DefinitionController extends Controller
             return redirect($return)->withErrors($test);
         }
 
+        dd('DefinitionController::save ... ');
+
+        // Pull relations.
+        $relations = (array) Arr::pull($data, 'relations');
+
         // Check languages, suggest other languages (esp. parents)
-        $codes  = explode(',', $data['language']);
+        $codes  = is_array($relations['languages']) ? $relations['languages'] : @explode(',', $relations['languages']);
         foreach ($codes as $code)
         {
             if ($lang = Language::findByCode($code))
@@ -269,12 +275,16 @@ class DefinitionController extends Controller
                     Session::push('messages',
                         '<em>'. $lang->getParam('parentName') .'</em> is the parent language for <em>'.
                         $lang->name .'</em>, and was added to the list of languages the word <em>'.
-                        $data['data'] .'</em> exists in.');
+                        $data['title'] .'</em> exists in.');
                 }
             }
         }
 
+        // Update definition details.
         $def->fill($data);
+
+        // Update translations.
+        $def->updateRelations($relations);
 
         $def->state     = 1;
 

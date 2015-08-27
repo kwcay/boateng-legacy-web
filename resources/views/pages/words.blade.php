@@ -35,6 +35,14 @@
             @endforeach
         </div>
 
+		<br />
+		<br />
+		<div class="">
+			Suggest a new {{ $lang->name }}
+			<a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">word</a>
+			or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">saying</a>.
+		</div>
+
 	</section>
 
 	@include('partials.footer')

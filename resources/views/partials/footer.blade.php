@@ -46,7 +46,7 @@
 	<div>
 		<a href="#" class="close">&#10005;</a>
 
-		<h1>Login</h1>
+		<h1>Login [todo]</h1>
 		<div class="center">
 		    <br />
 
@@ -61,7 +61,7 @@
 		    <em>~ or ~</em>
 		    <br /><br />
 
-		    <form class="form" action="{{ url('/auth/login') }}" method="POST">
+		    <form class="form" action="" method="POST" onsubmit="alert('TODO'); return false;">
 		        <input class="single" type="email" name="email" placeholder="email" />
 		        <input class="single" type="password" name="password" placeholder="password" />
 		        <input type="submit" value="sign in" style="width:75px;margin:0 auto;" />
@@ -93,4 +93,3 @@
     <a href="#" class="button" onclick="return App.keyboardInput(this.innerHTML)">õ</a>
     <span class="title">(helper keyboard)</span>
 </div>
-

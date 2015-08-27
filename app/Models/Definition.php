@@ -89,7 +89,7 @@ class Definition extends Model
     /**
      * The Markdown parser.
      */
-    private $markdown;
+    protected $markdown;
 
     /**
      * Attributes which aren't mass-assignable.
@@ -139,7 +139,21 @@ class Definition extends Model
     /**
      * Relations to be created when importing this definition.
      */
-    private $relationsToBeImported = [];
+    protected $relationsToBeImported = [];
+
+    /**
+     *
+     */
+    public function translations() {
+        return $this->hasMany('App\Models\Translation');
+    }
+
+    /**
+     *
+     */
+    public function languages() {
+        return $this->belongsToMany('App\Models\Language');
+    }
 
     public function __construct(array $attributes = [])
     {
@@ -241,13 +255,28 @@ class Definition extends Model
 
     /**
      * Sets a translation attribute.
+     *
+     * @param string $lang      The language code for the translation, e.g. 'en'.
+     * @param string $attribute The attribute to update, e.g. 'translation' or 'meaning'.
+     * @param string $data      The data to store for the attribute.
+     * @param bool $create      Whether to create a new translation relation if one doesn't already exist.
      */
-    protected function setTranslationAttribute($lang, $attribute, $data)
+    protected function setTranslationAttribute($lang, $attribute, $data, $create = false)
     {
+        // Update an existing translation.
         if ($translation = $this->getTranslationRelation($lang))
         {
             $translation->$attribute = $data;
             $translation->save();
+        }
+
+        // Create a new translation.
+        elseif ($create === true && $attribute == 'translation')
+        {
+            $this->translations()->create([
+                'language' => $lang,
+                'translation' => $data
+            ]);
         }
     }
 
@@ -263,8 +292,8 @@ class Definition extends Model
         return $this->getTranslationAttribute($lang, 'translation');
     }
 
-    public function setTranslation($lang, $translation) {
-        return $this->setTranslationAttribute($lang, 'translation', $translation);
+    public function setTranslation($lang, $translation, $create = false) {
+        return $this->setTranslationAttribute($lang, 'translation', $translation, $create);
     }
 
     //
@@ -314,14 +343,6 @@ class Definition extends Model
      */
     public function getEditUri($full = true) {
         return route('definition.edit', ['id' => $this->getId()], $full);
-    }
-
-    public function translations() {
-        return $this->hasMany('App\Models\Translation');
-    }
-
-    public function languages() {
-        return $this->belongsToMany('App\Models\Language');
     }
 
     /**
@@ -434,10 +455,16 @@ class Definition extends Model
         return $this->getUri(true);
     }
 
+    /**
+     *
+     */
     public function setRelationToBeImported($relation, $data) {
         $this->relationsToBeImported[$relation] = $data;
     }
 
+    /**
+     *
+     */
     public function getRelationsToBeImported() {
         return $this->relationsToBeImported;
     }
@@ -504,5 +531,26 @@ class Definition extends Model
         }
 
         return true;
+    }
+
+    public function updateRelations(array $relations)
+    {
+        // Performance check.
+        if (empty($relations)) {
+            return;
+        }
+
+        foreach ($relations as $relation => $data)
+        {
+            $methodName = 'update'. ucfirst(strtolower($relation)) .'Relation';
+            if (method_exists($this, $methodName)) {
+                $this->$methodName($data);
+            }
+        }
+    }
+
+    public function updateTranslationRelation($data)
+    {
+        
     }
 }

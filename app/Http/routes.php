@@ -21,7 +21,7 @@ Route::get('/language/search/{query?}',     'LanguageController@search');
 Route::post('/language/search/{query?}',    'LanguageController@search');
 
 // Definition endpoints.
-Route::resource('definition',               'DefinitionController', ['only' => ['create', 'store', 'update', 'delete']]);
+Route::resource('definition',               'DefinitionController', ['only' => ['create', 'edit', 'store', 'update', 'delete']]);
 Route::get('/definition/search/{query?}',   'DefinitionController@search');
 Route::post('/definition/search/{query?}',  'DefinitionController@search');
 
