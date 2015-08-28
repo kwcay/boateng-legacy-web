@@ -8,5 +8,7 @@ npm-debug.log
 Desktop.ini
 Thumbs.db
 
-# Other stuff.
-.tags_swap
+# Project files
+/.idea
+/.tags_swap
+/tags
