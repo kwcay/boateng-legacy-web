@@ -1,0 +1,12 @@
+# Laravel & vendor stuff.
+/node_modules
+/vendor
+.env
+npm-debug.log
+
+# Ignore OSX & Windows generated files.
+Desktop.ini
+Thumbs.db
+
+# Other stuff.
+.tags_swap
