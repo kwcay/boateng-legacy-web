@@ -14,10 +14,18 @@
         <br />
 
         <form class="form edit" method="post" name="definition" action="{{ route('definition.store') }}">
+			{!! csrf_field() !!}
+			<input type="hidden" name="type" value="{{ $type }}">
+			<input type="hidden" name="relations[language][]" value="{{ $lang->code }}">
 
-			<!-- Word -->
+			{{-- Word --}}
 			<div class="row">
 				<input type="text" name="title" class="text-input center" placeholder="your word" value="" />
+			</div>
+
+			{{-- Sub type --}}
+			<div class="row">
+				{!! Form::select('sub_type', $word->getSubTypes(), $word->sub_type, ['class' => 'en-text-input center']) !!}
 			</div>
 
             <div class="row center">
@@ -26,7 +34,7 @@
 
             <!-- Translation -->
             <div class="row">
-                <input type="text" name="translation[en]" class="en-text-input center" placeholder="your translation" value="" />
+                <input type="text" name="relations[translation][en]" class="en-text-input center" placeholder="your translation" value="" />
             </div>
 
             <div class="row center">
@@ -37,12 +45,10 @@
             <br />
             <br />
 			<div class="row center">
-				<input type="submit" name="finish" value="continue" />
-				<input type="button" name="cancel" value="return" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
+				<input type="submit" name="next" value="continue" />
+				<input type="submit" name="next" value="finish" />
+				<!-- <input type="button" name="cancel" value="return" onclick="return confirm('Cancel?') ? App.redirect('') : false;" /> -->
 			</div>
-
-			{!! Form::token() !!}
-            <input type="hidden" name="language" value="">
 		</form>
 	</section>
 

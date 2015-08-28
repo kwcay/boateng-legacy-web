@@ -176,7 +176,7 @@ class Language extends Model
      * @param \App\Models\Language $lang
      * @return bool
      */
-    public function checkAttributes($lang)
+    public static function checkAttributes($lang)
     {
 
         return true;

@@ -91,6 +91,8 @@ class Definition extends Model
      */
     protected $markdown;
 
+    protected $table = 'definitions';
+
     /**
      * Attributes which aren't mass-assignable.
      */
@@ -99,7 +101,7 @@ class Definition extends Model
     /**
     * The attributes that should be hidden for arrays.
     */
-    protected $hidden = ['id', 'state', 'params', 'created_at', 'updated_at', 'deleted_at', 'languages'];
+    protected $hidden = ['id', 'params', 'created_at', 'updated_at', 'deleted_at', 'languages'];
 
     /**
      * The accessors to append to the model's array form.
@@ -142,22 +144,30 @@ class Definition extends Model
     protected $relationsToBeImported = [];
 
     /**
-     *
+     * Defines the translation relations.
      */
     public function translations() {
-        return $this->hasMany('App\Models\Translation');
+        return $this->hasMany('App\Models\Translation', 'definition_id');
     }
 
     /**
-     *
+     * Defines the language relations.
      */
     public function languages() {
-        return $this->belongsToMany('App\Models\Language');
+        return $this->belongsToMany('App\Models\Language', 'definition_language', 'definition_id', 'language_id');
     }
 
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+
+        // Set some default values.
+        // foreach ($this->validationRules as $key => $rule)
+        // {
+        //     if (!array_key_exists($key, $this->attributes)) {
+        //         $this->attributes[$key] = strpos($rule, 'integer') ? 0 : '';
+        //     }
+        // }
 
         // Markdown parser.
         $this->markdown = new MarkdownExtra;
@@ -232,7 +242,7 @@ class Definition extends Model
     /**
      * Checks whether the attribute of a translation is empty or not.
      */
-    protected function hasTranslationAttribute($lang, $attribute)
+    protected function _hasTranslationAttribute($lang, $attribute)
     {
         if ($translation = $this->getTranslationRelation($lang)) {
             return strlen($translation->$attribute);
@@ -244,7 +254,7 @@ class Definition extends Model
     /**
      * Retrieves a translation attribute.
      */
-    protected function getTranslationAttribute($lang, $attribute, $default = null)
+    protected function _getTranslationAttribute($lang, $attribute, $default = null)
     {
         if ($translation = $this->getTranslationRelation($lang)) {
             return strlen($translation->$attribute) ? $translation->$attribute : $default;
@@ -261,7 +271,7 @@ class Definition extends Model
      * @param string $data      The data to store for the attribute.
      * @param bool $create      Whether to create a new translation relation if one doesn't already exist.
      */
-    protected function setTranslationAttribute($lang, $attribute, $data, $create = false)
+    protected function _setTranslationAttribute($lang, $attribute, $data, $create = false)
     {
         // Update an existing translation.
         if ($translation = $this->getTranslationRelation($lang))
@@ -285,15 +295,15 @@ class Definition extends Model
     //
 
     public function hasTranslation($lang) {
-        return $this->hasTranslationAttribute($lang, 'translation');
+        return $this->_hasTranslationAttribute($lang, 'translation');
     }
 
     public function getTranslation($lang = 'en') {
-        return $this->getTranslationAttribute($lang, 'translation');
+        return $this->_getTranslationAttribute($lang, 'translation');
     }
 
     public function setTranslation($lang, $translation, $create = false) {
-        return $this->setTranslationAttribute($lang, 'translation', $translation, $create);
+        return $this->_setTranslationAttribute($lang, 'translation', $translation, $create);
     }
 
     //
@@ -301,15 +311,15 @@ class Definition extends Model
     //
 
     public function hasLiteralTranslation($lang) {
-        return $this->hasTranslationAttribute($lang, 'literal');
+        return $this->_hasTranslationAttribute($lang, 'literal');
     }
 
     public function getLiteralTranslation($lang = 'en') {
-        return $this->getTranslationAttribute($lang, 'literal');
+        return $this->_getTranslationAttribute($lang, 'literal');
     }
 
     public function setLiteralTranslation($lang, $translation) {
-        return $this->setTranslationAttribute($lang, 'literal', $translation);
+        return $this->_setTranslationAttribute($lang, 'literal', $translation);
     }
 
     //
@@ -317,15 +327,22 @@ class Definition extends Model
     //
 
     public function hasMeaning($lang) {
-        return $this->hasTranslationAttribute($lang, 'meaning');
+        return $this->_hasTranslationAttribute($lang, 'meaning');
     }
 
     public function getMeaning($lang = 'en') {
-        return $this->getTranslationAttribute($lang, 'meaning');
+        return $this->_getTranslationAttribute($lang, 'meaning');
     }
 
     public function setMeaning($lang, $meaning) {
-        return $this->setTranslationAttribute($lang, 'meaning', $meaning);
+        return $this->_setTranslationAttribute($lang, 'meaning', $meaning);
+    }
+
+    /**
+     * Gets the list of sub types for this definition.
+     */
+    public function getSubTypes() {
+        return $this->subTypes[$this->getAttributeFromArray('type')];
     }
 
     /**
@@ -549,8 +566,70 @@ class Definition extends Model
         }
     }
 
-    public function updateTranslationRelation($data)
+    /**
+     * Updates the language relations.
+     *
+     * @param array $languages
+     */
+    public function updateLanguageRelation(array $languages)
     {
-        
+        // Perormance check.
+        if (empty($languages)) {
+            return;
+        }
+
+        // Make sure we have an array of IDs.
+        foreach ($languages as $index => $langID)
+        {
+            if (!is_numeric($langID))
+            {
+                // If we can't find the language by code, assume it was invalid.
+                if (!$lang = Language::findByCode($langID)) {
+                    unset($languages[$index]);
+                }
+
+                // Replace the code with an ID.
+                $languages[$index] = $lang->id;
+            }
+        }
+
+        // Sync language relations.
+        $this->languages()->sync($languages);
+    }
+
+    /**
+     * Updates or creates one or more translations.
+     *
+     * @param array $translations
+     */
+    public function updateTranslationRelation(array $translations)
+    {
+        foreach ($translations as $code => $translation) {
+            $this->setTranslation($code, $translation, true);
+        }
+    }
+
+    /**
+     * Updates one or more literal translations in the translation relations.
+     *
+     * @param array $translations
+     */
+    public function updateLiteralRelation(array $translations)
+    {
+        foreach ($translations as $code => $translation) {
+            $this->setLiteralTranslation($code, $translation);
+        }
+    }
+
+    /**
+     * Updates one or more meanings in the translation relations.
+     *
+     * @param array $translations
+     */
+    public function updateMeaningRelation(array $meanings)
+    {
+        foreach ($meanings as $code => $meaning) {
+            $this->setMeaning($code, $meaning);
+        }
     }
 }

@@ -1,4 +1,4 @@
-<?php namespace App\Models;
+<?php namespace App\Models\Definitions;
 
 use DB;
 use Log;
@@ -20,7 +20,7 @@ use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 /**
  *
  */
-class DefinitionWord extends Definition
+class Word extends Definition
 {
     public function __construct(array $attributes = [])
     {
@@ -91,5 +91,12 @@ class DefinitionWord extends Definition
 
         // Return results.
         return count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : [];
+    }
+
+    /**
+     * Gets the list of sub types for this definition.
+     */
+    public function getSubTypes() {
+        return $this->subTypes[Definition::TYPE_WORD];
     }
 }
