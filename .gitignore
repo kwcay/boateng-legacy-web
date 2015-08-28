@@ -1,6 +1,0 @@
-# Configuration files
-config.php
-
-# Other computer stuff we don't want
-/**/*.dat
-/**/Desktop.ini
