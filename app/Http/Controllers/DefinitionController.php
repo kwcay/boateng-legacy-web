@@ -2,7 +2,6 @@
 
 use DB;
 use URL;
-use Arr;
 use Lang;
 use Request;
 use Session;
@@ -12,6 +11,8 @@ use Validator;
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
+use App\Models\Definitions\Word;
+use Illuminate\Support\Arr;
 
 
 /**
@@ -88,10 +89,22 @@ class DefinitionController extends Controller
         {
             case Definition::TYPE_WORD:
                 $template = 'forms.definition.new-word';
+                $data = [
+                    'word' => new Word,
+                    'type' => Definition::TYPE_WORD
+                ];
+                break;
+
+            case Definition::TYPE_PHRASE:
+                abort(501);
+                break;
+
+            case Definition::TYPE_POEM:
+                abort(501);
                 break;
 
             default:
-                abort(501);
+                abort(400);
         }
 
         // Retrieve language object.
@@ -99,9 +112,7 @@ class DefinitionController extends Controller
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
-        return view($template, [
-                'lang' => $lang
-            ]);
+        return view($template, Arr::add($data, 'lang', $lang));
     }
     public function createWord($langCode) {
         return $this->createType(Definition::TYPE_WORD, $langCode);
@@ -163,8 +174,21 @@ class DefinitionController extends Controller
 	 *
 	 * @return Response
 	 */
-	public function store() {
-        return $this->save(new Definition, Request::all(), route('definition.create', [], false));
+	public function store()
+    {
+        $def = $this->getDefinition();
+        $def->state = Definition::STATE_VISIBLE;
+
+        $data = Request::only([
+            'title', 'alt_titles', 'data', 'type', 'sub_type', 'tags', 'state', 'relations'
+        ]);
+
+        $data['state'] = 1;
+
+        // Set return route.
+        $return = Request::input('next') == 'continue' ? 'edit' : 'index';
+
+        return $this->save($def, $data, $return);
 	}
 
 	/**
@@ -254,22 +278,20 @@ class DefinitionController extends Controller
             return redirect($return)->withErrors($test);
         }
 
-        dd('DefinitionController::save ... ');
-
         // Pull relations.
         $relations = (array) Arr::pull($data, 'relations');
 
         // Check languages, suggest other languages (esp. parents)
-        $codes  = is_array($relations['languages']) ? $relations['languages'] : @explode(',', $relations['languages']);
-        foreach ($codes as $code)
+        $relations['language']  = is_array($relations['language']) ? $relations['language'] : @explode(',', $relations['language']);
+        foreach ($relations['language'] as $code)
         {
             if ($lang = Language::findByCode($code))
             {
                 // Check if the language has a parent, and
                 // whether that parent is already in the list.
-                if (strlen($lang->parent) >= 3 && !in_array($lang->parent, $codes))
+                if (strlen($lang->parent) >= 3 && !in_array($lang->parent, $relations['language']))
                 {
-                    $codes[] = $lang->parent;
+                    $relations['language'][] = $lang->parent;
 
                     // Notify the user of the change
                     Session::push('messages',
@@ -282,18 +304,29 @@ class DefinitionController extends Controller
 
         // Update definition details.
         $def->fill($data);
+        $def->save();
 
         // Update translations.
         $def->updateRelations($relations);
 
-        $def->state     = 1;
+        // ...
+        switch ($return)
+        {
+            case 'index':
+                $return = $def->getUri(false);
+                break;
 
-        $def->save();
-        $rdir = $data['more'] ?
-            route('definition.create', ['lang' => $def->getMainLanguage(true)], false) : $def->getUri(false);
+            case 'edit':
+                $return = route('definition.edit', ['def' => $def->getId()]);
+                break;
+
+            case 'add':
+                $return = route('definition.create', ['lang' => $def->mainLanguage->code]);
+                break;
+        }
 
         Session::push('messages', 'The details for <em>'. $def->data .'</em> were successfully saved, thanks :)');
-        return Redirect::to($rdir);
+        return redirect($return);
     }
 
     /**
@@ -322,5 +355,22 @@ class DefinitionController extends Controller
         }
 
         return $this->send(['query' => $search, 'definitions' => $results]);
+    }
+
+    public function getDefinition()
+    {
+        $type = Request::input('type');
+
+        switch ($type)
+        {
+            case Definition::TYPE_WORD:
+                $def = new Word;
+                break;
+
+            default:
+                $def = new Definition;
+        }
+
+        return $def;
     }
 }

@@ -32,37 +32,37 @@
 
 			<!-- Word -->
 			<div class="row">
-				<input type="text" name="word" class="text-input" placeholder="e.g. ɔdɔ" value="{{ $def->data }}" />
-				<label for="word">Word</label>
+				<input type="text" name="title" class="text-input" placeholder="e.g. ɔdɔ" value="{{ $def->title }}" />
+				<label for="title">Word</label>
 			</div>
 
 			<!-- Alternate spellings -->
 			<div class="row">
-				<input type="text" name="alt" class="text-input" placeholder="e.g. do, dɔ, odo " value="{{ $def->alt_data }}" />
-				<label for="alt">Alternate words or spellings (seperated by ",")</label>
+				<input type="text" name="alt_titles" class="text-input" placeholder="e.g. do, dɔ, odo " value="{{ $def->alt_titles }}" />
+				<label for="alt_titles">Alternate words or spellings (seperated by ",")</label>
 			</div>
 
 			<!-- Type -->
 			<div class="row">
-                {!! Form::select('type', $def->partsOfSpeech, $def->type, array('class' => 'en-text-input')) !!}
+                {!! Form::select('sub_type', $def->getSubTypes(), $def->sub_type, array('class' => 'en-text-input')) !!}
 				<label for="type">Word type</label>
 			</div>
 
             <!-- Translation -->
             <div class="row">
-                <input type="text" name="translations[en]" class="en-text-input" placeholder="e.g. love" value="{{ $def->getTranslation('en') }}" />
-                <label for="translations[en]">English translation</label>
+                <input type="text" name="relations[translation][en]" class="en-text-input" placeholder="e.g. love" value="{{ $def->getTranslation('en') }}" />
+                <label for="relations[translation][en]">English translation</label>
             </div>
 
             <!-- Meaning -->
             <div class="row">
-                <input type="text" name="meanings[en]" class="en-text-input" placeholder="e.g. an intense feeling of deep affection." value="{{ $def->getMeaning('en') }}" />
-                <label for="meanings[en]">English meaning</label>
+                <input type="text" name="relations[meaning][en]" class="en-text-input" placeholder="e.g. an intense feeling of deep affection." value="{{ $def->getMeaning('en') }}" />
+                <label for="relations[meaning][en]">English meaning</label>
             </div>
 
 			<!-- Language -->
 			<div class="row">
-				<input id="languages" type="text" name="languages" class="text-input remote" value="{{ implode(', ', $def->languages) }}" />
+				<input id="languages" type="text" name="languages" class="text-input remote" value="" />
 				<label for="languages">Languages that use this word. Start typing and select a language from the list. You can drag these around (the first will be considred the "main" language).</label>
 			</div>
 
@@ -86,11 +86,11 @@
                 <h1>Really?</h1>
                 <div class="center">
                     Are you sure you want to delete the definition for
-                    <h2>&ldquo; {{ $def->data }} &rdquo;</h2>
+                    <h2>&ldquo; {{ $def->title }} &rdquo;</h2>
                     for ever and ever?<br /><br />
                     <form class="form" method="post" name="delete" action="{{ route('definition.destroy', ['id' => $def->getId()]) }}">
                         <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" name="confirm" value="yes, delete {{ $def->getWord() }}" />
+                        <input type="submit" name="confirm" value="yes, delete {{ $def->title }}" />
                         <input type="button" name="cancel" value="no, return" onclick="return App.closeDialogs()" />
 			            {!! Form::token() !!}
                     </form>
