@@ -1,13 +1,12 @@
 # Di Nkɔmɔ
-*"The book of Native tongues."*  
+*"The book of Native tongues."*
 
-Di Nkɔmɔ is a multilingual dictionary focused on indigenous languages from around the world. Di Nkomo is [Twi (or Akan)](http://en.wikipedia.org/wiki/Akan_language) for chat, or converse.
+Di Nkɔmɔ is a little project I started in 2014 to help me learn [Twi](http://en.wikipedia.org/wiki/Akan_language), my cultural language.
 
-# Pushing to production
-Optimize autoloader using `composer dump-autoload --optimize` or `php artisan optimize`
+The web app currently resides at [d2.l33p.com](http://d2.l33p.com) and is based on the [Laravel framework](http://laravel.com).
 
 # Dev environment
-Upgrade MySQL to 5.6
+Upgrade MySQL to version 5.6
 
     sudo apt-get update
     sudo apt-get upgrade
