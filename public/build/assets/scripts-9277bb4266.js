@@ -118,6 +118,8 @@ var Forms =
      */
     setupLangSearch: function(input, options, max, plugins)
     {
+        console.log(input);
+        console.log($(input));
         if (!$(input)) return;
         $(input).selectize({
             valueField: 'code',
