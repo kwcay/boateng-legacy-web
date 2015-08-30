@@ -1,54 +1,47 @@
 @extends('layouts.base')
 
 @section('body')
-	@include('layouts.header')
+	@include('partials.header')
 
 	<section>
-		<h1>
-			Suggest a new <i>language</i><br />
-			<small>
-				<a href="edit">
-					&rarr; or click here to suggest a new definition
-				</a>
-			</small>
-		</h1>
-		<form class="form edit" method="post">
-		
-			<!-- Title -->
+		<h1>Suggest a new language</h1>
+        <br />
+
+		<form class="form edit" method="post" action="{{ route('language.create') }}">
+			{!! csrf_field() !!}
+
+            <div class="row center">
+                Add a language named
+            </div>
+
+			{{-- Name --}}
 			<div class="row">
-				<input type="text" name="name" class="text-input" placeholder="e.g. ..." value="{{ $lang->getName() }}" />
-				<label for="name">Name</label>
+				<input type="text" name="name" class="text-input center" placeholder="your language" value="" required />
 			</div>
-			
-			<!-- Alternate spellings -->
+
+            <br />
+            <div class="row center">
+                which has the 3-letter <a href="http://en.wikipedia.org/wiki/ISO_639-3" target="_blank">ISO-639-3</a> code
+            </div>
+
+			{{-- ISO-639-3 --}}
 			<div class="row">
-				<input type="text" name="alt" class="text-input" placeholder="e.g. ..." value="{{ $lang->getAltSpellings() }}" />
-				<label for="alt">Alternate spellings (seperated by ",")</label>
+				<input type="text" name="code" class="en-text-input center" placeholder="3-letter code" value="" required />
 			</div>
-			
-			<!-- ISO-639-3 -->
-			<div class="row">
-				<input type="text" name="code" placeholder="e.g. ..." value="{{ $lang->code }}" />
-				<label for="code"><a href="http://en.wikipedia.org/wiki/ISO_639-3" target="_blank">ISO-639-3</a> language code</label>
-			</div>
-			
-			<!-- Countries -->
-			<div class="row">
-				<input type="text" name="countries" placeholder="e.g. ..." value="{{ $lang->countries }}" />
-				<label for="countries">Countries in which language is spoken</label>
-			</div>
-			
-			<!-- Form actions -->
+
+            <br />
+            <div class="row center">
+                to Di Nkɔmɔ.
+            </div>
+
+			{{-- Form actions --}}
+            <br />
 			<div class="row center">
-				<input type="button" name="cancel" value="cancel" />
-				<input type="submit" name="submit" value="save" />
+				<input type="submit" name="next" value="continue" />
+				<input type="submit" name="next" value="finish" />
 			</div>
-			
-			{{ Form::token() }}
-			<input type="hidden" name="what" value="save-language" />
-			<input type="hidden" name="isnew" value="1" />
 		</form>
 	</section>
 
-	@include('layouts.footer')
+	@include('partials.footer')
 @stop

@@ -9,7 +9,9 @@ use Validator;
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
+use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
+
 
 /**
  *
@@ -36,7 +38,7 @@ class LanguageController extends Controller
 
         return view('pages.language', [
             'lang' => $lang,
-            'random' => Definition::random($lang->code),
+            'random' => Word::random($lang->code),
             'first' => $lang->definitions()->orderBy('created_at', 'asc')->first(),
             'latest' => $lang->definitions()->orderBy('created_at', 'desc')->first()
         ]);
@@ -58,6 +60,15 @@ class LanguageController extends Controller
         $lang->desc = Request::get('desc', Request::old('desc', []));
 
         return view('forms.language.default')->withLang($lang);
+	}
+
+	/**
+	 * Displays the form to add a new language.
+	 *
+	 * @return Response
+	 */
+	public function walkthrough() {
+        return view('forms.language.walkthrough');
 	}
 
 	/**

@@ -58,6 +58,7 @@ Route::group(['prefix' => 'admin'], function()
 });
 
 // Dictionary pages
+Route::get('/+lang',            ['as' => 'language.walkthrough', 'uses' => 'LanguageController@walkthrough']);
 Route::get('/{lang}',           'LanguageController@show');
 Route::get('/{lang}/+edit',     'LanguageController@edit');
 Route::get('/{lang}/+word',     ['as' => 'definition.create.word', 'uses' => 'DefinitionController@createWord']);

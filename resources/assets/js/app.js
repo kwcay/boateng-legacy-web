@@ -3,20 +3,20 @@ var App =
 {
 
     _kbFocus: null,
-    
+
 	init: function()
 	{
 		//
         this.root = $('base').attr('href');
 	},
-    
+
     /**
-     * 
+     *
      */
     setKeyboardFocus: function(input) {
         this._kbFocus   = input;
     },
-    
+
     /**
      *
      */
@@ -26,10 +26,10 @@ var App =
             this._kbFocus.value = this._kbFocus.value + letter;
             this._kbFocus.focus();
         }
-        
+
         return false;
     },
-	
+
 	openDialog : function(id)
 	{
 		$('.dialog').hide();
@@ -38,16 +38,16 @@ var App =
 		else $(box).fadeOut(240);
 		return false;
 	},
-	
+
 	closeDialogs : function() {
 		$('.dialog').fadeOut(240);
 		return false;
 	},
-	
+
 	redirect: function(path) {
 		window.location = path.length > 1 ? this.root +'/'+ path : this.root;
 	},
-	
+
 	urlencode : function(str)
 	{
 		return encodeURIComponent((str + '').toString())
@@ -58,7 +58,7 @@ var App =
 		.replace(/\*/g, '%2A')
 		.replace(/%20/g, '+');
 	},
-	
+
 	log: function(msg) {
 		if (console) console.log('App.js - '+ msg);
 	}
@@ -67,26 +67,30 @@ var App =
 // Initiate
 $(document).ready(function(event)
 {
-	// Initialize app
+	// Initialize app.
 	App.init();
-	
-	// Attach event listeners
+
+	// Attach event listeners.
 	$('.close').click(App.closeDialogs.bind(App));
-	
-    // Attache helper keyboard to text inputs
+
+    // Attache helper keyboard to text inputs.
     $('.text-input').focus(function() {
         App.setKeyboardFocus(this);
         $('#keyboard').fadeIn(300);
     });
 
-    // Remove helper keyboard when focus is lost
+    // Remove helper keyboard when focus is lost.
     $('.en-text-input').focus(function() {
         App.setKeyboardFocus(null);
         $('#keyboard').fadeOut(300);
     });
 
-    // Make keyboard draggable
+    // Make keyboard draggable.
     $('#keyboard').draggable();
+
+    // Tooltips
+    $('.has-tooltip').popup({on: 'hover'});
+    $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
 
     // Setup AJAX headers
     $.ajaxSetup({

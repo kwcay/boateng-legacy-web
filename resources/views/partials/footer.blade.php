@@ -1,16 +1,46 @@
 <footer>
     <div class="shortcuts-wrap">
         <div class="shortcuts collapsed">
-            <a title="Home" href="{{ route('home') }}" class="fa fa-home"></a>
-            <a title="Info" href="{{ route('about') }}" class="fa fa-info"
-                onclick="return App.openDialog('info');"></a>
-            <a title="Login" href="{{ URL::to('login') }}" class="fa fa-unlock-alt"
-                onclick="return App.openDialog('login');"></a>
-            <a title="Learn" href="#" class="fa fa-graduation-cap"
-                onclick="alert('To do: learning games'); return false;"></a>
-            <a title="Settings" href="#" class="fa fa-wrench"
-                onclick="return App.openDialog('settings');"></a>
-            <a title="Suggest a new word" href="{{ route('definition.create') }}" class="fa fa-pencil"></a>
+            <a
+                href="{{ route('home') }}"
+                class="fa fa-home has-inline-tooltip"
+                data-position="top center"></a>
+            <span class="ui popup">Home of Di Nkɔmɔ</span>
+
+            <a
+                href="{{ route('about') }}"
+                class="fa fa-info has-inline-tooltip"
+                onclick="return App.openDialog('info');"
+                data-position="top center"></a>
+            <span class="ui popup">About this app</span>
+
+            <a
+                href="{{ url('login') }}"
+                class="fa fa-unlock-alt has-inline-tooltip"
+                onclick="return App.openDialog('login');"
+                data-position="top center"></a>
+            <span class="ui popup">Login</span>
+
+            <a
+                href="#"
+                class="fa fa-graduation-cap has-inline-tooltip"
+                onclick="alert('To do: learning games'); return false;"
+                data-position="top center"></a>
+            <span class="ui popup">Learn</span>
+
+            <a
+                href="#"
+                class="fa fa-wrench has-inline-tooltip"
+                onclick="return App.openDialog('settings');"
+                data-position="top center"></a>
+            <span class="ui popup">Settings</span>
+
+            <a
+                href="#"
+                class="fa fa-pencil has-inline-tooltip"
+                onclick="return App.openDialog('resource');"
+                data-position="top center"></a>
+            <span class="ui popup">Edit Di Nkɔmɔ</span>
         </div>
     </div>
 	<div class="credits">
@@ -80,6 +110,31 @@
 
 		<h1>Settings</h1>
 		<div>Target language, ...</div>
+
+	</div>
+</div>
+
+{{-- Add resource dialog --}}
+<div class="dialog resource">
+	<div>
+		<a href="#" class="close">&#10005;</a>
+
+		<h1>Add a resource [todo]</h1>
+		<div class="center">
+		    <br />
+
+		    Word | Phrase | Poem | Story<br />
+            in<br />
+            ___ [language] ___
+		    <br /><br />
+
+		    <em>~ or ~</em>
+		    <br /><br />
+
+		    <a href="{{ route('language.walkthrough') }}">
+		        click here to suggest a new language.
+		    </a>
+		</div>
 
 	</div>
 </div>
