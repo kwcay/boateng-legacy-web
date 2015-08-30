@@ -22,11 +22,11 @@ class RouteServiceProvider extends ServiceProvider {
 	 */
 	public function boot(Router $router)
 	{
-		parent::boot($router);
-
 		// Global patterns
         $router->pattern('id', '[0-9A-Za-z]+');
         $router->pattern('lang', '[a-z]{3}|[a-z]{3}-[a-z]{3}');
+
+        parent::boot($router);
 	}
 
 	/**

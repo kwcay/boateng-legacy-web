@@ -78,11 +78,13 @@ class LanguageController extends Controller
 	 */
 	public function store()
 	{
-        // Make sure we have a 'code' index.
-        $data = Request::all();
-        $data['code'] = isset($data['code']) ? $data['code'] : '';
+        // Retrieve the language details.
+        $data = Request::only(['code', 'parent_code', 'name', 'alt_names', 'countries']);
 
-        return $this->save(new Language($data), $data, route('language.create', [], false));
+        // Set return route.
+        $return = Request::input('next') == 'continue' ? 'edit' : 'index';
+
+        return $this->save(new Language, $data, $return);
 	}
 
 	/**
@@ -114,7 +116,10 @@ class LanguageController extends Controller
             abort(404, 'Can\'t find that languge :( [todo: throw exception]');
         }
 
-        return $this->save($lang, Request::all(), $lang->getEditUri(false));
+        // Retrieve the language details.
+        $data = Request::only(['code', 'parent_code', 'name', 'alt_names', 'countries']);
+
+        return $this->save($lang, $data, 'index');
 	}
 
 	/**
@@ -125,52 +130,66 @@ class LanguageController extends Controller
 	 */
 	public function destroy($id)
 	{
-        abort(501, 'Not Implemented');
+        abort(501, 'LanguageController::destroy Not Implemented');
 	}
 
     /**
      * Shortcut to create a new language or save an existing one.
      *
-     * @param object $lang      Language object.
-     * @param array $data       Language details to update.
-     * @param string $return    Relative URI to redirect to.
+     * @param \App\Models\Language $lang    Language object.
+     * @param array $data                   Language details to update.
+     * @param string $return                Relative URI to redirect to.
      * @return Response
      */
     public function save($lang, $data, $return)
     {
-
         // ...
         if (isset($data['countries']) && is_array($data['countries'])) {
             $data['countries'] = implode(',', $data['countries']);
         }
 
         // Validate input data
-        $test   = Validator::make($data, $lang->validationRules);
+        $test = Language::validate($data);
         if ($test->fails())
         {
             // Flash input data to session
             Request::flashExcept('_token');
 
             // Return to form
+            $return = $lang->exists ? route('language.edit', ['id' => $lang->getId()]) : route('language.create');
             return redirect($return)->withErrors($test);
         }
 
-        // Update language object.
-        $lang->fill($data);
-
         // Parent language details
-        if (strlen($data['parent']) >= 3 && $parent = Language::findByCode($data['parent'])) {
-            $lang->parent   = $parent->code;
+        if (strlen($data['parent_code']) >= 3 && $parent = Language::findByCode($data['parent_code'])) {
             $lang->setParam('parentName', $parent->name);
         } else {
-            $lang->parent   = '';
+            $data['parent_code'] = '';
             $lang->setParam('parentName', '');
         }
 
+        // Update language details.
+        $lang->fill($data);
         $lang->save();
 
+        // ...
+        switch ($return)
+        {
+            case 'index':
+                $return = $lang->getUri(false);
+                break;
+
+            case 'edit':
+                $return = route('language.edit', ['code' => $lang->code]);
+                break;
+
+            case 'add':
+                $return = route('language.create');
+                break;
+        }
+
         Session::push('messages', 'The details for <em>'. $lang->name .'</em> were successfully saved, thanks :)');
-        return redirect($lang->getUri(false));
+        return redirect($return);
     }
 
     /**
@@ -212,8 +231,8 @@ class LanguageController extends Controller
     /**
      * Shortcut to retrieve a language object.
      *
-     * @param string $id        Either the ISO 639-3 language code or language ID.
-     * @return object|null
+     * @param string $id                    Either the ISO 639-3 language code or language ID.
+     * @return \App\Models\Language|null
      */
     private function getLanguage($id)
     {

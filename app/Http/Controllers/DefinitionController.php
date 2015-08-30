@@ -270,7 +270,8 @@ class DefinitionController extends Controller
             Request::flashExcept('_token');
 
             // Return to form
-            return redirect($return)->withErrors($test);
+            $return = $def->exists ? route('definition.edit', ['id' => $def->getId()]) : route('definition.create');
+            return redirect(route('definition.edit'))->withErrors($test);
         }
 
         // Pull relations.
