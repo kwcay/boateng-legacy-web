@@ -16,7 +16,7 @@ Route::get('signup',    ['as' => 'auth.register', 'uses' => 'Auth\AuthController
 Route::post('signup',   ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
 
 // Language endpoints.
-Route::resource('language',                 'LanguageController', ['except' => ['index']]);
+Route::resource('language',                 'LanguageController', ['except' => ['index', 'show']]);
 Route::get('/language/search/{query?}',     'LanguageController@search');
 Route::post('/language/search/{query?}',    'LanguageController@search');
 

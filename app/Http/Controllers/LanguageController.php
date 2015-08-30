@@ -31,11 +31,6 @@ class LanguageController extends Controller
             abort(404, 'Can\'t find that languge :(');
         }
 
-        // Redirect if accessing language directly.
-        if (Request::path() != $lang->getUri(false)) {
-            return redirect($lang->getUri(false));
-        }
-
         return view('pages.language', [
             'lang' => $lang,
             'random' => Word::random($lang->code),
