@@ -112,7 +112,7 @@ class LanguageController extends Controller
         }
 
         // Retrieve the language details.
-        $data = Request::only(['code', 'parent_code', 'name', 'alt_names', 'countries']);
+        $data = Request::only(['parent_code', 'name', 'alt_names', 'countries']);
 
         return $this->save($lang, $data, 'index');
 	}

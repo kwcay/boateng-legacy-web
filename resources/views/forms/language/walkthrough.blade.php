@@ -7,7 +7,7 @@
 		<h1>Suggest a new language</h1>
         <br />
 
-		<form class="form edit" method="post" action="{{ route('language.create') }}">
+		<form class="form edit" method="post" action="{{ route('language.store') }}">
 			{!! csrf_field() !!}
 
             <div class="row center">

@@ -42,26 +42,14 @@ class Language extends Model
     ];
 
     /**
-     * @var array   Validation rules.
+     * Validation rules.
      */
     public $validationRules  = [
-        'code'      => 'required|min:3|max:7|unique:languages',
-        'parent'    => 'min:3|max:7',
-        'name'      => 'required|min:2',
+        'code' => 'sometimes|required|min:3|max:7|unique:languages',
+        'parent_code' => 'min:3|max:7',
+        'name' => 'required|min:2',
         'alt_names' => 'min:2'
     ];
-
-    /**
-     * @param array $attributes
-     */
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        // Markdown parser.
-        $this->markdown = new MarkdownExtra;
-        $this->markdown->html5 = true;
-    }
 
     /**
      * Parent relation.
@@ -88,6 +76,18 @@ class Language extends Model
      */
     public function definitions() {
         return $this->belongsToMany('App\Models\Definition');
+    }
+
+    /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        // Markdown parser.
+        $this->markdown = new MarkdownExtra;
+        $this->markdown->html5 = true;
     }
 
     /**
@@ -120,6 +120,17 @@ class Language extends Model
         return route('language.edit', ['code' => $this->code], $full);
     }
 
+    // TODO: add description relations for each description (en, fr, ...)
+    public function hasDescription($lang) {
+        return false;
+    }
+
+    public function getDescription($lang = 'en') {
+        return '';
+    }
+
+    public function setDescription($lang, $desc) {}
+
     /**
      * Creates the relation between an language and a definition.
      */
@@ -131,7 +142,7 @@ class Language extends Model
 
          // Performance check.
          if (!strlen($code) || !$def instanceof Definition) {
-             Log::debug('Language::addRelatedDefinition - Invalid code or definition object.');
+             Log::debug('Invalid code or definition object in Language::addRelatedDefinition.');
              return false;
          }
 

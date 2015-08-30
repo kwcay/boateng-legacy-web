@@ -32,7 +32,7 @@
 				<label for="name">Name</label>
 			</div>
 
-			{{-- Alternate spellings & names --}}
+			{{-- Alternate names/spellings --}}
 			<div class="row">
 				<input type="text" name="alt_names" class="text-input" placeholder="e.g. Kiswahili" value="{{ $lang->alt_names }}" />
 				<label for="alt">Alternate names or spellings (seperated by ",")</label>
@@ -46,14 +46,14 @@
 
 			{{-- Parent language --}}
 			<div class="row">
-				<input type="text" name="parent" class="text-input remote" value="{{ $lang->parent }}" />
+				<input type="text" name="parent_code" class="text-input remote" value="{{ $lang->parent }}" />
 				<label for="parent">Parent language (if applicable)</label>
 			</div>
 
 			{{-- Country list --}}
 			<div class="row">
                 {!! Form::select(
-                    'countries[]',
+                    'countries',
                     $lang->getCountryList(),
                     explode(',', $lang->countries),
                     [
@@ -61,23 +61,26 @@
                         'multiple' => 'multiple'
                     ]
                 ) !!}
-				<label for="countries[]">Countries in which language is spoken</label>
+				<label for="countries">Countries in which language is spoken</label>
 			</div>
 
             {{-- Language notes --}}
 			<div class="row">
-                <textarea name="desc[en]" class="en-text-input" placeholder="This language is so interesting because...">{{ $lang->getDescription('en') }}</textarea>
+                <textarea
+                    name="desc[en]"
+                    class="en-text-input"
+                    placeholder="This language is so interesting because..."
+                    disabled></textarea>
 				<label for="desc">Fun facts!</label>
 			</div>
 
 			{{-- Form actions --}}
 			<div class="row center">
+                <input type="submit" value="save" />
 				<input type="button" value="cancel" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
-				<input type="submit" value="save" />
 			</div>
 
-			{!! Form::token() !!}
-			<!-- {{ $lang->getId() }} -->
+            {!! csrf_field() !!}
 		</form>
 	</section>
 
@@ -85,16 +88,16 @@
 
     // Setup language search for "parent" field
     Forms.setupLangSearch(
-        'input[name="parent"]',
-        [{ code: '{{ $lang->parent }}', name: '{{ $lang->getParam('parentName') }}' }]
+        'input[name="parent_code"]',
+        [{ code: '{{ $lang->parent_code }}', name: '{{ $lang->getParam('parentName') }}' }]
     );
 
     // Country selection
-    $('select[name="countries[]"]').selectize({persist: false, maxItems: 20, plugins: ['remove_button']});
+    $('select[name="countries"]').selectize({persist: false, maxItems: 20, plugins: ['remove_button']});
 
     $(document).ready(function() { $('input[name="name"]').focus(); });
 
     </script>
 
-	@include('layouts.footer')
+	@include('partials.footer')
 @stop
