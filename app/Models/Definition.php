@@ -7,6 +7,10 @@ use App\Models\Language;
 use App\Models\Translation;
 use Illuminate\Support\Arr;
 use cebe\markdown\MarkdownExtra;
+use App\Models\Definitions\Poem;
+use App\Models\Definitions\Word;
+use App\Models\Definitions\Phrase;
+use App\Models\Definitions\Story;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -172,6 +176,35 @@ class Definition extends Model
         // Markdown parser.
         $this->markdown = new MarkdownExtra;
         $this->markdown->html5 = true;
+    }
+
+    /**
+     * Creates an instance of a definition depending on the type.
+     *
+     * @param int $type
+     * @return mixed
+     */
+    public static function getInstance($type, $attributes = [], $exists = false)
+    {
+        // Check that the definition type is valid.
+        $types = (new Definition)->types;
+        if (!array_key_exists($type, $types)) {
+            return null;
+        }
+
+        // Return new instance.
+        $className = '\\App\\Models\\Definitions\\'. ucfirst(strtolower($types[$type]));
+        return (new $className)->newInstance($attributes, $exists);
+    }
+
+    /**
+     * Returns the name of a definition type.
+     *
+     * @param int $type
+     * @return string
+     */
+    public static function getTypeName($type) {
+        return (new Definition)->types[$type];
     }
 
     /**

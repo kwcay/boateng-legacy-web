@@ -84,27 +84,9 @@ class DefinitionController extends Controller
 	 */
     private function createType($type, $langCode)
     {
-        // Define the template to use.
-        switch ($type)
-        {
-            case Definition::TYPE_WORD:
-                $template = 'forms.definition.new-word';
-                $data = [
-                    'word' => new Word,
-                    'type' => Definition::TYPE_WORD
-                ];
-                break;
-
-            case Definition::TYPE_PHRASE:
-                abort(501);
-                break;
-
-            case Definition::TYPE_POEM:
-                abort(501);
-                break;
-
-            default:
-                abort(400);
+        // Create a specific definition instance.
+        if (!$def = Definition::getInstance($type)) {
+            abort(400);
         }
 
         // Retrieve language object.
@@ -112,8 +94,17 @@ class DefinitionController extends Controller
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
-        return view($template, Arr::add($data, 'lang', $lang));
+        // Define view.
+        $typeName = Definition::getTypeName($type);
+        $template = 'forms.definition.'. $typeName .'.walkthrough';
+
+        return view($template, [
+            'lang' => $lang,
+            'type' => $type,
+            $typeName => $def
+        ]);
     }
+
     public function createWord($langCode) {
         return $this->createType(Definition::TYPE_WORD, $langCode);
     }
@@ -163,7 +154,9 @@ class DefinitionController extends Controller
             }
         }
 
-        return view('forms.definition.default', [
+        // TODO: update view according to definition type.
+
+        return view('forms.definition.word.default', [
             'def'       => $def,
             'options'   => $lso
         ]);
@@ -213,7 +206,9 @@ class DefinitionController extends Controller
             ];
         }
 
-        return view('forms.definition.default', [
+        // TODO: update view according to definition type.
+
+        return view('forms.definition.word.default', [
             'def'       => $def,
             'options'   => $lso
         ]);
@@ -325,7 +320,7 @@ class DefinitionController extends Controller
                 break;
         }
 
-        Session::push('messages', 'The details for <em>'. $def->data .'</em> were successfully saved, thanks :)');
+        Session::push('messages', 'The details for <em>'. $def->title .'</em> were successfully saved, thanks :)');
         return redirect($return);
     }
 
