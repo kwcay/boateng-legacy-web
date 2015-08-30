@@ -6,8 +6,8 @@
 <body>
 	<header>~·~</header>
     <section>
-        <div class="large">404</div>
-        Not Found.
+        <div class="large">403</div>
+        Forbidden.
     </section>
 </body>
 </html>
