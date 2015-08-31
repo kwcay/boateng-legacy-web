@@ -3,7 +3,7 @@
  */
 var Dialogs =
 {
-    definition: {
+    resource: {
         type: 'word',
         langCode: null
     },
@@ -16,21 +16,27 @@ var Dialogs =
         // Remove selected class from all links.
         $('.dialog.resource .types a').removeClass('selected');
 
-        // Add selected class to current link.
+        // Add selected class to current link and update the resource type.
         $(link).addClass('selected');
-        this.definition.type = $(link).data('type');
+        this.resource.type = $(link).data('type');
     },
 
     /*
-     *
+     * Initializes resource-related dialog stuff.
      */
-    showDefinitionForm: function(form)
+    initResource: function()
     {
-        console.log(form.language.value);
-        
-        if (this.definition.langCode)
-            App.redirect(this.definition.langCode +'/+'+ this.definition.type);
-
-        return false;
+        // Semantic UI search input.
+        $('.dialog.resource .ui.dialog-resource-lang').search({
+            apiSettings: {
+                url: 'language/search/{query}?semantic=1'
+            },
+            searchFields: ['name', 'alt_names'],
+            searchDelay: 500,
+            searchFullText: false,
+            onSelect: function(result, response) {
+                App.redirect(result.code +'/+'+ this.resource.type);
+            }.bind(this)
+        });
     }
 };

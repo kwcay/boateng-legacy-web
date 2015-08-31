@@ -45,7 +45,7 @@ var App =
 	},
 
 	redirect: function(path) {
-		window.location = path.length > 1 ? this.root +'/'+ path : this.root;
+		window.location = path.length > 1 ? this.root + path : this.root;
 	},
 
 	urlencode : function(str)

@@ -119,11 +119,11 @@
 	<div>
 		<a href="#" class="close">&#10005;</a>
 
-		<h1>Contribute to Di Nkɔmɔ</h1>
+		<h1>Edit Di Nkɔmɔ</h1>
 		<div class="center">
 
             <br />
-            <form class="form" name="dialogDefinitionForm" onsubmit="return Dialogs.showDefinitionForm(this)">
+            <form class="form" name="dialogDefinitionForm" onsubmit="return false;">
 
                 Add a
 
@@ -136,24 +136,14 @@
 
                 in
 
-                <input type="text" name="language" class="center" placeholder="your language" required />
-                <!-- <div class="ui dialog-resource-lang">
+                <!-- <input type="text" name="language" class="center" placeholder="your language" required /> -->
+                <div class="ui lang-search dialog-resource-lang">
                     <input type="text" name="language" class="prompt center" placeholder="your language" />
                     <div class="results"></div>
-                </div> -->
+                </div>
                 <script type="text/javascript">
-                    Forms.setupLangSearch(document.dialogDefinitionForm.language, [], 20);
-                    // $('.ui.dialog-resource-lang').search({
-                    //     apiSettings: {
-                    //         url: 'language/search/{query}?semantic=1'
-                    //     },
-                    //     searchFields: ['name', 'alt_names'],
-                    //     searchDelay: 500,
-                    //     searchFullText: false,
-                    //     onSelect: function(result, response) {
-                    //         Dialogs.definition.langCode = result.code;
-                    //     }
-                    // });
+                    // Forms.setupLangSearch(document.dialogDefinitionForm.language, [], 20);
+                    Dialogs.initResource();
                 </script>
 
             </form>

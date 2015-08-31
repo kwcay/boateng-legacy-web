@@ -65,7 +65,7 @@
 }
 
 /*
- * Definition types.
+ * Adding resources.
  */
 .dialog.resource .types, .dialog.resource input[type="text"] {
     margin: 20px 0;
@@ -79,6 +79,32 @@
 }
 .dialog.resource input[type="text"] {
     width: 100%;
+}
+
+.dialog .lang-search {
+    position: relative;
+}
+.dialog .lang-search .results {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+}
+.dialog .lang-search .results .result {
+    cursor: pointer;
+    margin: 1px 0;
+    padding: 4px 0;
+    display: block;
+    background-color: #333;
+}
+.dialog .lang-search .results .content .title {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    font-size: .9em;
+}
+.dialog .lang-search .results .content .description {
+    display: none;
 }
 
 .notices {
