@@ -38,6 +38,7 @@ Route::resource('audio',        'AudioController');
 // ]);
 Route::get('/login',        ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
 Route::post('/login',       ['as' => 'auth.login.post', 'uses' => 'Auth\AuthController@postLogin']);
+Route::get('/logout',       ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
 
 // Redirects.
 Route::get('stats', function() { return redirect(route('stats')); });

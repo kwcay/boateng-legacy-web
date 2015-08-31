@@ -18,6 +18,12 @@ use App\Http\Controllers\Controller;
  */
 class LanguageController extends Controller
 {
+    public function __construct()
+    {
+        // Enable the auth middleware.
+		$this->middleware('auth', ['except' => 'show', 'search']);
+    }
+    
     /**
      * Display the language page.
      *

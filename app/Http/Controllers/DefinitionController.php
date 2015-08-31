@@ -2,6 +2,7 @@
 
 use DB;
 use URL;
+use Auth;
 use Lang;
 use Request;
 use Session;
@@ -20,6 +21,12 @@ use Illuminate\Support\Arr;
  */
 class DefinitionController extends Controller
 {
+    public function __construct()
+    {
+        // Enable the auth middleware.
+		$this->middleware('auth', ['except' => 'show', 'search']);
+    }
+
     /**
      * Displays the word page, with similar definitions.
      *
@@ -84,6 +91,11 @@ class DefinitionController extends Controller
 	 */
     private function createType($type, $langCode)
     {
+        // Make sure we have a logged in user.
+        if (Auth::guest()) {
+            return redirect()->guest(route('auth.login'));
+        }
+
         // Create a specific definition instance.
         if (!$def = Definition::getInstance($type)) {
             abort(400);
@@ -269,7 +281,7 @@ class DefinitionController extends Controller
      * @param string $return    Relative URI to redirect to.
      * @return mixed
      */
-    public function save(Definition $def, array $data, $return)
+    private function save(Definition $def, array $data, $return)
     {
         // Validate input data
         $test = Definition::validate($data);
