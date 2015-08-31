@@ -199,30 +199,24 @@ class LanguageController extends Controller
             return $this->abort(400, 'Query too short');
         }
 
-        // Query the database
-        $langs = Language::where('name', 'LIKE', '%'. $query .'%')
-            ->orWhere('alt_name', 'LIKE', '%'. $query .'%')
-            ->orWhere('desc', 'LIKE', '%'. $query .'%')
-            ->orWhere('code', 'LIKE', '%'. $query .'%')
-            ->orWhere('parent', 'LIKE', '%'. $query .'%')->get();
+        $offset = min(0, (int) Request::get('offset', 0));
+        $limit = min(1, max(100, (int) Request::get('limit', 100)));
+
+        $langs = Language::search($query, $offset, $limit);
 
         // Format results
-        $results    = [];
+        $results  = [];
+        $semantic = (bool) Request::has('semantic');
         if (count($langs)) {
             foreach ($langs as $lang) {
-                $results[]  = [
-                    'code'          => $lang->code,
-                    'name'          => $lang->name,
-                    'altNames'      => $lang->alt_name,
-                    'parentCode'    => $lang->parent,
-                    'parentName'    => $lang->getParam('parentName', ''),
-                    'uri'           => $lang->getUri()
-                ];
+                $results[] = $semantic ? array_add($lang->toArray(), 'title', $lang->name) : $lang->toArray();
             }
         }
 
-        return $this->send(['query' => $query, 'languages' => $results]);
+        // return $this->send(['query' => $query, 'results' => $results]);
+        return $this->send($semantic ? $results : compact('query', 'results'));
     }
+
     /**
      * Shortcut to retrieve a language object.
      *

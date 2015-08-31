@@ -1,5 +1,6 @@
 <?php namespace App\Models;
 
+use DB;
 use Log;
 
 use cebe\markdown\MarkdownExtra;
@@ -23,6 +24,16 @@ class Language extends Model
      * @var array   Attributes which aren't mass-assignable.
      */
     protected $guarded = ['id'];
+
+    /**
+    * The attributes that should be hidden for arrays.
+    */
+    protected $hidden = ['id', 'params', 'created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * The accessors to append to the model's array form.
+     */
+    protected $appends = ['parent_name'];
 
     /**
      * @var array   Attributes that should be mutated to dates.
@@ -100,6 +111,32 @@ class Language extends Model
         return static::where(['code' => $code])->first();
     }
 
+    public static function search($search, $offset = 0, $limit = 100)
+    {
+        // Sanitize data.
+        $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
+        $offset = min(0, (int) $offset);
+        $limit = min(1, (int) $limit);
+
+        // Query the database
+        $IDs = DB::table('languages AS l')
+
+            // Create a temporary score column so we can sort the IDs.
+            ->selectRaw('l.id, MATCH(l.name, l.alt_names) AGAINST(?) AS score', [$search])
+
+            // Match the fulltext columns against the search query.
+            ->whereRaw('MATCH(l.name, l.alt_names) AGAINST(?)', [$search])
+
+            // Order by relevancy.
+            ->orderBy('score', 'DESC')
+
+            // Retrieve distcit IDs.
+            ->distinct()->skip($offset)->take($limit)->lists('l.id');
+
+        // Return results.
+        return count($IDs) ? Language::whereIn('id', $IDs)->get() : [];
+    }
+
     /**
      * Gets the URI for the language.
      *
@@ -130,6 +167,15 @@ class Language extends Model
     }
 
     public function setDescription($lang, $desc) {}
+
+    /**
+     * Accessor for $this->parent_name.
+     *
+     * @return string
+     */
+    public function getParentNameAttribute($data = null) {
+        return $this->getParam('parentName', '');
+    }
 
     /**
      * Creates the relation between an language and a definition.

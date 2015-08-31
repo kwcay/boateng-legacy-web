@@ -24,7 +24,7 @@ var Forms =
         $(input).selectize({
             valueField: 'code',
             labelField: 'name',
-            searchField: ['code', 'name', 'altNames'],
+            searchField: ['code', 'name', 'alt_names'],
             options: options,
             plugins: (plugins || null),
             create: false,
@@ -47,8 +47,8 @@ var Forms =
 
                     // Add a short desciption
                     var hint = '';
-                    if (item.altNames && item.altNames.length)
-                        hint = '<span class="hint"> &mdash; Also known as '+ item.altNames.join(', ') + '</span>';
+                    if (item.alt_names && item.alt_names.length)
+                        hint = '<span class="hint"> &mdash; Also known as '+ item.alt_names + '</span>';
 
                     // Return formatted HTML
                     return  '<div>' +
@@ -65,7 +65,7 @@ var Forms =
                         callback();
                     },
                     success: function(obj) {
-                        callback(obj.results.languages);
+                        callback(obj.results);
                     }
                 });
             }

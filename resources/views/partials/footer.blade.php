@@ -47,7 +47,7 @@
 		<small>
             &copy; 2014 - {{ date('Y') }}
             &nbsp;&ndash;&nbsp;
-			<a href="{{ route('about') }}">A Ghanaian product</a>
+			<a href="{{ route('about') }}">A Ghanaian app</a>
 		</small>
 	</div>
 </footer>
@@ -119,14 +119,45 @@
 	<div>
 		<a href="#" class="close">&#10005;</a>
 
-		<h1>Add a resource [todo]</h1>
+		<h1>Contribute to Di Nkɔmɔ</h1>
 		<div class="center">
-		    <br />
 
-		    Word | Phrase | Poem | Story<br />
-            in<br />
-            ___ [language] ___
-		    <br /><br />
+            <br />
+            <form class="form" name="dialogDefinitionForm" onsubmit="return Dialogs.showDefinitionForm(this)">
+
+                Add a
+
+                <div class="types">
+                    <a href="#" class="selected" onclick="Dialogs.toggleType(this)" data-type="word">Word</a>
+                    <a href="#" onclick="Dialogs.toggleType(this)" data-type="phrase">Phrase</a>
+                    <a href="#" onclick="Dialogs.toggleType(this)" data-type="poem">Poem</a>
+                    <a href="#" onclick="Dialogs.toggleType(this)" data-type="story">Story</a>
+                </div>
+
+                in
+
+                <input type="text" name="language" class="center" placeholder="your language" required />
+                <!-- <div class="ui dialog-resource-lang">
+                    <input type="text" name="language" class="prompt center" placeholder="your language" />
+                    <div class="results"></div>
+                </div> -->
+                <script type="text/javascript">
+                    Forms.setupLangSearch(document.dialogDefinitionForm.language, [], 20);
+                    // $('.ui.dialog-resource-lang').search({
+                    //     apiSettings: {
+                    //         url: 'language/search/{query}?semantic=1'
+                    //     },
+                    //     searchFields: ['name', 'alt_names'],
+                    //     searchDelay: 500,
+                    //     searchFullText: false,
+                    //     onSelect: function(result, response) {
+                    //         Dialogs.definition.langCode = result.code;
+                    //     }
+                    // });
+                </script>
+
+            </form>
+            <br />
 
 		    <em>~ or ~</em>
 		    <br /><br />

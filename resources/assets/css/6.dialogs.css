@@ -1,5 +1,6 @@
-
-
+/*
+ * General styles.
+ */
 .dialog {
 	position: fixed;
 	top: 0;
@@ -63,6 +64,23 @@
     margin: 0 20px;
 }
 
+/*
+ * Definition types.
+ */
+.dialog.resource .types, .dialog.resource input[type="text"] {
+    margin: 20px 0;
+}
+.dialog.resource .types a {
+    padding: 5px 15px;
+}
+.dialog.resource .types a.selected {
+    color: #333;
+    background-color: #fff;
+}
+.dialog.resource input[type="text"] {
+    width: 100%;
+}
+
 .notices {
 	height: auto;
 	width: 100%;
@@ -89,7 +107,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-	
+
 	.dialog > div {
 		padding: 4%;
 		width: 92%;
