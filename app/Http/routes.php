@@ -31,12 +31,13 @@ Route::resource('translation',  'TranslationController');
 // Audio endpoints.
 Route::resource('audio',        'AudioController');
 
-// User pages
-//Route::get('/login',    'PageController@showLoginForm');
-Route::controllers([
-//    'auth' => 'Auth\AuthController',
-    'password' => 'Auth\PasswordController',
-]);
+// Authentication routes.
+// Route::controllers([
+//     'auth' => 'Auth\AuthController',
+//     'password' => 'Auth\PasswordController',
+// ]);
+Route::get('/login',        ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
+Route::post('/login',       ['as' => 'auth.login.post', 'uses' => 'Auth\AuthController@postLogin']);
 
 // Redirects.
 Route::get('stats', function() { return redirect(route('stats')); });
@@ -55,6 +56,11 @@ Route::group(['prefix' => 'admin'], function()
 
     // Resource export
     Route::get('/export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'DataController@export']);
+});
+
+// Redirects.
+Route::get('/home', function() {
+    return redirect(route('home'));
 });
 
 // Dictionary pages

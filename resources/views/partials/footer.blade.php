@@ -14,12 +14,20 @@
                 data-position="top center"></a>
             <span class="ui popup">About this app</span>
 
-            <a
-                href="{{ url('login') }}"
-                class="fa fa-unlock-alt has-inline-tooltip"
-                onclick="return App.openDialog('login');"
-                data-position="top center"></a>
-            <span class="ui popup">Login</span>
+            @if (Auth::guest())
+                <a
+                    href="{{ url('login') }}"
+                    class="fa fa-unlock-alt has-inline-tooltip"
+                    onclick="return App.openDialog('login');"
+                    data-position="top center"></a>
+                <span class="ui popup">Login</span>
+            @else
+                <a
+                    href="#"
+                    class="fa fa-wrench has-inline-tooltip"
+                    data-position="top center"></a>
+                <span class="ui popup">Account Settings</span>
+            @endif
 
             <a
                 href="#"
@@ -30,17 +38,18 @@
 
             <a
                 href="#"
-                class="fa fa-wrench has-inline-tooltip"
-                onclick="return App.openDialog('settings');"
-                data-position="top center"></a>
-            <span class="ui popup">Settings</span>
-
-            <a
-                href="#"
                 class="fa fa-pencil has-inline-tooltip"
                 onclick="return App.openDialog('resource');"
                 data-position="top center"></a>
             <span class="ui popup">Edit Di Nkɔmɔ</span>
+
+            @if (Auth::check())
+                <a
+                    href="{{ route('admin') }}"
+                    class="fa fa-cogs has-inline-tooltip"
+                    data-position="top center"></a>
+                <span class="ui popup">Admin</span>
+            @endif
         </div>
     </div>
 	<div class="credits">

@@ -4,17 +4,25 @@ use Validator;
 
 use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {
-	use AuthenticatesAndRegistersUsers;
+	use AuthenticatesAndRegistersUsers, ThrottlesLogins {
+        // AuthenticatesAndRegistersUsers::postLogin as loginUser;
+    }
 
 	/**
 	 * Create a new authentication controller instance.
 	 */
 	public function __construct()
 	{
+        // Define rediretion paths (used internally).
+        $this->loginPath = route('auth.login');
+        $this->redirectAfterLogout = $this->redirectPath = route('home');
+
+        // Enable the guest middleware.
 		$this->middleware('guest', ['except' => 'getLogout']);
 	}
 

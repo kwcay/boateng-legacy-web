@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('body')
-	@include('layouts.header')
+	@include('partials.header')
 
 	<section>
 		<h1>
@@ -32,5 +32,5 @@
 
 	</section>
 
-	@include('layouts.footer')
+	@include('partials.footer')
 @stop
