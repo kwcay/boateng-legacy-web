@@ -228,7 +228,16 @@ class DefinitionController extends Controller
             throw new \Exception(Lang::get('errors.resource_not_found'), 404);
         }
 
-        return $this->save($def, Request::all(), $def->getEditUri(false));
+        $data = Request::only([
+            'title', 'alt_titles', 'data', 'type', 'sub_type', 'tags', 'state', 'relations'
+        ]);
+
+        $data['type'] = $def->rawType;
+        $data['state'] = $def->rawState;
+
+        $return = Request::has('add') ? 'add' : 'index';
+
+        return $this->save($def, $data, $return);
 	}
 
     /**
@@ -313,7 +322,7 @@ class DefinitionController extends Controller
                 break;
 
             case 'edit':
-                $return = route('definition.edit', ['def' => $def->getId()]);
+                $return = route('definition.edit', ['id' => $def->getId()]);
                 break;
 
             case 'add':

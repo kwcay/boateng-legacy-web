@@ -43,7 +43,7 @@ trait ObfuscatableResourceTrait
     public static function find($id, $columns = ['*'])
     {
         // Un-obfuscate ID
-        if (is_string($id) && strlen($id) >= 8 && !is_numeric($id)) {
+        if (is_string($id) && !is_numeric($id) && strlen($id) >= 8) {
             $id = static::getObfuscator()->decode($id)[0];
         }
 
@@ -58,7 +58,7 @@ trait ObfuscatableResourceTrait
     public static function findOrNew($id, $columns = ['*'])
     {
         // Un-obfuscate ID
-        if (is_string($id) && strlen($id) >= 8 && !is_numeric($id)) {
+        if (is_string($id) && !is_numeric($id) && strlen($id) >= 8) {
             $id = static::getObfuscator()->decode($id)[0];
         }
 
@@ -73,11 +73,10 @@ trait ObfuscatableResourceTrait
     public static function findOrFail($id, $columns = ['*'])
     {
         // Un-obfuscate ID
-        if (is_string($id) && strlen($id) >= 8 && !is_numeric($id)) {
+        if (is_string($id) && !is_numeric($id) && strlen($id) >= 8) {
             $id = static::getObfuscator()->decode($id)[0];
         }
 
         return parent::findOrFail($id, $columns);
     }
 }
-

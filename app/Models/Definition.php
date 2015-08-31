@@ -422,7 +422,7 @@ class Definition extends Model
 
             // Or pick first language as a default.
             if ($main === false) {
-                $main = $this->languages[0];
+                $main = $this->languages()->first();
             }
         }
 
@@ -440,13 +440,21 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->sub_type.
-     *
-     * @param string $subType
-     * @return string
+     * Accessor for $this->rawType.
+     */
+    public function getRawTypeAttribute($type = '') {
+        return $this->getAttributeFromArray('type');
+    }
+
+    /**
+     * Accessor for $this->subType.
      */
     public function getSubTypeAttribute($subType = '')
     {
+        // "subType" will be null, since it will try to retrieve it from $this->attribtues['subType']
+        // which doesn't exist. We it to the correct value here.
+        $subType = $this->getAttributeFromArray('sub_type');
+
         foreach ($this->types as $index => $type) {
             if (Arr::has($this->subTypes[$index], $subType)) {
                 return Arr::get($this->subTypes[$index], $subType);
@@ -454,6 +462,13 @@ class Definition extends Model
         }
 
         return $subType;
+    }
+
+    /**
+     * Accessor for $this->rawSubType.
+     */
+    public function getRawSubTypeAttribute($subType = '') {
+        return $this->getAttributeFromArray('sub_type');
     }
 
     /**
@@ -481,6 +496,13 @@ class Definition extends Model
      */
     public function getStateAttribute($state = 0) {
         return Arr::get($this->states, $state, $this->states[1]);
+    }
+
+    /**
+     * Accessor for $this->rawState.
+     */
+    public function getRawStateAttribute($state = 0) {
+        return $this->getAttributeFromArray('state');
     }
 
     /**
@@ -619,6 +641,7 @@ class Definition extends Model
                 // If we can't find the language by code, assume it was invalid.
                 if (!$lang = Language::findByCode($langID)) {
                     unset($languages[$index]);
+                    continue;
                 }
 
                 // Replace the code with an ID.

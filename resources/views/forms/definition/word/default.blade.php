@@ -50,7 +50,7 @@
 
 			{{-- Type --}}
 			<div class="row">
-                {!! Form::select('sub_type', $def->getSubTypes(), $def->sub_type, array('class' => 'en-text-input')) !!}
+                {!! Form::select('sub_type', $def->getSubTypes(), $def->rawSubType, ['class' => 'en-text-input']) !!}
 				<label for="type">Word type</label>
 			</div>
 
@@ -87,7 +87,7 @@
 			<!-- Form actions -->
 			<div class="row center">
 				<input type="submit" name="finish" value="done !" />
-				<input type="submit" name="new" value="save + add" onclick="return saveAndNew();" />
+				<input type="submit" name="add" value="save + add" onclick="return saveAndNew();" />
 				<input type="button" name="cancel" value="return" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
 			</div>
 
