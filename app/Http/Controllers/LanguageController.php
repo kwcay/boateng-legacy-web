@@ -21,7 +21,7 @@ class LanguageController extends Controller
     public function __construct()
     {
         // Enable the auth middleware.
-		$this->middleware('auth', ['except' => 'show', 'search']);
+		$this->middleware('auth', ['except' => ['show', 'search']]);
     }
 
     /**
@@ -199,6 +199,11 @@ class LanguageController extends Controller
      */
     public function search($query = '')
     {
+        // This method should really only be called through the API.
+        if (Request::method() == 'GET' && env('APP_ENV') == 'production') {
+            abort(405);
+        }
+
         // Performance check
         $query  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $query)));
         if (strlen($query) < 2) {

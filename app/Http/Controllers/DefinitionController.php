@@ -357,6 +357,11 @@ class DefinitionController extends Controller
      */
     public function search($search = '')
     {
+        // This method should really only be called through the API.
+        if (Request::method() == 'GET' && env('APP_ENV') == 'production') {
+            abort(405);
+        }
+
         // Performance check
         $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
         if (strlen($search) < 2) {
