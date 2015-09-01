@@ -65,6 +65,26 @@
 	</div>
 </div>
 
+{{-- Language dialog --}}
+<div class="dialog language">
+	<div>
+		<a href="#" class="close">&#10005;</a>
+
+		<h1>Find a language</h1>
+        <div class="center">
+            <form name="languageDialogForm" class="form" onsubmit="return false;">
+
+                <div class="ui lang-search languge-dialog-search">
+                    <input name="language" type="text" class="prompt center" placeholder="e.g. twi" />
+                    <div class="results"></div>
+                </div>
+                
+            </form>
+        </div>
+
+	</div>
+</div>
+
 {{-- Add resource dialog --}}
 <div class="dialog resource">
 	<div>

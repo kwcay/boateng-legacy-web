@@ -179,7 +179,7 @@ class Definition extends Model
     }
 
     /**
-     * Creates an instance of a definition depending on the type.
+     * Creates an instance of a definition type.
      *
      * @param int $type
      * @return mixed
@@ -384,6 +384,8 @@ class Definition extends Model
     /**
      * @param bool $full
      * @return string
+     *
+     * @deprecated  Use url($this->uri) instead.
      */
     public function getUri($full = false) {
         $path   = $this->mainLanguage->code .'/'. str_replace(' ', '_', $this->title);
@@ -393,6 +395,8 @@ class Definition extends Model
     /**
      * @param bool $full
      * @return string
+     *
+     * @deprecated  Use url($this->editUri) instead.
      */
     public function getEditUri($full = true) {
         return route('definition.edit', ['id' => $this->getId()], $full);
@@ -528,7 +532,16 @@ class Definition extends Model
      * @return string
      */
     public function getUriAttribute() {
-        return $this->getUri(true);
+        return $this->mainLanguage->code .'/'. str_replace(' ', '_', $this->title);
+    }
+
+    /**
+     * Accessor for $this->editUri.
+     *
+     * @return string
+     */
+    public function getEditUriAttribute() {
+        return route('definition.edit', ['id' => $this->getId()]);
     }
 
     /**

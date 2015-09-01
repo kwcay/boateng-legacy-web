@@ -4,6 +4,15 @@
 section {
     margin: 0 auto 0;
 }
+section .meta {
+    margin: 20px -20px;
+    font-size: .8em;
+    /*letter-spacing: 1.5px;*/
+}
+section .meta em {
+    font-size: inherit;
+    font-weight: bold;
+}
 
 /**
  * Homepage

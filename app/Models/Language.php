@@ -142,6 +142,8 @@ class Language extends Model
      *
      * @param bool $full
      * @return string
+     *
+     * @deprecated  Use url($this->uri) instead.
      */
     public function getUri($full = true) {
         return $full ? url($this->code) : $this->code;
@@ -152,6 +154,8 @@ class Language extends Model
      *
      * @param bool $full
      * @return string
+     *
+     * @deprecated  Use url($this->editUri) instead.
      */
     public function getEditUri($full = true) {
         return route('language.edit', ['code' => $this->code], $full);
@@ -169,12 +173,30 @@ class Language extends Model
     public function setDescription($lang, $desc) {}
 
     /**
-     * Accessor for $this->parent_name.
+     * Accessor for $this->parentName.
      *
      * @return string
      */
     public function getParentNameAttribute($data = null) {
         return $this->getParam('parentName', '');
+    }
+
+    /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return $this->code;
+    }
+
+    /**
+     * Accessor for $this->editUri.
+     *
+     * @return string
+     */
+    public function getEditUriAttribute() {
+        return route('language.edit', ['code' => $this->code]);
     }
 
     /**

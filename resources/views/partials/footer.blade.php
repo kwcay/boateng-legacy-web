@@ -43,6 +43,13 @@
                 data-position="top center"></a>
             <span class="ui popup">Edit Di Nkɔmɔ</span>
 
+            <a
+                href="#"
+                class="fa fa-globe has-inline-tooltip"
+                onclick="return App.openDialog('language');"
+                data-position="top center"></a>
+            <span class="ui popup">Find a language</span>
+
             @if (Auth::check())
                 <a
                     href="{{ route('admin') }}"
