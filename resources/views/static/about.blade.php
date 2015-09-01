@@ -6,37 +6,39 @@
 	<section>
 		<h1>Di Nkɔmɔ</h1>
         <h2 class="center" style="font-weight: normal;">~ The book of Native tongues ~</h2>
-		<em>Di Nkɔmɔ</em> is a multilingual dictionary focused on indigenous languages from around the world. <em>Di Nkɔmɔ</em> is <a href="aka">Akan</a> for chat, or converse. And so, we hope to encourage and increase the conversations between Native peoples all across the world.
+
+        Di Nkɔmɔ is a little project I started in 2014 to help myself learn
+        <a href="twi">Twi</a>, my native language. It quickly became a dictionary web app, which I
+        hope will be useful to others some day. Di Nkɔmɔ is <a href="twi">Twi</a> for chat,
+        or converse.
         <br /><br />
-		
-		The web app was conceived and developed by Yaw Amankwa&mdash;otherwise known as <a href="http://frnk.ca" target="_blank">Frank</a>&mdash;a Montreal native originally from Ghana. It relies on great libraries and resources such as the <a href="http://fortawesome.github.io/Font-Awesome/" target="_blank">Font Awesome</a> icon set and <a href="http://scripts.sil.org/gentium" target="_blank">Gentium</a>, <i>&ldquo;a typeface for the nations&rdquo;</i> developed for SIL International. Some other resources we use are:
+
+        My name is <a href="http://frnk.ca" target="_blank">Yaw Amankrah</a>. I built this app using
+        <a href="http://laravel.com" target="_blank">Laravel</a> and the following resources:
+
         <ul>
             <li>
-                <a href="http://www.iso.org/iso/catalogue_detail?csnumber=39534" target="_blank">ISO 639-3 (2007)</a>: Codes for the representation of names of languages
+                <a href="http://www.iso.org/iso/catalogue_detail?csnumber=39534" target="_blank">ISO 639-3</a>
+                codes for the representation of names of languages.
             </li>
             <li>
-                <a href="http://www.ethnologue.com/" target="_blank">Ethnologue</a>: Languages of the world.
+                The <a href="http://www.ethnologue.com/" target="_blank">Ethnologue's</a>
+                extensive catalog.
             </li>
             <li>
-                <a href="http://glottolog.org/" target="_blank">Glottolog</a>: Comprehensive reference information for the world's languages, especially the lesser known languages.
+                The <a href="http://glottolog.org/" target="_blank">Glottolog's</a>
+                extensive catalog.
             </li>
             <li>
-                <a href="http://cldr.unicode.org" target="_blank">CLDR</a>: Unicode Common Locale Data Repository
+                <a href="http://cldr.unicode.org" target="_blank">CLDR</a>, or Unicode's Common
+                Locale Data Repository.
             </li>
         </ul>
-        
-        Check out our stats page&mdash;<a href="{{ URL::to('stats') }}"><em>Di Nkɔmɔ</em>: in numbers</a>&mdash;for more details about the app itself.
-        
-        <h2>Other resources</h2>
-        Listed below are some of our favourite dictionaries and language resources which are available to the public:
-        <ul>
-            <li>
-                <a href="http://maguzawa.dyndns.ws/" target="_blank">Maguzawa</a>: A Hausa-English dictionary
-            </li>
-            <li>
-                <a href="http://twi.bb/" target="_blank">twi.bb</a>: Online Twi Dictionary
-            </li>
-        </ul>
+        <br />
+
+        I've spent a lot of time on this app. If you have any thoughts you'd like to share,
+        <a href="mailto:&#102;&#114;&#97;&#110;&#107;&#64;&#102;&#114;&#110;&#107;&#46;&#99;&#97;">please do</a> !
+
 	</section>
 
 	@include('partials.footer')

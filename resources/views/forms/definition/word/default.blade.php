@@ -80,15 +80,23 @@
 
 			{{-- Language --}}
 			<div class="row">
-				<input id="languages" type="text" name="relations[language]" class="text-input remote" value="" />
-				<label for="languages">Languages that use this word. Start typing and select a language from the list. You can drag these around (the first will be considred the "main" language).</label>
+                <select id="languages" class="text-input remote" name="relations[language]">
+                    @foreach($def->languages as $lang)
+                        <option value="{{ $lang->code }}" selected>
+                            $lang->name
+                        </option>
+                    @endforeach
+                </select>
+				<label for="languages">
+                    Languages that use this word. Start typing and select a language from the list.
+                    You can drag these around (the first will be considred the "main" language).</label>
 			</div>
 
 			<!-- Form actions -->
 			<div class="row center">
 				<input type="submit" name="finish" value="done !" />
 				<input type="submit" name="add" value="save + add" onclick="return saveAndNew();" />
-				<input type="button" name="cancel" value="return" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
+				<input type="button" name="cancel" value="cancel" onclick="return confirm('Cancel editing?') ? window.history.back() : false;" />
 			</div>
 
             {!! csrf_field() !!}

@@ -72,6 +72,9 @@ $(document).ready(function(event)
 
 	// Attach event listeners.
 	$('.close').click(App.closeDialogs.bind(App));
+    $('.has-tooltip').popup({on: 'hover'});
+    $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
+    $('.has-dropdown-menu').dropdown();
 
     // Attache helper keyboard to text inputs.
     $('.text-input').focus(function() {
@@ -87,10 +90,6 @@ $(document).ready(function(event)
 
     // Make keyboard draggable.
     $('#keyboard').draggable();
-
-    // Tooltips
-    $('.has-tooltip').popup({on: 'hover'});
-    $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
 
     // Setup AJAX headers
     $.ajaxSetup({

@@ -16,9 +16,6 @@ use App\Models\Definitions\Word;
 use Illuminate\Support\Arr;
 
 
-/**
- *
- */
 class DefinitionController extends Controller
 {
     public function __construct()
@@ -299,22 +296,30 @@ class DefinitionController extends Controller
         $relations = (array) Arr::pull($data, 'relations');
 
         // Check languages, suggest other languages (esp. parents)
-        $relations['language']  = is_array($relations['language']) ? $relations['language'] : @explode(',', $relations['language']);
-        foreach ($relations['language'] as $code)
+        if (isset($relations['language']))
         {
-            if ($lang = Language::findByCode($code))
-            {
-                // Check if the language has a parent, and
-                // whether that parent is already in the list.
-                if (strlen($lang->parent) >= 3 && !in_array($lang->parent, $relations['language']))
-                {
-                    $relations['language'][] = $lang->parent;
+            // Make sure we have an array.
+            $relations['language']  = is_array($relations['language'])
+                ? $relations['language'] :
+                @explode(',', $relations['language']);
 
-                    // Notify the user of the change
-                    Session::push('messages',
-                        '<em>'. $lang->getParam('parentName') .'</em> is the parent language for <em>'.
-                        $lang->name .'</em>, and was added to the list of languages the word <em>'.
-                        $data['title'] .'</em> exists in.');
+            foreach ($relations['language'] as $code)
+            {
+                if ($lang = Language::findByCode($code))
+                {
+                    // Check if the language has a parent, and
+                    // whether that parent is already in the list.
+                    if (strlen($lang->parent) >= 3 && !in_array($lang->parent, $relations['language'])
+                        && $parent = Language::findByCode($lang->parent))
+                    {
+                        $relations['language'][] = $parent->code;
+
+                        // Notify the user of the change
+                        Session::push('messages',
+                            '<em>'. $parent->name .'</em> is the parent language for <em>'.
+                            $lang->name .'</em>, and was added to the list of languages the word <em>'.
+                            $data['title'] .'</em> exists in.');
+                    }
                 }
             }
         }

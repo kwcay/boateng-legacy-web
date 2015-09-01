@@ -6,13 +6,15 @@
 
 		<h1>What is this?</h1>
 		<div class="center" style="margin-bottom: 20px;">
-            This is a <em>multilingual dictionary</em> focused on <em>indigenous languages</em> from around the world.
-            Or at least, that's what we're trying to make it. <a href="{{ route('about') }}">Find out more</a>.
+            This is a <em>multilingual dictionary</em> focused on <em>indigenous languages</em>
+            from around the world. Or, that's hopefully what it'll become some day.
+            <a href="{{ route('about') }}">Find out more</a>.
         </div>
 
         <div class="center">
-            There are over 7,000 languages spoken around the world today, and our web app is slowly growing to match
-            that&mdash;one word at a time. <a href="{{ route('stats') }}">Check out the stats</a>.
+            There are over 7,000 languages spoken around the world today, and this web app is
+            slowly growing to match that&mdash;one word at a time.
+            <a href="{{ route('stats') }}">Check out the stats</a>.
         </div>
 
 	</div>

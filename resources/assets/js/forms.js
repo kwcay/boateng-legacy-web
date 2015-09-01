@@ -13,19 +13,22 @@ var Forms =
     /**
      * Prepares a language search input for AJAX calls.
      *
-     * @param input
-     * @param options
-     * @param max
-     * @param plugins
+     * @param mixed input
+     * @param object items
+     * @param int max
+     * @param array plugins
      */
-    setupLangSearch: function(input, options, max, plugins)
+    setupLangSearch: function(input, items, max, plugins)
     {
+        // Performance check.
         if (!$(input)) return;
-        $(input).selectize({
+
+        // Initialize selectize input.
+        var $select = $(input).selectize({
             valueField: 'code',
             labelField: 'name',
             searchField: ['code', 'name', 'alt_names'],
-            options: options,
+            options: items,
             plugins: (plugins || null),
             create: false,
             maxItems: (max || 1),

@@ -220,6 +220,9 @@ class Definition extends Model
         return $query->with('languages', 'translations')->orderByRaw('RAND()')->first();
     }
 
+    /**
+     *
+     */
     public static function search($search, $offset = 0, $limit = 1000)
     {
         // Sanitize data.
@@ -472,7 +475,7 @@ class Definition extends Model
     }
 
     /**
-     * Mutator for $this->sub_type.
+     * Mutator for $this->subType.
      *
      * @param string $subType
      * @return void
@@ -506,7 +509,8 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->language.
+     * Accessor for $this->language. Used to return information about the main
+     * language when arraying this model.
      *
      * @return string
      */
@@ -651,6 +655,12 @@ class Definition extends Model
 
         // Sync language relations.
         $this->languages()->sync($languages);
+
+        // Make the first language the main language.
+        if ($lang = Language::find($languages[0])) {
+            $this->setParam('mainLang', $lang->code);
+            $this->save();
+        }
     }
 
     /**

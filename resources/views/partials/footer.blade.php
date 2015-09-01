@@ -49,6 +49,12 @@
                     class="fa fa-cogs has-inline-tooltip"
                     data-position="top center"></a>
                 <span class="ui popup">Admin</span>
+
+                <a
+                    href="{{ route('auth.logout') }}"
+                    class="fa fa-hand-peace-o has-inline-tooltip"
+                    data-position="top center"></a>
+                <span class="ui popup">Logout</span>
             @endif
         </div>
     </div>
