@@ -23,7 +23,7 @@ class LanguageController extends Controller
         // Enable the auth middleware.
 		$this->middleware('auth', ['except' => 'show', 'search']);
     }
-    
+
     /**
      * Display the language page.
      *

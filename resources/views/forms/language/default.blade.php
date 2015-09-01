@@ -62,15 +62,15 @@
 
 			{{-- Country list --}}
 			<div class="row">
-                {!! Form::select(
-                    'countries',
-                    $lang->getCountryList(),
-                    explode(',', $lang->countries),
-                    [
-                        'class' => 'en-text-input',
-                        'multiple' => 'multiple'
-                    ]
-                ) !!}
+                <select id="countries" name="countries[]" class="en-text-input" multiple>
+                    @foreach($lang->getCountryList() as $code => $name)
+                        <option
+                            value="{{ $code }}"
+                            {{ in_array($code, explode(',', $lang->countries)) ? 'selected' : '' }}>
+                            {{ $name }}
+                        </option>
+                    @endforeach
+                </select>
 				<label for="countries">Countries in which language is spoken</label>
 			</div>
 
@@ -100,7 +100,7 @@
     Forms.setupLangSearch('#parent_code', [{code: '{{ $lang->parent_code }}', name: '{{ $lang->getParam('parentName') }}'}], 1);
 
     // Country selection
-    $('select[name="countries"]').selectize({persist: false, maxItems: 20, plugins: ['remove_button']});
+    $('#countries').selectize({persist: false, maxItems: 20, plugins: ['remove_button']});
 
     $(document).ready(function() { $('input[name="name"]').focus(); });
 
