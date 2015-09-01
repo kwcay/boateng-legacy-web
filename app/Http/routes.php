@@ -66,7 +66,7 @@ Route::get('/home', function() {
 
 // Dictionary pages
 Route::get('/+lang',            ['as' => 'language.walkthrough', 'uses' => 'LanguageController@walkthrough']);
-Route::get('/{lang}',           'LanguageController@show');
+Route::get('/{lang}',           ['as' => 'language.show', 'uses' => 'LanguageController@show']);
 Route::get('/{lang}/+word',     ['as' => 'definition.create.word', 'uses' => 'DefinitionController@createWord']);
 Route::get('/{lang}/+phrase',   ['as' => 'definition.create.phrase', 'uses' => 'DefinitionController@createPhrase']);
 Route::get('/{lang}/+poem',     ['as' => 'definition.create.poem', 'uses' => 'DefinitionController@createPoem']);

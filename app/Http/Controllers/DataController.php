@@ -296,24 +296,27 @@ class DataController extends Controller
 
     public function convertOldLanguageSet(array $oldFormat)
     {
-        $data = [];
+        $data = [];         // This will hold our data to be imported.
+        $sortedByCode = []; // This references languages by code.
+        $hasParent = [];    // This will hold the index of languages with parents.
 
         foreach($oldFormat as $oldLang)
         {
-            $lang = new Language(Arr::only($oldLang, ['code', 'countries', 'created_at']));
+            $lang = new Language(array_only($oldLang, ['code', 'countries', 'created_at']));
 
-            // Parent language.
+            // If the language has a code, remember its index in $data so we can try
+            // and save the parent language later.
             if (isset($oldLang['parent'])) {
-                $lang->setAttribute('parent_code', $oldLang['parent']);
+                $hasParent[count($data)] = $oldLang['parent'];
             }
 
             // Language name.
             if (strpos($oldLang['name'], ',')) {
                 $names = @explode(',', $oldLang['name']);
-                $lang->setAttribute('name', Arr::pull($names, 0));
-                $lang->setAttribute('alt_names', implode(', ', $names));
+                $lang->name = array_pull($names, 0);
+                $lang->alt_names = implode(', ', $names);
             } else {
-                $lang->setAttribute('name', $oldLang['name']);
+                $lang->name = $oldLang['name'];
             }
 
             // Description.
@@ -322,6 +325,20 @@ class DataController extends Controller
             }
 
             $data[] = $lang;
+            $sortedByCode[$lang->code] = $lang;
+        }
+
+        // Update parents.
+        if (count($hasParent))
+        {
+            foreach ($hasParent as $index => $parentCode)
+            {
+                if (isset($sortedByCode[$parentCode]))
+                {
+                    $data[$index]->parent_code = $parentCode;
+                    $data[$index]->setParam('parentName', $sortedByCode[$parentCode]->name);
+                }
+            }
         }
 
         return $data;

@@ -40,13 +40,23 @@
 
 			{{-- ISO-639-3 --}}
 			<div class="row">
-				<input type="text" name="code" class="en-text-input" placeholder="e.g. swa" value="{{ $lang->code }}" {{ $lang->exists ? 'disabled' : 'required' }} />
-				<label for="code"><a href="http://en.wikipedia.org/wiki/ISO_639-3" target="_blank">ISO-639-3</a> language code</label>
+				<input
+                    type="text"
+                    name="code"
+                    class="en-text-input"
+                    placeholder="e.g. swa"
+                    value="{{ $lang->code }}"
+                    {{ $lang->exists ? 'disabled' : 'required' }} />
+
+				<label for="code">
+                    <a href="http://en.wikipedia.org/wiki/ISO_639-3" target="_blank">ISO-639-3</a>
+                    language code
+                </label>
 			</div>
 
 			{{-- Parent language --}}
 			<div class="row">
-				<input type="text" name="parent_code" class="text-input remote" value="{{ $lang->parent }}" />
+				<input type="text" name="parent_code" class="text-input remote" value="{{ $lang->parent_code }}" />
 				<label for="parent">Parent language (if applicable)</label>
 			</div>
 
@@ -77,7 +87,7 @@
 			{{-- Form actions --}}
 			<div class="row center">
                 <input type="submit" value="save" />
-				<input type="button" value="cancel" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
+				<input type="button" value="cancel" onclick="return confirm('Cancel editing?') ? window.history.back() : false;" />
 			</div>
 
             {!! csrf_field() !!}
@@ -87,10 +97,7 @@
     <script type="text/javascript">
 
     // Setup language search for "parent" field
-    Forms.setupLangSearch(
-        'input[name="parent_code"]',
-        [{ code: '{{ $lang->parent_code }}', name: '{{ $lang->getParam('parentName') }}' }]
-    );
+    Forms.setupLangSearch('#parent_code', [{code: '{{ $lang->parent_code }}', name: '{{ $lang->getParam('parentName') }}'}], 1);
 
     // Country selection
     $('select[name="countries"]').selectize({persist: false, maxItems: 20, plugins: ['remove_button']});
