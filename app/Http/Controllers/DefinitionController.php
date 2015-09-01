@@ -359,7 +359,7 @@ class DefinitionController extends Controller
     {
         // This method should really only be called through the API.
         if (Request::method() != 'POST' && env('APP_ENV') == 'production') {
-            abort(405, print_r([Request::method(), env('APP_ENV')], true));
+            abort(405);
         }
 
         // Performance check
