@@ -357,10 +357,9 @@ class DefinitionController extends Controller
      */
     public function search($search = '')
     {
-        dd(env('APP_ENV'));
         // This method should really only be called through the API.
-        if (Request::method() == 'GET' && env('APP_ENV') == 'production') {
-            abort(405);
+        if (Request::method() != 'POST' && env('APP_ENV') == 'production') {
+            abort(405, print_r([Request::method(), env('APP_ENV')], true));
         }
 
         // Performance check
