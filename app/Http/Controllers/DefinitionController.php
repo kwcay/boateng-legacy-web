@@ -21,7 +21,7 @@ class DefinitionController extends Controller
     public function __construct()
     {
         // Enable the auth middleware.
-		$this->middleware('auth', ['except' => 'show', 'search']);
+		$this->middleware('auth', ['except' => ['show', 'search']]);
     }
 
     /**
