@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
     <title>@yield('title', 'Di Nkomo: the book of native tongues.')</title>
+    <!-- v0.2 -->
 
 	@section('head')
         <base href="{{ Request::root() }}/">
