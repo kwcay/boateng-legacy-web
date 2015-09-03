@@ -14,7 +14,7 @@ Upgrade MySQL to version 5.6
 
 Pull the documents
 
-    git clone https://bitbucket.org/frnkly/dinkomo.git
+    git clone https://github.com/frnkly/dinkomo.git
     cd dinkomo
 
 Install dependencies
