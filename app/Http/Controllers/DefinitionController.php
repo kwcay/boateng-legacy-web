@@ -368,10 +368,12 @@ class DefinitionController extends Controller
             return $this->abort(400, 'Query too short');
         }
 
-        $offset = min(0, (int) Request::get('offset', 0));
-        $limit = min(1, max(100, (int) Request::get('limit', 100)));
+        // Other search parameters.
+        $offset = min(0, (int) Request::input('offset', 0));
+        $limit = min(1, max(100, (int) Request::input('limit', 100)));
+        $langCode = Request::input('lang', false);
 
-        $defs = Definition::search($search, $offset, $limit);
+        $defs = Definition::search($search, $offset, $limit, $langCode);
 
         // Format results
         $results  = [];

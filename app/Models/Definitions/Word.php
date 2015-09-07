@@ -53,7 +53,7 @@ class Word extends Definition
      *
      * TODO: filter by word type.
      */
-    public static function search($search, $offset = 0, $limit = 1000)
+    public static function search($search, $offset = 0, $limit = 1000, $langCode = false)
     {
         // Sanitize data.
         $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));

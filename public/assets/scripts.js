@@ -258,6 +258,10 @@ var Forms =
             // Display loading message
             form.results.html('<div class="center">looking up '+ query +'...</div>');
 
+            // Build endpoint.
+            var endpoint = App.root +'/definition/search/' + App.urlencode(query) +
+                (options.langCode ? '?code='+ options.langCode : '');
+
             // Start ajax request
             $.ajax({
                 url: App.root +'/definition/search/' + App.urlencode(query),

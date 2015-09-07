@@ -21,23 +21,9 @@
 
         {{-- Search form --}}
         <br />
-        @include('partials.lang-search')
+        @include('partials.lang-search', ['code' => $lang->code, 'name' => $lang->name])
         <br />
         <br />
-
-        {{-- Random word --}}
-        <div class="emphasis">
-            <i>A random word in {{ $lang->name }}:</i><br />
-            <em>&ldquo; <a href="{{ $random->uri }}">{{ $random->title }}</a> &rdquo;</em>
-        </div>
-        <br />
-
-        @else
-        <div class="center">
-            We have no definitions in this language yet.<br />
-            <em><a href="{{ route('definition.create', ['lang' => $lang->code]) }}">Be the first to add one!</a></em>
-        </div>
-        @endif
 
         {{-- Language details --}}
         <h3>A little background...</h3>
@@ -84,6 +70,20 @@
             The latest one to be added is
 			<a href="{{ $latest->getUri() }}">{{ $latest->title }}</a>.
             <br /><br />
+        </div>
+        @endif
+
+        {{-- Random word --}}
+        <div class="emphasis">
+            <i>A random word in {{ $lang->name }}:</i><br />
+            <em>&ldquo; <a href="{{ $random->uri }}">{{ $random->title }}</a> &rdquo;</em>
+        </div>
+        <br />
+
+        @else
+        <div class="center">
+            We have no definitions in this language yet.<br />
+            <em><a href="{{ route('definition.create', ['lang' => $lang->code]) }}">Be the first to add one!</a></em>
         </div>
         @endif
 

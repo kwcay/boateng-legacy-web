@@ -14,7 +14,7 @@
         <br /><br />
 
         My name is <a href="http://frnk.ca" target="_blank">Yaw Amankrah</a>. I built this app using
-        <a href="http://laravel.com" target="_blank">Laravel</a> and the following resources:
+        <a href="http://laravel.com" target="_blank">Laravel</a> and other free resources such as:
 
         <ul>
             <li>

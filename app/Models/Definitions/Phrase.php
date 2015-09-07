@@ -49,7 +49,7 @@ class Phrase extends Definition
      *
      * TODO: filter by phrase type.
      */
-    public static function search($search, $offset = 0, $limit = 1000)
+    public static function search($search, $offset = 0, $limit = 1000, $langCode = false)
     {
         abort(501, 'App\Models\Definitions\Phrase::search not implemented.');
     }

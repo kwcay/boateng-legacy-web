@@ -10,6 +10,13 @@
     </form>
 
     <div id="results">
-        <div class="center">Use this <em>&#10548;</em> to lookup words<br />in another language.</div>
+        <div class="center">Use this <em>&#10548;</em> to lookup words<br />in {{ $name or 'another language' }}.</div>
     </div>
 </div>
+
+<script type="text/javascript">
+Forms.setupDefinitionLookup('search', {
+    langCode: <?= isset($code) ? '"'. $code .'"' : 'false' ?>,
+    langName: '{{ $name or 'another language' }}'
+});
+</script>

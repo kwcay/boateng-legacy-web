@@ -28,9 +28,10 @@ class Definition extends Model
     use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
-    CONST TYPE_PHRASE = 1;      // Proverbs, sayings, etc.
-    CONST TYPE_POEM = 2;        // Poems, songs, etc.
-    CONST TYPE_STORY = 3;       // Short stories.
+    CONST TYPE_NAME = 1;        // Names.
+    CONST TYPE_PHRASE = 10;     // Proverbs, sayings, etc.
+    CONST TYPE_POEM = 20;       // Poems, songs, etc.
+    CONST TYPE_STORY = 30;      // Short stories.
 
     CONST STATE_HIDDEN = 0;     // Hidden definition.
     CONST STATE_VISIBLE = 1;    // Default state.
@@ -40,9 +41,10 @@ class Definition extends Model
      */
     public $types = [
         0 => 'word',
-        1 => 'phrase',
-        2 => 'poem',
-        3 => 'story',
+        1 => 'name',
+        10 => 'phrase',
+        20 => 'poem',
+        30 => 'story',
     ];
 
     /**
@@ -223,12 +225,19 @@ class Definition extends Model
     /**
      *
      */
-    public static function search($search, $offset = 0, $limit = 1000)
+    public static function search($search, $offset = 0, $limit = 1000, $langCode = false)
     {
         // Sanitize data.
         $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
         $offset = min(0, (int) $offset);
         $limit = min(1, (int) $limit);
+
+        // Get query builder.
+        // if ($langCode && $lang = Language::findByCode($langCode)) {
+        //     $builder = $lang->definitions();
+        // } else {
+        //     $builder = DB::table('definitions AS d');
+        // }
 
         // Query the database
         $IDs = DB::table('definitions AS d')
