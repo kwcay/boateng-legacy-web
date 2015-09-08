@@ -78,7 +78,7 @@
                     <input name="language" type="text" class="prompt center" placeholder="e.g. twi" />
                     <div class="results"></div>
                 </div>
-                
+
             </form>
         </div>
 
@@ -94,31 +94,29 @@
 		<div class="center">
 
             <br />
-            <form class="form" name="dialogDefinitionForm" onsubmit="return false;">
+            <form class="form" name="dialogResourceForm" onsubmit="return Dialogs.addResource();">
+                <input type="hidden" name="lang" value="" />
 
-                Add a
-
-                <div class="types">
-                    <a href="#" class="selected" onclick="Dialogs.toggleType(this)" data-type="word">Word</a>
-                    <a href="#" onclick="Dialogs.toggleType(this)" data-type="phrase">Phrase</a>
-                    <a href="#" onclick="Dialogs.toggleType(this)" data-type="poem">Poem</a>
-                    <a href="#" onclick="Dialogs.toggleType(this)" data-type="story">Story</a>
-                </div>
+                Suggest a new
+                <select class="" name="">
+                    @foreach (\App\Models\Definition::types() as $type)
+                        <option value="{{ $type }}">{{ $type }}</option>
+                    @endforeach
+                </select>
 
                 in
 
-                <!-- <input type="text" name="language" class="center" placeholder="your language" required /> -->
-                <div class="ui lang-search dialog-resource-lang">
+                <div class="ui add-resource-input">
                     <input type="text" name="language" class="prompt center" placeholder="your language" />
                     <div class="results"></div>
                 </div>
-                <script type="text/javascript">
-                    // Forms.setupLangSearch(document.dialogDefinitionForm.language, [], 20);
-                    Dialogs.initResource();
-                </script>
 
+                <input type="submit" value="go" style="width: 50px; margin: 0 auto; text-align: center;">
             </form>
-            <br />
+
+            <script type="text/javascript">
+                Dialogs.setupAddResourceForm('.dialog.resource .ui.add-resource-input');
+            </script>
 
 		    <em>~ or ~</em>
 		    <br /><br />

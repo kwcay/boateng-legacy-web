@@ -199,6 +199,10 @@ class Definition extends Model
         return (new $className)->newInstance($attributes, $exists);
     }
 
+    public static function types() {
+        return (new static)->types;
+    }
+
     /**
      * Returns the name of a definition type.
      *

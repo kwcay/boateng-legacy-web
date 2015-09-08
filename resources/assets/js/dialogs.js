@@ -3,31 +3,15 @@
  */
 var Dialogs =
 {
-    resource: {
-        type: 'word',
-        langCode: null
-    },
-
     /*
-     * Related to "add resource" dialog.
+     * Attaches listener to "Add Resource" input.
+     *
+     * @param mixed input
      */
-    toggleType: function(link)
-    {
-        // Remove selected class from all links.
-        $('.dialog.resource .types a').removeClass('selected');
-
-        // Add selected class to current link and update the resource type.
-        $(link).addClass('selected');
-        this.resource.type = $(link).data('type');
-    },
-
-    /*
-     * Initializes resource-related dialog stuff.
-     */
-    initResource: function()
+    setupAddResourceForm: function(input)
     {
         // Semantic UI search input.
-        $('.dialog.resource .ui.dialog-resource-lang').search({
+        $(input).search({
             apiSettings: {
                 url: 'language/search/{query}?semantic=1'
             },
@@ -35,8 +19,15 @@ var Dialogs =
             searchDelay: 500,
             searchFullText: false,
             onSelect: function(result, response) {
-                App.redirect(result.code +'/+'+ this.resource.type);
-            }.bind(this)
+                document.dialogResourceForm.lang = result.code;
+            }
         });
+    },
+
+    addResource: function()
+    {
+        console.log(document.dialogResourceForm.lang);
+
+        return false;
     }
 };

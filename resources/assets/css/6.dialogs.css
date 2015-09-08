@@ -46,8 +46,13 @@
 	width: 100%;
 	overflow: scroll;
 }
-.dialog .form {
-
+.dialog .form select {
+    padding: 0 0 5px 0;
+    color: #fff;
+    font-size: 1.1em;
+    text-align: center;
+    letter-spacing: 2px;
+    border-bottom: 1px solid #aaa;
 }
 .dialog .form input {
     color: #fff;
@@ -67,43 +72,33 @@
 /*
  * Adding resources.
  */
-.dialog.resource .types, .dialog.resource input[type="text"] {
-    margin: 20px 0;
-}
-.dialog.resource .types a {
-    padding: 5px 15px;
-}
-.dialog.resource .types a.selected {
-    color: #333;
-    background-color: #fff;
-}
 .dialog.resource input[type="text"] {
+    margin: 20px 0;
     width: 100%;
 }
-
-.dialog .lang-search {
+.dialog .add-resource-input {
     position: relative;
 }
-.dialog .lang-search .results {
+.dialog .add-resource-input .results {
     position: absolute;
     top: 50px;
     left: 0;
     width: 100%;
 }
-.dialog .lang-search .results .result {
+.dialog .add-resource-input .results .result {
     cursor: pointer;
     margin: 1px 0;
     padding: 4px 0;
     display: block;
     background-color: #333;
 }
-.dialog .lang-search .results .content .title {
+.dialog .add-resource-input .results .content .title {
     margin: 0;
     width: 100%;
     text-align: center;
     font-size: .9em;
 }
-.dialog .lang-search .results .content .description {
+.dialog .add-resource-input .results .content .description {
     display: none;
 }
 
