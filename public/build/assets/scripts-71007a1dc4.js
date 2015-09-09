@@ -125,6 +125,7 @@ var Dialogs =
         // Semantic UI search input.
         $(input).search({
             apiSettings: {
+                method : 'POST',
                 url: 'language/search/{query}?semantic=1'
             },
             searchFields: ['name', 'alt_names'],
@@ -160,6 +161,7 @@ var Dialogs =
         // Semantic UI search input.
         $(input).search({
             apiSettings: {
+                method : 'POST',
                 url: 'language/search/{query}?semantic=1'
             },
             searchFields: ['name', 'alt_names'],
