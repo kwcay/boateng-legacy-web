@@ -69,7 +69,7 @@ var Dialogs =
             searchDelay: 500,
             searchFullText: false,
             onSelect: function(result, response) {
-                $(document.findLanguageDialogForm).fadeOut(1000);
+                $(document.findLanguageDialogForm).fadeOut(500);
                 App.redirect(result.code);
             }
         });
