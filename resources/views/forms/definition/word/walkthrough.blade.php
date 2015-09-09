@@ -25,7 +25,7 @@
 
 			{{-- Sub type --}}
 			<div class="row">
-				{!! Form::select('sub_type', $word->getSubTypes(), $word->sub_type, ['class' => 'en-text-input center']) !!}
+				{!! Form::select('sub_type', $word->getSubTypes(), $word->subType, ['class' => 'en-text-input center']) !!}
 			</div>
 
             <div class="row center">

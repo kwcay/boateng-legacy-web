@@ -10,7 +10,7 @@
             <a
                 href="{{ route('about') }}"
                 class="fa fa-info has-inline-tooltip"
-                onclick="return App.openDialog('info');"
+                onclick="return Dialogs.open('info');"
                 data-position="top center"></a>
             <span class="ui popup">About this app</span>
 
@@ -18,7 +18,7 @@
                 <a
                     href="{{ url('login') }}"
                     class="fa fa-unlock-alt has-inline-tooltip"
-                    onclick="return App.openDialog('login');"
+                    onclick="return Dialogs.open('login');"
                     data-position="top center"></a>
                 <span class="ui popup">Login</span>
             @else
@@ -39,14 +39,14 @@
             <a
                 href="#"
                 class="fa fa-pencil has-inline-tooltip"
-                onclick="return App.openDialog('resource');"
+                onclick="return Dialogs.open('resource');"
                 data-position="top center"></a>
             <span class="ui popup">Edit Di Nkɔmɔ</span>
 
             <a
                 href="#"
                 class="fa fa-globe has-inline-tooltip"
-                onclick="return App.openDialog('language');"
+                onclick="return Dialogs.open('language');"
                 data-position="top center"></a>
             <span class="ui popup">Find a language</span>
 

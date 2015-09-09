@@ -47,20 +47,30 @@
 	overflow: scroll;
 }
 .dialog .form select {
-    padding: 0 0 5px 0;
+    margin: 0 4px;
+    padding: 3px 5px 5px;
     color: #fff;
     font-size: 1.1em;
     text-align: center;
     letter-spacing: 2px;
     border-bottom: 1px solid #aaa;
+    background-color: #333;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
 }
 .dialog .form input {
     color: #fff;
     display: block;
 }
+.dialog .form input[type="text"] {
+    width: 100%;
+}
 .dialog .form input.single {
     margin: 0 auto;
-    width: 80%;
+    width: 80% !important;
     text-align: center;
 }
 .dialog .form input[type="submit"], .dialog .form input[type="button"] {
@@ -70,38 +80,92 @@
 }
 
 /*
- * Adding resources.
+ * Semantic-UI search inputs.
  */
-.dialog.resource input[type="text"] {
-    margin: 20px 0;
-    width: 100%;
-}
-.dialog .add-resource-input {
+.dialog .semantic-search {
     position: relative;
+    margin: 20px 0;
+    height: 50px;
 }
-.dialog .add-resource-input .results {
+.dialog .semantic-search .results {
     position: absolute;
     top: 50px;
     left: 0;
     width: 100%;
 }
-.dialog .add-resource-input .results .result {
+.dialog .semantic-search .results .result,
+.dialog .semantic-search .results .message {
     cursor: pointer;
     margin: 1px 0;
-    padding: 4px 0;
+    padding: 6px 0;
     display: block;
+    width: 100%;
+    font-size: 1.2em;
     background-color: #333;
 }
-.dialog .add-resource-input .results .content .title {
+.dialog .semantic-search .results .content .title,
+.dialog .semantic-search .results .message .header {
+    position: relative;
     margin: 0;
     width: 100%;
     text-align: center;
     font-size: .9em;
 }
-.dialog .add-resource-input .results .content .description {
+.dialog .semantic-search .results .content .description,
+.dialog .semantic-search .results .message .description {
     display: none;
 }
+.dialog .semantic-search.loading input[type="text"] {
+   color: #777;
+   background-color: #333;
+}
 
+/*
+ * "Add resource" dialog.
+ */
+.dialog.resource input[type="text"], .dialog.resource input[type="submit"] {
+    position: absolute;
+    top: 0;
+    height: 50px;
+}
+.dialog.resource input[type="text"] {
+    left: 0;
+    width: 90%;
+    border-bottom: 1px solid #fff;
+}
+.dialog.resource input[type="submit"] {
+    right: 0;
+    width: 10%;
+    margin: 0;
+    border: none;
+}
+.dialog.resource .semantic-search .results {
+   width: 90%;
+}
+
+/*
+ * "Find a language" dialog.
+ */
+.dialog.language .semantic-search input[type="text"] {
+    color: #333;
+    font-size: 1em;
+    line-height: 49px;
+    background-color: #fff;
+    border-radius: 25px;
+}
+.dialog.language .semantic-search .results .result,
+.dialog.language .semantic-search .results .message {
+    margin: 5px 0;
+    background-color: transparent;
+}
+.dialog.language .semantic-search.loading input[type="text"] {
+   color: #777;
+   background-color: #333;
+}
+
+/*
+ * Miscellaneous.
+ */
 .notices {
 	height: auto;
 	width: 100%;

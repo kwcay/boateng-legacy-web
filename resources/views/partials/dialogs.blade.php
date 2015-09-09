@@ -65,26 +65,6 @@
 	</div>
 </div>
 
-{{-- Language dialog --}}
-<div class="dialog language">
-	<div>
-		<a href="#" class="close">&#10005;</a>
-
-		<h1>Find a language</h1>
-        <div class="center">
-            <form name="languageDialogForm" class="form" onsubmit="return false;">
-
-                <div class="ui lang-search languge-dialog-search">
-                    <input name="language" type="text" class="prompt center" placeholder="e.g. twi" />
-                    <div class="results"></div>
-                </div>
-
-            </form>
-        </div>
-
-	</div>
-</div>
-
 {{-- Add resource dialog --}}
 <div class="dialog resource">
 	<div>
@@ -93,12 +73,12 @@
 		<h1>Edit Di Nkɔmɔ</h1>
 		<div class="center">
 
-            <br />
-            <form class="form" name="dialogResourceForm" onsubmit="return Dialogs.addResource();">
+            <br>
+            <form name="addResourceDialogForm" class="form" onsubmit="return Dialogs.addResource();">
                 <input type="hidden" name="lang" value="" />
 
                 Suggest a new
-                <select class="" name="">
+                <select name="type">
                     @foreach (\App\Models\Definition::types() as $type)
                         <option value="{{ $type }}">{{ $type }}</option>
                     @endforeach
@@ -106,26 +86,52 @@
 
                 in
 
-                <div class="ui add-resource-input">
-                    <input type="text" name="language" class="prompt center" placeholder="your language" />
+                <div class="semantic-search">
+                    <input type="text" name="language" class="prompt center" placeholder="your language">
                     <div class="results"></div>
-                </div>
 
-                <input type="submit" value="go" style="width: 50px; margin: 0 auto; text-align: center;">
+                    <input type="submit" name="submit" value="&#10163;">
+                </div>
             </form>
 
             <script type="text/javascript">
-                Dialogs.setupAddResourceForm('.dialog.resource .ui.add-resource-input');
+                Dialogs.setupAddResourceForm('.dialog.resource .semantic-search');
             </script>
 
+            <br>
 		    <em>~ or ~</em>
-		    <br /><br />
+		    <br><br>
 
 		    <a href="{{ route('language.walkthrough') }}">
 		        click here to suggest a new language.
 		    </a>
 		</div>
 
+	</div>
+</div>
+
+{{-- "Find a language" dialog --}}
+<div class="dialog language">
+	<div>
+		<a href="#" class="close">&#10005;</a>
+
+		<h1>Find a language</h1>
+        <div class="center">
+
+            <br>
+            <form name="findLanguageDialogForm" class="form" onsubmit="return false;">
+
+                <div class="semantic-search">
+                    <input name="language" type="text" class="prompt center" placeholder="e.g. Twi" />
+                    <div class="results"></div>
+                </div>
+
+            </form>
+
+            <script type="text/javascript">
+                Dialogs.setupFindLanguageForm('.dialog.language .semantic-search');
+            </script>
+        </div>
 	</div>
 </div>
 

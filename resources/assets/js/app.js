@@ -32,11 +32,9 @@ var App =
 
 	openDialog : function(id)
 	{
-		$('.dialog').hide();
-		box	= '.dialog.'+ id;
-		if ($(box).is(':hidden')) $(box).fadeIn(240);
-		else $(box).fadeOut(240);
-		return false;
+		console.log('App.openDialog deprecated');
+        
+        return Dialogs.open(id);
 	},
 
 	closeDialogs : function() {

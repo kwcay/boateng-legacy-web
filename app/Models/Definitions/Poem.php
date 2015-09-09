@@ -25,6 +25,8 @@ class Poem extends Definition
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+
+        $this->attributes['type'] = static::TYPE_POEM;
     }
 
     /**

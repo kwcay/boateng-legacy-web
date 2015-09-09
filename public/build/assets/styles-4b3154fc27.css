@@ -484,20 +484,30 @@ a.button:after {
 	overflow: scroll;
 }
 .dialog .form select {
-    padding: 0 0 5px 0;
+    margin: 0 4px;
+    padding: 3px 5px 5px;
     color: #fff;
     font-size: 1.1em;
     text-align: center;
     letter-spacing: 2px;
     border-bottom: 1px solid #aaa;
+    background-color: #333;
+    border: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
 }
 .dialog .form input {
     color: #fff;
     display: block;
 }
+.dialog .form input[type="text"] {
+    width: 100%;
+}
 .dialog .form input.single {
     margin: 0 auto;
-    width: 80%;
+    width: 80% !important;
     text-align: center;
 }
 .dialog .form input[type="submit"], .dialog .form input[type="button"] {
@@ -507,38 +517,92 @@ a.button:after {
 }
 
 /*
- * Adding resources.
+ * Semantic-UI search inputs.
  */
-.dialog.resource input[type="text"] {
-    margin: 20px 0;
-    width: 100%;
-}
-.dialog .add-resource-input {
+.dialog .semantic-search {
     position: relative;
+    margin: 20px 0;
+    height: 50px;
 }
-.dialog .add-resource-input .results {
+.dialog .semantic-search .results {
     position: absolute;
     top: 50px;
     left: 0;
     width: 100%;
 }
-.dialog .add-resource-input .results .result {
+.dialog .semantic-search .results .result,
+.dialog .semantic-search .results .message {
     cursor: pointer;
     margin: 1px 0;
-    padding: 4px 0;
+    padding: 6px 0;
     display: block;
+    width: 100%;
+    font-size: 1.2em;
     background-color: #333;
 }
-.dialog .add-resource-input .results .content .title {
+.dialog .semantic-search .results .content .title,
+.dialog .semantic-search .results .message .header {
+    position: relative;
     margin: 0;
     width: 100%;
     text-align: center;
     font-size: .9em;
 }
-.dialog .add-resource-input .results .content .description {
+.dialog .semantic-search .results .content .description,
+.dialog .semantic-search .results .message .description {
     display: none;
 }
+.dialog .semantic-search.loading input[type="text"] {
+   color: #777;
+   background-color: #333;
+}
 
+/*
+ * "Add resource" dialog.
+ */
+.dialog.resource input[type="text"], .dialog.resource input[type="submit"] {
+    position: absolute;
+    top: 0;
+    height: 50px;
+}
+.dialog.resource input[type="text"] {
+    left: 0;
+    width: 90%;
+    border-bottom: 1px solid #fff;
+}
+.dialog.resource input[type="submit"] {
+    right: 0;
+    width: 10%;
+    margin: 0;
+    border: none;
+}
+.dialog.resource .semantic-search .results {
+   width: 90%;
+}
+
+/*
+ * "Find a language" dialog.
+ */
+.dialog.language .semantic-search input[type="text"] {
+    color: #333;
+    font-size: 1em;
+    line-height: 49px;
+    background-color: #fff;
+    border-radius: 25px;
+}
+.dialog.language .semantic-search .results .result,
+.dialog.language .semantic-search .results .message {
+    margin: 5px 0;
+    background-color: transparent;
+}
+.dialog.language .semantic-search.loading input[type="text"] {
+   color: #777;
+   background-color: #333;
+}
+
+/*
+ * Miscellaneous.
+ */
 .notices {
 	height: auto;
 	width: 100%;
@@ -6357,16 +6421,6 @@ select.ui.dropdown {
  * http://opensource.org/licenses/MIT
  *
  */.ui.popup{display:none;position:absolute;top:0;right:0;min-width:-webkit-min-content;min-width:-moz-min-content;min-width:min-content;z-index:1900;border:1px solid #d4d4d5;line-height:1.4285em;max-width:250px;background-color:#fff;padding:.833em 1em;font-weight:400;font-style:normal;color:rgba(0,0,0,.87);border-radius:.28571429rem;box-shadow:0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);margin:0}.ui.popup>.header{padding:0;font-family:Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;font-size:1.125em;line-height:1.2;font-weight:700}.ui.popup>.header+.content{padding-top:.5em}.ui.popup:before{position:absolute;content:'';width:.75em;height:.75em;background:#fff;-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg);z-index:2;box-shadow:1px 1px 0 0 #bababc}.ui.top.popup{margin:0 0 .75em}.ui.top.left.popup{-webkit-transform-origin:left bottom;-ms-transform-origin:left bottom;transform-origin:left bottom}.ui.top.center.popup{-webkit-transform-origin:center bottom;-ms-transform-origin:center bottom;transform-origin:center bottom}.ui.top.right.popup{-webkit-transform-origin:right bottom;-ms-transform-origin:right bottom;transform-origin:right bottom}.ui.left.center.popup{margin:0 .75em 0 0;-webkit-transform-origin:right 50%;-ms-transform-origin:right 50%;transform-origin:right 50%}.ui.right.center.popup{margin:0 0 0 .75em;-webkit-transform-origin:left 50%;-ms-transform-origin:left 50%;transform-origin:left 50%}.ui.bottom.popup{margin:.75em 0 0}.ui.bottom.left.popup{-webkit-transform-origin:left top;-ms-transform-origin:left top;transform-origin:left top}.ui.bottom.center.popup{-webkit-transform-origin:center top;-ms-transform-origin:center top;transform-origin:center top}.ui.bottom.right.popup{-webkit-transform-origin:right top;-ms-transform-origin:right top;transform-origin:right top;margin-right:0}.ui.bottom.center.popup:before{margin-left:-.325em;top:-.325em;left:50%;right:auto;bottom:auto;box-shadow:-1px -1px 0 0 #bababc}.ui.bottom.left.popup{margin-left:0}.ui.bottom.left.popup:before{top:-.325em;left:1em;right:auto;bottom:auto;margin-left:0;box-shadow:-1px -1px 0 0 #bababc}.ui.bottom.right.popup:before{top:-.325em;right:1em;bottom:auto;left:auto;margin-left:0;box-shadow:-1px -1px 0 0 #bababc}.ui.top.center.popup:before{top:auto;right:auto;bottom:-.325em;left:50%;margin-left:-.325em}.ui.top.left.popup{margin-left:0}.ui.top.left.popup:before{bottom:-.325em;left:1em;top:auto;right:auto;margin-left:0}.ui.top.right.popup{margin-right:0}.ui.top.right.popup:before{bottom:-.325em;right:1em;top:auto;left:auto;margin-left:0}.ui.left.center.popup:before{top:50%;right:-.325em;bottom:auto;left:auto;margin-top:-.325em;box-shadow:1px -1px 0 0 #bababc}.ui.right.center.popup:before{top:50%;left:-.325em;bottom:auto;right:auto;margin-top:-.325em;box-shadow:-1px 1px 0 0 #bababc}.ui.popup>.ui.grid:not(.padded){width:calc(100% + 1.75rem);margin:-.7rem -.875rem}.ui.loading.popup{display:block;visibility:hidden;z-index:-1}.ui.animating.popup,.ui.visible.popup{display:block}.ui.visible.popup{-webkit-transform:translateZ(0);transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}.ui.basic.popup:before{display:none}.ui.wide.popup{max-width:350px}.ui[class*="very wide"].popup{max-width:550px}@media only screen and (max-width:767px){.ui.wide.popup,.ui[class*="very wide"].popup{max-width:250px}}.ui.fluid.popup{width:100%;max-width:none}.ui.inverted.popup{background:#1b1c1d;color:#fff;border:none;box-shadow:none}.ui.inverted.popup .header{background-color:none;color:#fff}.ui.inverted.popup:before{background-color:#1b1c1d;box-shadow:none!important}.ui.flowing.popup{max-width:none}.ui.mini.popup{font-size:.71428571rem}.ui.tiny.popup{font-size:.85714286rem}.ui.small.popup{font-size:.92857143rem}.ui.popup{font-size:1rem}.ui.large.popup{font-size:1.14285714rem}.ui.huge.popup{font-size:1.42857143rem}
-/*!
- * # Semantic UI 2.0.8 - Search
- * http://github.com/semantic-org/semantic-ui/
- *
- *
- * Copyright 2015 Contributors
- * Released under the MIT license
- * http://opensource.org/licenses/MIT
- *
- */.ui.search{position:relative}.ui.search>.prompt{margin:0;outline:0;-webkit-appearance:none;-webkit-tap-highlight-color:rgba(255,255,255,0);text-shadow:none;font-style:normal;font-weight:400;line-height:1.2142em;padding:.67861429em 1em;font-size:1em;background:#fff;border:1px solid rgba(34,36,38,.15);color:rgba(0,0,0,.87);box-shadow:0 0 0 0 transparent inset;-webkit-transition:background-color .1s ease,color .1s ease,box-shadow .1s ease,border-color .1s ease;transition:background-color .1s ease,color .1s ease,box-shadow .1s ease,border-color .1s ease}.ui.search .prompt{border-radius:500rem}.ui.search .prompt~.search.icon{cursor:pointer}.ui.search>.results{display:none;position:absolute;top:100%;left:0;-webkit-transform-origin:center top;-ms-transform-origin:center top;transform-origin:center top;background:#fff;margin-top:.5em;width:18em;border-radius:.28571429rem;box-shadow:0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);border:1px solid #d4d4d5;z-index:998}.ui.search>.results>:first-child{border-radius:.28571429rem .28571429rem 0 0}.ui.search>.results>:last-child{border-radius:0 0 .28571429rem .28571429rem}.ui.search>.results .result{cursor:pointer;display:block;overflow:hidden;font-size:1em;padding:.85714286em 1.14285714em;color:rgba(0,0,0,.87);line-height:1.33;border-bottom:1px solid rgba(34,36,38,.1)}.ui.search>.results .result:last-child{border-bottom:none!important}.ui.search>.results .result .image{float:right;overflow:hidden;background:0 0;width:5em;height:3em;border-radius:.25em}.ui.search>.results .result .image img{display:block;width:auto;height:100%}.ui.search>.results .result .image+.content{margin:0 6em 0 0}.ui.search>.results .result .title{margin:-.14285em 0 0;font-family:Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;font-weight:700;font-size:1em;color:rgba(0,0,0,.85)}.ui.search>.results .result .description{margin-top:0;font-size:.92857143em;color:rgba(0,0,0,.4)}.ui.search>.results .result .price{float:right;color:#21ba45}.ui.search>.results>.message{padding:1em}.ui.search>.results>.message .header{font-family:Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;font-size:1rem;font-weight:700;color:rgba(0,0,0,.87)}.ui.search>.results>.message .description{margin-top:.25rem;font-size:1em;color:rgba(0,0,0,.87)}.ui.search>.results>.action{display:block;border-top:none;background:#f3f4f5;padding:.92857143em 1em;color:rgba(0,0,0,.87);font-weight:700;text-align:center}.ui.search>.prompt:focus{border-color:rgba(34,36,38,.35);background:#fff;color:rgba(0,0,0,.95)}.ui.loading.search .input>i.icon:before{position:absolute;content:'';top:50%;left:50%;margin:-.64285714em 0 0 -.64285714em;width:1.28571429em;height:1.28571429em;border-radius:500rem;border:.2em solid rgba(0,0,0,.1)}.ui.loading.search .input>i.icon:after{position:absolute;content:'';top:50%;left:50%;margin:-.64285714em 0 0 -.64285714em;width:1.28571429em;height:1.28571429em;-webkit-animation:button-spin .6s linear;animation:button-spin .6s linear;-webkit-animation-iteration-count:infinite;animation-iteration-count:infinite;border-radius:500rem;border-color:#767676 transparent transparent;border-style:solid;border-width:.2em;box-shadow:0 0 0 1px transparent}.ui.category.search>.results .category .result:hover,.ui.search>.results .result:hover{background:#f9fafb}.ui.search .action:hover{background:#e0e0e0}.ui.category.search>.results .category.active{background:#f3f4f5}.ui.category.search>.results .category.active>.name{color:rgba(0,0,0,.87)}.ui.category.search>.results .category .result.active,.ui.search>.results .result.active{position:relative;border-left-color:rgba(34,36,38,.1);background:#f3f4f5;box-shadow:none}.ui.search>.results .result.active .description,.ui.search>.results .result.active .title{color:rgba(0,0,0,.85)}.ui.category.search .results{width:28em}.ui.category.search>.results .category{background:#f3f4f5;box-shadow:none;border-bottom:1px solid rgba(34,36,38,.1);-webkit-transition:background .1s ease,border-color .1s ease;transition:background .1s ease,border-color .1s ease}.ui.category.search>.results .category:last-child{border-bottom:none}.ui.category.search>.results .category:first-child .name+.result{border-radius:0 .28571429rem 0 0}.ui.category.search>.results .category .result{background:#fff;margin-left:100px;border-left:1px solid rgba(34,36,38,.15);border-bottom:1px solid rgba(34,36,38,.1);-webkit-transition:background .1s ease,border-color .1s ease;transition:background .1s ease,border-color .1s ease;padding:.85714286em 1.14285714em}.ui.category.search>.results .category:last-child .result:last-child{border-radius:0 0 .28571429rem;border-bottom:none}.ui.category.search>.results .category>.name{width:100px;background:0 0;font-family:Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;font-size:1em;float:1em;float:left;padding:.4em 1em;font-weight:700;color:rgba(0,0,0,.4)}.ui[class*="left aligned"].search>.results{right:auto;left:0}.ui[class*="right aligned"].search>.results{right:0;left:auto}.ui.fluid.search .results{width:100%}.ui.mini.search{font-size:.71428571em}.ui.small.search{font-size:.92857143em}.ui.search{font-size:1em}.ui.large.search{font-size:1.14285714em}.ui.big.search{font-size:1.28571429em}.ui.huge.search{font-size:1.42857143em}.ui.massive.search{font-size:1.71428571em}
 /*!
  * # Semantic UI 2.0.8 - Transition
  * http://github.com/semantic-org/semantic-ui/

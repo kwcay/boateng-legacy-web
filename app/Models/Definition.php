@@ -66,22 +66,39 @@ class Definition extends Model
             'v'     => 'verb',
         ],
 
-        // Types of phrases.
+        // Types of names.
         1 => [
+            'fam'   => 'family',
+            'given' => 'given',
+        ],
+
+        // Types of phrases.
+        10 => [
             'ex'    => 'expression',
             'prov'  => 'proverb',
-            'say'   => 'saying',
+            'sayng' => 'saying',
         ],
 
         //
-        2 => [
+        20 => [
 
         ],
 
         //
-        3 => [
+        30 => [
 
         ]
+    ];
+
+    /*
+     * @var array
+     */
+    public $defaultSubTypes = [
+        0 => 'n',
+        1 => 'given',
+        10 => 'sayng',
+        20 => '',
+        30 => '',
     ];
 
     /**
@@ -471,9 +488,17 @@ class Definition extends Model
      */
     public function getSubTypeAttribute($subType = '')
     {
-        // "subType" will be null, since it will try to retrieve it from $this->attribtues['subType']
-        // which doesn't exist. We it to the correct value here.
-        $subType = $this->getAttributeFromArray('sub_type');
+        // "subType" will be null, since it will try to retrieve it from $this->attributes['subType']
+        // which doesn't exist. We set it to the correct value here.
+        if (!$subType = $this->rawSubType)
+        {
+            // Set and return a default type/sub-type.
+            if (!$this->rawType) {
+                $this->attributes['type'] = static::TYPE_WORD;
+            }
+
+            $this->attributes['sub_type'] = $subType = $this->defaultSubTypes[$this->rawType];
+        }
 
         foreach ($this->types as $index => $type) {
             if (Arr::has($this->subTypes[$index], $subType)) {

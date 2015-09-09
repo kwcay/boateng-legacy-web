@@ -118,6 +118,10 @@ class DefinitionController extends Controller
         return $this->createType(Definition::TYPE_WORD, $langCode);
     }
 
+    public function createName($langCode) {
+        return $this->createType(Definition::TYPE_NAME, $langCode);
+    }
+
     public function createPhrase($langCode) {
         return $this->createType(Definition::TYPE_PHRASE, $langCode);
     }
