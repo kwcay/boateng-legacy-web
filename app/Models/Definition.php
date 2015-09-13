@@ -247,9 +247,12 @@ class Definition extends Model
     }
 
     /**
-     * 
+     * @param string $search
+     * @param int $offset
+     * @param int $limit
+     * @param string $langCode
      */
-    public static function search($search, $offset = 0, $limit = 1000, $langCode = null)
+    public static function fulltextSearch($search, $offset = 0, $limit = 1000, $langCode = null)
     {
         // Sanitize data.
         $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));

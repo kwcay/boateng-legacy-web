@@ -21,7 +21,7 @@ class DefinitionController extends Controller
     public function __construct()
     {
         // Enable the auth middleware.
-		$this->middleware('auth', ['except' => ['show', 'search']]);
+		$this->middleware('auth', ['except' => ['show', 'search', 'exists']]);
     }
 
     /**
@@ -82,6 +82,8 @@ class DefinitionController extends Controller
     }
 
     /**
+     * Performs a fulltext search against a query.
+     *
      * @param string $query
      * @return string
      */
@@ -103,7 +105,7 @@ class DefinitionController extends Controller
         $limit = min(1, max(100, (int) Request::input('limit', 100)));
         $langCode = Request::input('lang', '');
 
-        $defs = Definition::search($search, $offset, $limit, $langCode);
+        $defs = Definition::fulltextSearch($search, $offset, $limit, $langCode);
 
         // Format results
         $results  = [];
@@ -114,6 +116,25 @@ class DefinitionController extends Controller
         }
 
         return $this->send(['query' => $search, 'definitions' => $results]);
+    }
+
+    /**
+     * Performs an exact match search for a definition.
+     *
+     * @param string $title
+     */
+    public function exists($title)
+    {
+        // Performance check
+        $title = trim(preg_replace('/[\s+]/', ' ', strip_tags($title)));
+        if (strlen($title) < 2) {
+            return $this->abort(400, 'Query too short');
+        }
+
+        // Find a specific definition.
+        $def = Definition::where('title', '=', $title)->first();
+
+        return $this->send($def);
     }
 
 	/**
