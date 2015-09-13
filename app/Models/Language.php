@@ -105,10 +105,11 @@ class Language extends Model
      * Looks up a language model by code.
      *
      * @param string $code
-     * @return \App\Models\Language
+     * @return \App\Models\Language|null
      */
     public static function findByCode($code) {
-        return static::where(['code' => $code])->first();
+        $code = static::sanitizeCode($code);
+        return $code ? static::where(['code' => $code])->first() : null;
     }
 
     public static function search($search, $offset = 0, $limit = 100)
@@ -135,6 +136,24 @@ class Language extends Model
 
         // Return results.
         return count($IDs) ? Language::whereIn('id', $IDs)->get() : [];
+    }
+
+    /**
+     * @param string $code
+     * @return string|null
+     */
+    public static function sanitizeCode($code)
+    {
+        // Performance check.
+        if (!is_string($code)) {
+            return null;
+        }
+
+        // A language code can contain letters and dashes.
+        $code = preg_replace('/[^a-z\-]/', '', strtolower($code));
+
+        // And will have the format "abc" or "abc-def"
+        return preg_match('/^([a-z]{3}(-[a-z]{3})?)$/', $code) ? $code : null;
     }
 
     /**

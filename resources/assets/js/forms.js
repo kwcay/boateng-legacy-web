@@ -116,11 +116,11 @@ var Forms =
 
             // Build endpoint.
             var endpoint = App.root +'/definition/search/' + App.urlencode(query) +
-                (options.langCode ? '?code='+ options.langCode : '');
+                (options.langCode ? '?lang='+ options.langCode : '');
 
             // Start ajax request
             $.ajax({
-                url: App.root +'/definition/search/' + App.urlencode(query),
+                url: endpoint,
                 type: 'POST',
                 error: function(xhr, status, error) {
                     App.log('XHR error on search form: '+ xhr.status +' ('+ error +')');

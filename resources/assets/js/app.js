@@ -33,13 +33,15 @@ var App =
 	openDialog : function(id)
 	{
 		console.log('App.openDialog deprecated');
-        
+
         return Dialogs.open(id);
 	},
 
-	closeDialogs : function() {
-		$('.dialog').fadeOut(240);
-		return false;
+	closeDialogs : function()
+    {
+		console.log('App.closeDialogs deprecated');
+
+        return Dialogs.close();
 	},
 
 	redirect: function(path) {
@@ -74,7 +76,7 @@ $(document).ready(function(event)
     $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
     $('.has-dropdown-menu').dropdown();
 
-    // Attache helper keyboard to text inputs.
+    // Attach helper keyboard to text inputs.
     $('.text-input').focus(function() {
         App.setKeyboardFocus(this);
         $('#keyboard').fadeIn(300);

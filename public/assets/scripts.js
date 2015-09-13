@@ -33,13 +33,15 @@ var App =
 	openDialog : function(id)
 	{
 		console.log('App.openDialog deprecated');
-        
+
         return Dialogs.open(id);
 	},
 
-	closeDialogs : function() {
-		$('.dialog').fadeOut(240);
-		return false;
+	closeDialogs : function()
+    {
+		console.log('App.closeDialogs deprecated');
+
+        return Dialogs.close();
 	},
 
 	redirect: function(path) {
@@ -74,7 +76,7 @@ $(document).ready(function(event)
     $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
     $('.has-dropdown-menu').dropdown();
 
-    // Attache helper keyboard to text inputs.
+    // Attach helper keyboard to text inputs.
     $('.text-input').focus(function() {
         App.setKeyboardFocus(this);
         $('#keyboard').fadeIn(300);
@@ -115,6 +117,11 @@ var Dialogs =
         else $(box).fadeOut(240);
         return false;
     },
+
+	close : function() {
+		$('.dialog').fadeOut(240);
+		return false;
+	},
 
     //
     // "Add resource" dialog.
@@ -168,7 +175,7 @@ var Dialogs =
             searchDelay: 500,
             searchFullText: false,
             onSelect: function(result, response) {
-                $(document.findLanguageDialogForm).fadeOut(1000);
+                $(document.findLanguageDialogForm).fadeOut(500);
                 App.redirect(result.code);
             }
         });
@@ -293,11 +300,11 @@ var Forms =
 
             // Build endpoint.
             var endpoint = App.root +'/definition/search/' + App.urlencode(query) +
-                (options.langCode ? '?code='+ options.langCode : '');
+                (options.langCode ? '?lang='+ options.langCode : '');
 
             // Start ajax request
             $.ajax({
-                url: App.root +'/definition/search/' + App.urlencode(query),
+                url: endpoint,
                 type: 'POST',
                 error: function(xhr, status, error) {
                     App.log('XHR error on search form: '+ xhr.status +' ('+ error +')');

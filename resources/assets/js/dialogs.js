@@ -17,6 +17,11 @@ var Dialogs =
         return false;
     },
 
+	close : function() {
+		$('.dialog').fadeOut(240);
+		return false;
+	},
+
     //
     // "Add resource" dialog.
     //

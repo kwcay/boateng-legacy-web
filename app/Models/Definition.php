@@ -114,6 +114,9 @@ class Definition extends Model
      */
     protected $markdown;
 
+    /**
+     * Associated MySQL table.
+     */
     protected $table = 'definitions';
 
     /**
@@ -244,26 +247,20 @@ class Definition extends Model
     }
 
     /**
-     *
+     * 
      */
-    public static function search($search, $offset = 0, $limit = 1000, $langCode = false)
+    public static function search($search, $offset = 0, $limit = 1000, $langCode = null)
     {
         // Sanitize data.
         $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
         $offset = min(0, (int) $offset);
         $limit = min(1, (int) $limit);
+        $lang = Language::findByCode($langCode);
 
-        // Get query builder.
-        // if ($langCode && $lang = Language::findByCode($langCode)) {
-        //     $builder = $lang->definitions();
-        // } else {
-        //     $builder = DB::table('definitions AS d');
-        // }
+        // Query builder.
+        $query = DB::table('definitions AS d')
 
-        // Query the database
-        $IDs = DB::table('definitions AS d')
-
-            // Create a temporary score column so we can sort the IDs.
+            // Create temporary score columns so we can sort the IDs.
             ->selectRaw(
                 'd.id, '.
                 'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
@@ -277,17 +274,28 @@ class Definition extends Model
 
             // Match the fulltext columns against the search query.
             ->whereRaw(
-                'MATCH(d.title, d.alt_titles) AGAINST(?) '.
+                '( MATCH(d.title, d.alt_titles) AGAINST(?) '.
                 'OR MATCH(t.translation, t.meaning, t.literal) AGAINST(?) '.
                 'OR MATCH(d.data) AGAINST(?) '.
-                'OR MATCH(d.tags) AGAINST(?) ',
+                'OR MATCH(d.tags) AGAINST(?) )',
                 [$search, $search, $search, $search])
 
             // Order by relevancy.
-            ->orderByraw('(title_score + tran_score + data_score + tags_score) DESC')
+            ->orderByraw('(title_score + tran_score + data_score + tags_score) DESC');
 
-            // Retrieve distcit IDs.
-            ->distinct()->skip($offset)->take($limit)->lists('d.id');
+        // Limit scope to a specific language.
+        if ($lang)
+        {
+            // We join the pivot table so that we may join the language table. Joining the language
+            // table allows us to limit the search to a specific language.
+            $query->join('definition_language AS pivot', 'pivot.definition_id', '=', 'd.id')
+                ->where('pivot.language_id', DB::raw($lang->id));
+        }
+
+        // dd($query->toSql());
+
+        // Retrieve distcit IDs.
+        $IDs = $query->distinct()->skip($offset)->take($limit)->lists('d.id');
 
         // Return results.
         return count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : [];

@@ -81,6 +81,41 @@ class DefinitionController extends Controller
         ]);
     }
 
+    /**
+     * @param string $query
+     * @return string
+     */
+    public function search($search = '')
+    {
+        // This method should really only be called through the API.
+        if (Request::method() != 'POST' && env('APP_ENV') == 'production') {
+            abort(405);
+        }
+
+        // Performance check
+        $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
+        if (strlen($search) < 2) {
+            return $this->abort(400, 'Query too short');
+        }
+
+        // Other search parameters.
+        $offset = min(0, (int) Request::input('offset', 0));
+        $limit = min(1, max(100, (int) Request::input('limit', 100)));
+        $langCode = Request::input('lang', '');
+
+        $defs = Definition::search($search, $offset, $limit, $langCode);
+
+        // Format results
+        $results  = [];
+        if (count($defs)) {
+            foreach ($defs as $def) {
+                $results[] = $def->toArray();
+            }
+        }
+
+        return $this->send(['query' => $search, 'definitions' => $results]);
+    }
+
 	/**
 	 * Displays the form to add a new definition.
 	 *
@@ -353,41 +388,6 @@ class DefinitionController extends Controller
 
         Session::push('messages', 'The details for <em>'. $def->title .'</em> were successfully saved, thanks :)');
         return redirect($return);
-    }
-
-    /**
-     * @param string $query
-     * @return string
-     */
-    public function search($search = '')
-    {
-        // This method should really only be called through the API.
-        if (Request::method() != 'POST' && env('APP_ENV') == 'production') {
-            abort(405);
-        }
-
-        // Performance check
-        $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
-        if (strlen($search) < 2) {
-            return $this->abort(400, 'Query too short');
-        }
-
-        // Other search parameters.
-        $offset = min(0, (int) Request::input('offset', 0));
-        $limit = min(1, max(100, (int) Request::input('limit', 100)));
-        $langCode = Request::input('lang', false);
-
-        $defs = Definition::search($search, $offset, $limit, $langCode);
-
-        // Format results
-        $results  = [];
-        if (count($defs)) {
-            foreach ($defs as $def) {
-                $results[] = $def->toArray();
-            }
-        }
-
-        return $this->send(['query' => $search, 'definitions' => $results]);
     }
 
     public function getDefinition()
