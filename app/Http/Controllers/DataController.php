@@ -34,7 +34,7 @@ class DataController extends Controller
     private $dataType;
 
     /**
-     * Fully parsed data object.
+     * Fully parsed data object (including meta data).
      */
     private $dataObject;
 
@@ -57,7 +57,7 @@ class DataController extends Controller
         $this->response = $response;
 
         // Define the directory to upload data.
-        $this->dataPath = storage_path() . DIRECTORY_SEPARATOR .'app'. DIRECTORY_SEPARATOR .'data';
+        $this->dataPath = storage_path() .'/app/data';
     }
 
     /**
@@ -93,7 +93,6 @@ class DataController extends Controller
 
             default:
                 $message = 'Bad data type.';
-                return redirect(route('admin.import'))->withMessages(['Bad data type.']);
         }
 
         return redirect(route('admin.import'))->withMessages([$message]);
@@ -101,7 +100,7 @@ class DataController extends Controller
 
     public function export($resourceType, $format = 'yaml')
     {
-        // Performance check.
+        // 
         if (!in_array($resourceType, ['language', 'definition'])) {
             return redirect(route('admin.export'))->withMessages(['Invalid resource type.']);
         }
