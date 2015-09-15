@@ -33,10 +33,6 @@ Route::resource('translation',  'TranslationController');
 Route::resource('audio',        'AudioController');
 
 // Authentication routes.
-// Route::controllers([
-//     'auth' => 'Auth\AuthController',
-//     'password' => 'Auth\PasswordController',
-// ]);
 Route::get('/login',        ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
 Route::post('/login',       ['as' => 'auth.login.post', 'uses' => 'Auth\AuthController@postLogin']);
 Route::get('/logout',       ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
@@ -45,8 +41,7 @@ Route::get('/logout',       ['as' => 'auth.logout', 'uses' => 'Auth\AuthControll
 Route::get('stats', function() { return redirect(route('stats')); });
 
 // Admin stuff
-//Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
-Route::group(['prefix' => 'admin'], function()
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 {
     // General pages
     Route::get('/',         ['as' => 'admin', 'uses' => 'AdminController@index']);

@@ -20,20 +20,28 @@ class Language extends Model
 
     private $markdown;
 
+
+    //
+    //
+    // Attirbutes used by Illuminate\Database\Eloquent\Model
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
-     * @var array   Attributes which aren't mass-assignable.
+     * Attributes which aren't mass-assignable.
      */
     protected $guarded = ['id'];
 
     /**
     * The attributes that should be hidden for arrays.
     */
-    protected $hidden = ['id', 'params', 'created_at', 'updated_at', 'deleted_at'];
+    protected $hidden = ['id', 'params', 'updated_at', 'deleted_at', 'parent', 'children', 'definitions'];
 
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['parent_name'];
+    protected $appends = ['parent_name', 'uri'];
 
     /**
      * @var array   Attributes that should be mutated to dates.
@@ -101,6 +109,14 @@ class Language extends Model
         $this->markdown->html5 = true;
     }
 
+
+    //
+    //
+    // Helper methods
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
      * Looks up a language model by code.
      *
@@ -112,6 +128,9 @@ class Language extends Model
         return $code ? static::where(['code' => $code])->first() : null;
     }
 
+    /**
+     *
+     */
     public static function search($search, $offset = 0, $limit = 100)
     {
         // Sanitize data.
@@ -191,6 +210,14 @@ class Language extends Model
 
     public function setDescription($lang, $desc) {}
 
+
+    //
+    //
+    // Accessors and mutators.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
      * Accessor for $this->parentName.
      *
@@ -201,12 +228,21 @@ class Language extends Model
     }
 
     /**
+     * Accessor for $this->relativeUri.
+     *
+     * @return string
+     */
+    public function getRelativeUriAttribute() {
+        return $this->code;
+    }
+
+    /**
      * Accessor for $this->uri.
      *
      * @return string
      */
     public function getUriAttribute() {
-        return $this->code;
+        return url($this->relativeUri);
     }
 
     /**
@@ -217,6 +253,14 @@ class Language extends Model
     public function getEditUriAttribute() {
         return route('language.edit', ['code' => $this->code]);
     }
+
+
+    //
+    //
+    // Import/export-related methods.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Creates the relation between an language and a definition.

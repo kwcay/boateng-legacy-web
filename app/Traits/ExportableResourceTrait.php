@@ -11,6 +11,26 @@ trait ExportableResourceTrait
     ];
 
     /**
+     * Returns an array of attributes that includes some hidden properties.
+     */
+    public function getExportArray()
+    {
+        // Temporarily disable hidden fields.
+        $originallyHidden = $this->hidden;
+        $this->hidden = array_where($this->hidden, function($key, $value) {
+            return !in_array($value, ['params', 'created_at', 'deleted_at']);
+        });
+
+        // Retrieve attributes and relations.
+        $attributes = $this->attributesToArray();
+
+        // Reset hidden fields.
+        $this->hidden = $originallyHidden;
+
+        return $attributes;
+    }
+
+    /**
      * @param $data
      * @param string $format
      * @return mixed|string
@@ -26,7 +46,7 @@ trait ExportableResourceTrait
 
             case 'yml':
             case 'yaml':
-                $result = Yaml::dump($data);
+                $result = Yaml::dump($data, 4);
                 break;
 
             default:
@@ -45,9 +65,18 @@ trait ExportableResourceTrait
         return isset(static::$contentTypes[$format]) ? static::$contentTypes[$format] : 'text/plain';
     }
 
-    public static function getExportFileName($format = '') {
+    public static function getExportFileName($format = '')
+    {
+        // Header name.
         $className = explode('\\', get_called_class());
-        return 'Di Nkomo_'. date('Y-m-d') .'_'. array_pop($className) .'s'. (strlen($format) ? '.'. $format : '');
+        $name = 'Di Nkomo '. array_pop($className);
+
+        // Unique name.
+        $unique = date('Y-m-d') .'_'. substr(sha1(microtime()), 0, 8);
+
+        // File extension.
+        $extension = strlen($format) ? '.'. $format : '';
+
+        return $name .'_'. $unique . $extension;
     }
 }
-

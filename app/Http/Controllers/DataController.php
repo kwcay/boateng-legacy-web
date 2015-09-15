@@ -100,12 +100,11 @@ class DataController extends Controller
 
     public function export($resourceType, $format = 'yaml')
     {
-        // 
+        //
         if (!in_array($resourceType, ['language', 'definition'])) {
             return redirect(route('admin.export'))->withMessages(['Invalid resource type.']);
         }
 
-        // Retrieve data.
         $className = 'App\\Models\\'. ucfirst($resourceType);
 
         // Double-check data format.
@@ -124,7 +123,7 @@ class DataController extends Controller
         ];
 
         foreach ($data as $resource) {
-            $export['data'][] = Arr::except($resource->attributesToArray(), ['id']);
+            $export['data'][] = array_except($resource->getExportArray(), ['id']);
         }
 
         $export['meta']['checksum'] = md5(json_encode($export['data']));
@@ -157,7 +156,8 @@ class DataController extends Controller
                 return false;
             }
 
-            // Move data file so we can manipulate it.
+            // Move data file so we can manipulate it. We put the date in the filename so we can
+            // keep track on files if ever needed.
             $filename = date('Y-m-d') .'-'. md5($temp->getBasename()) .'.'. $temp->getClientOriginalExtension();
             $file = $temp->move($this->dataPath, $filename);
 
@@ -239,7 +239,7 @@ class DataController extends Controller
             return false;
         }
 
-        // Well formatted data files.
+        // Data files with meta data.
         if (isset($this->dataObject['meta']) && isset($this->dataObject['data']))
         {
             $meta = $this->dataObject['meta'];
@@ -250,22 +250,16 @@ class DataController extends Controller
                 $this->error = 'Checksum failed.';
             }
 
-            //
+            // Performance check.
             elseif (!is_array($data) || empty($data)) {
                 $this->error = 'No data found.';
             }
 
+            // Since our dataset seems valid, try and import it.
             else
             {
-
-                $this->error = 'TODO: import and validate well formatted data.';
-
-                $this->dataSet = [];
+                $this->dataSet = $this->importDefinitions($data);
                 $this->dataType = $meta['type'];
-                // foreach ($data as $item)
-                // {
-                //
-                // }
             }
         }
 
@@ -349,13 +343,13 @@ class DataController extends Controller
 
         foreach ($oldFormat as $oldDef)
         {
-            $def = new Definition(Arr::only($oldDef, ['created_at']));
+            $def = new Definition(array_only($oldDef, ['created_at']));
             $def->setAttribute('type', Definition::TYPE_WORD);
 
             // Definition data.
             if (strpos($oldDef['word'], ',')) {
                 $titles = @explode(',', $oldDef['word']);
-                $def->setAttribute('title', Arr::pull($titles, 0));
+                $def->setAttribute('title', array_pull($titles, 0));
                 $def->setAttribute('alt_titles', implode(', ', $titles));
             } else {
                 $def->setAttribute('title', $oldDef['word']);
@@ -380,19 +374,137 @@ class DataController extends Controller
     }
 
     /**
+     * Formats language data into something we can import into our database.
      *
+     * @param array $rawData
+     * @return array
      */
-	public function exportLanguages()
+    public function importLanguages(array $rawData)
     {
-        $data = Language::export();
+        $data = [];
+
+        return $data;
     }
 
     /**
+     * Formats definition data into something we can import into our database.
      *
+     * @param array $rawData
+     * @return array
      */
-    public function exportDefinitions()
+    public function importDefinitions(array $rawData)
     {
-        $data = Definition::export();
-    }
+        $data = [];
 
+        // Create definitions one by one, so that we may update the relations at the same time.
+        foreach ($rawData as $raw)
+        {
+            $def = new Definition(array_only($raw, ['created_at', 'deleted_at']));
+
+            // Title.
+            if (isset($raw['word']))
+            {
+                if (strpos($raw['word'], ',')) {
+                    $titles = @explode(',', $raw['word']);
+                    $def->title = array_pull($titles, 0);
+                    $def->altTitles = implode(', ', $titles);
+                } else {
+                    $def->title = $raw['word'];
+                }
+            }
+
+            elseif (isset($raw['alt_data']))
+            {
+                $def->title = $raw['data'];
+                $def->altTitles = $raw['alt_data'];
+
+                unset($raw['data'], $raw['alt_data']);
+            }
+
+            else {
+                $def->title = $raw['title'];
+                $def->altTitles = $raw['alt_titles'];
+            }
+
+            // Data.
+            if (isset($raw['data']) && strlen($raw['data'])) {
+                $def->setAttribute('data', $raw['data']);
+            }
+
+            // Type.
+            $def->type = isset($raw['type']) ? $raw['type'] : Definition::TYPE_WORD;
+
+            // Sub-type (or automatically set a default).
+            $def->subType = isset($raw['sub_type']) ? $raw['sub_type'] : $def->subType;
+
+            // Languages.
+            $langCodes = [];
+            if (isset($raw['language']) && is_array($raw['language'])) {
+                $langCodes = array_keys($raw['language']);
+            }
+            elseif (isset($raw['languages']) && is_string($raw['languages'])) {
+                $langCodes = @explode(',', $raw['languages']);
+            }
+            elseif (isset($raw['language']) && is_string($raw['language'])) {
+                $langCodes = @explode(',', $raw['language']);
+            }
+
+            $def->setRelationToBeImported('languages', $langCodes);
+
+            // Translation set.
+            if (isset($raw['translation']) && is_array($raw['translation']) && !isset($raw['translation']['code']))
+            {
+                $def->setRelationToBeImported('translations', $raw['translation']['practical']);
+                $def->setRelationToBeImported('literals', $raw['translation']['literal']);
+                $def->setRelationToBeImported('meanings', $raw['translation']['meaning']);
+            }
+
+            else
+            {
+                // Translations.
+                if (isset($raw['translations']) || (isset($raw['translation']) && is_string($raw['translation']))) {
+                    $translations = isset($raw['translations']) ? $raw['translations'] : $raw['translation'];
+                    $def->setRelationToBeImported('translations', json_decode($translations, true));
+                }
+
+                // Literal translations.
+                if (isset($raw['literal_translations'])) {
+                    $def->setRelationToBeImported('literals', json_decode($raw['literal_translations'], true));
+                }
+
+                // Meanings.
+                if (isset($raw['meanings']) || isset($raw['meaning']))
+                {
+                    $meanings = isset($raw['meanings']) ? $raw['meanings'] : $raw['meaning'];
+                    $def->setRelationToBeImported('meanings', json_decode($meanings, true));
+                }
+            }
+
+            // Parameters.
+            if (isset($raw['params']))
+            {
+                if (is_array($raw['params'])) {
+                    $def->params = $raw['params'];
+                }
+
+                elseif ($params = json_decode($raw['params'], true))
+                {
+                    // Some old formats will have the sub-type hidden here.
+                    if (array_has($params, 'type')) {
+                        $def->subType = $params['type'];
+                        unset($params['type']);
+                    }
+
+                    $def->params = $params;
+                }
+            }
+
+            // State
+            $def->state = isset($raw['state']) ? $raw['state'] : Definition::STATE_VISIBLE;
+
+            $data[] = $def;
+        }
+
+        return $data;
+    }
 }
