@@ -11,7 +11,7 @@
 
 			{{-- Email --}}
 			<div class="row">
-				<input type="email" name="email" placeholder="your email" required />
+				<input type="email" name="email" placeholder="your email" required autofocus />
 				<label for="email">Email</label>
 			</div>
 

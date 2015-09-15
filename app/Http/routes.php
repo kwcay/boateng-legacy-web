@@ -40,13 +40,17 @@ Route::get('/logout',       ['as' => 'auth.logout', 'uses' => 'Auth\AuthControll
 // Redirects.
 Route::get('stats', function() { return redirect(route('stats')); });
 
-// Admin stuff
+//
+// Admin area.
+//
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 {
     // General pages
     Route::get('/',         ['as' => 'admin', 'uses' => 'AdminController@index']);
     Route::get('/import',   ['as' => 'admin.import', 'uses' => 'AdminController@import']);
     Route::get('/export',   ['as' => 'admin.export', 'uses' => 'AdminController@export']);
+    Route::get('/list/def', ['as' => 'admin.list.definitions', 'uses' => 'AdminController@getDefinitionList']);
+    Route::get('/list/lang',['as' => 'admin.list.languages', 'uses' => 'AdminController@getLanguageList']);
 
     // Resource import.
     Route::post('/import',  ['as' => 'admin.import.action', 'uses' => 'DataController@import']);
