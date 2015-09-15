@@ -6,6 +6,10 @@
 	<section>
 		<h1>Admin Stuff</h1>
 
+        <h2>Notifications</h2>
+        ...
+
+        <h2>Import/Export</h2>
 		<ul>
 		    <li>
 		        <a href="{{ route('admin.import') }}">Import data.</a>

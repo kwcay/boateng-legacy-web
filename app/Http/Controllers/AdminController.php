@@ -1,11 +1,10 @@
-<?php
-namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use App\Models\Language;
 use App\Models\Definition;
 
 /**
- *
+ * Administration area.
  */
 class AdminController extends Controller
 {
