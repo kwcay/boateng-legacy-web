@@ -20,7 +20,7 @@
 
 			{{-- Word --}}
 			<div class="row">
-				<input type="text" name="title" class="text-input center" placeholder="your word" value="" />
+				<input type="text" name="title" class="text-input center loading" placeholder="your word" required>
 			</div>
 
 			{{-- Sub type --}}
@@ -51,6 +51,15 @@
 			</div>
 		</form>
 	</section>
+
+    <script type="text/javascript">
+        $(document.definition.title).on('blur', function()
+        {
+            if (!this.value.trim().length) return;
+
+            $(this).addClass('loading');
+        });
+    </script>
 
 	@include('partials.footer')
 @stop

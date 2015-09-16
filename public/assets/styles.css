@@ -342,6 +342,10 @@ section .meta em {
 	border-bottom-color: #333;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
+.form.edit .row input.loading {
+    color: #999;
+    background-color: #ccc;
+}
 .form.edit input[type="button"], .form.edit input[type="submit"], a.button {
 	position: relative;
 	cursor: pointer;
@@ -414,24 +418,24 @@ a.button:after {
         width: 100%;
         position: relative;
     }
-    
+
     .form.search input {
         font-size: 0.8em;
     }
-    
+
     .form.search .container input[name="q"] {
         width: 65%;
         margin: 0 2.5%;
         padding: 0;
     }
-    
+
     .form.search .container input[type="button"], .form.search .container input[type="submit"] {
         width: 15%;
         margin: 0;
         padding: 0;
     }
-    
-    
+
+
 
 }
 
