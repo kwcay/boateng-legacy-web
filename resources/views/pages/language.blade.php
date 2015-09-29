@@ -1,6 +1,8 @@
 @extends('layouts.base')
 
+{{-- Page meta --}}
 @section('title', $lang->name .' - the book of native tongues.')
+@section('description', 'Learn new words in '. $lang->name)
 
 @section('body')
 	@include('partials.header')

@@ -6,13 +6,13 @@ use App\Models\Definition;
 /**
  *
  */
-class StaticPageController extends Controller
+class PageController extends Controller
 {
 	/**
 	 * Displays main landing page.
 	 */
 	public function home() {
-		return view('static.home');
+		return view('pages.home');
 	}
 
 	/**
@@ -39,4 +39,3 @@ class StaticPageController extends Controller
 		return view('static.api');
 	}
 }
-

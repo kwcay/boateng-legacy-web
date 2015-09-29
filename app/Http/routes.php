@@ -1,10 +1,10 @@
 <?php
 
 // Static pages.
-Route::get('/',             ['as' => 'home', 'uses' => 'StaticPageController@home']);
-Route::get('/about',        ['as' => 'about', 'uses' => 'StaticPageController@about']);
-Route::get('/in-numbers',   ['as' => 'stats', 'uses' => 'StaticPageController@stats']);
-Route::get('/api',       'StaticPageController@api');
+Route::get('/',             ['as' => 'home', 'uses' => 'PageController@home']);
+Route::get('/about',        ['as' => 'about', 'uses' => 'PageController@about']);
+Route::get('/in-numbers',   ['as' => 'stats', 'uses' => 'PageController@stats']);
+Route::get('/api',          'PageController@api');
 
 // Authentication routes.
 Route::get('login',     ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);

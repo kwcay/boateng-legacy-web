@@ -3,6 +3,10 @@
 @section('body')
 	@include('partials.header')
 
+    <div class="ui grid">
+
+    </div>
+
     <div class="title">
         Di Nkɔmɔ
         <br />
