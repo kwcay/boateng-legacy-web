@@ -15,11 +15,10 @@
 		<meta property="og:title" content="@yield('title', 'Di Nkomo: the book of native tongues.')" />
 		<meta property="og:desc" content="@yield('description', 'The book of native tongues.')" />
 		<meta property="og:type" content="website" />
-		<script src="{{ asset('assets/jquery-2.1.4.min.js') }}" type="text/javascript"></script>
-		<script src="{{ elixir('assets/scripts.js') }}" type="text/javascript"></script>
+		<script src="{{ elixir('assets/all.js') }}" type="text/javascript"></script>
 		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 		<link rel="stylesheet" type="text/css" href="assets/fonts/sinanova.css" />
-		<link rel="stylesheet" type="text/css" href="{{ elixir('assets/styles.css') }}" />
+		<link rel="stylesheet" type="text/css" href="{{ elixir('assets/all.css') }}" />
 	@show
 </head>
 <body>
