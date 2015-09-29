@@ -10,5 +10,6 @@ Thumbs.db
 
 # Project files
 /.idea
+/.tags
 /.tags_swap
 /tags

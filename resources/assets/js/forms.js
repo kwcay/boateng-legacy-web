@@ -141,8 +141,8 @@ var Forms =
                                 '<li>'+
                                 '<a href="'+ def.uri +'">'+ def.title +'</a>'+
                                 ' <small>('+ def.sub_type +')</small>'+
-                                ' is a '+ def.type +' that means <i>'+ def.translations[0].translation +'</i> in '+
-                                ' <a href="'+ def.language.uri +'">'+ def.language.name +'</a>'+
+                                ' is a '+ def.type +' that means <i>'+ def.translation.practical.en +'</i> in '+
+                                ' <a href="'+ def.main_language.uri +'">'+ def.main_language.name +'</a>'+
                                 '</li>';
                         });
 

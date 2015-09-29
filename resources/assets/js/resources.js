@@ -19,7 +19,7 @@ var Resources =
                 Resources.log('XHR error: '+ error);
             }.bind(input),
             onSuccess: function(obj) {
-                
+
             }
         };
 

@@ -9,7 +9,7 @@
 		<h1>{{ $query }}</h1>
 
         <div class="center pad-bottom">
-            Is a word in <em><a href="{{ $lang->getUri() }}">{{ $lang->name }}</a></em> that translates to:
+            Is a word in <em><a href="{{ $lang->uri }}">{{ $lang->name }}</a></em> that translates to:
         </div>
 
         {{-- List of matching definitions --}}
@@ -19,10 +19,14 @@
                     @if ($def->id != $definitions[0]->id)
                         <span class="or">or</span>
                     @endif
+
                     <h3>
+                        @if (Auth::check())
                         <span class="edit-res">
-                            <a href="{{ $def->getEditUri() }}" class="fa fa-pencil"></a>
+                            <a href="{{ $def->editUri }}" class="fa fa-pencil"></a>
                         </span>
+                        @endif
+                        
                         &ldquo; {{ $def->getTranslation('en') }} &rdquo;
                     </h3>
                     @if ($def->hasMeaning('en'))

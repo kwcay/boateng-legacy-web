@@ -66,9 +66,9 @@
         @if ($first)
         <div class="center">
             The first definition that was added to Di Nkɔmɔ in the <em>{{ $lang->name }}</em> language was
-			<a href="{{ $first->getUri() }}">{{ $first->title }}</a>.
+			<a href="{{ $first->uri }}">{{ $first->title }}</a>.
             The latest one to be added is
-			<a href="{{ $latest->getUri() }}">{{ $latest->title }}</a>.
+			<a href="{{ $latest->uri }}">{{ $latest->title }}</a>.
             <br /><br />
         </div>
         @endif
