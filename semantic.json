@@ -1,21 +1,30 @@
 {
-  "base": "resources\\assets\\semantic\\",
-  "paths": {
-    "source": {
-      "config": "src/theme.config",
-      "definitions": "src/definitions/",
-      "site": "src/site/",
-      "themes": "src/themes/"
+    "base": "resources\\assets\\semantic\\",
+    "paths": {
+        "source": {
+            "config": "src/theme.config",
+            "definitions": "src/definitions/",
+            "site": "src/site/",
+            "themes": "src/themes/"
+        },
+        "output": {
+            "packaged": "../../../public/semantic/",
+            "uncompressed": "../../../public/semantic/components/",
+            "compressed": "../../../public/semantic/components/",
+            "themes": "../../../public/semantic/themes/"
+        },
+        "clean": "../../../public/semantic/"
     },
-    "output": {
-      "packaged": "../../../public/semantic/",
-      "uncompressed": "../../../public/semantic/components/",
-      "compressed": "../../../public/semantic/components/",
-      "themes": "../../../public/semantic/themes/"
-    },
-    "clean": "../../../public/semantic/"
-  },
-  "permission": false,
-  "rtl": false,
-  "version": "2.1.4"
+    "permission": false,
+    "rtl": false,
+    "version": "2.1.4",
+    "components": [
+        "reset",
+        "site",
+        "container",
+        "grid",
+        "dropdown",
+        "popup",
+        "transition"
+    ]
 }

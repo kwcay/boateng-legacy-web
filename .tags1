@@ -4,3 +4,20 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
+base	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^    "base": "resources\\\\assets\\\\semantic\\\\",$/;"	function	line:2
+paths	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^    "paths": {$/;"	function	line:3
+source	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^        "source": {$/;"	function	line:4
+config	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^            "config": "src\/theme.config",$/;"	function	line:5
+definitions	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^            "definitions": "src\/definitions\/",$/;"	function	line:6
+site	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^            "site": "src\/site\/",$/;"	function	line:7
+themes	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^            "themes": "src\/themes\/"$/;"	function	line:8
+output	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^        "output": {$/;"	function	line:10
+packaged	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^            "packaged": "..\/..\/..\/public\/semantic\/",$/;"	function	line:11
+uncompressed	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^            "uncompressed": "..\/..\/..\/public\/semantic\/components\/",$/;"	function	line:12
+compressed	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^            "compressed": "..\/..\/..\/public\/semantic\/components\/",$/;"	function	line:13
+themes	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^            "themes": "..\/..\/..\/public\/semantic\/themes\/"$/;"	function	line:14
+clean	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^        "clean": "..\/..\/..\/public\/semantic\/"$/;"	function	line:16
+permission	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^    "permission": false,$/;"	function	line:18
+rtl	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^    "rtl": false,$/;"	function	line:19
+version	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^    "version": "2.1.4",$/;"	function	line:20
+components	C:\Users\Frank\dev\dinkomo.git\semantic.json	/^    "components": [$/;"	function	line:21
