@@ -37,7 +37,7 @@ class DefinitionController extends Controller
     {
         // Redirect if accessing definition directly.
         if (!$raw) {
-            $def = Definition::find($code);
+            $def = Word::find($code);
             return $def ? redirect($def->getUri(false)) : redirect(route('home'))->withMessages([Lang::get('errors.resource_not_found')]);
         }
 

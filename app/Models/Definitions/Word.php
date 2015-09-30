@@ -26,7 +26,7 @@ class Word extends Definition
     {
         parent::__construct($attributes);
 
-        //
+        // Set the definiiton type.
         $this->attributes['type'] = static::TYPE_WORD;
     }
 

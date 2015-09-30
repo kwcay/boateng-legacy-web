@@ -343,8 +343,8 @@ class DataController extends Controller
 
         foreach ($oldFormat as $oldDef)
         {
-            $def = new Definition(array_only($oldDef, ['created_at']));
-            $def->setAttribute('type', Definition::TYPE_WORD);
+            $def = new \App\Models\Definitions\Word(array_only($oldDef, ['created_at']));
+            // $def->setAttribute('type', Definition::TYPE_WORD);
 
             // Definition data.
             if (strpos($oldDef['word'], ',')) {
@@ -399,7 +399,7 @@ class DataController extends Controller
         // Create definitions one by one, so that we may update the relations at the same time.
         foreach ($rawData as $raw)
         {
-            $def = new Definition(array_only($raw, ['created_at', 'deleted_at']));
+            $def = new \App\Models\Definitions\Word(array_only($raw, ['created_at', 'deleted_at']));
 
             // Title.
             if (isset($raw['word']))
@@ -432,7 +432,7 @@ class DataController extends Controller
             }
 
             // Type.
-            $def->type = isset($raw['type']) ? $raw['type'] : Definition::TYPE_WORD;
+            // $def->type = isset($raw['type']) ? $raw['type'] : Definition::TYPE_WORD;
 
             // Sub-type (or automatically set a default).
             $def->subType = isset($raw['sub_type']) ? $raw['sub_type'] : $def->subType;
