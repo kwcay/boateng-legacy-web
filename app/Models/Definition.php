@@ -1,4 +1,9 @@
-<?php namespace App\Models;
+<?php
+/**
+ * @file    Definition.php
+ * @brief   ...
+ */
+namespace App\Models;
 
 use DB;
 use Log;
@@ -20,9 +25,8 @@ use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 
-/**
- *
- */
+// TODO: make this an abstract class.
+
 class Definition extends Model
 {
     use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
@@ -35,6 +39,8 @@ class Definition extends Model
 
     CONST STATE_HIDDEN = 0;     // Hidden definition.
     CONST STATE_VISIBLE = 1;    // Default state.
+
+    CONST SEARCH_LIMIT = 50;    // Maximum number of results to return on a search.
 
     /**
      * Definition types.
@@ -275,36 +281,68 @@ class Definition extends Model
     }
 
     /**
-     * Performs a fulltext search.
+     * Searches the database for definitions.
      *
-     * @param string $query
-     * @param int $offset
-     * @param int $limit
-     * @param string $langCode
+     * @param string $query     Search query.
+     * @param array $options    Search options.
      * @return array
      */
-    public static function fulltextSearch($query, $offset = 0, $limit = 1000, $langCode = null)
+    public static function search($query, array $options = [])
     {
-        // Sanitize data.
+        // Retrieve search parameters.
+        $offset = isset($options['offset']) ? $options['offset'] : 0;
+        $limit = isset($options['limit']) ? $options['limit'] : static::SEARCH_LIMIT;
+        $method = isset($options['method']) ? $options['method'] : 'fulltext';
+
+        switch (strtolower($method))
+        {
+            case 'like':
+                $results = static::likeSearch($query, $offset, $limit, $options);
+                break;
+
+            default:
+                $results = static::fulltextSearch($query, $offset, $limit, $options);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Performs a fulltext search.
+     *
+     * @param string $query     Search query.
+     * @param int $offset       Search offset.
+     * @param int $limit        Search limit (max 50).
+     * @param array $options    Search options.
+     * @return array
+     */
+    public static function fulltextSearch($query, $offset = 0, $limit = 50, array $options = [])
+    {
+        // Sanitize data and retrieve search options.
         $query = trim(preg_replace('/[\s+]/', ' ', strip_tags($query)));
         $offset = min(0, (int) $offset);
-        $limit = min(1, (int) $limit);
-        $lang = Language::findByCode($langCode);
+        $limit = min(1, max(static::SEARCH_LIMIT, (int) $limit));
+        $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
 
-        // Query builder.
+        $type = null;
+        if (isset($options['type']) && in_array($options['type'], static::types())) {
+            $type = (int) array_flip(static::types())[$options['type']];
+        }
+
+        // Start building our database query.
         $builder = DB::table('definitions AS d')
+
+            // Join the translations table so we can search its columns.
+            ->leftJoin('translations AS t', 't.definition_id', '=', 'd.id')
 
             // Create temporary score columns so we can sort the IDs.
             ->selectRaw(
                 'd.id, '.
                 'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
                 'MATCH(t.translation, t.meaning, t.literal) AGAINST(?) * 9 AS tran_score, '.
-                'MATCH(d.data) AGAINST(?) * 8 AS data_score, '.
-                'MATCH(d.tags) AGAINST(?) * 5 AS tags_score ',
+                'MATCH(d.data) AGAINST(?) * 7 AS data_score, '.
+                'MATCH(d.tags) AGAINST(?) * 4 AS tags_score ',
                 [$query, $query, $query, $query])
-
-            // Join the translations table so we can search its columns.
-            ->leftJoin('translations AS t', 't.definition_id', '=', 'd.id')
 
             // Match the fulltext columns against the search query.
             ->whereRaw(
@@ -326,13 +364,43 @@ class Definition extends Model
                 ->where('pivot.language_id', DB::raw($lang->id));
         }
 
-        // dd($query->toSql());
+        // Limit scope to a specific definition type.
+        if (is_integer($type)) {
+            $builder->where('type', '=', $type);
+        }
 
-        // Retrieve distcit IDs.
+        // dd($builder->toSql());
+
+        // Retrieve distinct IDs.
         $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
 
         // Return results.
         return count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : [];
+    }
+
+    /**
+     * Performs a basic comparison search.
+     *
+     * @param string $query     Search query.
+     * @param int $offset       Search offset.
+     * @param int $limit        Search limit (max 50).
+     * @param array $options    Search options.
+     * @return array
+     */
+    public function likeSearch($query, $offset = 0, $limit = 50, array $options = [])
+    {
+        // Sanitize data.
+        $query = trim(preg_replace('/[\s+]/', ' ', strip_tags($query)));
+        $offset = min(0, (int) $offset);
+        $limit = min(1, max(static::SEARCH_LIMIT, (int) $limit));
+        $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
+
+        // Query builder.
+        $builder = $lang ? $lang->definitions() : static::query();
+
+        // ...
+
+        return [];
     }
 
 

@@ -1,4 +1,9 @@
-<?php namespace App\Models;
+<?php
+/**
+ * @file    Language.php
+ * @brief   ...
+ */
+namespace App\Models;
 
 use DB;
 use Log;
@@ -36,7 +41,7 @@ class Language extends Model
     /**
     * The attributes that should be hidden for arrays.
     */
-    protected $hidden = ['id', 'params', 'updated_at', 'deleted_at', 'parent', 'children', 'definitions'];
+    protected $hidden = ['id', 'params', 'updated_at', 'deleted_at', 'parent', 'children', 'definitions', 'pivot'];
 
     /**
      * The accessors to append to the model's array form.
@@ -120,10 +125,17 @@ class Language extends Model
     /**
      * Looks up a language model by code.
      *
-     * @param string $code
+     * @param string|\App\Models\Language $code
      * @return \App\Models\Language|null
      */
-    public static function findByCode($code) {
+    public static function findByCode($code)
+    {
+        // Performance check.
+        if ($code instanceof static) {
+            return $code;
+        }
+
+        // Retrieve langauge by code.
         $code = static::sanitizeCode($code);
         return $code ? static::where(['code' => $code])->first() : null;
     }

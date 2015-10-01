@@ -1,4 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php
+/**
+ * @file    LanguageController.php
+ * @brief   ...
+ */
+namespace App\Http\Controllers;
 
 use Lang;
 use Session;

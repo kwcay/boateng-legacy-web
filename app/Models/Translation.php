@@ -1,4 +1,9 @@
-<?php namespace App\Models;
+<?php
+/**
+ * @file    Translation.php
+ * @brief   ...
+ */
+namespace App\Models;
 
 use cebe\markdown\MarkdownExtra;
 use App\Traits\ValidatableResourceTrait as Validatable;

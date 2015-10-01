@@ -1,4 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php
+/**
+ * @file    StaticPageController.php
+ * @brief   Serves the mostly static app pages.
+ */
+namespace App\Http\Controllers;
 
 use App\Models\Language;
 use App\Models\Definition;
@@ -39,4 +44,3 @@ class StaticPageController extends Controller
 		return view('static.api');
 	}
 }
-

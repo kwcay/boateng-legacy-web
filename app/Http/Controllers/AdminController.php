@@ -1,4 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php
+/**
+ * @file    AdminController.php
+ * @brief   Controls the administration section.
+ */
+namespace App\Http\Controllers;
 
 use App\Models\Language;
 use App\Models\Definition;

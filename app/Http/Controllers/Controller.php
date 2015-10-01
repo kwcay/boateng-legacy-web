@@ -5,8 +5,8 @@ use Illuminate\Foundation\Bus\DispatchesCommands;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
-abstract class Controller extends BaseController {
-
+abstract class Controller extends BaseController
+{
 	use DispatchesCommands, ValidatesRequests;
 
 	/**
@@ -37,5 +37,4 @@ abstract class Controller extends BaseController {
     public function abort($code = 401, $msg = 'Unauthorized') {
         return Response::json(['status' => $code, 'message' => $msg], $code);
     }
-
 }

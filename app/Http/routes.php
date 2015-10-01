@@ -59,6 +59,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
     Route::get('/export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'DataController@export']);
 });
 
+//
+// API endpoints.
+//
+Route::group(['prefix' => 'api'], function()
+{
+    // General search endpoints.
+    Route::get('/{resource}/{query}',   'ApiController@search');
+});
+
 // Redirects.
 Route::get('/home', function() {
     return redirect(route('home'));

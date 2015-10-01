@@ -1,4 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php
+/**
+ * @file    DataController.php
+ * @brief   ...
+ */
+namespace App\Http\Controllers;
 
 use Session;
 use Redirect;

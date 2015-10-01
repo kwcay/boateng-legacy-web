@@ -1,4 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php
+/**
+ * @file    DefinitionController.php
+ * @brief   ...
+ */
+namespace App\Http\Controllers;
 
 use DB;
 use URL;
@@ -87,25 +92,17 @@ class DefinitionController extends Controller
      * @param string $query
      * @return string
      */
-    public function search($search = '')
+    public function search($query = '')
     {
         // This method should really only be called through the API.
-        if (Request::method() != 'POST' && env('APP_ENV') == 'production') {
-            abort(405);
+        if (Request::method() != 'POST' && env('APP_ENV') != 'local') {
+            return $this->abort(405);
         }
 
-        // Performance check
-        $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
-        if (strlen($search) < 2) {
-            return $this->abort(400, 'Query too short');
-        }
-
-        // Other search parameters.
-        $offset = min(0, (int) Request::input('offset', 0));
-        $limit = min(1, max(100, (int) Request::input('limit', 100)));
-        $langCode = Request::input('lang', '');
-
-        $defs = Definition::fulltextSearch($search, $offset, $limit, $langCode);
+        // Let the definition model do all the checks.
+        $defs = Definition::fulltextSearch($query, Request::input('offset'), Request::input('limit'), [
+            'lang' => Request::input('lang')
+        ]);
 
         // Format results
         $results  = [];
