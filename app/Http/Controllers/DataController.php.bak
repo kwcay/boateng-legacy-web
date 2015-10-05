@@ -62,7 +62,7 @@ class DataController extends Controller
         $this->response = $response;
 
         // Define the directory to upload data.
-        $this->dataPath = storage_path() .'/app/data';
+        $this->dataPath = storage_path() .'/app/import';
     }
 
     /**
