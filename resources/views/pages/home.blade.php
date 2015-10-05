@@ -3,13 +3,8 @@
 @section('body')
 	@include('partials.header')
 
-    <div class="ui grid">
-
-    </div>
-
     <div class="title">
-        Di Nkɔmɔ
-        <br />
+        Di Nkɔmɔ<br>
         <small>The Book of Native Tongues.</small>
     </div>
 
@@ -25,7 +20,9 @@
 		</form>
 
 		<div id="results">
-		    <div class="center">Use this <em>&#10548;</em> to lookup words<br />in another language.</div>
+		    <div class="center">
+                Use this <em>&#10548;</em> to lookup words<br>
+                in another language. <a href="{{ route('about') }}"></a></div>
 		</div>
 
 	</section>

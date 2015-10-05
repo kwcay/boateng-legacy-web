@@ -1,14 +1,4 @@
 
-<div class="ui grid container">
-    <div class="eight wide column orange">
-        One
-    </div>
-
-    <div class="eight wide column pink">
-        Two
-    </div>
-</div>
-
 <header>
 	<div class="header">~·~</div>
 
