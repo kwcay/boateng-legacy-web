@@ -26,23 +26,32 @@ elixir.extend('checks', function() {
 // Use Laravel's Elixir to create unique references to our scripts,
 // so we can use them in our templates.
 elixir(function(mix) {
-    
+
     // Trigger PHPUnit tests.
     // mix.phpUnit();
-    
+
     // Trigger PHPSpec tests.
     // mix.phpSpec();
 
     //mix.sass('app.scss');
-    
+
     // Combine stylesheets.
-    mix.stylesIn('resources/assets/css', 'public/assets/styles.css');
-    
+    mix.stylesIn('resources/assets/css', 'public/assets/dinkomo.css');
+    mix.styles([
+        '../../../public/semantic/semantic.min.css',
+        '../../../public/assets/dinkomo.css'
+    ], 'public/assets');
+
     // Combine scripts
     //mix.checks();
-    mix.scriptsIn('resources/assets/js', 'public/assets/scripts.js');
-    
+    mix.scriptsIn('resources/assets/js', 'public/assets/dinkomo.js');
+    mix.scripts([
+        '../../../public/assets/jquery-2.1.4.min.js',
+        '../../../public/semantic/semantic.min.js',
+        '../../../public/assets/dinkomo.js'
+    ], 'public/assets');
+
     // Create a unique filename for each script version.
-    mix.version(['public/assets/styles.css', 'public/assets/scripts.js']);
+    mix.version(['public/assets/all.css', 'public/assets/all.js']);
 
 });

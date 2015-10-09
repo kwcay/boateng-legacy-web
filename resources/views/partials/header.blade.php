@@ -1,6 +1,7 @@
+
 <header>
 	<div class="header">~·~</div>
-    
+
     @if ($errors->any() || $messages = Session::get('messages'))
     <div class="notices">
         @if ($errors->any())
