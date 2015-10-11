@@ -39,9 +39,10 @@ class Architecture_0_4 extends Migration
             $table->engine = 'InnoDB';
 
 			$table->increments('id');
-            $table->string('name', 100);
-            $table->string('abbreviation', 10);
-            $table->text('letters');
+            $table->string('name', 100)->unique();
+            $table->string('abbreviation', 10)->unique();
+            $table->text('alphabet')->nullable();
+            $table->text('partial_alphabet')->nullable();
 			$table->timestamps();
             $table->softDeletes();
 		});
@@ -74,8 +75,8 @@ class Architecture_0_4 extends Migration
                 ->onDelete('cascade');
             $table->string('language', 3)->index(); // Main language (not expecting sub-languages here).
             $table->text('practical');              // Actual translation.
-            $table->text('literal');                // Literal translation.
-            $table->text('meaning');                // Elaboration on the meaning of the definition.
+            $table->text('literal')->nullable();    // Literal translation.
+            $table->text('meaning')->nullable();    // Elaboration on the meaning of the definition.
             $table->timestamps();
             $table->softDeletes();
         });
@@ -86,7 +87,7 @@ class Architecture_0_4 extends Migration
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->string('title', 100);
+            $table->string('title', 100)->unique();
             $table->timestamps();
         });
 
@@ -135,6 +136,7 @@ class Architecture_0_4 extends Migration
             $table->engine = 'InnoDB';
 
             $table->increments('id');
+            $table->integer('language_id')->unsigned();
             $table->foreign('language_id')
                 ->references('id')
                 ->on('languages');
@@ -152,6 +154,7 @@ class Architecture_0_4 extends Migration
             $table->increments('id');
             $table->string('name', 400);
             $table->string('alt_names', 400)->nullable();
+            $table->string('code', 3)->unique();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -166,21 +169,88 @@ class Architecture_0_4 extends Migration
 			$table->string('email', 100)->unique();
 			$table->string('password', 60);
 			$table->rememberToken();
-            $table->text('params');
+            $table->text('params')->nullable();
 			$table->timestamps();
             $table->softDeletes();
 		});
 
         // Roles: handled by zizaco/entrust.
+        Schema::create('roles', function(Blueprint $table)
+		{
+            $table->engine = 'InnoDB';
+
+			$table->increments('id');
+			$table->string('name')->unique();
+			$table->string('display_name')->nullable();
+            $table->text('description')->nullable();
+		});
 
         // Permissions: handled by zizaco/entrust.
+        Schema::create('permissions', function (Blueprint $table)
+        {
+            $table->increments('id');
+            $table->string('name')->unique();
+            $table->string('display_name')->nullable();
+            $table->string('description')->nullable();
+            $table->timestamps();
+        });
 
         // Pivot tables.
-        Schema::create('definition_language', function(Blueprint $table)
+        $pivots = [
+            'country' => 'culture',
+            'country' => 'language',
+            'definition' => 'language',
+            'definition' => 'sentence',
+            'definition' => 'tag',
+            'language' => 'script',
+        ];
+
+        foreach ($pivot as $table1 => $table2)
         {
-            $table->engine = 'InnoDB';
-            $table->integer('language_id')->unsigned();
-            $table->integer('definition_id')->unsigned();
+            Schema::create($table1 .'_'. $table2, function(Blueprint $table) use($table1, $table2)
+            {
+                $table->engine = 'InnoDB';
+                $table->integer($table1 .'_id')->unsigned();
+                $table->integer($table2 .'_id')->unsigned();
+            });
+        }
+
+        // Role-User (Many-to-Many).
+        Schema::create('role_user', function (Blueprint $table)
+        {
+            $table->integer('user_id')->unsigned();
+            $table->integer('role_id')->unsigned();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('roles')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->primary(['user_id', 'role_id']);
+        });
+
+        // Permission-Role (Many-to-Many)
+        Schema::create('permission_role', function (Blueprint $table)
+        {
+            $table->integer('permission_id')->unsigned();
+            $table->integer('role_id')->unsigned();
+            $table->foreign('permission_id')
+                ->references('id')
+                ->on('permissions')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('roles')
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
+
+            $table->primary(['permission_id', 'role_id']);
         });
     }
 
@@ -192,11 +262,19 @@ class Architecture_0_4 extends Migration
     public function down()
     {
         // Drop everything except for password_resets and recreate the previous structure.
-        Schema::hasTable('users') ? Schema::drop('users') : null;
-        Schema::hasTable('languages') ? Schema::drop('languages') : null;
-        Schema::hasTable('definitions') ? Schema::drop('definitions') : null;
-        Schema::hasTable('translations') ? Schema::drop('translations') : null;
-        Schema::hasTable('definition_language') ? Schema::drop('definition_language') : null;
+        $drop = [
+            'languages', 'scripts', 'definitions', 'translations', 'tags', 'sentences', 'media',
+            'data', 'cultures', 'countries', 'users', 'roles', 'permissions',
+            'country_culture', 'country_language', 'definition_language', 'definition_sentence',
+            'definition_tag', 'language_script', 'permission_role', 'role_user'
+            ];
+        ];
+
+        foreach ($drop as $table) {
+            if (Schema::hasTable($table)) {
+                Schema::drop($table);
+            }
+        }
 
         Schema::create('users', function(Blueprint $table)
 		{
