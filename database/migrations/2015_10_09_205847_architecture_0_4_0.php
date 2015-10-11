@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Architecture_0_4 extends Migration
+class Architecture040 extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,24 @@ class Architecture_0_4 extends Migration
     {
         // Drop all existing tables except for password_resets.
         Schema::hasTable('users') ? Schema::drop('users') : null;
-        Schema::hasTable('languages') ? Schema::drop('languages') : null;
-        Schema::hasTable('definitions') ? Schema::drop('definitions') : null;
-        Schema::hasTable('translations') ? Schema::drop('translations') : null;
         Schema::hasTable('definition_language') ? Schema::drop('definition_language') : null;
+        if (Schema::hasTable('translations'))
+        {
+            DB::statement('ALTER TABLE translations DROP INDEX idx_translation');
+            Schema::drop('translations');
+        }
+        if (Schema::hasTable('languages'))
+        {
+            DB::statement('ALTER TABLE languages DROP INDEX idx_name');
+            Schema::drop('languages');
+        }
+        if (Schema::hasTable('definitions'))
+        {
+            DB::statement('ALTER TABLE definitions DROP INDEX idx_title');
+            DB::statement('ALTER TABLE definitions DROP INDEX idx_data');
+            DB::statement('ALTER TABLE definitions DROP INDEX idx_tags');
+            Schema::drop('definitions');
+        }
 
         // Languages.
         Schema::create('languages', function(Blueprint $table)
@@ -32,6 +46,7 @@ class Architecture_0_4 extends Migration
 			$table->timestamps();
             $table->softDeletes();
 		});
+        DB::statement('CREATE FULLTEXT INDEX idx_name ON languages (name, alt_names)');
 
         // Language scripts.
         Schema::create('scripts', function(Blueprint $table)
@@ -61,6 +76,7 @@ class Architecture_0_4 extends Migration
 			$table->timestamps();
             $table->softDeletes();
 		});
+        DB::statement('CREATE FULLTEXT INDEX idx_title ON definitions (title, alt_titles)');
 
         // Translations.
         Schema::create('translations', function(Blueprint $table)
@@ -80,6 +96,7 @@ class Architecture_0_4 extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        DB::statement('CREATE FULLTEXT INDEX idx_translation ON translations (practical, literal, meaning)');
 
         // Tags.
         Schema::create('tags', function(Blueprint $table)
@@ -90,6 +107,7 @@ class Architecture_0_4 extends Migration
             $table->string('title', 100)->unique();
             $table->timestamps();
         });
+        DB::statement('CREATE FULLTEXT INDEX idx_title ON tags (title)');
 
         // Sentences.
         Schema::create('sentences', function(Blueprint $table)
@@ -97,10 +115,11 @@ class Architecture_0_4 extends Migration
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->text('contents');
+            $table->text('content');
             $table->timestamps();
             $table->softDeletes();
         });
+        DB::statement('CREATE FULLTEXT INDEX idx_content ON sentences (content)');
 
         // Media.
         Schema::create('media', function(Blueprint $table)
@@ -127,8 +146,9 @@ class Architecture_0_4 extends Migration
             $table->increments('id');
             $table->integer('parent_id')->unsigned();
             $table->string('parent_type');
-            $table->text('contents');
+            $table->text('content');
         });
+        DB::statement('CREATE FULLTEXT INDEX idx_content ON data (content)');
 
         // Cultures.
         Schema::create('cultures', function(Blueprint $table)
@@ -145,6 +165,7 @@ class Architecture_0_4 extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        DB::statement('CREATE FULLTEXT INDEX idx_name ON cultures (name, alt_names)');
 
         // Countries.
         Schema::create('countries', function(Blueprint $table)
@@ -158,6 +179,7 @@ class Architecture_0_4 extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+        DB::statement('CREATE FULLTEXT INDEX idx_name ON countries (name, alt_names)');
 
         // Users.
         Schema::create('users', function(Blueprint $table)
@@ -180,7 +202,7 @@ class Architecture_0_4 extends Migration
             $table->engine = 'InnoDB';
 
 			$table->increments('id');
-			$table->string('name')->unique();
+			$table->string('name', 100)->unique();
 			$table->string('display_name')->nullable();
             $table->text('description')->nullable();
 		});
@@ -189,7 +211,7 @@ class Architecture_0_4 extends Migration
         Schema::create('permissions', function (Blueprint $table)
         {
             $table->increments('id');
-            $table->string('name')->unique();
+            $table->string('name', 100)->unique();
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
@@ -205,7 +227,7 @@ class Architecture_0_4 extends Migration
             'language' => 'script',
         ];
 
-        foreach ($pivot as $table1 => $table2)
+        foreach ($pivots as $table1 => $table2)
         {
             Schema::create($table1 .'_'. $table2, function(Blueprint $table) use($table1, $table2)
             {
@@ -262,12 +284,19 @@ class Architecture_0_4 extends Migration
     public function down()
     {
         // Drop everything except for password_resets and recreate the previous structure.
+        DB::statement('ALTER TABLE languages DROP INDEX idx_name');
+        DB::statement('ALTER TABLE definitions DROP INDEX idx_title');
+        DB::statement('ALTER TABLE translations DROP INDEX idx_translation');
+        DB::statement('ALTER TABLE tags DROP INDEX idx_title');
+        DB::statement('ALTER TABLE sentences DROP INDEX idx_content');
+        DB::statement('ALTER TABLE data DROP INDEX idx_content');
+        DB::statement('ALTER TABLE cultures DROP INDEX idx_name');
+        DB::statement('ALTER TABLE countries DROP INDEX idx_name');
         $drop = [
-            'languages', 'scripts', 'definitions', 'translations', 'tags', 'sentences', 'media',
-            'data', 'cultures', 'countries', 'users', 'roles', 'permissions',
             'country_culture', 'country_language', 'definition_language', 'definition_sentence',
-            'definition_tag', 'language_script', 'permission_role', 'role_user'
-            ];
+            'definition_tag', 'language_script', 'permission_role', 'role_user',
+            'scripts', 'languages', 'translations', 'tags', 'sentences', 'media', 'definitions',
+            'cultures', 'countries', 'data', 'roles', 'permissions', 'users',
         ];
 
         foreach ($drop as $table) {
