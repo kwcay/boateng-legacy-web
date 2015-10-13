@@ -33,6 +33,8 @@ class ExportController extends Controller
 
     public function export($resourceType, $format = 'yaml')
     {
+        dd('It works!');
+
         // Currently, only languages and definitions can be exported.
         if (!in_array($resourceType, ['language', 'definition'])) {
             return redirect(route('admin.export'))->withMessages(['Invalid resource type.']);

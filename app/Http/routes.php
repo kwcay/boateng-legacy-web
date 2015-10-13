@@ -24,7 +24,7 @@ Route::post('/language/search/{query?}',    'LanguageController@search');
 Route::resource('definition',               'DefinitionController', ['only' => ['create', 'edit', 'store', 'update', 'destroy']]);
 Route::get('/definition/search/{query}',    'DefinitionController@search');
 Route::post('/definition/search/{query}',   'DefinitionController@search');
-Route::post('/definition/exists/{title}',    'DefinitionController@exists');
+Route::post('/definition/exists/{title}',   'DefinitionController@exists');
 
 // Translation endpoints.
 Route::resource('translation',  'TranslationController');
@@ -43,7 +43,7 @@ Route::get('stats', function() { return redirect(route('stats')); });
 //
 // Admin area.
 //
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
+Route::group(['prefix' => 'admin'/*, 'middleware' => 'auth'*/], function()
 {
     // General pages
     Route::get('/',         ['as' => 'admin', 'uses' => 'AdminController@index']);
@@ -53,10 +53,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
     Route::get('/list/lang',['as' => 'admin.list.languages', 'uses' => 'AdminController@getLanguageList']);
 
     // Resource import.
-    Route::post('/import',  ['as' => 'admin.import.action', 'uses' => 'DataController@import']);
+    Route::post('/import',  ['as' => 'admin.import.action', 'uses' => 'ImportController@import']);
 
     // Resource export
-    Route::get('/export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'DataController@export']);
+    Route::get('/export/{resource}.{format}',
+        ['as' => 'export.resource', 'uses' => 'ExportController@export']);
 });
 
 //
