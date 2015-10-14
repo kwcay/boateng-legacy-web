@@ -3,7 +3,7 @@
  * @file    ExportController.php
  * @brief   Handles export of data, such as definitions, languages, etc.
  */
-namespace App\Http\Controllers\Data;
+namespace App\Http\Controllers\Data\v040;
 
 use Session;
 use Redirect;
@@ -33,8 +33,6 @@ class ExportController extends Controller
 
     public function export($resourceType, $format = 'yaml')
     {
-        dd('It works!');
-
         // Currently, only languages and definitions can be exported.
         if (!in_array($resourceType, ['language', 'definition'])) {
             return redirect(route('admin.export'))->withMessages(['Invalid resource type.']);

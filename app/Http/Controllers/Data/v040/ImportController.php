@@ -3,7 +3,7 @@
  * @file    ImportController.php
  * @brief   Handles data import into the app.
  */
-namespace App\Http\Controllers\Data;
+namespace App\Http\Controllers\Data\v040;
 
 use Session;
 use Redirect;
@@ -15,10 +15,16 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\Yaml\Yaml;
 use App\Http\Controllers\Controller;
+use App\Factories\DataImportFactory as ImportHelper;
 
 
 class ImportController extends Controller
 {
+    /**
+     * The DataImportFactory helps us parse and import data.
+     */
+    private $dataHelper;
+
     /**
      * Directory to temporarily store data files.
      */
@@ -37,7 +43,7 @@ class ImportController extends Controller
     /**
      * Model associated with data.
      */
-    private $dataType;
+    private $dataModel;
 
     /**
      * Fully parsed data object (including meta data).
@@ -57,8 +63,9 @@ class ImportController extends Controller
     /**
      *
      */
-    public function __construct(Request $request, Response $response)
+    public function __construct(ImportHelper $helper, Request $request, Response $response)
     {
+        $this->importHelper = $helper;
         $this->request = $request;
         $this->response = $response;
 
@@ -71,6 +78,17 @@ class ImportController extends Controller
      */
     public function import()
     {
+        // Use the DataImportFactory to parse and import data into the database.
+        try
+        {
+            $this->importHelper->import($this->request->file('data'));
+        }
+        catch (Exception $e)
+        {
+
+        }
+
+
         // Retrieve data.
         if (!$this->getDataFromRequest()) {
             return redirect(route('admin.import'))->withMessages(['Couldn\'t parse data.']);
@@ -82,8 +100,27 @@ class ImportController extends Controller
         }
 
         // Import data.
+        try
+        {
+            $this->dataHelper->import();
+        }
+        catch (Exception $exception)
+        {
+            return redirect(route('admin.import'))->withMessages([$exception->getMessage()]);
+        }
+
+
+
+
+        abort(501);
+
+        if (!$this->importData()) {
+            return redirect(route('admin.import'))->withMessages([$this->error]);
+        }
+
+        // Import data.
         $success = '%d of %d %s were imported into the database.';
-        switch ($this->dataType)
+        switch ($this->dataModel)
         {
             case 'language':
                 $results = Language::import($this->dataSet);
@@ -198,138 +235,36 @@ class ImportController extends Controller
             return false;
         }
 
-        // Data files with meta data.
-        if (isset($this->dataObject['meta']) && isset($this->dataObject['data']))
-        {
-            $meta = $this->dataObject['meta'];
-            $data = $this->dataObject['data'];
-
-            // Data integrity check.
-            if (!isset($meta['checksum']) || $meta['checksum'] != md5(json_encode($data))) {
-                $this->error = 'Checksum failed.';
-            }
-
-            // Performance check.
-            elseif (!is_array($data) || empty($data)) {
-                $this->error = 'No data found.';
-            }
-
-            // Since our dataset seems valid, try and import it.
-            else
-            {
-                $this->dataSet = $this->importDefinitions($data);
-                $this->dataType = $meta['type'];
-            }
+        // Check metadata.
+        if (!isset($this->dataObject['meta']) || !isset($this->dataObject['data'])) {
+            $this->error = 'Invalid data format.';
+            return false;
         }
 
-        // Pure array.
-        elseif (isset($this->dataObject[0]) && isset($this->dataObject[0]['params']))
-        {
-            // Try to classify this data set.
-            $sample = $this->dataObject[0];
-
-            // Old languages file.
-            if (isset($sample['code']))
-            {
-                $this->dataType = 'language';
-                $this->dataSet = $this->convertOldLanguageSet($this->dataObject);
-            }
-
-            // Old definitions file.
-            elseif (isset($sample['word']))
-            {
-                $this->dataType = 'definition';
-                $this->dataSet = $this->convertoldDefinitionSet($this->dataObject);
-            }
+        // Retrieve data and metadata.
+        $meta = $this->dataObject['meta'];
+        $data = $this->dataObject['data'];
+        if (!is_array($data) || empty($data)) {
+            $this->error = 'No data found.';
+            return false;
         }
+
+        // Data integrity check.
+        if (!isset($meta['checksum']) || $meta['checksum'] != md5(json_encode($data))) {
+            $this->error = 'Checksum failed.';
+            return false;
+        }
+
+        // Since our dataset seems valid, try and import it.
+        $this->dataSet = $this->importDefinitions($data);
+        $this->dataModel = $meta['type'];
 
         return (strlen($this->error) == 0);
     }
 
-    public function convertOldLanguageSet(array $oldFormat)
+    private function importData()
     {
-        $data = [];         // This will hold our data to be imported.
-        $sortedByCode = []; // This references languages by code.
-        $hasParent = [];    // This will hold the index of languages with parents.
 
-        foreach($oldFormat as $oldLang)
-        {
-            $lang = new Language(array_only($oldLang, ['code', 'countries', 'created_at']));
-
-            // If the language has a code, remember its index in $data so we can try
-            // and save the parent language later.
-            if (isset($oldLang['parent'])) {
-                $hasParent[count($data)] = $oldLang['parent'];
-            }
-
-            // Language name.
-            if (strpos($oldLang['name'], ',')) {
-                $names = @explode(',', $oldLang['name']);
-                $lang->name = array_pull($names, 0);
-                $lang->alt_names = implode(', ', $names);
-            } else {
-                $lang->name = $oldLang['name'];
-            }
-
-            // Description.
-            if (isset($oldLang['desc'])) {
-                $lang->setParam('desc', $oldLang['desc']);
-            }
-
-            $data[] = $lang;
-            $sortedByCode[$lang->code] = $lang;
-        }
-
-        // Update parents.
-        if (count($hasParent))
-        {
-            foreach ($hasParent as $index => $parentCode)
-            {
-                if (isset($sortedByCode[$parentCode]))
-                {
-                    $data[$index]->parent_code = $parentCode;
-                    $data[$index]->setParam('parentName', $sortedByCode[$parentCode]->name);
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    public function convertOldDefinitionSet(array $oldFormat)
-    {
-        $data = [];
-
-        foreach ($oldFormat as $oldDef)
-        {
-            $def = new \App\Models\Definitions\Word(array_only($oldDef, ['created_at']));
-            // $def->setAttribute('type', Definition::TYPE_WORD);
-
-            // Definition data.
-            if (strpos($oldDef['word'], ',')) {
-                $titles = @explode(',', $oldDef['word']);
-                $def->setAttribute('title', array_pull($titles, 0));
-                $def->setAttribute('alt_titles', implode(', ', $titles));
-            } else {
-                $def->setAttribute('title', $oldDef['word']);
-            }
-
-            // Other attributes.
-            $def->setRelationToBeImported('languages', @explode(',', $oldDef['language']));
-            $def->setRelationToBeImported('translations', json_decode($oldDef['translation'], true));
-            $def->setRelationToBeImported('meanings', json_decode($oldDef['meaning'], true));
-
-            if ($params = json_decode($oldDef['params'], true)) {
-                $def->subType = $params['type'];
-            }
-
-            // State
-            $def->setAttribute('state', Definition::STATE_VISIBLE);
-
-            $data[] = $def;
-        }
-
-        return $data;
     }
 
     /**

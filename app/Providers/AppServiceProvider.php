@@ -33,17 +33,5 @@ class AppServiceProvider extends ServiceProvider {
 			'Illuminate\Contracts\Auth\Registrar',
 			'App\Services\Registrar'
 		);
-
-        // Register "ImportController" containter binding.
-        $this->app->bind(
-			'App\Http\Controllers\Data\v040\ImportController',
-			'App\Http\Controllers\ImportController'
-		);
-
-        // Register "ExportController" container binding.
-        $this->app->bind(
-			'App\Http\Controllers\Data\v040\ExportController',
-			'App\Http\Controllers\ExportController'
-		);
 	}
 }
