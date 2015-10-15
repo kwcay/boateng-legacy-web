@@ -5,6 +5,7 @@
  */
 namespace App\Factories;
 
+use Exception;
 use Symfony\Component\Yaml\Yaml;
 use App\Factories\Contract as BaseFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile as File;
@@ -64,6 +65,11 @@ class DataImportFactory extends BaseFactory
         $this->setDataPath(storage_path() .'/app/import');
     }
 
+    /**
+     *
+     *
+     * @param File $rawDataFile
+     */
     public function importFromFile(File $rawDataFile)
     {
         $this->setDataFile($rawDataFile);
@@ -122,7 +128,7 @@ class DataImportFactory extends BaseFactory
 
         // Check that data really was parsed.
         if (!is_array($this->rawDataObject) || empty($this->rawDataObject)) {
-            throw new Exception('Invalid data.')
+            throw new Exception('Invalid data.');
         }
 
         // Check format of array.
@@ -178,7 +184,7 @@ class DataImportFactory extends BaseFactory
      */
     public function setDataPath($path)
     {
-        $this->dataPath = $path;
+        $this->rawDataPath = $path;
     }
 
     /**
@@ -200,7 +206,7 @@ class DataImportFactory extends BaseFactory
         $this->setDataFormat($this->rawDataFile->getClientOriginalExtension());
 
         // Reset other properties.
-
+        // TODO
     }
 
     /**
@@ -233,20 +239,25 @@ class DataImportFactory extends BaseFactory
         // Set model from meta data.
         if (!$model)
         {
-            switch ($this->dataMeta['type'])
+            switch (strtolower($this->dataMeta['type']))
             {
-                case 'Language':
+                case 'language':
                     $this->dataModel = 'App\\Models\\Language';
                     break;
 
-                case 'Definition/Word':
-                case 'Definition/Phrase':
-                case 'Definition/Poem':
+                case 'definition':
+                    $this->dataModel = 'App\\Models\\Definition\\Word';
+                    break;
+
+                case 'definition/word':
+                case 'definition/phrase':
+                case 'definition/poem':
                     $this->dataModel = 'App\\Models\\'. str_replace('/', '\\\\', $this->dataMeta['type']);
             }
         }
 
         // Set model from object.
+        // TODO
         elseif (false)
         {
 
@@ -270,7 +281,7 @@ class DataImportFactory extends BaseFactory
     public function isDataIntegral()
     {
         // Performance check.
-        if (!$this->hasValidDataFile() || !isset($this->dataMeta['checksum']) {
+        if (!$this->hasValidDataFile() || !isset($this->dataMeta['checksum'])) {
             return false;
         }
 
@@ -291,16 +302,19 @@ class DataImportFactory extends BaseFactory
         switch ($this->dataModel)
         {
             case 'App\\Models\\Language':
-                $factory = new DataImport\LanguageImportFactory;
+                $factory = $this->make('LanguageImportFactory');
                 break;
 
             case 'App\\Models\\Definition\\Word':
-                $factory = new DataImport\Definition\WordImportFactory;
+                $factory = $this->make('Definition\\WordImportFactory');
                 break;
 
             default:
                 throw new Exception('Invalid data model.');
         }
+
+        // Set data...
+        // TODO
 
         throw new Exception('TODO: DataImportFactory->importDataSet');
     }

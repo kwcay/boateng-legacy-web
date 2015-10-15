@@ -53,8 +53,7 @@ Route::group(['prefix' => 'admin'/*, 'middleware' => 'auth'*/], function()
     Route::get('/list/lang',['as' => 'admin.list.languages', 'uses' => 'AdminController@getLanguageList']);
 
     // Resource import.
-    Route::post('/import',
-        ['as' => 'admin.import.action', 'uses' => 'Data\v040\ImportController@import']);
+    Route::post('/import', ['as' => 'admin.import.action', 'uses' => 'Data\v040\DataController@import']);
 
     // Resource export
     Route::get('/export/{resource}.{format}',

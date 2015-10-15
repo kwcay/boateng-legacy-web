@@ -2,7 +2,7 @@
 /**
  *
  */
-namespace App\Factories\DataImport;
+namespace App\Factories\DataImport\Definition;
 
 use App\Factories\DataImportFactory;
 
