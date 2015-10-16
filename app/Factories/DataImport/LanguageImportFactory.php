@@ -35,6 +35,14 @@ class LanguageImportFactory extends DataImportFactory
                 'created_at',
                 'deleted_at'
             ]));
+
+            // TODO: relations to be added:
+            // Has Many: Culture
+            // Has Many: Data
+            // Has Many: Country
+            // Has Many: Script
+
+            // TODO: Save language now?
         }
 
         $this->setMessage('Dev mode.');
