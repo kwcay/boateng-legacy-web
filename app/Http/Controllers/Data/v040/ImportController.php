@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Data\v040;
 use Session;
 use Redirect;
 
+use Exception;
 use App\Models\Language;
 use App\Models\Definition;
 use Illuminate\Support\Arr;

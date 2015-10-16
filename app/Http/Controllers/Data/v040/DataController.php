@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Data\v040;
 use Session;
 use Redirect;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
@@ -41,13 +42,13 @@ class DataController extends Controller
         // Use the DataImportFactory to parse and import data into the database.
         try
         {
-            $this->importHelper->importFromFile($this->request->file('data'));
+            $result = $this->importHelper->importFromFile($this->request->file('data'));
         }
         catch (Exception $e)
         {
             return redirect(route('admin.import'))->withMessages([$e->getMessage()]);
         }
 
-        return redirect(route('admin.import'))->withMessages(['Import successful.']);
+        return redirect(route('admin.import'))->withMessages($result->getMessages());
     }
 }

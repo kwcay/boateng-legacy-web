@@ -20,42 +20,47 @@ class DataImportFactory extends BaseFactory
     /**
      * ...
      */
-    private $rawDataFile;
+    protected $rawDataFile;
 
     /**
      *
      */
-    private $fileName;
+    protected $fileName;
 
     /**
      * Original format of data (e.g. YAML, JSON, etc.)
      */
-    private $rawFormat;
+    protected $rawFormat;
 
     /**
      * Stores the raw data file to be parsed.
      */
-    private $rawDataString;
+    protected $rawDataString;
 
     /**
      * Fully parsed data object (including meta data).
      */
-    private $rawDataObject;
+    protected $rawDataObject;
 
     /**
      * Model associated with data.
      */
-    private $dataModel;
+    protected $dataModel;
 
     /**
      * Meta data
      */
-    private $dataMeta;
+    protected $dataMeta;
 
     /**
      * Array containing a set of data.
      */
-    private $dataSet;
+    protected $dataSet;
+
+    /**
+     *
+     */
+    protected $messages = [];
 
     /**
      * Called once class has been instantiated.
@@ -69,6 +74,7 @@ class DataImportFactory extends BaseFactory
      *
      *
      * @param File $rawDataFile
+     * @return DataImportFactory
      */
     public function importFromFile(File $rawDataFile)
     {
@@ -90,6 +96,9 @@ class DataImportFactory extends BaseFactory
 
         // Parse raw data into an array.
         $this->parseRawData();
+
+        // We're now ready to import the data set.
+        return $this->importDataSet();
     }
 
     /**
@@ -136,9 +145,9 @@ class DataImportFactory extends BaseFactory
             throw new Exception('Invalid data format.');
         }
 
-        $this->dataMeta = $this->rawDataObject['meta'];
-        $this->dataObject = $this->rawDataObject['data'];
-        if (!is_array($this->dataObject) || empty($this->dataObject)) {
+        $this->setDataMeta($this->rawDataObject['meta']);
+        $this->setDataArray($this->rawDataObject['data']);
+        if (!is_array($this->dataArray) || empty($this->dataArray)) {
             throw new Exception('No data found.');
         }
 
@@ -151,11 +160,8 @@ class DataImportFactory extends BaseFactory
         $this->setDataModel();
 
         // Remove duplicates.
-        $this->dataObject = array_map('unserialize',
-                                array_unique(array_map('serialize', $this->dataObject)));
-
-        // We're now ready to import the data set.
-        $this->importDataSet();
+        $this->dataArray = array_map('unserialize',
+                                array_unique(array_map('serialize', $this->dataArray)));
     }
 
     /**
@@ -270,6 +276,35 @@ class DataImportFactory extends BaseFactory
     }
 
     /**
+     * ...
+     *
+     * @param array $meta
+     */
+    public function setDataMeta(array $meta)
+    {
+        $this->dataMeta = $meta;
+    }
+
+    /**
+     * ...
+     *
+     * @param array $data
+     */
+    public function setDataArray(array $data)
+    {
+        $this->dataArray = $data;
+    }
+
+    public function setMessage($msg)
+    {
+        array_push($this->messages, $msg);
+    }
+
+    public function getMessages() {
+        return $this->messages;
+    }
+
+    /**
      * Returns true if $this->rawDataFile is a valid file.
      *
      * @return bool
@@ -287,13 +322,15 @@ class DataImportFactory extends BaseFactory
 
         // Build checksum.
         // TODO: support different checksum algorithms.
-        $checksum = md5(json_encode($this->dataObject));
+        $checksum = md5(json_encode($this->dataArray));
 
         return $this->dataMeta['checksum'] === $checksum;
     }
 
     /**
-     * Imports a data set into the database. This method should be overriden in child classes.
+     * Imports a data set into the database.
+     *
+     * @return DataImportFactory
      */
     public function importDataSet()
     {
@@ -313,9 +350,11 @@ class DataImportFactory extends BaseFactory
                 throw new Exception('Invalid data model.');
         }
 
-        // Set data...
-        // TODO
+        $factory->setDataModel($this->dataModel);
+        $factory->setDataMeta($this->dataMeta);
+        $factory->setDataArray($this->dataArray);
 
-        throw new Exception('TODO: DataImportFactory->importDataSet');
+        // TODO: check for infinite loops.
+        return $factory->importDataSet();
     }
 }
