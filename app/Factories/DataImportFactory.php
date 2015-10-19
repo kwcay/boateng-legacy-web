@@ -334,6 +334,11 @@ class DataImportFactory extends BaseFactory
      */
     public function importDataSet()
     {
+        // Performance check.
+        if (count($this->dataArray) < 1) {
+            throw new Exception('Empty data set.');
+        }
+
         // Since we're in the general DataImportFactory, we will create a new factory that
         // is specific to this data set.
         switch ($this->dataModel)
@@ -354,7 +359,8 @@ class DataImportFactory extends BaseFactory
         $factory->setDataMeta($this->dataMeta);
         $factory->setDataArray($this->dataArray);
 
-        // TODO: check for infinite loops.
+        // TODO: check for infinite loops?
+
         return $factory->importDataSet();
     }
 }

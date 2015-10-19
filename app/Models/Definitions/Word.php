@@ -1,4 +1,8 @@
-<?php namespace App\Models\Definitions;
+<?php
+/**
+ * 
+ */
+namespace App\Models\Definitions;
 
 use DB;
 use Log;

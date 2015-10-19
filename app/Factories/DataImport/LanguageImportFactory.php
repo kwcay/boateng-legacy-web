@@ -5,6 +5,7 @@
 namespace App\Factories\DataImport;
 
 use Exception;
+use App\Models\Language;
 use App\Factories\DataImportFactory;
 
 class LanguageImportFactory extends DataImportFactory
@@ -14,16 +15,11 @@ class LanguageImportFactory extends DataImportFactory
      */
     public function importDataSet()
     {
-        // Performance check.
-        if (count($this->dataArray) < 1) {
-            throw new Exception('Empty data set.');
-        }
-
-        $data = [];         // This will hold our data to be imported.
-        $sortedByCode = []; // This references languages by code.
-        $hasParent = [];    // This will hold the index of languages with parents.
+        // TODO: check database for duplicates
+        // ...
 
         // Loop through languages and import them one by one.
+        $saved = $skipped = 0;
         foreach ($this->dataArray as $langArray)
         {
             // Create a language object.
@@ -42,10 +38,10 @@ class LanguageImportFactory extends DataImportFactory
             // Has Many: Country
             // Has Many: Script
 
-            // TODO: Save language now?
+            $lang->save() ? $saved++ : $skipped++;
         }
 
-        $this->setMessage('Dev mode.');
+        $this->setMessage($saved .' of '. ($saved + $skipped) .' languages added to database.');
 
         return $this;
     }
