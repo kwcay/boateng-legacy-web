@@ -1,5 +1,19 @@
 <?php
 
+// API v 0.1
+Route::group(['prefix' => 'v0.1'], function()
+{
+    Route::get('/', function() {
+        return 'v0.1';
+    });
+
+    // General count.
+    Route::get('/{definitionType}/count',   'API\v01\ApiController@count');
+
+    // General search.
+    Route::get('/{definitionType}/search/{query}',   'API\v01\ApiController@search');
+});
+
 // Static pages.
 Route::get('/',             ['as' => 'home', 'uses' => 'PageController@home']);
 Route::get('/about',        ['as' => 'about', 'uses' => 'PageController@about']);
@@ -57,7 +71,7 @@ Route::group(['prefix' => 'admin'/*, 'middleware' => 'auth'*/], function()
 
     // Resource export
     Route::get('/export/{resource}.{format}',
-        ['as' => 'export.resource', 'uses' => 'Data\v040\ExportController@export']);
+        ['as' => 'export.resource', 'uses' => 'Data\v041\DataController@export']);
 });
 
 //
