@@ -73,6 +73,7 @@ class Architecture041 extends Migration
             $table->tinyInteger('type')->unsigned();		// Data type, e.g. word.
             $table->string('sub_type');	    				// Data sub-type, e.g. noun.
             $table->tinyInteger('state');
+            $table->text('params');
 			$table->timestamps();
             $table->softDeletes();
 		});

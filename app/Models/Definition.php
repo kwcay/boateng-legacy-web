@@ -38,7 +38,7 @@ class Definition extends Model
     CONST TYPE_STORY = 30;      // Short stories.
 
     CONST STATE_HIDDEN = 0;     // Hidden definition.
-    CONST STATE_VISIBLE = 1;    // Default state.
+    CONST STATE_VISIBLE = 10;   // Default state.
 
     CONST SEARCH_LIMIT = 50;    // Maximum number of results to return on a search.
 
@@ -112,13 +112,18 @@ class Definition extends Model
      */
     public $states = [
         0 => 'hidden',
-        1 => 'visible'
+        10 => 'visible'
     ];
 
     /**
      * The Markdown parser.
      */
     protected $markdown;
+
+    /**
+     * 
+     */
+    public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
 
 
     //
@@ -160,19 +165,15 @@ class Definition extends Model
         'title' => 'string',
         'alt_titles' => 'string',
         'type' => 'integer',
-        'data' => 'string',
-        'tags' => 'string',
-        'state' => 'integer',
         'params' => 'array',
     ];
 
     public $validationRules = [
         'title' => 'required|string|min:2',
         'alt_titles' => 'string|min:2',
-        'data' => 'string',
         'type' => 'required|integer',
         'sub_type' => 'string',
-        'tags' => 'string|min:2|regex:/^([a-z, \-]+)$/i',
+        // 'tags' => 'string|min:2|regex:/^([a-z, \-]+)$/i',
         'state' => 'required|integer'
     ];
 
@@ -189,8 +190,6 @@ class Definition extends Model
     public function languages() {
         return $this->belongsToMany('App\Models\Language', 'definition_language', 'definition_id', 'language_id');
     }
-
-    public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
 
     /**
      * Relations to be created when importing this definition.
@@ -667,6 +666,26 @@ class Definition extends Model
      */
     public function getStateAttribute($state = 0) {
         return Arr::get($this->states, $state, $this->states[1]);
+    }
+
+    /**
+     * Mutator for $this->state.
+     *
+     * @param string $state
+     * @return void
+     */
+    public function setStateAttribute($state)
+    {
+        // If the state is already numeric, assume we're using a constant.
+        if (is_numeric($state) && array_key_exists($state, $this->states)) {
+            $this->attributes['state'] = (int) $state;
+        }
+
+        // Else, try to find the right constant.
+        else {
+            $this->attributes['state'] = is_int(array_search(strtolower($state), $this->states)) ?
+                array_flip($this->states)[$state] : Definition::STATE_VISIBLE;
+        }
     }
 
     /**
