@@ -3,7 +3,7 @@
  * @file    DataController.php
  * @brief   ...
  */
-namespace App\Http\Controllers\Data\v040;
+namespace App\Http\Controllers\Data\v041;
 
 use Session;
 use Redirect;
