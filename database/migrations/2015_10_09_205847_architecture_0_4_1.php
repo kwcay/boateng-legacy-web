@@ -230,10 +230,10 @@ class Architecture041 extends Migration
 
         foreach ($pivots as $pivot)
         {
-            Schema::create($table1 .'_'. $table2, function(Blueprint $table) use($pivot)
+            Schema::create($pivot, function(Blueprint $table) use($pivot)
             {
                 list($table1, $table2) = explode('_', $pivot);
-                
+
                 $table->engine = 'InnoDB';
                 $table->integer($table1 .'_id')->unsigned();
                 $table->integer($table2 .'_id')->unsigned();
@@ -287,19 +287,19 @@ class Architecture041 extends Migration
     public function down()
     {
         // Drop everything except for password_resets and recreate the previous structure.
-        DB::statement('ALTER TABLE languages DROP INDEX idx_name');
-        DB::statement('ALTER TABLE definitions DROP INDEX idx_title');
-        DB::statement('ALTER TABLE translations DROP INDEX idx_translation');
-        DB::statement('ALTER TABLE tags DROP INDEX idx_title');
-        DB::statement('ALTER TABLE sentences DROP INDEX idx_content');
-        DB::statement('ALTER TABLE data DROP INDEX idx_content');
-        DB::statement('ALTER TABLE cultures DROP INDEX idx_name');
-        DB::statement('ALTER TABLE countries DROP INDEX idx_name');
+        Schema::hasTable('languages') ? DB::statement('ALTER TABLE languages DROP INDEX idx_name') : null;
+        Schema::hasTable('definitions') ? DB::statement('ALTER TABLE definitions DROP INDEX idx_title') : null;
+        Schema::hasTable('translations') ? DB::statement('ALTER TABLE translations DROP INDEX idx_translation') : null;
+        Schema::hasTable('tags') ? DB::statement('ALTER TABLE tags DROP INDEX idx_title') : null;
+        Schema::hasTable('sentences') ? DB::statement('ALTER TABLE sentences DROP INDEX idx_content') : null;
+        Schema::hasTable('data') ? DB::statement('ALTER TABLE data DROP INDEX idx_content') : null;
+        Schema::hasTable('cultures') ? DB::statement('ALTER TABLE cultures DROP INDEX idx_name') : null;
+        Schema::hasTable('countries') ? DB::statement('ALTER TABLE countries DROP INDEX idx_name') : null;
         $drop = [
             'country_culture', 'country_language', 'definition_language', 'definition_sentence',
             'definition_tag', 'language_script', 'permission_role', 'role_user',
-            'scripts', 'languages', 'translations', 'tags', 'sentences', 'media', 'definitions',
-            'cultures', 'countries', 'data', 'roles', 'permissions', 'users',
+            'scripts', 'tags', 'sentences', 'media', 'cultures', 'countries', 'data',
+            'roles', 'permissions', 'users', 'translations', 'definitions', 'languages',
         ];
 
         foreach ($drop as $table) {
