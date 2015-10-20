@@ -58,13 +58,13 @@ class WordImportFactory extends DataImportFactory
                     // Make sure we have a 3-letter code.
                     $langCode = $lang == 'en' ? 'eng' : $lang;
 
-                    $word->translations()->save(new Translation([
+                    $word->translations()->create([
                         'language' => $langCode,
                         'practical' => $practical[$lang],
                         'literal' => $literal[$lang],
                         'meaning' => $meaning[$lang],
                         'created_at' => $word->createdAt
-                    ]));
+                    ]);
                 }
             }
 
@@ -109,6 +109,8 @@ class WordImportFactory extends DataImportFactory
                         $this->setMessage('Could not add related language "'. $code .'" to "'. $word->title .'"');
                     }
                 }
+
+                $word->languages()->saveMany($languages);
             }
 
             $saved++;

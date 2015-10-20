@@ -220,18 +220,20 @@ class Architecture041 extends Migration
 
         // Pivot tables.
         $pivots = [
-            'country' => 'culture',
-            'country' => 'language',
-            'definition' => 'language',
-            'definition' => 'sentence',
-            'definition' => 'tag',
-            'language' => 'script',
+            'country_culture',
+            'country_language',
+            'definition_language',
+            'definition_sentence',
+            'definition_tag',
+            'language_script',
         ];
 
-        foreach ($pivots as $table1 => $table2)
+        foreach ($pivots as $pivot)
         {
-            Schema::create($table1 .'_'. $table2, function(Blueprint $table) use($table1, $table2)
+            Schema::create($table1 .'_'. $table2, function(Blueprint $table) use($pivot)
             {
+                list($table1, $table2) = explode('_', $pivot);
+                
                 $table->engine = 'InnoDB';
                 $table->integer($table1 .'_id')->unsigned();
                 $table->integer($table2 .'_id')->unsigned();
