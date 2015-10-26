@@ -1,7 +1,9 @@
 <?php
 /**
- * @file    Definition.php
- * @brief   ...
+ *
+ *
+ * TODO: make this an abstract class.
+ *
  */
 namespace App\Models;
 
@@ -24,8 +26,6 @@ use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
-
-// TODO: make this an abstract class.
 
 class Definition extends Model
 {
@@ -121,7 +121,7 @@ class Definition extends Model
     protected $markdown;
 
     /**
-     * 
+     *
      */
     public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
 
@@ -320,7 +320,7 @@ class Definition extends Model
         // Sanitize data and retrieve search options.
         $query = trim(preg_replace('/[\s+]/', ' ', strip_tags($query)));
         $offset = min(0, (int) $offset);
-        $limit = min(1, max(static::SEARCH_LIMIT, (int) $limit));
+        $limit = max(1, min(static::SEARCH_LIMIT, (int) $limit));
         $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
 
         $type = null;
@@ -338,21 +338,18 @@ class Definition extends Model
             ->selectRaw(
                 'd.id, '.
                 'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
-                'MATCH(t.translation, t.meaning, t.literal) AGAINST(?) * 9 AS tran_score, '.
-                'MATCH(d.data) AGAINST(?) * 7 AS data_score, '.
-                'MATCH(d.tags) AGAINST(?) * 4 AS tags_score ',
-                [$query, $query, $query, $query])
+                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) * 8 AS tran_score ',
+                [$query, $query])
 
             // Match the fulltext columns against the search query.
             ->whereRaw(
                 '( MATCH(d.title, d.alt_titles) AGAINST(?) '.
-                'OR MATCH(t.translation, t.meaning, t.literal) AGAINST(?) '.
-                'OR MATCH(d.data) AGAINST(?) '.
-                'OR MATCH(d.tags) AGAINST(?) )',
-                [$query, $query, $query, $query])
+                'OR MATCH(t.practical, t.literal, t.meaning) AGAINST(?) )',
+                [$query, $query])
 
             // Order by relevancy.
-            ->orderByraw('(title_score + tran_score + data_score + tags_score) DESC');
+            //->orderByraw('(title_score + tran_score + data_score + tags_score) DESC');
+            ->orderByraw('(title_score + tran_score) DESC');
 
         // Limit scope to a specific language.
         if ($lang)
@@ -365,7 +362,7 @@ class Definition extends Model
 
         // Limit scope to a specific definition type.
         if (is_integer($type)) {
-            $builder->where('type', '=', $type);
+            $builder->where('d.type', '=', DB::raw($type));
         }
 
         // dd($builder->toSql());
@@ -386,12 +383,12 @@ class Definition extends Model
      * @param array $options    Search options.
      * @return array
      */
-    public function likeSearch($query, $offset = 0, $limit = 50, array $options = [])
+    public static function likeSearch($query, $offset = 0, $limit = 50, array $options = [])
     {
         // Sanitize data.
         $query = trim(preg_replace('/[\s+]/', ' ', strip_tags($query)));
         $offset = min(0, (int) $offset);
-        $limit = min(1, max(static::SEARCH_LIMIT, (int) $limit));
+        $limit = max(1, min(static::SEARCH_LIMIT, (int) $limit));
         $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
 
         // Query builder.
@@ -665,7 +662,7 @@ class Definition extends Model
      * @return string
      */
     public function getStateAttribute($state = 0) {
-        return Arr::get($this->states, $state, $this->states[1]);
+        return array_get($this->states, $state, $this->states[static::STATE_VISIBLE]);
     }
 
     /**
@@ -717,7 +714,7 @@ class Definition extends Model
         $translations = [];
 
         foreach ($this->translations as $translation) {
-            $translations[$translation->language] = $translation->translation;
+            $translations[$translation->language] = $translation->practical;
         }
 
         return $translations;
