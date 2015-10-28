@@ -38,7 +38,7 @@ elixir(function(mix) {
     // Combine stylesheets.
     mix.stylesIn('resources/assets/css', 'public/assets/dinkomo.css');
     mix.styles([
-        '../../../public/semantic/semantic.min.css',
+        // '../../../public/semantic/semantic.min.css',
         '../../../public/assets/dinkomo.css'
     ], 'public/assets');
 
@@ -47,7 +47,7 @@ elixir(function(mix) {
     mix.scriptsIn('resources/assets/js', 'public/assets/dinkomo.js');
     mix.scripts([
         '../../../public/assets/jquery-2.1.4.min.js',
-        '../../../public/semantic/semantic.min.js',
+        // '../../../public/semantic/semantic.min.js',
         '../../../public/assets/dinkomo.js'
     ], 'public/assets');
 
