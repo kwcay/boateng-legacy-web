@@ -1,7 +1,7 @@
 <?php
 
 // API v 0.1
-Route::group(['prefix' => 'v0.1'], function()
+Route::group(['prefix' => 'v0.1', 'middleware' => ['api.headers']], function()
 {
     Route::get('/', function() {
         return 'v0.1';
