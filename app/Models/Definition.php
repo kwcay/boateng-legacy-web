@@ -151,7 +151,7 @@ class Definition extends Model
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['translation', 'language', 'main_language', 'uri', 'unique_id'];
+    protected $appends = ['subType', 'translation', 'language', 'mainLanguage', 'uri', 'uniqueId'];
 
     /**
      * Attributes that should be mutated to dates.

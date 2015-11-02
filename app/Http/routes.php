@@ -1,4 +1,7 @@
 <?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ */
 
 // API v 0.1
 Route::group(['prefix' => 'v0.1', 'middleware' => ['api.headers']], function()
