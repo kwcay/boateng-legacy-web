@@ -26,7 +26,17 @@ class LanguageController extends Controller
     public function __construct()
     {
         // Enable the auth middleware.
-		$this->middleware('auth', ['except' => ['show', 'search']]);
+		$this->middleware('auth', ['except' => ['index', 'show', 'search']]);
+    }
+
+    /**
+     * Lists available languages.
+     *
+     * @return array
+     */
+    public function index()
+    {
+        return Language::all();
     }
 
     /**
@@ -42,7 +52,7 @@ class LanguageController extends Controller
             abort(404, 'Can\'t find that languge :(');
         }
 
-        return view('pages.language', [
+        return Request::ajax() ? $lang : view('pages.language', [
             'lang' => $lang,
             'random' => Word::random($lang->code),
             'first' => $lang->definitions()->orderBy('created_at', 'asc')->first(),
@@ -52,7 +62,10 @@ class LanguageController extends Controller
 
 	/**
 	 * Displays the form to add a new language.
+     *
+     * TODO: integrate with API.
 	 *
+     * @param \App\Models\Language $lang
 	 * @return Response
 	 */
 	public function create(Language $lang)
@@ -79,6 +92,8 @@ class LanguageController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
+     *
+     * TODO: integrate with API.
 	 *
 	 * @return Response
 	 */
@@ -112,6 +127,8 @@ class LanguageController extends Controller
 	/**
 	 * Update the specified resource in storage.
 	 *
+     * TODO: integrate with API.
+     *
 	 * @param  int  $id
 	 * @return Response
 	 */
@@ -130,6 +147,8 @@ class LanguageController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+     *
+     * TODO: integrate with API.
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -141,6 +160,8 @@ class LanguageController extends Controller
 
     /**
      * Shortcut to create a new language or save an existing one.
+     *
+     * TODO: integrate with API.
      *
      * @param \App\Models\Language $lang    Language object.
      * @param array $data                   Language details to update.

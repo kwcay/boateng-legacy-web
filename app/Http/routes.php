@@ -10,6 +10,9 @@ Route::group(['prefix' => 'v0.1', 'middleware' => ['api.headers']], function()
         return 'v0.1';
     });
 
+    // Language endpoints.
+    Route::resource('language', 'LanguageController', ['except' => ['create', 'store', 'destroy']]);
+
     // General count.
     Route::get('/{definitionType}/count',   'API\v01\ApiController@count');
 
@@ -75,15 +78,6 @@ Route::group(['prefix' => 'admin'/*, 'middleware' => 'auth'*/], function()
     // Resource export
     Route::get('/export/{resource}.{format}',
         ['as' => 'export.resource', 'uses' => 'Data\v041\DataController@export']);
-});
-
-//
-// API endpoints.
-//
-Route::group(['prefix' => 'api'], function()
-{
-    // General search endpoints.
-    Route::get('/{resource}/{query}',   'ApiController@search');
 });
 
 // Redirects.
