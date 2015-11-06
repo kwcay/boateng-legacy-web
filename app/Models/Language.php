@@ -41,12 +41,14 @@ class Language extends Model
     /**
     * The attributes that should be hidden for arrays.
     */
-    protected $hidden = ['id', 'params', 'updated_at', 'deleted_at', 'parent', 'children', 'definitions', 'pivot'];
+    protected $hidden = [
+        'id', 'params', 'created_at', 'updated_at', 'deleted_at', 'definitions', 'pivot'
+    ];
 
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['parent_name', 'uri'];
+    protected $appends = ['count', 'edit_uri'];
 
     /**
      * @var array   Attributes that should be mutated to dates.
@@ -236,25 +238,7 @@ class Language extends Model
      * @return string
      */
     public function getParentNameAttribute($data = null) {
-        return $this->getParam('parentName', '');
-    }
-
-    /**
-     * Accessor for $this->relativeUri.
-     *
-     * @return string
-     */
-    public function getRelativeUriAttribute() {
-        return $this->code;
-    }
-
-    /**
-     * Accessor for $this->uri.
-     *
-     * @return string
-     */
-    public function getUriAttribute() {
-        return url($this->relativeUri);
+        return $this->parent ? $this->parent->name : '';
     }
 
     /**
@@ -264,6 +248,15 @@ class Language extends Model
      */
     public function getEditUriAttribute() {
         return route('language.edit', ['code' => $this->code]);
+    }
+
+    /**
+     * Accessor for $this->count.
+     *
+     * @return int
+     */
+    public function getCountAttribute() {
+        return $this->definitions()->count();
     }
 
 
@@ -334,5 +327,22 @@ class Language extends Model
     {
 
         return true;
+    }
+
+    /**
+     * Converts the model instance to an array, and changes the snake_case keys to camelCase.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $camelCasedAttributes = [];
+        $snakeCaseAttributes = parent::toArray();
+
+        foreach ($snakeCaseAttributes as $key => $value) {
+            $camelCasedAttributes[camel_case($key)] = $value;
+        }
+
+        return $camelCasedAttributes;
     }
 }

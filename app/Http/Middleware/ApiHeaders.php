@@ -18,7 +18,7 @@ class ApiHeaders
     public function handle($request, Closure $next)
     {
         $response = $next($request);
-        
+
         // Set the "Access-Control-Allow-Origin" header.
         if ($request->header('Origin') == 'http://dinkomo.vagrant') {
             $response->header('Access-Control-Allow-Origin', 'http://dinkomo.vagrant', true);
