@@ -23,6 +23,9 @@ class ApiHeaders
         if ($request->header('Origin') == 'http://dinkomo.vagrant') {
             $response->header('Access-Control-Allow-Origin', 'http://dinkomo.vagrant', true);
         }
+        elseif ($request->header('Origin') == 'http://dinkomo.frnk.ca') {
+            $response->header('Access-Control-Allow-Origin', 'http://dinkomo.frnk.ca', true);
+        }
 
         // Current API version.
         $response->header('X-API-Version', '0.1', true);
