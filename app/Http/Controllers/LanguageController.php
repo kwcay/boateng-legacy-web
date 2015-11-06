@@ -51,10 +51,8 @@ class LanguageController extends Controller
         if (!$lang = $this->getLanguage($id)) {
             abort(404, 'Can\'t find that languge :(');
         }
-        
-        $jsonRequest = strpos(Request::header('Accept'), 'json') !== false;
 
-        return $jsonRequest ? $lang : view('pages.language', [
+        return (Request::acceptsJson() || Request::has('dev')) ? $lang : view('pages.language', [
             'lang' => $lang,
             'random' => Word::random($lang->code),
             'first' => $lang->definitions()->orderBy('created_at', 'asc')->first(),
