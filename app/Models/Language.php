@@ -42,13 +42,22 @@ class Language extends Model
     * The attributes that should be hidden for arrays.
     */
     protected $hidden = [
-        'id', 'params', 'created_at', 'updated_at', 'deleted_at', 'definitions', 'pivot'
+        'id', 'params', 'created_at', 'updated_at', 'deleted_at',
+        'parent', 'definitions', 'pivot'
     ];
 
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['count', 'edit_uri'];
+    protected $appends = [
+        'parentLanguage',
+        'count',
+        'firstDefinition',
+        'latestDefinition',
+        'randomDefinition',
+        'editUri',
+        'resourceType'
+    ];
 
     /**
      * @var array   Attributes that should be mutated to dates.
@@ -190,18 +199,6 @@ class Language extends Model
     }
 
     /**
-     * Gets the URI for the language.
-     *
-     * @param bool $full
-     * @return string
-     *
-     * @deprecated  Use url($this->uri) instead.
-     */
-    public function getUri($full = true) {
-        return $full ? url($this->code) : $this->code;
-    }
-
-    /**
      * Gets the URI to the language edit form.
      *
      * @param bool $full
@@ -242,6 +239,15 @@ class Language extends Model
     }
 
     /**
+     * Accessor for $this->parentLanguage.
+     *
+     * @return string
+     */
+    public function getParentLanguageAttribute($data = null) {
+        return $this->parent ? $this->parent : null;
+    }
+
+    /**
      * Accessor for $this->editUri.
      *
      * @return string
@@ -257,6 +263,87 @@ class Language extends Model
      */
     public function getCountAttribute() {
         return $this->definitions()->count();
+    }
+
+    /**
+     * Accessor for $this->firstDefinition.
+     *
+     * @return array
+     */
+    public function getFirstDefinitionAttribute()
+    {
+        $first = null;
+
+        if ($definition = $this->definitions()->first())
+        {
+            $first = [
+                'title' => $definition->title,
+                'translation' => $definition->translation,
+                'type' => $definition->type,
+                'mainLanguage' => [
+                    'code' => $definition->mainLanguage->code
+                ]
+            ];
+        }
+
+        return $first;
+    }
+
+    /**
+     * Accessor for $this->latestDefinition.
+     *
+     * @return array
+     */
+    public function getLatestDefinitionAttribute()
+    {
+        $latest = null;
+
+        if ($definition = $this->definitions()->orderBy('created_at', 'DESC')->first())
+        {
+            $latest = [
+                'title' => $definition->title,
+                'translation' => $definition->translation,
+                'type' => $definition->type,
+                'mainLanguage' => [
+                    'code' => $definition->mainLanguage->code
+                ]
+            ];
+        }
+
+        return $latest;
+    }
+
+    /**
+     * Accessor for $this->randomDefinition.
+     *
+     * @return array
+     */
+    public function getRandomDefinitionAttribute()
+    {
+        $random = null;
+
+        if ($definition = $this->definitions()->orderByRaw('RAND()')->first())
+        {
+            $random = [
+                'title' => $definition->title,
+                'translation' => $definition->translation,
+                'type' => $definition->type,
+                'mainLanguage' => [
+                    'code' => $definition->mainLanguage->code
+                ]
+            ];
+        }
+
+        return $random;
+    }
+
+    /**
+     * Accessor for $this->resourceType.
+     *
+     * @return string
+     */
+    public function getResourceTypeAttribute() {
+        return 'language';
     }
 
 
@@ -327,22 +414,5 @@ class Language extends Model
     {
 
         return true;
-    }
-
-    /**
-     * Converts the model instance to an array, and changes the snake_case keys to camelCase.
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        $camelCasedAttributes = [];
-        $snakeCaseAttributes = parent::toArray();
-
-        foreach ($snakeCaseAttributes as $key => $value) {
-            $camelCasedAttributes[camel_case($key)] = $value;
-        }
-
-        return $camelCasedAttributes;
     }
 }

@@ -2,7 +2,7 @@
 /**
  *
  *
- * TODO: make this an abstract class.
+ * TODO: make this an abstract class?
  *
  */
 namespace App\Models;
@@ -20,6 +20,7 @@ use App\Models\Definitions\Phrase;
 use App\Models\Definitions\Story;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 use App\Traits\HasParamsTrait as HasParams;
 use App\Traits\ExportableResourceTrait as Exportable;
@@ -151,7 +152,7 @@ class Definition extends Model
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['subType', 'translation', 'language', 'mainLanguage', 'uri', 'uniqueId'];
+    protected $appends = ['translation', 'language', 'mainLanguage', 'resourceType'];
 
     /**
      * Attributes that should be mutated to dates.
@@ -371,7 +372,7 @@ class Definition extends Model
         $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
 
         // Return results.
-        return count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : [];
+        return count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : new Collection;
     }
 
     /**
@@ -770,15 +771,6 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->uri.
-     *
-     * @return string
-     */
-    public function getUriAttribute() {
-        return url($this->relativeUri);
-    }
-
-    /**
      * Accessor for $this->editUri.
      *
      * @return string
@@ -794,6 +786,14 @@ class Definition extends Model
         return $this->getUniqueId();
     }
 
+    /**
+     * Accessor for $this->resourceType.
+     *
+     * @return string
+     */
+    public function getResourceTypeAttribute() {
+        return 'definition';
+    }
 
     //
     //

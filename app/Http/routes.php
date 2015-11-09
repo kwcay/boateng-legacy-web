@@ -13,11 +13,14 @@ Route::group(['prefix' => 'v0.1', 'middleware' => ['api.headers']], function()
     // Language endpoints.
     Route::resource('language', 'LanguageController', ['except' => ['create', 'store', 'destroy']]);
 
-    // General count.
+    // Resource count.
     Route::get('/{definitionType}/count',   'API\v01\ApiController@count');
 
-    // General search.
+    // Resource lookup.
     Route::get('/{definitionType}/search/{query}',   'API\v01\ApiController@search');
+
+    // General lookup
+    Route::get('/search/{query}', 'API\v01\ApiController@searchAllResources');
 });
 
 // Static pages.

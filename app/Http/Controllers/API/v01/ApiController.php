@@ -15,6 +15,7 @@ use App\Models\Definition\Phrase;
 use App\Models\Definition\Poem;
 use App\Models\Definition\Story;
 use App\Models\Definition\Word;
+use App\Models\Language;
 
 class ApiController extends Controller
 {
@@ -40,7 +41,7 @@ class ApiController extends Controller
     }
 
     /**
-     * General search.
+     * Resource search.
      *
      * @param string $resource
      * @param string $query
@@ -49,7 +50,7 @@ class ApiController extends Controller
     {
         // Retrieve model.
         if (!$model = $this->getResourceModel($resource)) {
-            return $this->abort(500, 'Invalid resource type.');
+            return $this->abort(400, 'Invalid resource type.');
         }
 
         // Retrieve search options.
@@ -60,6 +61,27 @@ class ApiController extends Controller
 
         // Perform search.
         return $model->search($query, $options);
+    }
+
+    /**
+     * Queries the database for all resource types.
+     *
+     * @param string $query
+     * @return \Illuminate\Support\Collection
+     */
+    public function searchAllResources($query)
+    {
+        // Lookup all definitions.
+        $options = [];
+        $results = Definition::search($query, $options);
+
+        // Add languages.
+        $results = $results->merge(Language::search($query));
+
+        // Add countries.
+        // ...
+
+        return $results;
     }
 
     /**
