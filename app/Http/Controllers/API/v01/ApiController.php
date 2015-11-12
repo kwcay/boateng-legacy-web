@@ -8,7 +8,6 @@ namespace App\Http\Controllers\API\v01;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use App\Models\Definition;
 use App\Models\Definition\Name;
 use App\Models\Definition\Phrase;
@@ -16,6 +15,7 @@ use App\Models\Definition\Poem;
 use App\Models\Definition\Story;
 use App\Models\Definition\Word;
 use App\Models\Language;
+use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {

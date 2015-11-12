@@ -147,6 +147,7 @@ return [
         'App\Providers\ObfuscatorServiceProvider',
 		'App\Providers\RouteServiceProvider',
         'Collective\Html\HtmlServiceProvider',
+        Laravel\Socialite\SocialiteServiceProvider::class,
 
 	],
 
@@ -193,6 +194,7 @@ return [
 		'Route'     => 'Illuminate\Support\Facades\Route',
 		'Schema'    => 'Illuminate\Support\Facades\Schema',
 		'Session'   => 'Illuminate\Support\Facades\Session',
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
 		'Storage'   => 'Illuminate\Support\Facades\Storage',
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',

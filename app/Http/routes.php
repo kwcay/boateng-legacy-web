@@ -10,6 +10,9 @@ Route::group(['prefix' => 'v0.1', 'middleware' => ['api.headers']], function()
         return 'v0.1';
     });
 
+    // Definition endpoints.
+    Route::resource('definition', 'API\v01\DefinitionController', ['except' => ['create', 'edit']]);
+
     // Language endpoints.
     Route::resource('language', 'LanguageController', ['except' => ['create', 'store', 'destroy']]);
 

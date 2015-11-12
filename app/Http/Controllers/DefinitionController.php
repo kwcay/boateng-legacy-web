@@ -1,7 +1,6 @@
 <?php
 /**
- * @file    DefinitionController.php
- * @brief   ...
+ *
  */
 namespace App\Http\Controllers;
 
@@ -26,7 +25,7 @@ class DefinitionController extends Controller
     public function __construct()
     {
         // Enable the auth middleware.
-		$this->middleware('auth', ['except' => ['show', 'search', 'exists']]);
+		// $this->middleware('auth', ['except' => ['show', 'search', 'exists']]);
     }
 
     /**
