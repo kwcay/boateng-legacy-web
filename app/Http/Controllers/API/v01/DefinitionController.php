@@ -104,9 +104,26 @@ class DefinitionController extends Controller
 	 */
 	public function store()
     {
-        // TODO ...
 
-        return $this->error(501);
+        // Instantiate by definition type.
+        switch (Request::input('type'))
+        {
+            case Definition::TYPE_WORD:
+                $def = new Word;
+                break;
+
+            default:
+                return response('Invalid definition type.', 400);
+        }
+
+        // TODO: validate incoming data.
+        $data = Request::only([]);
+
+        // ...
+        // $def->fill();
+        // $def->state = Definition::STATE_VISIBLE;
+
+        return response('Not Implemented.', 501);
 	}
 
     /**

@@ -4,7 +4,7 @@
  */
 
 // API v 0.1
-Route::group(['prefix' => 'v0.1', 'middleware' => ['api.headers']], function()
+Route::group(['prefix' => 'v0.1', 'middleware' => ['api.headers', 'api.auth']], function()
 {
     Route::get('/', function() {
         return 'v0.1';

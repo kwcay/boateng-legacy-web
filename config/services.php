@@ -48,7 +48,7 @@ return [
 
     'twitter' => [
         'client_id' => '',
-        'client_secret' => app_env('TWITTER_API_KEY')
+        'client_secret' => env('TWITTER_API_KEY')
     ],
 
 ];
