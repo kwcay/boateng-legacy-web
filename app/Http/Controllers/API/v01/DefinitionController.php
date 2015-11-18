@@ -181,7 +181,9 @@ class DefinitionController extends Controller
         {
             $translations = [];
 
-            foreach ($rawTranslations as $foreign => $data) {
+            foreach ($rawTranslations as $foreign => $data)
+            {
+                $data['language'] = $foreign;
                 $translations[] = new Translation($data);
             }
 
