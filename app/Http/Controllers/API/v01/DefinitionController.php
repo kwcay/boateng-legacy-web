@@ -129,8 +129,6 @@ class DefinitionController extends Controller
 
         $definition->state = Definition::STATE_VISIBLE;
 
-        \Log::debug(Request::all());
-
         // Retrieve data for new definition.
         $data = Request::only(['title', 'alt_titles', 'sub_type']);
 
