@@ -1,8 +1,8 @@
 <?php
 /**
- *
+ * API v0.1
  */
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\v01;
 
 use DB;
 use URL;
@@ -16,6 +16,7 @@ use Validator;
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
+use App\Models\Translation;
 use App\Models\Definitions\Word;
 use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
@@ -30,23 +31,29 @@ class DefinitionController extends Controller
     }
 
     /**
-     * Displays the word page, with similar definitions.
      *
-     * @param string $code  ISO 639-3 language code.
-     * @param string $raw   Word to be defined.
-     * @return mixed
      *
-     * TODO: handle different definition types.
+     * TODO: restrict this method.
      */
-    public function show($code, $raw = null)
+    public function index()
     {
-        // Retrieve language object
-        if (!$lang = Language::findByCode($code)) {
-            return $this->error(404, 'Language not found.');
+        return Request::has('dev') ? Definition::all() : response('Bad Request.', 400);
+    }
+
+    /**
+     * Returns a definition resource.
+     *
+     * @param string $id    Unique ID of definition.
+     * @return object
+     */
+    public function show($id)
+    {
+        // Retrieve definition object
+        if ($definition = Definition::find($id)) {
+            return $definition;
         }
 
-
-        return $this->error(501);
+        return response('Definition Nod Found.', 404);
     }
 
     /**
@@ -81,20 +88,25 @@ class DefinitionController extends Controller
     /**
      * Performs an exact match search for a definition.
      *
+     * @param string $definitionType
      * @param string $title
+     * @return Response
      */
-    public function exists($title)
+    public function exists($definitionType, $title)
     {
         // Performance check
         $title = trim(preg_replace('/[\s+]/', ' ', strip_tags($title)));
         if (strlen($title) < 2) {
-            return $this->abort(400, 'Query too short');
+            return response('Query Too Short.', 400);
         }
 
-        // Find a specific definition.
-        $def = Definition::where('title', '=', $title)->first();
+        // TODO: add definition type to where clause.
+        // ...
 
-        return $this->send($def);
+        // Find a specific definition.
+        $definition = Definition::where('title', '=', $title)->first();
+
+        return $definition ?: response('Definition Not Found.', 404);
     }
 
 	/**
@@ -104,26 +116,81 @@ class DefinitionController extends Controller
 	 */
 	public function store()
     {
-
         // Instantiate by definition type.
         switch (Request::input('type'))
         {
             case Definition::TYPE_WORD:
-                $def = new Word;
+                $definition = new Word;
                 break;
 
             default:
                 return response('Invalid definition type.', 400);
         }
 
-        // TODO: validate incoming data.
-        $data = Request::only([]);
+        $definition->state = Definition::STATE_VISIBLE;
 
-        // ...
-        // $def->fill();
-        // $def->state = Definition::STATE_VISIBLE;
+        \Log::debug(Request::all());
 
-        return response('Not Implemented.', 501);
+        // Retrieve data for new definition.
+        $data = Request::only(['title', 'alt_titles', 'sub_type']);
+
+        // Create the record in the database.
+        return $this->save($definition, $data);
+    }
+
+    /**
+     * Shortcut to save a definition model.
+     *
+     * @param \App\Models\Definition $definition
+     * @param array $data
+     * @return Response
+     */
+	public function save($definition, array $data = [])
+    {
+        // Validate incoming data.
+        $validation = Definition::validate($data);
+        if ($validation->fails())
+        {
+            // Return first message as error hint.
+            return response($validation->messages()->first(), 400);
+        }
+
+        // Add definition to database.
+        $definition->fill($data);
+        if (!$definition->save()) {
+            return response('Could Not Save Definition.', 500);
+        }
+
+        // Add language relations.
+        $languageCodes = Request::input('languages');
+        if (is_array($languageCodes))
+        {
+            $languageIDs = [];
+
+            foreach ($languageCodes as $langCode)
+            {
+                if ($lang = Language::findByCode($langCode)) {
+                    $languageIDs[] = $lang->id;
+                }
+            }
+
+            $definition->languages()->sync($languageIDs);
+        }
+
+        // Add translation relations.
+        $rawTranslations = Request::input('translations');
+        if (is_array($rawTranslations))
+        {
+            $translations = [];
+
+            foreach ($rawTranslations as $foreign => $data) {
+                $translations[] = new Translation($data);
+            }
+
+            $definition->translations()->saveMany($translations);
+        }
+
+        return $definition;
 	}
 
     /**
@@ -153,21 +220,4 @@ class DefinitionController extends Controller
 
         return $this->error(501);
 	}
-
-    public function getDefinition()
-    {
-        $type = Request::input('type');
-
-        switch ($type)
-        {
-            case Definition::TYPE_WORD:
-                $def = new Word;
-                break;
-
-            default:
-                $def = new Definition;
-        }
-
-        return $def;
-    }
 }

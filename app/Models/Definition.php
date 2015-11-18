@@ -152,7 +152,7 @@ class Definition extends Model
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['translation', 'language', 'mainLanguage', 'resourceType'];
+    protected $appends = ['translation', 'language', 'mainLanguage', 'resourceType', 'uniqueId'];
 
     /**
      * Attributes that should be mutated to dates.
@@ -172,10 +172,9 @@ class Definition extends Model
     public $validationRules = [
         'title' => 'required|string|min:2',
         'alt_titles' => 'string|min:2',
-        'type' => 'required|integer',
+        'type' => 'integer',
         'sub_type' => 'string',
-        // 'tags' => 'string|min:2|regex:/^([a-z, \-]+)$/i',
-        'state' => 'required|integer'
+        'state' => 'integer'
     ];
 
     /**

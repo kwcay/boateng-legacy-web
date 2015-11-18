@@ -4,23 +4,21 @@
  */
 
 // API v 0.1
-Route::group(['prefix' => 'v0.1', 'middleware' => ['api.headers', 'api.auth']], function()
+Route::group(['prefix' => '0.1', 'middleware' => ['api.headers', 'api.auth']], function()
 {
     Route::get('/', function() {
-        return 'v0.1';
+        return 'Di Nkɔmɔ API 0.1';
     });
 
     // Definition endpoints.
+    Route::get('{definitionType}/count', 'API\v01\ApiController@count');
+    Route::get('{definitionType}/exists/{title}', 'API\v01\DefinitionController@exists');
+    Route::get('{definitionType}/search/{query}', 'API\v01\ApiController@search');
+    Route::options('definition/{id?}', 'API\v01\ApiController@options');
     Route::resource('definition', 'API\v01\DefinitionController', ['except' => ['create', 'edit']]);
 
     // Language endpoints.
     Route::resource('language', 'LanguageController', ['except' => ['create', 'store', 'destroy']]);
-
-    // Resource count.
-    Route::get('/{definitionType}/count',   'API\v01\ApiController@count');
-
-    // Resource lookup.
-    Route::get('/{definitionType}/search/{query}',   'API\v01\ApiController@search');
 
     // General lookup
     Route::get('/search/{query}', 'API\v01\ApiController@searchAllResources');

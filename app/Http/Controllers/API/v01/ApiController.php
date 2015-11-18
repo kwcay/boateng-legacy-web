@@ -85,6 +85,14 @@ class ApiController extends Controller
     }
 
     /**
+     * Handles OPTIONS requests.
+     */
+    public function options()
+    {
+        return response('OK', 200);
+    }
+
+    /**
      * Helper method to determine the requested resource's type.
      *
      * @param string $resource

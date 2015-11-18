@@ -27,6 +27,12 @@ class ApiHeaders
             $response->header('Access-Control-Allow-Origin', 'http://dinkomo.frnk.ca', true);
         }
 
+        // Set the "Content-Type" header.
+        if ($request->method() == 'OPTIONS') {
+            // $response->header('Content-Type', 'application/json', true);
+            $response->header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS', true);
+        }
+
         // Current API version.
         $response->header('X-API-Version', '0.1', true);
 
