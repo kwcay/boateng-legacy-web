@@ -27,10 +27,18 @@ class ApiHeaders
             $response->header('Access-Control-Allow-Origin', 'http://dinkomo.frnk.ca', true);
         }
 
-        // Set the "Content-Type" header.
-        if ($request->method() == 'OPTIONS') {
-            // $response->header('Content-Type', 'application/json', true);
-            $response->header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS', true);
+        // Respond to pre-flighted requests.
+        if ($request->method() == 'OPTIONS')
+        {
+            // Allow the requested method.
+            if (in_array($request->header('Access-Control-Request-Method'), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
+                $response->header('Access-Control-Allow-Methods', $request->header('Access-Control-Request-Method'), true);
+            }
+
+            // Allow requested header.
+            if ($request->header('Access-Control-Request-Headers')) {
+                $response->header('Access-Control-Allow-Headers', $request->header('Access-Control-Request-Headers'), true);
+            }
         }
 
         // Current API version.
