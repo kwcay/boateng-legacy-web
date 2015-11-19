@@ -20,6 +20,10 @@ Route::group(['prefix' => '0.1', 'middleware' => ['api.headers', 'api.auth']], f
     // Language endpoints.
     Route::resource('language', 'LanguageController', ['except' => ['create', 'store', 'destroy']]);
 
+    // Authentication endpoints.
+    Route::post('auth/local', 'API\v01\AuthController@login');
+    Route::options('auth/local', 'API\v01\ApiController@options');
+
     // General lookup
     Route::get('/search/{query}', 'API\v01\ApiController@searchAllResources');
 });

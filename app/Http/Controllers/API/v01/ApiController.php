@@ -89,7 +89,7 @@ class ApiController extends Controller
      */
     public function options()
     {
-        return response('OK', 200);
+        return null;
     }
 
     /**
