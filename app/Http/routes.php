@@ -12,8 +12,8 @@ Route::group(['prefix' => '0.1', 'middleware' => ['api.headers', 'api.auth']], f
 
     // Definition endpoints.
     Route::get('{definitionType}/count', 'API\v01\ApiController@count');
-    Route::get('{definitionType}/exists/{title}', 'API\v01\DefinitionController@exists');
     Route::get('{definitionType}/search/{query}', 'API\v01\ApiController@search');
+    Route::get('{definitionType}/title/{title}', 'API\v01\DefinitionController@findBytitle');
     Route::options('definition/{id?}', 'API\v01\ApiController@options');
     Route::resource('definition', 'API\v01\DefinitionController', ['except' => ['create', 'edit']]);
 

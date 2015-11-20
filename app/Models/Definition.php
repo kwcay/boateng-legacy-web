@@ -98,7 +98,7 @@ class Definition extends Model
     ];
 
     /*
-     * @var array
+     * Defaults for definition sub types.
      */
     public $defaultSubTypes = [
         0 => 'n',
@@ -109,7 +109,7 @@ class Definition extends Model
     ];
 
     /**
-     * Definition states.
+     * States a definition can be in.
      */
     public $states = [
         0 => 'hidden',
@@ -120,6 +120,11 @@ class Definition extends Model
      * The Markdown parser.
      */
     protected $markdown;
+
+    /**
+     * Holds the object representing the main language for this definition.
+     */
+    protected $mainLanguage;
 
     /**
      *
@@ -546,9 +551,7 @@ class Definition extends Model
      */
     public function getMainLanguageAttribute()
     {
-        static $main = false;
-
-        if ($main === false)
+        if (!$this->mainLanguage)
         {
             // Loop through related languages.
             if ($code = $this->getParam('mainLang', false))
@@ -557,19 +560,19 @@ class Definition extends Model
                 {
                     if ($lang->code == $code)
                     {
-                        $main = $lang;
+                        $this->mainLanguage = $lang;
                         break;
                     }
                 }
             }
 
             // Or pick first language as a default.
-            if ($main === false) {
-                $main = $this->languages()->first();
+            if (!$this->mainLanguage) {
+                $this->mainLanguage = $this->languages()->first();
             }
         }
 
-        return $main;
+        return $this->mainLanguage;
     }
 
     /**

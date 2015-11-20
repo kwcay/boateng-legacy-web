@@ -86,13 +86,13 @@ class DefinitionController extends Controller
     }
 
     /**
-     * Performs an exact match search for a definition.
+     * Finds definitions matching a title (exact match).
      *
      * @param string $definitionType
      * @param string $title
      * @return Response
      */
-    public function exists($definitionType, $title)
+    public function findByTitle($definitionType, $title)
     {
         // Performance check
         $title = trim(preg_replace('/[\s+]/', ' ', strip_tags($title)));
@@ -103,10 +103,10 @@ class DefinitionController extends Controller
         // TODO: add definition type to where clause.
         // ...
 
-        // Find a specific definition.
-        $definition = Definition::where('title', '=', $title)->first();
+        // Lookup definitions with a specific title
+        $definitions = Definition::where('title', '=', $title)->get();
 
-        return $definition ?: response('Definition Not Found.', 404);
+        return $definitions ?: response('Definition Not Found.', 404);
     }
 
 	/**
