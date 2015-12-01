@@ -10,7 +10,7 @@ Upgrade MySQL to version 5.6 and install php5-curl
 
 Pull the documents
 
-    git clone https://bitbucket.org/frnkly/dinkomo.git
+    git clone https://bitbucket.org/frnkly/dinkomo-web.git
     cd dinkomo
 
 Install dependencies and setup app
