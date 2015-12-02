@@ -7,7 +7,7 @@ var Forms =
     _def: {},
 
     getDefinitionForm: function(name) {
-        return this._def[name]
+        return this._def[name];
     },
 
     /**

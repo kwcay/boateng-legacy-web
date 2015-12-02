@@ -1,4 +1,5 @@
 # Laravel & vendor stuff.
+/bower_components
 /node_modules
 /vendor
 .env

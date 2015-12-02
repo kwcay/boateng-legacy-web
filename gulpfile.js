@@ -7,25 +7,22 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var elixir = require('laravel-elixir');
 
-// ...
-elixir.extend('checks', function() {
 
-    // Check javascript scripts for errors using JSHint.
-    gulp.task('checks', function() {
-        return gulp.src('resources/assets/js/*.js')
-            .pipe(jshint())
-            .pipe(jshint.reporter('default'));
-    });
-
-    // Register a watcher to monitor this task.
-    this.registerWatcher('checks', 'resources/assets/js/*.js');
-
-    return this.queueTask('checks');
+// Checks javascript scripts for errors using JSHint.
+gulp.task('jshint', function() {
+    return gulp.src('resources/assets/js/*.js')
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
 });
 
 // Use Laravel's Elixir to create unique references to our scripts,
 // so we can use them in our templates.
 elixir(function(mix) {
+
+    // Refreshes the browser when assets are changed (used with 'watch' task).
+    // mix.browserSync({
+    //     proxy: 'dinkomo.vagrant'
+    // });
 
     // Trigger PHPUnit tests.
     // mix.phpUnit();
@@ -33,25 +30,40 @@ elixir(function(mix) {
     // Trigger PHPSpec tests.
     // mix.phpSpec();
 
-    //mix.sass('app.scss');
+    // Copy over some assets to the public folder.
+    mix.copy('bower_components/font-awesome/fonts', 'public/assets/fonts');
+    mix.copy('resources/assets/fonts', 'public/assets/fonts');
 
-    // Combine stylesheets.
-    mix.stylesIn('resources/assets/css', 'public/assets/dinkomo.css');
+    // Build app stylesheet. Paths are relative to 'resources/assets/sass'.
+    mix.sass('main.scss', 'resources/assets/build/app.css');
+
+    // Combine stylesheets. Paths are relative to 'resources/assets/css'.
     mix.styles([
-        // '../../../public/semantic/semantic.min.css',
-        '../../../public/assets/dinkomo.css'
-    ], 'public/assets');
+        '../../../bower_components/bootstrap/dist/css/bootstrap.min.css',
+        '../../../bower_components/font-awesome/css/font-awesome.min.css',
+        'fonts.css',
+        '../build/app.css'
+    ], 'public/assets/css/dinkomo.css');
 
-    // Combine scripts
-    mix.checks();
-    mix.scriptsIn('resources/assets/js', 'resources/build/dinkomo.js');
+    // Compile app scripts into retular javascript.
+    mix.task('jshint');
+    mix.babel([
+        'app.js',
+        'dialogs.js',
+        'forms.js',
+        'resources.js',
+    ], 'resources/assets/build/compiled.js');
+
+    // Combine scripts. Paths are relative to 'resources/assets/js'.
     mix.scripts([
-        '../../../public/assets/jquery-2.1.4.min.js',
-        // '../../../public/semantic/semantic.min.js',
-        '../../../resources/build/dinkomo.js'
-    ], 'public/assets');
+        '../../../bower_components/jquery/dist/jquery.min.js',
+        // '../../../bower_components/jquery-ui/jquery-ui.min.js',
+        '../../../bower_components/bootstrap/dist/js/bootstrap.min.js',
+        '../../../bower_components/selectize/dist/js/selectize.min.js',
+        '../build/compiled.js'
+    ], 'public/assets/js/dinkomo.js');
 
-    // Create a unique filename for each script version.
-    mix.version(['public/assets/all.css', 'public/assets/all.js']);
-
+    // Versioning. Fetched paths are relative to 'public', while output paths are relative to
+    // fetched path.
+    mix.version(['assets/css/dinkomo.css', 'assets/js/dinkomo.js']);
 });

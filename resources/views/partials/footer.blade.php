@@ -1,10 +1,10 @@
 <footer>
     <div class="shortcuts">
-        <a href="{{ route('admin') }}" class="fa fa-cubes">Admin</a>
-        <a href="#" class="fa fa-cog">Config</a>
-        <a href="#" class="fa fa-pencil" onclick="return Dialogs.open('resource');">Res</a>
-        <a href="#" class="fa fa-globe" onclick="return Dialogs.open('language');">Lang</a>
-        <a href="{{ route('auth.logout') }}" class="fa fa-hand-peace-o">Logout</a>
+        <a href="{{ route('admin') }}" class="fa fa-cubes"></a>
+        <a href="#" class="fa fa-cog"></a>
+        <a href="#" class="fa fa-pencil" onclick="return Dialogs.open('resource');"></a>
+        <a href="#" class="fa fa-globe" onclick="return Dialogs.open('language');"></a>
+        <a href="{{ route('auth.logout') }}" class="fa fa-hand-peace-o"></a>
     </div>
 	<div class="credits">
 		<small>
