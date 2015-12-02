@@ -1,34 +1,40 @@
 footer  {
-	margin: 60px auto 20px;
-	color: #aaa;
-}
-footer a, footer a:visited {
-	color: #aaa;
-}
-footer a:after {
-	background-color: #aaa;
-}
-footer a.fa {
-	margin: 0 10px;
-}
-footer a.fa:hover {
-	color: #333;
-}
-
-footer > div {
-    width: 100%;
-	margin: 5px auto;
+	margin: 40px auto 20px;
 	text-align: center;
 }
 
+footer a {
+    border: none;
+}
+footer a:after {
+	visibility: hidden;
+	transform: scaleX(0);
+}
+footer a:hover, footer a:focus {
+    text-decoration: none;
+}
+
 footer .credits {
-
+    display: block;
+    width: 100%;
+	margin: 5px auto;
+	color: #bbb;
+    font-size: .5em;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    transition: color .3s;
 }
-footer .credits a {
-
+footer .credits:hover {
+    color: #333;
 }
-
-@media only screen and (max-width: 600px) {
-
-
+footer .credits .ghana {
+    position: relative;
+    margin: 0 10px;
+    top: 8px;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: transparent center center no-repeat url('/assets/img/flag-of-ghana.png');
+    background-size: contain;
+    border-radius: 10px;
 }

@@ -1,6 +1,12 @@
 /**
  *
  */
+/*
+ * Variables
+ */
+/*
+ * Mixins
+ */
 html, body, a, div, header, input, label, section {
   margin: 0;
   padding: 0;
@@ -136,25 +142,43 @@ header .header {
   color: #aaa; }
 
 footer {
-  margin: 60px auto 20px;
-  color: #aaa; }
+  margin: 40px auto 20px;
+  text-align: center; }
 
-footer a, footer a:visited {
-  color: #aaa; }
+footer a {
+  border: none; }
 
 footer a:after {
-  background-color: #aaa; }
+  visibility: hidden;
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0); }
 
-footer a.fa {
-  margin: 0 10px; }
+footer a:hover, footer a:focus {
+  text-decoration: none; }
 
-footer a.fa:hover {
-  color: #333; }
-
-footer > div {
+footer .credits {
+  display: block;
   width: 100%;
   margin: 5px auto;
-  text-align: center; }
+  color: #bbb;
+  font-size: .5em;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  transition: color 0.3s; }
+
+footer .credits:hover {
+  color: #333; }
+
+footer .credits .ghana {
+  position: relative;
+  margin: 0 10px;
+  top: 8px;
+  display: inline-block;
+  height: 24px;
+  width: 24px;
+  background: transparent center center no-repeat url("/assets/img/flag-of-ghana.png");
+  background-size: contain;
+  border-radius: 10px; }
 
 /**
  * General
@@ -207,20 +231,123 @@ section .meta em {
     height: auto;
     font-size: 1.15em; } }
 
-.form input, .form textarea, .form select {
+/*
+ * General form styles
+ */
+.form input,
+.form textarea,
+.form select {
   border: none;
   background-color: transparent;
   font: normal 24px/1.618 "sinanova", Serif;
   -webkit-appearance: none;
+  -ms-appearance: none;
   -moz-appearance: none;
+  -o-appearance: none;
   appearance: none; }
 
 .form input:focus {
   outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  -ms-tap-highlight-color: rgba(255, 255, 255, 0);
+  -moz-tap-highlight-color: rgba(255, 255, 255, 0);
+  -o-tap-highlight-color: rgba(255, 255, 255, 0);
+  tap-highlight-color: rgba(255, 255, 255, 0); }
+
+.form input[type="button"],
+.form input[type="submit"] {
+  cursor: pointer; }
+
+/*
+ * Form rows
+ */
+.form .row {
+  padding-top: 10px;
+  padding-bottom: 10px; }
+
+.form .row label {
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+  color: #666; }
+
+.form .row input[type="text"],
+.form .row input[type="email"],
+.form .row input[type="password"],
+.form .row textarea,
+.form .row select {
+  width: 100%;
+  font-size: 1.1em;
+  color: #000;
+  border-bottom: 2px solid #aaa;
+  -webkit-appearance: none;
+  -ms-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none; }
+
+.form .row input[type="text"],
+.form .row input[type="email"],
+.form .row input[type="password"] {
+  padding: 10px 5px; }
+
+.form .row textarea {
+  height: 200px; }
+
+.form input[type="text"]:focus,
+.form input[type="email"]:focus,
+.form input[type="password"]:focus,
+.form .row textarea:focus,
+.form .row select:focus {
+  outline: none;
+  border-bottom-color: #333;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0); }
 
-.form input[type="button"], .form input[type="submit"] {
-  cursor: pointer; }
+.form .row input.loading {
+  color: #999;
+  background-color: #ccc; }
+
+.form input[type="button"],
+.form input[type="submit"],
+a.button {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  margin: 4px;
+  padding: 3px 12px;
+  color: #333;
+  background-color: #eee;
+  border: 1px solid #999;
+  border-radius: 2px;
+  font-size: 1em;
+  -ms-box-shadow: 2px 2px 2px #eee;
+  -o-box-shadow: 2px 2px 2px #eee;
+  box-shadow: 2px 2px 2px #eee; }
+
+.form input[type="button"]:hover,
+.form input[type="submit"]:hover,
+a.button:hover,
+.form input[type="button"]:focus,
+.form input[type="submit"]:focus,
+a.button:focus {
+  background-color: #e6e6e6; }
+
+.form input[type="button"]:active,
+.form input[type="submit"]:active,
+a.button:active {
+  top: 1px;
+  left: 1px;
+  -ms-box-shadow: 1px 1px 2px #eee;
+  -o-box-shadow: 1px 1px 2px #eee;
+  box-shadow: 1px 1px 2px #eee; }
+
+a.button:after {
+  visibility: hidden;
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0); }
+
+.form .row input[disabled] {
+  color: #999; }
 
 /*
  * Search form
@@ -243,8 +370,10 @@ section .meta em {
   color: #aaa;
   font-size: 1em;
   background-color: transparent;
-  border-radius: 0;
-  box-shadow: none; }
+  -ms-box-shadow: none;
+  -o-box-shadow: none;
+  box-shadow: none;
+  border-radius: 0; }
 
 .form.search .container input[type="button"]:hover, .form.search .container input[type="submit"]:hover {
   color: #333; }
@@ -263,71 +392,6 @@ section .meta em {
 /*
  * Edit forms
  */
-.form.edit .row {
-  position: relative;
-  padding: 10px 3%;
-  width: 94%; }
-
-.form.edit .row label {
-  display: inline-block;
-  width: 100%;
-  text-align: left;
-  color: #666; }
-
-.form.edit .row input[type="text"], .form.edit .row textarea, .form.edit .row select {
-  width: 100%;
-  font-size: 1.1em;
-  color: #000;
-  border-bottom: 1px solid #aaa;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none; }
-
-.form.edit .row input[type="text"] {
-  height: 28px; }
-
-.form.edit .row textarea {
-  height: 200px; }
-
-.form.edit input[type="text"]:focus, .form.edit .row textarea:focus, .form.edit .row select:focus {
-  outline: none;
-  border-bottom-color: #333;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); }
-
-.form.edit .row input.loading {
-  color: #999;
-  background-color: #ccc; }
-
-.form.edit input[type="button"], .form.edit input[type="submit"], a.button {
-  position: relative;
-  cursor: pointer;
-  display: inline-block;
-  margin: 4px;
-  padding: 3px 12px;
-  color: #333;
-  background-color: #eee;
-  border: 1px solid #999;
-  border-radius: 2px;
-  box-shadow: 2px 2px 2px #eee;
-  font-size: 1em; }
-
-.form.edit input[type="button"]:hover, .form.edit input[type="submit"]:hover, a.button:hover,
-.form.edit input[type="button"]:focus, .form.edit input[type="submit"]:focus, a.button:focus {
-  background-color: #e6e6e6; }
-
-.form.edit input[type="button"]:active, .form.edit input[type="submit"]:active, a.button:active {
-  top: 1px;
-  left: 1px;
-  box-shadow: 1px 1px 2px #eee; }
-
-a.button:after {
-  visibility: hidden;
-  -webkit-transform: scaleX(0);
-  transform: scaleX(0); }
-
-.form.edit .row input[disabled] {
-  color: #999; }
-
 #keyboard {
   display: none;
   position: fixed;
@@ -339,9 +403,11 @@ a.button:after {
   text-align: center;
   background-color: #f7f7f7;
   border: 1px solid #aaa;
-  border-radius: 2px;
+  z-index: 10;
+  -ms-box-shadow: 4px 4px 10px #aaa;
+  -o-box-shadow: 4px 4px 10px #aaa;
   box-shadow: 4px 4px 10px #aaa;
-  z-index: 10; }
+  border-radius: 2px; }
 
 #keyboard .title {
   font-size: 0.5em;
@@ -362,7 +428,7 @@ a.button:after {
   right: -30px;
   top: 15px; }
 
-@media only screen and (max-width: 600px) {
+@media (max-width: 600px) {
   .form.search .container {
     width: 100%;
     position: relative; }
@@ -372,7 +438,8 @@ a.button:after {
     width: 65%;
     margin: 0 2.5%;
     padding: 0; }
-  .form.search .container input[type="button"], .form.search .container input[type="submit"] {
+  .form.search .container input[type="button"],
+  .form.search .container input[type="submit"] {
     width: 15%;
     margin: 0;
     padding: 0; } }

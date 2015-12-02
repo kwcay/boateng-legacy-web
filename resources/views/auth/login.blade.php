@@ -3,7 +3,7 @@
 @section('body')
 	@include('partials.header')
 
-	<section>
+	<div class="col-xs-10 col-xs-offset-1 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
 		<h1>Login</h1>
 
         <form class="form edit" name="login" method="post" action="{{ route('auth.login.post') }}">
@@ -12,22 +12,26 @@
 
 			{{-- Email --}}
 			<div class="row">
-				<input type="email" name="email" placeholder="your email" required autofocus>
+				<div class="col-xs-12">
+				    <input type="email" name="email" placeholder="your email" required autofocus>
+				</div>
 			</div>
 
 			{{-- Password --}}
 			<div class="row">
-				<input type="password" name="password" placeholder="your password" required>
+				<div class="col-xs-12">
+				    <input type="password" name="password" placeholder="your password" required>
+				</div>
 			</div>
 
 			{{-- Submit --}}
-			<div class="row center">
-				<input type="submit" value="login">
+			<div class="row text-center">
+				<div class="col-xs-12">
+				    <input type="submit" value="login">
+				</div>
 			</div>
-
         </form>
-
-	</section>
+	</div>
 
 	@include('partials.footer')
 @stop

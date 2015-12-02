@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-    <title>@yield('title', 'Di Nkɔmɔ: a Collection of Cultures.')</title>
+    <title>@yield('title', 'Di Nkomo: a Collection of Cultures.')</title>
 
 	@section('head')
         <base href="{{ Request::root() }}/">

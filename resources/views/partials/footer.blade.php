@@ -1,18 +1,27 @@
-<footer>
-    <div class="shortcuts">
-        <a href="{{ route('admin') }}" class="fa fa-cubes"></a>
-        <a href="#" class="fa fa-cog"></a>
-        <a href="#" class="fa fa-pencil" onclick="return Dialogs.open('resource');"></a>
-        <a href="#" class="fa fa-globe" onclick="return Dialogs.open('language');"></a>
-        <a href="{{ route('auth.logout') }}" class="fa fa-hand-peace-o"></a>
+
+<div class="row">
+    <div class="col-xs-12">
+        <footer>
+            <div class="shortcuts">
+                <a href="#" class="fa fa-cog"></a>
+                <a href="#" class="fa fa-pencil" onclick="return Dialogs.open('resource');"></a>
+                <a href="#" class="fa fa-globe" onclick="return Dialogs.open('language');"></a>
+
+                @if (Auth::check())
+                    <a href="{{ route('admin') }}" class="fa fa-cubes"></a>
+                    <a href="{{ route('auth.logout') }}" class="fa fa-hand-peace-o"></a>
+                @else
+                    <a href="{{ route('auth.login') }}" class="fa fa-user"></a>
+                @endif
+            </div>
+
+            <a href="#/about" class="credits">
+                &copy; 2014 - {{ date('Y') }}
+                <span class="ghana no-underline"></span>
+            	A <b>Ghanaian</b> app
+            </a>
+        </footer>
     </div>
-	<div class="credits">
-		<small>
-            &copy; 2014 - {{ date('Y') }}
-            &nbsp;&ndash;&nbsp;
-			A Ghanaian app
-		</small>
-	</div>
-</footer>
+</div>
 
 @include('partials.dialogs')
