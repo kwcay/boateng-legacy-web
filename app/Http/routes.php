@@ -1,104 +1,97 @@
 <?php
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
  */
 
+
+//
+// ...
+//
+// Route::get('/', 'PageController@home')->name('home');
+Route::get('/', ['as' => 'home', 'uses' => 'PageController@home']);
+// Route::get('about', 'PageController@about')->name('about');
+Route::get('about', ['as' => 'about', 'uses' => 'PageController@about']);
+// Route::get('about/in-numbers', 'PageController@stats')->name('stats');
+Route::get('about/in-numbers', ['as' => 'stats', 'uses' => 'PageController@stats']);
+// Route::get('about/author', 'PageController@author')->name('author');
+Route::get('about/author', ['as' => 'author', 'uses' => 'PageController@author']);
+
+
+//
+// Admin area.
+//
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
+{
+    // General pages
+    Route::get('/',         ['as' => 'admin', 'uses' => 'AdminController@index']);
+    Route::get('import',    ['as' => 'admin.import', 'uses' => 'AdminController@import']);
+    Route::get('export',    ['as' => 'admin.export', 'uses' => 'AdminController@export']);
+    // Route::get('list/def',  'AdminController@getDefinitionList')->name('admin.list.definitions');
+    Route::get('list/def',  ['as' => 'admin.list.definitions', 'uses' => 'AdminController@getDefinitionList']);
+    // Route::get('list/lang', 'AdminController@getLanguageList')->name('admin.list.languages');
+    Route::get('list/lang', ['as' => 'admin.list.languages', 'uses' => 'AdminController@getLanguageList']);
+
+    // Resources
+    Route::resource('language',     'LanguageController');
+    Route::resource('definition',   'DefinitionController');
+    Route::resource('translation',  'TranslationController');
+    Route::resource('audio',        'AudioController');
+
+    // Resource import.
+    Route::post('import',
+        ['as' => 'admin.import.action', 'uses' => 'Data\v041\DataController@import']);
+
+    // Resource export
+    Route::get('export/{resource}.{format}',
+        ['as' => 'export.resource', 'uses' => 'Data\v041\DataController@export']);
+});
+
+
+//
 // API v 0.1
-Route::group(['prefix' => '0.1', 'middleware' => ['api.headers', 'api.auth']], function()
+//
+Route::group(['prefix' => '0.1', 'namespace' => 'API\v01', 'middleware' => ['api.headers', 'api.auth']], function()
 {
     Route::get('/', function() {
         return 'Di Nkɔmɔ API 0.1';
     });
 
     // Definition endpoints.
-    Route::get('{definitionType}/count', 'API\v01\ApiController@count');
-    Route::get('{definitionType}/search/{query}', 'API\v01\ApiController@search');
-    Route::get('{definitionType}/title/{title}', 'API\v01\DefinitionController@findBytitle');
-    Route::options('definition/{id?}', 'API\v01\ApiController@options');
-    Route::resource('definition', 'API\v01\DefinitionController', ['except' => ['create', 'edit']]);
+    Route::get('{definitionType}/count', 'ApiController@count');
+    Route::get('{definitionType}/search/{query}', 'ApiController@search');
+    Route::get('{definitionType}/title/{title}', 'DefinitionController@findBytitle');
+    Route::options('definition/{id?}', 'ApiController@options');
+    Route::resource('definition', 'DefinitionController', ['except' => ['create', 'edit']]);
 
     // Language endpoints.
     Route::resource('language', 'LanguageController', ['except' => ['create', 'store', 'destroy']]);
 
     // Authentication endpoints.
-    Route::post('auth/local', 'API\v01\AuthController@login');
-    Route::options('auth/local', 'API\v01\ApiController@options');
+    Route::post('auth/local', 'AuthController@login');
+    Route::options('auth/local', 'ApiController@options');
 
     // General lookup
-    Route::get('/search/{query}', 'API\v01\ApiController@searchAllResources');
+    Route::get('search/{query}', 'ApiController@searchAllResources');
 });
 
-// Static pages.
-Route::get('/',             ['as' => 'home', 'uses' => 'PageController@home']);
-Route::get('/about',        ['as' => 'about', 'uses' => 'PageController@about']);
-Route::get('/in-numbers',   ['as' => 'stats', 'uses' => 'PageController@stats']);
-Route::get('/api',          'PageController@api');
-
-// Authentication routes.
-Route::get('login',     ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
-Route::post('login',    ['as' => 'auth.login.action', 'uses' => 'Auth\AuthController@postLogin']);
-Route::get('logout',    ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
-
-// Registration routes.
-Route::get('signup',    ['as' => 'auth.register', 'uses' => 'Auth\AuthController@getRegister']);
-Route::post('signup',   ['as' => 'auth.register.action', 'uses' => 'Auth\AuthController@postRegister']);
-
-// Language endpoints.
-Route::resource('language',                 'LanguageController', ['except' => ['index', 'show']]);
-Route::get('/language/search/{query?}',     'LanguageController@search');
-Route::post('/language/search/{query?}',    'LanguageController@search');
-
-// Definition endpoints.
-Route::resource('definition',               'DefinitionController', ['only' => ['create', 'edit', 'store', 'update', 'destroy']]);
-Route::get('/definition/search/{query}',    'DefinitionController@search');
-Route::post('/definition/search/{query}',   'DefinitionController@search');
-Route::post('/definition/exists/{title}',   'DefinitionController@exists');
-
-// Translation endpoints.
-Route::resource('translation',  'TranslationController');
-
-// Audio endpoints.
-Route::resource('audio',        'AudioController');
-
-// Authentication routes.
-Route::get('/login',        ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
-Route::post('/login',       ['as' => 'auth.login.post', 'uses' => 'Auth\AuthController@postLogin']);
-Route::get('/logout',       ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
-
-// Redirects.
-Route::get('stats', function() { return redirect(route('stats')); });
 
 //
-// Admin area.
+// Authentication routes.
 //
-Route::group(['prefix' => 'admin'/*, 'middleware' => 'auth'*/], function()
+Route::group(['prefix' => 'auth'], function()
 {
-    // General pages
-    Route::get('/',         ['as' => 'admin', 'uses' => 'AdminController@index']);
-    Route::get('/import',   ['as' => 'admin.import', 'uses' => 'AdminController@import']);
-    Route::get('/export',   ['as' => 'admin.export', 'uses' => 'AdminController@export']);
-    Route::get('/list/def', ['as' => 'admin.list.definitions', 'uses' => 'AdminController@getDefinitionList']);
-    Route::get('/list/lang',['as' => 'admin.list.languages', 'uses' => 'AdminController@getLanguageList']);
+    Route::get('/', ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
+    Route::post('/', ['as' => 'auth.login.post', 'uses' => 'Auth\AuthController@postLogin']);
+    Route::get('logout', ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
+});
 
-    // Resource import.
-    Route::post('/import', ['as' => 'admin.import.action', 'uses' => 'Data\v041\DataController@import']);
+// OAuth2...
+Route::group(['prefix' => 'oauth2'], function()
+{
 
-    // Resource export
-    Route::get('/export/{resource}.{format}',
-        ['as' => 'export.resource', 'uses' => 'Data\v041\DataController@export']);
 });
 
 // Redirects.
-Route::get('/home', function() {
-    return redirect(route('home'));
-});
-
-// Dictionary pages
-Route::get('/+lang',            ['as' => 'language.walkthrough', 'uses' => 'LanguageController@walkthrough']);
-Route::get('/{lang}',           ['as' => 'language.show', 'uses' => 'LanguageController@show']);
-Route::get('/{lang}/+word',     ['as' => 'definition.create.word', 'uses' => 'DefinitionController@createWord']);
-Route::get('/{lang}/+name',     ['as' => 'definition.create.name', 'uses' => 'DefinitionController@createName']);
-Route::get('/{lang}/+phrase',   ['as' => 'definition.create.phrase', 'uses' => 'DefinitionController@createPhrase']);
-Route::get('/{lang}/+poem',     ['as' => 'definition.create.poem', 'uses' => 'DefinitionController@createPoem']);
-Route::get('/{lang}/+story',    ['as' => 'definition.create.story', 'uses' => 'DefinitionController@createStory']);
-Route::get('/{lang}/{word}',    'DefinitionController@show');
+Route::get('home', function() { return redirect(route('home')); });
+Route::get('stats', function() { return redirect(route('stats')); });

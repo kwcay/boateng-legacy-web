@@ -778,7 +778,7 @@ class Definition extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('definition.edit', ['id' => $this->getId()]);
+        return route('admin.definition.edit', ['id' => $this->getId()]);
     }
 
     /**

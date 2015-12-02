@@ -51,4 +51,12 @@ class DataController extends Controller
 
         return redirect(route('admin.import'))->withMessages($result->getMessages());
     }
+
+    /**
+     * Exports a resource to file.
+     */
+    public function export()
+    {
+        return response('Not Implemented.', 501);
+    }
 }

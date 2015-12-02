@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-    <title>@yield('title', 'Di Nkomo: the book of native tongues.')</title>
+    <title>@yield('title', 'Di Nkɔmɔ: a Collection of Cultures.')</title>
 
 	@section('head')
         <base href="{{ Request::root() }}/">
@@ -15,7 +15,6 @@
 		<meta property="og:title" content="@yield('title', 'Di Nkomo: the book of native tongues.')" />
 		<meta property="og:desc" content="@yield('description', 'The book of native tongues.')" />
 		<meta property="og:type" content="website" />
-		<script src="{{ elixir('assets/all.js') }}" type="text/javascript"></script>
 		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 		<link rel="stylesheet" type="text/css" href="assets/fonts/sinanova.css" />
 		<link rel="stylesheet" type="text/css" href="{{ elixir('assets/all.css') }}" />
@@ -23,5 +22,6 @@
 </head>
 <body>
 	@yield('body')
+    <script src="{{ elixir('assets/all.js') }}" type="text/javascript"></script>
 </body>
 </html>

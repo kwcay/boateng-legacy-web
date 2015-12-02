@@ -5,7 +5,7 @@
 
     <div class="title">
         Di Nkɔmɔ<br>
-        <small>The Book of Native Tongues.</small>
+        <small>A Collection of Cultures.</small>
     </div>
 
 	<section class="form search">

@@ -1,7 +1,6 @@
 <?php
 /**
- * @file    Language.php
- * @brief   ...
+ *
  */
 namespace App\Models;
 
@@ -23,6 +22,9 @@ class Language extends Model
 {
     use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
 
+    /**
+     *
+     */
     private $markdown;
 
 
@@ -42,8 +44,14 @@ class Language extends Model
     * The attributes that should be hidden for arrays.
     */
     protected $hidden = [
-        'id', 'params', 'created_at', 'updated_at', 'deleted_at',
-        'parent', 'definitions', 'pivot'
+        'id',
+        'params',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'parent',
+        'definitions',
+        'pivot'
     ];
 
     /**
@@ -207,7 +215,7 @@ class Language extends Model
      * @deprecated  Use url($this->editUri) instead.
      */
     public function getEditUri($full = true) {
-        return route('language.edit', ['code' => $this->code], $full);
+        return route('admin.language.edit', ['code' => $this->code], $full);
     }
 
     // TODO: add description relations for each description (en, fr, ...)
@@ -253,7 +261,7 @@ class Language extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('language.edit', ['code' => $this->code]);
+        return route('admin.language.edit', ['code' => $this->code]);
     }
 
     /**
