@@ -6,16 +6,12 @@
 
 
 //
-// ...
+// Static pages.
 //
-// Route::get('/', 'PageController@home')->name('home');
-Route::get('/', ['as' => 'home', 'uses' => 'PageController@home']);
-// Route::get('about', 'PageController@about')->name('about');
-Route::get('about', ['as' => 'about', 'uses' => 'PageController@about']);
-// Route::get('about/in-numbers', 'PageController@stats')->name('stats');
-Route::get('about/in-numbers', ['as' => 'stats', 'uses' => 'PageController@stats']);
-// Route::get('about/author', 'PageController@author')->name('author');
-Route::get('about/author', ['as' => 'author', 'uses' => 'PageController@author']);
+Route::get('/', 'PageController@home')->name('home');
+Route::get('about', 'PageController@about')->name('about');
+Route::get('about/in-numbers', 'PageController@stats')->name('stats');
+Route::get('about/author', 'PageController@author')->name('author');
 
 
 //
@@ -95,3 +91,4 @@ Route::group(['prefix' => 'oauth2'], function()
 // Redirects.
 Route::get('home', function() { return redirect(route('home')); });
 Route::get('stats', function() { return redirect(route('stats')); });
+Route::get('in-numbers', function() { return redirect(route('stats')); });

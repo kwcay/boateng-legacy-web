@@ -1,0 +1,18 @@
+{
+  "name": "dinkomo",
+  "description": "A Collection of Cultures",
+  "main": "public/index.php",
+  "authors": [
+    "frnkly <frank@frnk.ca>"
+  ],
+  "license": "MIT",
+  "homepage": "http://dinkomo.frnk.ca",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -43,12 +43,12 @@ elixir(function(mix) {
     ], 'public/assets');
 
     // Combine scripts
-    //mix.checks();
-    mix.scriptsIn('resources/assets/js', 'public/assets/dinkomo.js');
+    mix.checks();
+    mix.scriptsIn('resources/assets/js', 'resources/build/dinkomo.js');
     mix.scripts([
         '../../../public/assets/jquery-2.1.4.min.js',
         // '../../../public/semantic/semantic.min.js',
-        '../../../public/assets/dinkomo.js'
+        '../../../resources/build/dinkomo.js'
     ], 'public/assets');
 
     // Create a unique filename for each script version.
