@@ -56,6 +56,7 @@ elixir(function(mix) {
 
     // Combine scripts. Paths are relative to 'resources/assets/js'.
     mix.scripts([
+        '../../../bower_components/microplugin/src/microplugin.js',
         '../../../bower_components/jquery/dist/jquery.min.js',
         // '../../../bower_components/jquery-ui/jquery-ui.min.js',
         '../../../bower_components/bootstrap/dist/js/bootstrap.min.js',

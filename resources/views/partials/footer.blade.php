@@ -3,7 +3,7 @@
     <div class="col-xs-12">
         <footer>
             <div class="shortcuts">
-                <a href="#" class="fa fa-cog"></a>
+                <a href="{{ route('home') }}" class="fa fa-book"></a>
                 <a href="#" class="fa fa-pencil" onclick="return Dialogs.open('resource');"></a>
                 <a href="#" class="fa fa-globe" onclick="return Dialogs.open('language');"></a>
 
@@ -15,7 +15,7 @@
                 @endif
             </div>
 
-            <a href="#/about" class="credits">
+            <a href="{{ route('about') }}" class="credits">
                 &copy; 2014 - {{ date('Y') }}
                 <span class="ghana no-underline"></span>
             	A <b>Ghanaian</b> app

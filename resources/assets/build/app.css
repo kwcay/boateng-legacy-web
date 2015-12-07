@@ -352,35 +352,39 @@ a.button:after {
 /*
  * Search form
  */
-.form.search .container {
+.form.search .input-wrapper {
+  display: inline-block;
   position: relative;
   margin: 5px auto;
   width: 100%;
-  border-bottom: 1px solid #aaa; }
-
-.form.search .container input {
-  float: left;
-  padding: 8px; }
-
-.form.search .container input[type="button"], .form.search .container input[type="submit"] {
-  display: block;
-  width: 40px;
-  margin: 0;
-  padding: 12.5px;
-  color: #aaa;
-  font-size: 1em;
-  background-color: transparent;
-  -ms-box-shadow: none;
-  -o-box-shadow: none;
-  box-shadow: none;
-  border-radius: 0; }
-
-.form.search .container input[type="button"]:hover, .form.search .container input[type="submit"]:hover {
-  color: #333; }
-
-.form.search .container input[name="q"] {
-  width: 454px;
-  text-align: center; }
+  background-color: rgba(0, 128, 0, 0.05); }
+  .form.search .input-wrapper input {
+    float: left;
+    padding: 8px;
+    font-size: 1.3em; }
+  .form.search .input-wrapper input[type="button"],
+  .form.search .input-wrapper input[type="submit"] {
+    display: block;
+    width: 15%;
+    margin: 0;
+    color: #aaa;
+    background-color: transparent;
+    border: none;
+    -ms-box-shadow: none;
+    -o-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
+    transition-duration: 0.2s; }
+  .form.search .input-wrapper input[type="button"]:hover,
+  .form.search .input-wrapper input[type="button"]:focus,
+  .form.search .input-wrapper input[type="submit"]:hover,
+  .form.search .input-wrapper input[type="submit"]:focus {
+    color: #333;
+    background-color: rgba(0, 128, 0, 0.4); }
+  .form.search .input-wrapper input[name="q"] {
+    width: 70%;
+    text-align: center;
+    border-bottom: none; }
 
 #results {
   margin: 30px 0 0;

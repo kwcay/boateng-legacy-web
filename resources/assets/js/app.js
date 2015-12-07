@@ -1,4 +1,7 @@
-
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
 var App =
 {
 
@@ -8,6 +11,8 @@ var App =
 	{
 		//
         this.root = $('base').attr('href');
+
+        console.log('App initialized.');
 	},
 
     /**
@@ -98,3 +103,5 @@ $(document).ready(function(event)
         }
     });
 });
+
+console.log('app.js loaded.');

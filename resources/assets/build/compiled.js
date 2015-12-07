@@ -1,3 +1,7 @@
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
 'use strict';
 
 var App = {
@@ -7,6 +11,8 @@ var App = {
     init: function init() {
         //
         this.root = $('base').attr('href');
+
+        console.log('App initialized.');
     },
 
     /**
@@ -87,7 +93,10 @@ $(document).ready(function (event) {
     });
 });
 
-/*
+console.log('app.js loaded.');
+
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
  */
 var Dialogs = {
@@ -163,6 +172,10 @@ var Dialogs = {
     }
 };
 
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
 var Forms = {
     /**
      * Definition lookup forms.
@@ -374,6 +387,9 @@ var Forms = {
     }
 };
 
+/**
+ * 
+ */
 var Resources = {
     /**
      * Shortcut to verfify a definition title form input.
