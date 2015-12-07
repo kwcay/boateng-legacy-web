@@ -9,10 +9,24 @@ var App = {
     _kbFocus: null,
 
     init: function init() {
-        //
+        // Save URL root for redirects.
         this.root = $('base').attr('href');
 
-        console.log('App initialized.');
+        // Set the environment of the app.
+        this.isLocalEnvironment = window.location.hostname == 'localhost' || window.location.hostname.match(/.*\.local$/i) || window.location.hostname.match(/.*\.vagrant$/i) ? true : false;
+
+        // Setup AJAX headers
+        this.log('Setting CSRF token for ajax calls: ' + $('meta[name="csrf-token"]').attr('content'));
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Initialize other objects.
+        Dialogs.init();
+        Forms.init();
+        this.log('App initialized.');
     },
 
     /**
@@ -55,51 +69,24 @@ var App = {
     },
 
     log: function log(msg) {
-        if (console) console.log('App.js - ' + msg);
+        if (console && this.isLocalEnvironment) console.log('App.js - ' + msg);
     }
 };
-
-// Initiate
-$(document).ready(function (event) {
-    // Initialize app.
-    App.init();
-
-    // Attach event listeners.
-    $('.close').click(App.closeDialogs.bind(App));
-    $('.has-tooltip').popup({ on: 'hover' });
-    $('.has-inline-tooltip').popup({ inline: true, on: 'hover' });
-    $('.has-dropdown-menu').dropdown();
-
-    // Attach helper keyboard to text inputs.
-    $('.text-input').focus(function () {
-        App.setKeyboardFocus(this);
-        $('#keyboard').fadeIn(300);
-    });
-
-    // Remove helper keyboard when focus is lost.
-    $('.en-text-input').focus(function () {
-        App.setKeyboardFocus(null);
-        $('#keyboard').fadeOut(300);
-    });
-
-    // Make keyboard draggable.
-    $('#keyboard').draggable();
-
-    // Setup AJAX headers
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-});
-
-console.log('app.js loaded.');
 
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
  */
 var Dialogs = {
+    init: function init() {
+
+        // Attach event listeners.
+        $('.close').click(App.closeDialogs.bind(App));
+        // $('.has-tooltip').popup({on: 'hover'});
+        // $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
+        $('.has-dropdown-menu').dropdown();
+    },
+
     open: function open(dialog) {
         $('.dialog').hide();
         return this.toggle(dialog);
@@ -175,12 +162,31 @@ var Dialogs = {
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
+ * @brief   The Forms object handles all form-related logic.
  */
 var Forms = {
     /**
      * Definition lookup forms.
      */
     _def: {},
+
+    init: function init() {
+
+        // Attach helper keyboard to text inputs.
+        $('.text-input').focus(function () {
+            App.setKeyboardFocus(this);
+            $('#keyboard').fadeIn(300);
+        });
+
+        // Remove helper keyboard when focus is lost.
+        $('.en-text-input').focus(function () {
+            App.setKeyboardFocus(null);
+            $('#keyboard').fadeOut(300);
+        });
+
+        // Make keyboard draggable.
+        $('#keyboard').draggable();
+    },
 
     getDefinitionForm: function getDefinitionForm(name) {
         return this._def[name];
@@ -230,7 +236,7 @@ var Forms = {
             load: function load(query, callback) {
                 if (!query.trim().length) return callback();
                 $.ajax({
-                    url: App.root + 'language/search/' + App.urlencode(query.trim()),
+                    url: App.root + '0.1/language/search/' + App.urlencode(query.trim()),
                     type: 'POST',
                     error: function error() {
                         callback();
@@ -244,10 +250,8 @@ var Forms = {
     },
 
     /**
-     *
      * @param name
      * @param options
-     * @param lang
      */
     setupDefinitionLookup: function setupDefinitionLookup(name, options) {
         // Retrieve form elements.
@@ -281,22 +285,24 @@ var Forms = {
             form.results.html('<div class="center">looking up ' + query + '...</div>');
 
             // Build endpoint.
-            var endpoint = App.root + '/definition/search/' + App.urlencode(query) + (options.langCode ? '?lang=' + options.langCode : '');
+            var endpoint = App.root + '0.1/word/search/' + App.urlencode(query) + (options.langCode ? '?lang=' + options.langCode : '');
 
             // Start ajax request
             $.ajax({
                 url: endpoint,
-                type: 'POST',
+                type: 'GET',
                 error: function error(xhr, status, _error) {
-                    App.log('XHR error on search form: ' + xhr.status + ' (' + _error + ')');
-                    form.results.html('<div class="center">Seems like we ran into a snag <span class="fa fa-frown-o"></span> try again?</div>');
+                    App.log('XHR error on search form: ' + _error + ' (' + xhr.status + ')');
+                    form.results.html('<div class="center">' + 'Seems like we ran into a snag <span class="fa fa-frown-o"></span> ' + ' Please try again later.' + '</div>');
                 },
                 success: function success(obj) {
                     if (obj.results.definitions.length > 0) {
                         var html = '<div class="center">' + 'we found <em>' + obj.results.definitions.length + '</em> definitions' + ' for <i>' + obj.results.query + '</i>.' + '</div><ol>';
 
                         $.each(obj.results.definitions, function (i, def) {
-                            html += '<li>' + '<a href="' + def.uri + '">' + def.title + '</a>' + ' <small>(' + def.sub_type + ')</small>' + ' is a ' + def.type + ' that means <i>' + def.translation.practical.en + '</i> in ' + ' <a href="' + def.main_language.uri + '">' + def.main_language.name + '</a>' + '</li>';
+                            def.uri = def.uri || '#';
+                            def.mainLanguage.uri = def.mainLanguage.uri || '#';
+                            html += '<li>' + '<a href="' + def.uri + '">' + def.title + '</a>' + ' <small>(' + def.subType + ')</small>' + ' is a ' + def.type + ' that means <i>' + def.translation.practical.eng + '</i> in ' + ' <a href="' + def.mainLanguage.uri + '">' + def.mainLanguage.name + '</a>' + '</li>';
                         });
 
                         form.results.html(html + '</ol>');
@@ -383,12 +389,12 @@ var Forms = {
     },
 
     log: function log(msg) {
-        if (console) console.log('Forms.js - ' + msg);
+        if (console && this.isLocalEnvironment) console.log('Forms.js - ' + msg);
     }
 };
 
 /**
- * 
+ *
  */
 var Resources = {
     /**
@@ -434,7 +440,7 @@ var Resources = {
     },
 
     log: function log(msg) {
-        if (console) console.log('Resources.js - ' + msg);
+        if (console && this.isLocalEnvironment) console.log('Resources.js - ' + msg);
     }
 };
 //# sourceMappingURL=compiled.js.map

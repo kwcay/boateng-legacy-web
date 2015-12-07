@@ -1,6 +1,7 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
+ * @brief   The Forms object handles all form-related logic.
  */
 var Forms =
 {
@@ -8,6 +9,24 @@ var Forms =
      * Definition lookup forms.
      */
     _def: {},
+
+    init: function() {
+
+        // Attach helper keyboard to text inputs.
+        $('.text-input').focus(function() {
+            App.setKeyboardFocus(this);
+            $('#keyboard').fadeIn(300);
+        });
+
+        // Remove helper keyboard when focus is lost.
+        $('.en-text-input').focus(function() {
+            App.setKeyboardFocus(null);
+            $('#keyboard').fadeOut(300);
+        });
+
+        // Make keyboard draggable.
+        $('#keyboard').draggable();
+    },
 
     getDefinitionForm: function(name) {
         return this._def[name];
@@ -65,7 +84,7 @@ var Forms =
             load: function(query, callback) {
                 if (!query.trim().length) return callback();
                 $.ajax({
-                    url: App.root +'language/search/' + App.urlencode(query.trim()),
+                    url: App.root +'0.1/language/search/' + App.urlencode(query.trim()),
                     type: 'POST',
                     error: function() {
                         callback();
@@ -79,10 +98,8 @@ var Forms =
     },
 
     /**
-     *
      * @param name
      * @param options
-     * @param lang
      */
     setupDefinitionLookup: function(name, options)
     {
@@ -118,16 +135,20 @@ var Forms =
             form.results.html('<div class="center">looking up '+ query +'...</div>');
 
             // Build endpoint.
-            var endpoint = App.root +'/definition/search/' + App.urlencode(query) +
+            var endpoint = App.root +'0.1/word/search/' + App.urlencode(query) +
                 (options.langCode ? '?lang='+ options.langCode : '');
 
             // Start ajax request
             $.ajax({
                 url: endpoint,
-                type: 'POST',
+                type: 'GET',
                 error: function(xhr, status, error) {
-                    App.log('XHR error on search form: '+ xhr.status +' ('+ error +')');
-                    form.results.html('<div class="center">Seems like we ran into a snag <span class="fa fa-frown-o"></span> try again?</div>');
+                    App.log('XHR error on search form: '+ error +' ('+ xhr.status +')');
+                    form.results.html(
+                        '<div class="center">'+
+                            'Seems like we ran into a snag <span class="fa fa-frown-o"></span> '+
+                            'please try again later.'+
+                        '</div>');
                 },
                 success: function(obj)
                 {
@@ -140,12 +161,14 @@ var Forms =
                             '</div><ol>';
 
                         $.each(obj.results.definitions, function(i, def) {
+                            def.uri = def.uri || '#';
+                            def.mainLanguage.uri = def.mainLanguage.uri || '#';
                             html +=
                                 '<li>'+
                                 '<a href="'+ def.uri +'">'+ def.title +'</a>'+
-                                ' <small>('+ def.sub_type +')</small>'+
-                                ' is a '+ def.type +' that means <i>'+ def.translation.practical.en +'</i> in '+
-                                ' <a href="'+ def.main_language.uri +'">'+ def.main_language.name +'</a>'+
+                                ' <small>('+ def.subType +')</small>'+
+                                ' is a '+ def.type +' that means <i>'+ def.translation.practical.eng +'</i> in '+
+                                ' <a href="'+ def.mainLanguage.uri +'">'+ def.mainLanguage.name +'</a>'+
                                 '</li>';
                         });
 
@@ -267,6 +290,7 @@ var Forms =
     },
 
 	log: function(msg) {
-		if (console) console.log('Forms.js - '+ msg);
+		if (console && this.isLocalEnvironment)
+            console.log('Forms.js - '+ msg);
 	}
 };

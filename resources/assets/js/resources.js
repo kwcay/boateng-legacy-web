@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 var Resources =
 {
@@ -54,6 +54,7 @@ var Resources =
     },
 
 	log: function(msg) {
-		if (console) console.log('Resources.js - '+ msg);
+		if (console && this.isLocalEnvironment)
+            console.log('Resources.js - '+ msg);
 	}
 };

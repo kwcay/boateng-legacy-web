@@ -27,9 +27,6 @@
 
 	<script type="text/javascript">
 	Forms.setupDefinitionLookup('search');
-
-    //$(document).ready(function() { $(document.search).submit(); });
-
 	</script>
 
 @stop

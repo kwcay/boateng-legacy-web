@@ -9,10 +9,27 @@ var App =
 
 	init: function()
 	{
-		//
+		// Save URL root for redirects.
         this.root = $('base').attr('href');
 
-        console.log('App initialized.');
+        // Set the environment of the app.
+        this.isLocalEnvironment =
+            (window.location.hostname == 'localhost' ||
+            window.location.hostname.match(/.*\.local$/i) ||
+            window.location.hostname.match(/.*\.vagrant$/i)) ? true : false;
+
+        // Setup AJAX headers
+        this.log('Setting CSRF token for ajax calls: ' + $('meta[name="csrf-token"]').attr('content'));
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Initialize other objects.
+        Dialogs.init();
+        Forms.init();
+        this.log('App initialized.');
 	},
 
     /**
@@ -56,52 +73,16 @@ var App =
 	urlencode : function(str)
 	{
 		return encodeURIComponent((str + '').toString())
-		.replace(/!/g, '%21')
-		.replace(/'/g, '%27')
-		.replace(/\(/g, '%28')
-		.replace(/\)/g, '%29')
-		.replace(/\*/g, '%2A')
-		.replace(/%20/g, '+');
+    		.replace(/!/g, '%21')
+    		.replace(/'/g, '%27')
+    		.replace(/\(/g, '%28')
+    		.replace(/\)/g, '%29')
+    		.replace(/\*/g, '%2A')
+    		.replace(/%20/g, '+');
 	},
 
 	log: function(msg) {
-		if (console) console.log('App.js - '+ msg);
+		if (console && this.isLocalEnvironment)
+            console.log('App.js - '+ msg);
 	}
 };
-
-// Initiate
-$(document).ready(function(event)
-{
-	// Initialize app.
-	App.init();
-
-	// Attach event listeners.
-	$('.close').click(App.closeDialogs.bind(App));
-    $('.has-tooltip').popup({on: 'hover'});
-    $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
-    $('.has-dropdown-menu').dropdown();
-
-    // Attach helper keyboard to text inputs.
-    $('.text-input').focus(function() {
-        App.setKeyboardFocus(this);
-        $('#keyboard').fadeIn(300);
-    });
-
-    // Remove helper keyboard when focus is lost.
-    $('.en-text-input').focus(function() {
-        App.setKeyboardFocus(null);
-        $('#keyboard').fadeOut(300);
-    });
-
-    // Make keyboard draggable.
-    $('#keyboard').draggable();
-
-    // Setup AJAX headers
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-});
-
-console.log('app.js loaded.');
