@@ -1,7 +1,8 @@
 <?php
 /**
- * @file    LanguageController.php
- * @brief   ...
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ * @brief   Handles language pages.
  */
 namespace App\Http\Controllers;
 
@@ -17,10 +18,6 @@ use App\Models\Definition;
 use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
 
-
-/**
- *
- */
 class LanguageController extends Controller
 {
     public function __construct()
@@ -36,7 +33,7 @@ class LanguageController extends Controller
      */
     public function index()
     {
-        return Language::all();
+        abort(501);
     }
 
     /**
@@ -52,7 +49,7 @@ class LanguageController extends Controller
             abort(404, 'Can\'t find that languge :(');
         }
 
-        return (Request::acceptsJson() || Request::has('dev')) ? $lang : view('pages.language', [
+        return view('pages.language', [
             'lang' => $lang,
             'random' => Word::random($lang->code),
             'first' => $lang->definitions()->orderBy('created_at', 'asc')->first(),

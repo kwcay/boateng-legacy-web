@@ -6,12 +6,14 @@
 
 
 //
-// Static pages.
+// General pages.
 //
 Route::get('/', 'PageController@home')->name('home');
 Route::get('about', 'PageController@about')->name('about');
 Route::get('about/in-numbers', 'PageController@stats')->name('stats');
 Route::get('about/author', 'PageController@author')->name('author');
+Route::get('{languageCode}', 'LanguageController@show')->name('language.show');
+Route::get('{languageCode}/{definition}', 'DefinitionController@show')->name('definition.show');
 
 
 //
@@ -47,7 +49,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
 //
 // API v 0.1
 //
-Route::group(['prefix' => '0.1', 'namespace' => 'API\v01', 'middleware' => ['api.headers', 'api.auth']], function()
+Route::group(['prefix' => '0.1', 'namespace' => 'API\v01', 'middleware' => ['api.headers'/*, 'api.auth'*/]], function()
 {
     Route::get('/', function() {
         return 'Di Nkɔmɔ API 0.1';
@@ -77,9 +79,9 @@ Route::group(['prefix' => '0.1', 'namespace' => 'API\v01', 'middleware' => ['api
 //
 Route::group(['prefix' => 'auth'], function()
 {
-    Route::get('/', ['as' => 'auth.login', 'uses' => 'Auth\AuthController@getLogin']);
-    Route::post('/', ['as' => 'auth.login.post', 'uses' => 'Auth\AuthController@postLogin']);
-    Route::get('logout', ['as' => 'auth.logout', 'uses' => 'Auth\AuthController@getLogout']);
+    Route::get('/', 'Auth\AuthController@getLogin')->name('auth.login');
+    Route::post('/', 'Auth\AuthController@postLogin')->name('auth.login.post');
+    Route::get('logout', 'Auth\AuthController@getLogout')->name('auth.logout');
 });
 
 // OAuth2...

@@ -443,7 +443,7 @@ var Forms = {
                 type: 'GET',
                 error: function error(xhr, status, _error) {
                     App.log('XHR error on search form: ' + _error + ' (' + xhr.status + ')');
-                    form.results.html('<div class="center">' + 'Seems like we ran into a snag <span class="fa fa-frown-o"></span> ' + ' Please try again later.' + '</div>');
+                    form.results.html('<div class="center">' + 'Seems like we ran into a snag <span class="fa fa-frown-o"></span> ' + 'please try again later.' + '</div>');
                 },
                 success: function success(obj) {
                     if (obj.results.definitions.length > 0) {

@@ -1,6 +1,9 @@
 <?php
 /**
- * API v0.1
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ * @version 0.1
+ * @brief   Handles definition-related API requests.
  */
 namespace App\Http\Controllers\API\v01;
 

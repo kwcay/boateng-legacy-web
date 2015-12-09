@@ -1,9 +1,11 @@
 <?php
 /**
- * @file    LanguageController.php
- * @brief   ...
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ * @version 0.1
+ * @brief   Handles language-related API requests.
  */
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\v01;
 
 use Lang;
 use Session;
@@ -49,15 +51,10 @@ class LanguageController extends Controller
     {
         // Retrieve the language object.
         if (!$lang = $this->getLanguage($id)) {
-            abort(404, 'Can\'t find that languge :(');
+            return response('Language Not Found.', 404);
         }
 
-        return (Request::acceptsJson() || Request::has('dev')) ? $lang : view('pages.language', [
-            'lang' => $lang,
-            'random' => Word::random($lang->code),
-            'first' => $lang->definitions()->orderBy('created_at', 'asc')->first(),
-            'latest' => $lang->definitions()->orderBy('created_at', 'desc')->first()
-        ]);
+        return $lang;
     }
 
 	/**
