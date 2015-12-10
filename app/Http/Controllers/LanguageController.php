@@ -59,8 +59,6 @@ class LanguageController extends Controller
 
 	/**
 	 * Displays the form to add a new language.
-     *
-     * TODO: integrate with API.
 	 *
      * @param \App\Models\Language $lang
 	 * @return Response

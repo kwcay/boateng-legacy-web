@@ -12,8 +12,25 @@ Route::get('/', 'PageController@home')->name('home');
 Route::get('about', 'PageController@about')->name('about');
 Route::get('about/in-numbers', 'PageController@stats')->name('stats');
 Route::get('about/author', 'PageController@author')->name('author');
-Route::get('{languageCode}', 'LanguageController@show')->name('language.show');
-Route::get('{languageCode}/{definition}', 'DefinitionController@show')->name('definition.show');
+
+//
+// Language pages.
+//
+Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
+Route::get('{code}', 'LanguageController@show')->name('language.show');
+Route::resource('language', 'LanguageController', [
+    'only' => ['store', 'update', 'destroy']
+]);
+
+//
+// Definition pages.
+//
+Route::get('{code}/+word', 'DefinitionController@createWord')->name('definition.create.word');
+Route::get('{code}/+phrase', 'DefinitionController@createPhrase')->name('definition.create.phrase');
+Route::get('{code}/{definition}', 'DefinitionController@show')->name('definition.show');
+Route::resource('definition', 'DefinitionController', [
+    'only' => ['store', 'update', 'destroy']
+]);
 
 
 //

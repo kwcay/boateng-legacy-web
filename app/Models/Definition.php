@@ -1,8 +1,6 @@
 <?php
 /**
- *
- *
- * TODO: make this an abstract class?
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
  */
 namespace App\Models;
@@ -109,7 +107,7 @@ class Definition extends Model
     ];
 
     /**
-     * States a definition can be in.
+     * Definition state.
      */
     public $states = [
         0 => 'hidden',

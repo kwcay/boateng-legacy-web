@@ -1,9 +1,8 @@
-@extends('layouts.base')
+@extends('layouts.narrow')
 
-@section('title', $query .' is a word in '. $lang->name .' - Di Nkomo: the book of native tongues.')
+@section('title', $query .' is a word in '. $lang->name .' - Di Nkomo: A Collection of Cultures.')
 
 @section('body')
-	@include('partials.header')
 
 	<section>
 		<h1>{{ $query }}</h1>
@@ -26,11 +25,11 @@
                             <a href="{{ $def->editUri }}" class="fa fa-pencil"></a>
                         </span>
                         @endif
-                        
-                        &ldquo; {{ $def->getTranslation('en') }} &rdquo;
+
+                        &ldquo; {{ $def->getTranslation('eng') }} &rdquo;
                     </h3>
-                    @if ($def->hasMeaning('en'))
-                        {{ $def->getMeaning('en') }}.
+                    @if ($def->hasMeaning('eng'))
+                        {{ $def->getMeaning('eng') }}.
                     @endif
                     @if (strlen($def->altTitles))
                         Alternatively: {{ $def->altTitles }}
@@ -49,5 +48,4 @@
 
 	</section>
 
-	@include('partials.footer')
 @stop

@@ -41,12 +41,6 @@ class DefinitionController extends Controller
      */
     public function show($code, $raw = null)
     {
-        // Redirect if accessing definition directly.
-        if (!$raw) {
-            $def = Word::find($code);
-            return $def ? redirect($def->getUri(false)) : redirect(route('home'))->withMessages([Lang::get('errors.resource_not_found')]);
-        }
-
         // Retrieve language object
         if (!$lang = Language::findByCode($code)) {
             abort(404, Lang::get('errors.resource_not_found'));
@@ -62,7 +56,6 @@ class DefinitionController extends Controller
 
         // Find definitions matching the query
         $data   = str_replace('_', ' ', $data);
-        $wData  = '(title = :a OR alt_titles LIKE :b or alt_titles LIKE :c or alt_titles LIKE :d)';
         $definitions = $lang->definitions()
             ->with('languages', 'translations')
             ->where('title', '=', $data)
@@ -73,7 +66,7 @@ class DefinitionController extends Controller
             // If no definitions were found, check alternate titles...
             $alts = Definition::search($data, 0, 1);
             if (count($alts)) {
-                return redirect($alts[0]->getUri(false));
+                return redirect($alts[0]->relativeUri);
             }
 
             abort(404, Lang::get('errors.resource_not_found'));
@@ -143,13 +136,13 @@ class DefinitionController extends Controller
     private function createType($type, $langCode)
     {
         // Make sure we have a logged in user.
-        if (Auth::guest()) {
-            return redirect()->guest(route('auth.login'));
-        }
+        // if (Auth::guest()) {
+        //     return redirect()->guest(route('auth.login'));
+        // }
 
         // Create a specific definition instance.
         if (!$def = Definition::getInstance($type)) {
-            abort(400);
+            abort(500);
         }
 
         // Retrieve language object.
@@ -237,13 +230,12 @@ class DefinitionController extends Controller
 	public function store()
     {
         $def = $this->getDefinition();
-        $def->state = Definition::STATE_VISIBLE;
 
         $data = Request::only([
             'title', 'alt_titles', 'data', 'type', 'sub_type', 'tags', 'state', 'relations'
         ]);
 
-        $data['state'] = 1;
+        $data['state'] = Auth::guest() ? Definition::STATE_VISIBLE : $data['state'];
 
         // Set return route.
         $return = Request::input('next') == 'continue' ? 'edit' : 'index';

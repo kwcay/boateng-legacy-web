@@ -1,7 +1,6 @@
-@extends('layouts.base')
+@extends('layouts.narrow')
 
 @section('body')
-	@include('partials.header')
 
 	<section>
 		<h1>
@@ -34,7 +33,7 @@
 
             <!-- Translation -->
             <div class="row">
-                <input type="text" name="relations[translation][en]" class="en-text-input center" placeholder="your translation" value="" />
+                <input type="text" name="relations[translation][en]" class="en-text-input center" placeholder="your translation" value="">
             </div>
 
             <div class="row center">
@@ -45,9 +44,9 @@
             <br />
             <br />
 			<div class="row center">
-				<input type="submit" name="next" value="continue" />
-				<input type="submit" name="next" value="finish" />
-				<!-- <input type="button" name="cancel" value="return" onclick="return confirm('Cancel?') ? App.redirect('') : false;" /> -->
+				<input type="submit" name="next" value="continue">
+				<input type="submit" name="next" value="finish">
+				<input type="button" name="cancel" value="return" onclick="return confirm('Cancel?') ? App.redirect('') : false;">
 			</div>
 		</form>
 	</section>
@@ -61,5 +60,4 @@
         });
     </script>
 
-	@include('partials.footer')
 @stop
