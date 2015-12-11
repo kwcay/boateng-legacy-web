@@ -1,11 +1,10 @@
 html, body, a, div, header, input, label, section {
 	margin: 0;
 	padding: 0;
-    position: inherit;
+    position: relative;
 }
 
 body {
-    position: relative;
 	color: #333;
 	font: normal 21px/1.618 'sinanova', Serif;
 	background-color: #f7f7f7;
@@ -39,6 +38,10 @@ a img {
 	border: none;
 	outline: none;
 }
+a:focus, a:hover {
+    color: #333;
+    text-decoration: none;
+}
 a:hover:after {
 	transform: scaleX(.65);
 }
@@ -50,13 +53,18 @@ em {
 	font-size: 1.2em;
 }
 h1 {
-	margin: 2px auto 5px;
-	font-size: 1.5em;
+    margin: 5px auto 30px;
+    width: 100%;
+    font-size: 1.3em;
 	font-weight: normal;
 	text-align: center;
 }
 h1 em {
     letter-spacing: 5px;
+}
+h1 small {
+    font-size: 0.7em;
+    letter-spacing: 2.5px;
 }
 h2 {
 	margin: 5px auto;
@@ -75,9 +83,9 @@ i {
 pre {
 	font: normal 16px/1.618 monospace;
 }
-section, header, footer {
-	width: 550px;
-}
+// section, header, footer {
+// 	width: 550px;
+// }
 small {
 	font-size: 0.5em;
 }
@@ -117,20 +125,18 @@ small {
     h1, h2 {
         text-align: center;
     }
-	
-	section, header, footer {
-		margin: 0 auto 0;
-		padding: 0 5%;
-		width: 90%;
-	}
-    
+
+	// section, header, footer {
+	// 	margin: 0 auto 0;
+	// 	padding: 0 5%;
+	// 	width: 90%;
+	// }
+
     ul li, ol li {
         margin-left: 0;
     }
-    
+
     .edit-res {
         font-size: 0.9em;
     }
-
 }
-

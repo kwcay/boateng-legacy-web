@@ -1,6 +1,7 @@
 <?php
 /**
- * @file    AdminController.php
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
  * @brief   Controls the administration section.
  */
 namespace App\Http\Controllers;
@@ -8,9 +9,6 @@ namespace App\Http\Controllers;
 use App\Models\Language;
 use App\Models\Definition;
 
-/**
- * Administration area.
- */
 class AdminController extends Controller
 {
 	/**

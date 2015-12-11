@@ -1,4 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
+namespace App\Http\Controllers;
 
 use Response;
 use Illuminate\Foundation\Bus\DispatchesCommands;
