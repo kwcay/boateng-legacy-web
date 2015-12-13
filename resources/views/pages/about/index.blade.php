@@ -57,10 +57,13 @@
         <br>
 
         This app was built with <a href="http://laravel.com" target="_blank">Laravel</a>,
-        <a href="https://angularjs.org" target="_blank">Angular</a> and other free resources such as:
+        <a href="https://angularjs.org" target="_blank">Angular</a> and other great resources such as:
         <br><br>
 
         <ul>
+            <!-- <li>
+                Asante Twi for Beginners
+            </li> -->
             <li>
                 <a href="http://www.iso.org/iso/catalogue_detail?csnumber=39534" target="_blank">ISO 639-3</a>
                 codes for the representation of names of languages.

@@ -5,25 +5,25 @@
 @section('description', 'Learn new words in '. $lang->name)
 
 @section('body')
-	<section>
-		<h1>
-            {{-- Edit button --}}
-            @if (Auth::check())
-                <span class="edit-res">
-                    <a href="{{ $lang->editUri }}" class="fa fa-pencil"></a>
-                </span>
-            @endif
 
-            {{ $lang->name }}
-        </h1>
+    <h1>
+        {{-- Edit button --}}
+        @if (Auth::check())
+            <span class="edit-res">
+                <a href="{{ $lang->editUri }}" class="fa fa-pencil"></a>
+            </span>
+        @endif
 
-        @if ($random)
+        {{ $lang->name }}<br>
+        <small>A Collection of Cultures.</small>
+    </h1>
+
+    @if ($lang->definitions()->count())
 
         {{-- Search form --}}
-        <br />
         @include('partials.lang-search', ['code' => $lang->code, 'name' => $lang->name])
-        <br />
-        <br />
+        <br>
+        <br>
 
         {{-- Language details --}}
         <h3>A little background...</h3>
@@ -66,9 +66,9 @@
         @if ($first)
         <div class="center">
             The first definition that was added to Di Nkɔmɔ in the <em>{{ $lang->name }}</em> language was
-			<a href="{{ $first->uri }}">{{ $first->title }}</a>.
+            <a href="{{ $first->uri }}">{{ $first->title }}</a>.
             The latest one to be added is
-			<a href="{{ $latest->uri }}">{{ $latest->title }}</a>.
+            <a href="{{ $latest->uri }}">{{ $latest->title }}</a>.
             <br /><br />
         </div>
         @endif
@@ -78,14 +78,13 @@
             <i>A random word in {{ $lang->name }}:</i><br />
             <em>&ldquo; <a href="{{ $random->uri }}">{{ $random->title }}</a> &rdquo;</em>
         </div>
-        <br />
+        <br>
 
-        @else
-        <div class="center">
-            We have no definitions in this language yet.<br />
-            <em><a href="{{ route('definition.create', ['lang' => $lang->code]) }}">Be the first to add one!</a></em>
-        </div>
-        @endif
+    @else
+    <div class="center">
+        We have no definitions in this language yet.<br>
+        <em><a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">Be the first to add one!</a></em>
+    </div>
+    @endif
 
-	</section>
 @stop

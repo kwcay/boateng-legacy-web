@@ -56,6 +56,7 @@
 }
 
 /**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
  */
 /*
@@ -577,22 +578,6 @@ section .meta em {
   font-weight: bold; }
 
 /**
- * Homepage
- */
-.title {
-  margin: 5px auto 30px;
-  width: 100%;
-  text-align: center;
-  font-size: 1.3em; }
-
-.title small {
-  font-size: 0.7em;
-  letter-spacing: 2.5px; }
-
-/**
- * Language page
- */
-/**
  * Word page
  */
 .definition {
@@ -715,6 +700,7 @@ section .meta em {
   .timeline .event-marker {
     top: 48px;
     left: 49.31%;
+    left: 50%;
     width: 7px;
     height: 7px;
     -webkit-transform: translateX(-55%);
@@ -750,6 +736,10 @@ section .meta em {
     right: 122%;
     text-align: right; } }
 
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
 /*
  * General form styles
  */
