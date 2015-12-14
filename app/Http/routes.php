@@ -34,6 +34,14 @@ Route::resource('definition', 'DefinitionController', [
 
 
 //
+// Authentication routes.
+//
+Route::get('login', 'Auth\AuthController@getLogin')->name('auth.login');
+Route::post('logout', 'Auth\AuthController@postLogin')->name('auth.login.post');
+Route::get('logout', 'Auth\AuthController@getLogout')->name('auth.logout');
+
+
+//
 // Admin area.
 //
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function()
@@ -88,17 +96,6 @@ Route::group(['prefix' => '0.1', 'namespace' => 'API\v01', 'middleware' => ['api
 
     // General lookup
     Route::get('search/{query}', 'ApiController@searchAllResources');
-});
-
-
-//
-// Authentication routes.
-//
-Route::group(['prefix' => 'auth'], function()
-{
-    Route::get('/', 'Auth\AuthController@getLogin')->name('auth.login');
-    Route::post('/', 'Auth\AuthController@postLogin')->name('auth.login.post');
-    Route::get('logout', 'Auth\AuthController@getLogout')->name('auth.logout');
 });
 
 // OAuth2...

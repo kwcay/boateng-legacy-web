@@ -1,7 +1,6 @@
 @extends('layouts.narrow')
 
 @section('body')
-	@include('partials.header')
 
 	<h1>Login</h1>
 
@@ -31,5 +30,4 @@
 		</div>
     </form>
 
-	@include('partials.footer')
 @stop

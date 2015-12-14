@@ -524,7 +524,7 @@ header .header {
   color: #aaa; }
 
 footer {
-  margin: 40px auto 20px;
+  margin: 40px auto 80px;
   text-align: center; }
 
 footer a {
@@ -541,7 +541,7 @@ footer a:hover, footer a:focus {
 footer .credits {
   display: block;
   width: 100%;
-  margin: 5px auto;
+  margin: 15px auto 5px;
   color: #bbb;
   font-size: .5em;
   letter-spacing: 1.3px;

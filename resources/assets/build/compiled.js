@@ -295,7 +295,6 @@ var Forms = {
                     form.results.html('<div class="center">' + 'Seems like we ran into a snag <span class="fa fa-frown-o"></span> ' + 'please try again later.' + '</div>');
                 },
                 success: function success(words) {
-                    console.log(words);
                     if (words.length > 0) {
                         var html = '<div class="center">' + 'we found <em>' + words.length + '</em> definitions' + ' for <i>' + query + '</i>.' + '</div><ol>';
 
