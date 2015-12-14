@@ -120,11 +120,6 @@ class Definition extends Model
     protected $markdown;
 
     /**
-     * Holds the object representing the main language for this definition.
-     */
-    protected $mainLanguage;
-
-    /**
      *
      */
     public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
@@ -155,7 +150,7 @@ class Definition extends Model
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['translation', 'language', 'mainLanguage', 'resourceType', 'uniqueId'];
+    protected $appends = ['translation', 'language', 'mainLanguage', 'resourceType', 'uri', 'uniqueId'];
 
     /**
      * Attributes that should be mutated to dates.
@@ -374,7 +369,9 @@ class Definition extends Model
         $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
 
         // Return results.
-        return count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : new Collection;
+        return count($IDs) ?
+            Definition::with('languages', 'translations')->whereIn('id', $IDs)->get() :
+            new Collection;
     }
 
     /**
@@ -549,28 +546,27 @@ class Definition extends Model
      */
     public function getMainLanguageAttribute()
     {
-        if (!$this->mainLanguage)
-        {
-            // Loop through related languages.
-            if ($code = $this->getParam('mainLang', false))
-            {
-                foreach ($this->languages as $lang)
-                {
-                    if ($lang->code == $code)
-                    {
-                        $this->mainLanguage = $lang;
-                        break;
-                    }
-                }
-            }
+        $mainLanguage = null;
 
-            // Or pick first language as a default.
-            if (!$this->mainLanguage) {
-                $this->mainLanguage = $this->languages()->first();
+        // Loop through related languages.
+        if ($code = $this->getParam('mainLang', false))
+        {
+            foreach ($this->languages as $lang)
+            {
+                if ($lang->code == $code)
+                {
+                    $mainLanguage = $lang;
+                    break;
+                }
             }
         }
 
-        return $this->mainLanguage;
+        // Or pick first language as a default.
+        if (!$mainLanguage) {
+            $mainLanguage = $this->languages->first();
+        }
+
+        return $mainLanguage;
     }
 
     /**
@@ -762,12 +758,12 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->relativeUri.
+     * Accessor for $this->uri.
      *
      * @return string
      */
-    public function getRelativeUriAttribute() {
-        return $this->mainLanguage->code .'/'. str_replace(' ', '_', $this->title);
+    public function getUriAttribute() {
+        return url($this->mainLanguage->code .'/'. str_replace(' ', '_', $this->title));
     }
 
     /**

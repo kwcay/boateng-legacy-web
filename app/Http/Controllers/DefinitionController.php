@@ -66,7 +66,7 @@ class DefinitionController extends Controller
             // If no definitions were found, check alternate titles...
             $alts = Definition::search($data, 0, 1);
             if (count($alts)) {
-                return redirect($alts[0]->relativeUri);
+                return redirect($alts[0]->uri);
             }
 
             abort(404, Lang::get('errors.resource_not_found'));

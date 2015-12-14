@@ -63,6 +63,7 @@ class Language extends Model
         'firstDefinition',
         'latestDefinition',
         'randomDefinition',
+        'uri',
         'editUri',
         'resourceType'
     ];
@@ -253,6 +254,15 @@ class Language extends Model
      */
     public function getParentLanguageAttribute($data = null) {
         return $this->parent ? $this->parent : null;
+    }
+
+    /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return route('language.show', ['code' => $this->code]);
     }
 
     /**

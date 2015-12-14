@@ -60,35 +60,6 @@ class DefinitionController extends Controller
     }
 
     /**
-     * Performs a fulltext search against a query.
-     *
-     * @param string $query
-     * @return string
-     */
-    public function search($query = '')
-    {
-        // This method should really only be called through the API.
-        if (Request::method() != 'POST' && env('APP_ENV') != 'local') {
-            return $this->abort(405);
-        }
-
-        // Let the definition model do all the checks.
-        $defs = Definition::fulltextSearch($query, Request::input('offset'), Request::input('limit'), [
-            'lang' => Request::input('lang')
-        ]);
-
-        // Format results
-        $results  = [];
-        if (count($defs)) {
-            foreach ($defs as $def) {
-                $results[] = $def->toArray();
-            }
-        }
-
-        return $this->send(['query' => $search, 'definitions' => $results]);
-    }
-
-    /**
      * Finds definitions matching a title (exact match).
      *
      * @param string $definitionType

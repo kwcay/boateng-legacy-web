@@ -1,7 +1,6 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
- * @brief   The Forms object handles all form-related logic.
  */
 var Forms =
 {
@@ -72,8 +71,8 @@ var Forms =
 
                     // Add a short desciption
                     var hint = '';
-                    if (item.alt_names && item.alt_names.length)
-                        hint = '<span class="hint"> &mdash; Also known as '+ item.alt_names + '</span>';
+                    if (item.altNames && item.altNames.length)
+                        hint = '<span class="hint"> &mdash; Also known as '+ item.altNames + '</span>';
 
                     // Return formatted HTML
                     return  '<div>' +
@@ -150,17 +149,17 @@ var Forms =
                             'please try again later.'+
                         '</div>');
                 },
-                success: function(obj)
+                success: function(words)
                 {
-                    if (obj.results.definitions.length > 0)
+                    if (words.length > 0)
                     {
                         var html	=
                             '<div class="center">'+
-                            'we found <em>'+ obj.results.definitions.length +'</em> definitions'+
-                            ' for <i>'+ obj.results.query +'</i>.'+
+                            'we found <em>'+ words.length +'</em> definitions'+
+                            ' for <i>'+ query +'</i>.'+
                             '</div><ol>';
 
-                        $.each(obj.results.definitions, function(i, def) {
+                        $.each(words, function(i, def) {
                             def.uri = def.uri || '#';
                             def.mainLanguage.uri = def.mainLanguage.uri || '#';
                             html +=

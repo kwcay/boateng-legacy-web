@@ -162,7 +162,6 @@ var Dialogs = {
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
- * @brief   The Forms object handles all form-related logic.
  */
 var Forms = {
     /**
@@ -227,7 +226,7 @@ var Forms = {
 
                     // Add a short desciption
                     var hint = '';
-                    if (item.alt_names && item.alt_names.length) hint = '<span class="hint"> &mdash; Also known as ' + item.alt_names + '</span>';
+                    if (item.altNames && item.altNames.length) hint = '<span class="hint"> &mdash; Also known as ' + item.altNames + '</span>';
 
                     // Return formatted HTML
                     return '<div>' + '<span class="label">' + escape(title) + '</span>' + hint + '</div>';
@@ -295,11 +294,12 @@ var Forms = {
                     App.log('XHR error on search form: ' + _error + ' (' + xhr.status + ')');
                     form.results.html('<div class="center">' + 'Seems like we ran into a snag <span class="fa fa-frown-o"></span> ' + 'please try again later.' + '</div>');
                 },
-                success: function success(obj) {
-                    if (obj.results.definitions.length > 0) {
-                        var html = '<div class="center">' + 'we found <em>' + obj.results.definitions.length + '</em> definitions' + ' for <i>' + obj.results.query + '</i>.' + '</div><ol>';
+                success: function success(words) {
+                    console.log(words);
+                    if (words.length > 0) {
+                        var html = '<div class="center">' + 'we found <em>' + words.length + '</em> definitions' + ' for <i>' + query + '</i>.' + '</div><ol>';
 
-                        $.each(obj.results.definitions, function (i, def) {
+                        $.each(words, function (i, def) {
                             def.uri = def.uri || '#';
                             def.mainLanguage.uri = def.mainLanguage.uri || '#';
                             html += '<li>' + '<a href="' + def.uri + '">' + def.title + '</a>' + ' <small>(' + def.subType + ')</small>' + ' is a ' + def.type + ' that means <i>' + def.translation.practical.eng + '</i> in ' + ' <a href="' + def.mainLanguage.uri + '">' + def.mainLanguage.name + '</a>' + '</li>';
