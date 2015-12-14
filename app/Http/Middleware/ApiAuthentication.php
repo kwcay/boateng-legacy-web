@@ -18,7 +18,7 @@ class ApiAuthentication
     public function handle($request, Closure $next)
     {
         // Authenticate app. For now, we only check the origin header.
-        if (!in_array($request->header('Origin'), ['http://dinkomo.vagrant', 'http://dinkomo.frnk.ca']))
+        if (!in_array($request->header('Origin'), ['http://app.dinkomo.vagrant', 'http://dinkomo-app.frnk.ca']))
         {
             // Allow dev access.
             if (!$request->has('dev'))

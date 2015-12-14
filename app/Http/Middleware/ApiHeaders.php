@@ -20,11 +20,11 @@ class ApiHeaders
         $response = $next($request);
 
         // Set the "Access-Control-Allow-Origin" header.
-        if ($request->header('Origin') == 'http://dinkomo.vagrant') {
-            $response->header('Access-Control-Allow-Origin', 'http://dinkomo.vagrant', true);
+        if ($request->header('Origin') == 'http://app.dinkomo.vagrant') {
+            $response->header('Access-Control-Allow-Origin', 'http://app.dinkomo.vagrant', true);
         }
-        elseif ($request->header('Origin') == 'http://dinkomo.frnk.ca') {
-            $response->header('Access-Control-Allow-Origin', 'http://dinkomo.frnk.ca', true);
+        elseif ($request->header('Origin') == 'http://dinkomo-app.frnk.ca') {
+            $response->header('Access-Control-Allow-Origin', 'http://dinkomo-app.frnk.ca', true);
         }
 
         // Respond to pre-flighted requests.
