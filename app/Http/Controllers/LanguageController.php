@@ -2,7 +2,6 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
- * @brief   Handles language pages.
  */
 namespace App\Http\Controllers;
 
@@ -49,11 +48,30 @@ class LanguageController extends Controller
             abort(404, 'Can\'t find that languge :(');
         }
 
+        // TODO: count number of words, not all definitions.
+        $total = $lang->definitions()->count();
+        $first = $latest = $random = null;
+
+        // Retrieve first definition.
+        if ($total > 0) {
+            $first = $lang->definitions()->orderBy('created_at', 'asc')->first();
+        }
+
+        // Retrieve latest definition.
+        if ($total > 1) {
+            $latest = $lang->definitions()->orderBy('created_at', 'desc')->first();
+        }
+
+        // Retrieve random definition.
+        if ($total > 2) {
+            $random = Word::random($lang->code);
+        }
+
         return view('pages.language', [
             'lang' => $lang,
-            'random' => Word::random($lang->code),
-            'first' => $lang->definitions()->orderBy('created_at', 'asc')->first(),
-            'latest' => $lang->definitions()->orderBy('created_at', 'desc')->first()
+            'random' => $random,
+            'first' => $first,
+            'latest' => $latest
         ]);
     }
 

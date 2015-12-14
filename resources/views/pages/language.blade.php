@@ -18,7 +18,7 @@
         <small>A Collection of Cultures.</small>
     </h1>
 
-    @if ($lang->definitions()->count())
+    @if ($lang->definitions->count())
 
         {{-- Search form --}}
         @include('partials.lang-search', ['code' => $lang->code, 'name' => $lang->name])
@@ -26,59 +26,73 @@
         <br>
 
         {{-- Language details --}}
-        <h3>A little background...</h3>
+        <h3>A little background on {{ $lang->name }}...</h3>
+        <br>
 
-        <div class="meta">
-
-            {{-- Alternate spellings --}}
-            @if (strlen($lang->alt_names))
-                <div class="row">
-                    Alternatively: <em>{{ $lang->alt_names }}</em>
-                </div>
-            @endif
-
-            {{-- Total words --}}
-            <div class="row">
-                Total words: <em>{{ $lang->definitions()->count() }}</em>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 meta">
+                Lorem ipsum...
             </div>
 
-            {{-- Parent language --}}
-            @if ($lang->parent)
-                <div class="row">
-                    Parent language: <em><a href="{{ $lang->parent->uri }}">{{ $lang->parent->name }}</a></em>
-                </div>
-            @endif
+            <div class="col-sm-12 col-md-6 meta">
+                <ul class="fa-ul">
+                    @if (strlen($lang->altNames))
+                    <li>
+                        <i class="fa-li fa fa-asterisk"></i>
+                        Also refered to as: {{ $lang->altNames }}
+                    </li>
+                    @endif
 
-            {{-- Children languages --}}
-            @if (count($lang->children))
+                    @if ($lang->parentLanguage)
+                    <li>
+                        <i class="fa-li fa fa-asterisk"></i>
+                        Is a child language of
+                        <a href="{{ $lang->parentLanguage->uri }}">
+                            {{ $lang->parentLanguage->name }}
+                        </a>.
+                    </li>
+                    @endif
 
-                <div class="row">
-                    Child languages:
-                    @foreach ($lang->children as $child)
-                        <em><a href="{{ $child->uri }}">{{ $child->name }}</a></em>
-                        {{ $lang->children->last()->code == $child->code ? '.' : ', ' }}
-                    @endforeach
-                </div>
-            @endif
+                    {{-- Definition count --}}
+                    <li>
+                        <i class="fa-li fa fa-asterisk"></i>
+                        We have {{ $lang->definitions->count() }} {{ $lang->name }} words in our
+                        database.
+                    </li>
 
+                    {{-- First and latest words. --}}
+                    <li>
+                        <i class="fa-li fa fa-asterisk"></i>
+
+                            @if ($first)
+                            The first word was
+                            <a href="{{ $first->uri }}">
+                                {{ $first->title }}
+                            </a>
+                            @endif
+
+                            @if ($latest)
+                            , and the latest word is
+                            <a href="{{ $latest->uri }}">
+                                {{ $latest->title }}
+                            </a>
+                            @endif
+                        .
+                    </li>
+
+                    @if ($random)
+                    <li>
+                        <i class="fa-li fa fa-asterisk"></i>
+                        <a href="{{ $random->uri }}">
+                            {{ $random->title }}
+                        </a>
+
+                        is a random word in {{ $lang->name }}.
+                    </li>
+                    @endif
+                </ul>
+            </div>
         </div>
-
-        @if ($first)
-        <div class="center">
-            The first definition that was added to Di Nkɔmɔ in the <em>{{ $lang->name }}</em> language was
-            <a href="{{ $first->uri }}">{{ $first->title }}</a>.
-            The latest one to be added is
-            <a href="{{ $latest->uri }}">{{ $latest->title }}</a>.
-            <br /><br />
-        </div>
-        @endif
-
-        {{-- Random word --}}
-        <div class="emphasis">
-            <i>A random word in {{ $lang->name }}:</i><br />
-            <em>&ldquo; <a href="{{ $random->uri }}">{{ $random->title }}</a> &rdquo;</em>
-        </div>
-        <br>
 
     @else
     <div class="center">
