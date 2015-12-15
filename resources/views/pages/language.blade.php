@@ -30,9 +30,9 @@
         <br>
 
         <div class="row">
-            <div class="col-sm-12 col-md-6 meta">
+            <!-- <div class="col-sm-12 col-md-6 meta">
                 Lorem ipsum...
-            </div>
+            </div> -->
 
             <div class="col-sm-12 col-md-6 meta">
                 <ul class="fa-ul">

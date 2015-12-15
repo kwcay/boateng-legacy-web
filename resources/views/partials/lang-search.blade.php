@@ -14,8 +14,13 @@
 
 <div id="results">
     <div class="center">
-        Use this <em>&#10548;</em> to lookup words<br>
-        in {{ $name or 'another language' }}.
+        @if (isset($name))
+            Use this <em>&#10548;</em> to lookup words<br>
+            in {{ $name }}.
+        @else
+            Use this <em>&#10548;</em> to lookup words,<br>
+            sayings and languages.
+        @endif
     </div>
 </div>
 

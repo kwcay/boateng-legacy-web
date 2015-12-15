@@ -179,6 +179,9 @@ class Language extends Model
             // Match the fulltext columns against the search query.
             ->whereRaw('MATCH(l.name, l.alt_names) AGAINST(?)', [$search])
 
+            // Or match the language code.
+            ->orWhere('code', '=', $search)
+
             // Order by relevancy.
             ->orderBy('score', 'DESC')
 

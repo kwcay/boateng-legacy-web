@@ -284,7 +284,12 @@ var Forms = {
             form.results.html('<div class="center">looking up ' + query + '...</div>');
 
             // Build endpoint.
-            var endpoint = App.root + '0.1/word/search/' + App.urlencode(query) + (options.langCode ? '?lang=' + options.langCode : '');
+            var endpoint = App.root + '0.1';
+            if (options.langCode) {
+                endpoint += '/word/search/' + App.urlencode(query) + '?lang=' + options.langCode;
+            } else {
+                endpoint += '/search/' + App.urlencode(query) + '?method=fulltext';
+            }
 
             // Start ajax request
             $.ajax({
@@ -294,14 +299,21 @@ var Forms = {
                     App.log('XHR error on search form: ' + _error + ' (' + xhr.status + ')');
                     form.results.html('<div class="center">' + 'Seems like we ran into a snag <span class="fa fa-frown-o"></span> ' + 'please try again later.' + '</div>');
                 },
-                success: function success(words) {
-                    if (words.length > 0) {
-                        var html = '<div class="center">' + 'we found <em>' + words.length + '</em> definitions' + ' for <i>' + query + '</i>.' + '</div><ol>';
+                success: function success(results) {
+                    if (results.length > 0) {
+                        var html = '<div class="center">' + 'we found <em>' + results.length + '</em> results' + ' for <i>' + query + '</i>.' + '</div><ol>';
 
-                        $.each(words, function (i, def) {
-                            def.uri = def.uri || '#';
-                            def.mainLanguage.uri = def.mainLanguage.uri || '#';
-                            html += '<li>' + '<a href="' + def.uri + '">' + def.title + '</a>' + ' <small>(' + def.subType + ')</small>' + ' is a ' + def.type + ' that means <i>' + def.translation.practical.eng + '</i> in ' + ' <a href="' + def.mainLanguage.uri + '">' + def.mainLanguage.name + '</a>' + '</li>';
+                        $.each(results, function (i, res) {
+
+                            switch (res.resourceType) {
+                                case 'language':
+                                    var parentData = res.parentLanguage ? ' is a child language of ' + '<a href="' + res.parentLanguage.uri + '">' + res.parentLanguage.name + '</a>' : '';
+                                    html += '<li>' + '<a href="' + res.uri + '">' + res.name + '</a>' + ' <small>(language)</small>' + parentData + '</li>';
+                                    break;
+
+                                default:
+                                    html += '<li>' + '<a href="' + res.uri + '">' + res.title + '</a>' + ' <small>(' + res.subType + ')</small>' + ' is a ' + res.type + ' that means <i>' + res.translation.practical.eng + '</i> in ' + ' <a href="' + res.mainLanguage.uri + '">' + res.mainLanguage.name + '</a>' + '</li>';
+                            }
                         });
 
                         form.results.html(html + '</ol>');
