@@ -39,7 +39,7 @@ class Definition extends Model
     CONST STATE_HIDDEN = 0;     // Hidden definition.
     CONST STATE_VISIBLE = 10;   // Default state.
 
-    CONST SEARCH_LIMIT = 50;    // Maximum number of results to return on a search.
+    CONST SEARCH_LIMIT = 20;    // Maximum number of results to return on a search.
 
     /**
      * Definition types.
@@ -223,21 +223,27 @@ class Definition extends Model
      * Creates an instance of a definition type.
      *
      * @param int $type
+     * @param array $attributes
      * @return App\Models\Definition|null
      */
-    public static function getInstance($type, $attributes = [], $exists = false)
+    public static function getInstance($type, array $attributes = [])
     {
         // Check that the definition type is valid.
-        $types = (new Definition)->types;
+        $types = static::types();
         if (!array_key_exists($type, $types)) {
             return null;
         }
 
         // Return new instance.
         $className = '\\App\\Models\\Definitions\\'. ucfirst(strtolower($types[$type]));
-        return (new $className)->newInstance($attributes, $exists);
+        return new $className($attributes);
     }
 
+    /**
+     * Gets the valid definition types.
+     *
+     * @return array
+     */
     public static function types() {
         return (new static)->types;
     }
@@ -473,11 +479,11 @@ class Definition extends Model
         }
 
         // Create a new translation.
-        elseif ($create === true && $attribute == 'translation')
+        elseif ($create === true && $attribute == 'practical')
         {
             $this->translations()->create([
                 'language' => $lang,
-                'translation' => $data
+                'practical' => $data
             ]);
         }
     }
@@ -486,16 +492,16 @@ class Definition extends Model
     // Translations attribute.
     //
 
-    public function hasTranslation($lang) {
-        return $this->_hasTranslationAttribute($lang, 'translation');
+    public function hasPracticalTranslation($lang) {
+        return $this->_hasTranslationAttribute($lang, 'practical');
     }
 
-    public function getTranslation($lang = 'en') {
-        return $this->_getTranslationAttribute($lang, 'translation');
+    public function getPracticalTranslation($lang = 'eng') {
+        return $this->_getTranslationAttribute($lang, 'practical');
     }
 
-    public function setTranslation($lang, $translation, $create = false) {
-        return $this->_setTranslationAttribute($lang, 'translation', $translation, $create);
+    public function setPracticalTranslation($lang, $translation, $create = false) {
+        return $this->_setTranslationAttribute($lang, 'practical', $translation, $create);
     }
 
     //
@@ -932,14 +938,14 @@ class Definition extends Model
     }
 
     /**
-     * Updates or creates one or more translations.
+     * Updates or creates one or more practical translations.
      *
      * @param array $translations
      */
-    public function updateTranslationRelation(array $translations)
+    public function updatePracticalRelation(array $translations)
     {
         foreach ($translations as $code => $translation) {
-            $this->setTranslation($code, $translation, true);
+            $this->setPracticalTranslation($code, $translation, true);
         }
     }
 

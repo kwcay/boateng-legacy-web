@@ -29,7 +29,7 @@ Route::get('{code}/+word', 'DefinitionController@createWord')->name('definition.
 Route::get('{code}/+phrase', 'DefinitionController@createPhrase')->name('definition.create.phrase');
 Route::get('{code}/{definition}', 'DefinitionController@show')->name('definition.show');
 Route::resource('definition', 'DefinitionController', [
-    'only' => ['store', 'update', 'destroy']
+    'only' => ['store', 'edit', 'update', 'destroy']
 ]);
 
 

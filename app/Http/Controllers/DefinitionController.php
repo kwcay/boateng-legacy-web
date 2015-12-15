@@ -197,9 +197,9 @@ class DefinitionController extends Controller
         $def->sub_type = Request::get('sub_type', Request::old('sub_type', 'n'));
         $def->tags = Request::get('tags', Request::old('tags', ''));
 
-        $translations = (array) Request::get('translations', Request::old('translations', []));
-        $literalTranslations = (array) Request::get('literal_translations', Request::old('literal_translations', []));
-        $meanings = (array) Request::get('meanings', Request::old('meanings', []));
+        $translations = (array) Request::get('translation', Request::old('translation', []));
+        $literalTranslations = (array) Request::get('literal', Request::old('literal', []));
+        $meanings = (array) Request::get('meaning', Request::old('meaning', []));
 
         // Retrieve language data.
         if ($langCode = Request::get('lang', Request::old('lang')))
@@ -229,18 +229,17 @@ class DefinitionController extends Controller
 	 */
 	public function store()
     {
-        $def = $this->getDefinition();
+        if (!$definition = Definition::getInstance(Request::input('type'))) {
+            return redirect(route('home'))->withMessages(['Internal Error.']);
+        }
 
-        $data = Request::only([
-            'title', 'alt_titles', 'data', 'type', 'sub_type', 'tags', 'state', 'relations'
-        ]);
-
+        // Retrieve new definition data.
+        $data = Request::only(['title', 'alt_titles', 'type', 'sub_type', 'state', 'relations']);
         $data['state'] = Auth::guest() ? Definition::STATE_VISIBLE : $data['state'];
 
-        // Set return route.
         $return = Request::input('next') == 'continue' ? 'edit' : 'index';
 
-        return $this->save($def, $data, $return);
+        return $this->save($definition, $data, $return);
 	}
 
 	/**
@@ -267,7 +266,7 @@ class DefinitionController extends Controller
 
         // TODO: update view according to definition type.
 
-        return view('forms.definition.word.default', [
+        return view('forms.definition.default', [
             'def'       => $def,
             'options'   => $lso
         ]);
@@ -338,8 +337,7 @@ class DefinitionController extends Controller
             Request::flashExcept('_token');
 
             // Return to form
-            $return = $def->exists ? route('definition.edit', ['id' => $def->getId()]) : route('definition.create');
-            return redirect(route('definition.edit'))->withErrors($test);
+            return back()->withErrors($test);
         }
 
         // Pull relations.
@@ -378,23 +376,27 @@ class DefinitionController extends Controller
         $def->fill($data);
         $def->save();
 
-        // Update translations.
+        // Update translations and other relations.
         $def->updateRelations($relations);
 
         // ...
         switch ($return)
         {
             case 'index':
-                $return = $def->getUri(false);
+                $return = $def->uri;
                 break;
 
             case 'edit':
-                $return = route('definition.edit', ['id' => $def->getId()]);
+                $return = route('definition.edit', ['id' => $def->uniqueId]);
                 break;
 
-            case 'add':
-                $return = route('definition.create', ['lang' => $def->mainLanguage->code]);
+            case 'word':
+            case 'phrase':
+                $return = route('definition.create.'. $return, ['lang' => $def->mainLanguage->code]);
                 break;
+
+            default:
+                $return = route('home');
         }
 
         Session::push('messages', 'The details for <em>'. $def->title .'</em> were successfully saved, thanks :)');

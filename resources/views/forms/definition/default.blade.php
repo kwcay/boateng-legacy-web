@@ -1,121 +1,122 @@
-@extends('layouts.base')
+@extends('layouts.narrow')
 
 @section('body')
-	@include('partials.header')
 
-	<section>
-		<h1>
-            @if ($def->exists)
-                Edit an <i>existing</i>
-            @else
-                Suggest a <i>new</i>
-            @endif
-            <br /><em>definition</em><br />
-            @if ($def->exists)
-                <small>
-                    <a href="#" onclick="return App.openDialog('del');">
-                        <span class="fa fa-trash-o"></span> click here to delete it
-                    </a>
-                </small><br />
-            @endif
-			<small>
-				<a href="{{ route('language.create')  }}">&rarr; or click here to suggest a language</a>
-			</small>
-		</h1>
+    <h1>
+        Edit an <i>existing</i>
+        <br>
 
-        @if ($def->exists)
-            <form class="form edit" method="post" name="definition" action="{{ route('definition.update', ['id' => $def->getId()]) }}">
-                <input type="hidden" name="_method" value="PUT">
-        @else
-            <form class="form edit" method="post" name="definition" action="{{ route('definition.store') }}">
-        @endif
+        <em>definition</em>
+        <br>
 
-			{{-- Title --}}
-			<div class="row">
-				<input type="text" name="title" class="text-input" placeholder="e.g. ɔdɔ" value="{{ $def->title }}" />
-				<label for="title">Title</label>
-			</div>
+        <small>
+            <a href="#" onclick="return App.openDialog('del');">
+                <span class="fa fa-trash-o"></span> click here to delete it
+            </a>
+        </small>
+    </h1>
 
-			{{-- Alternate spellings --}}
-			<div class="row">
-				<input
-                    type="text"
-                    id="alt_titles"
-                    name="alt_titles"
-                    class="text-input"
-                    placeholder="e.g. do, dɔ, odo "
-                    value="{{ $def->alt_titles }}" />
-				<label for="alt_titles">Alternate titles or spellings (seperated by ",")</label>
-			</div>
+    <form
+        class="form edit"
+        method="post"
+        name="definition"
+        action="{{ route('definition.update', ['id' => $def->uniqueId]) }}">
 
-			{{-- Type --}}
-			<div class="row">
-                {!! Form::select('sub_type', $def->getSubTypes(), $def->sub_type, array('class' => 'en-text-input')) !!}
-				<label for="type">Word type</label>
-			</div>
+        <input type="hidden" name="_method" value="PUT">
+        <input type="hidden" name="more" value="0">
+        {!! csrf_field() !!}
 
-            {{-- Translation --}}
-            <div class="row">
-                <input
-                    type="text"
-                    id="relations[translation][en]"
-                    name="relations[translation][en]"
-                    class="en-text-input"
-                    placeholder="e.g. love"
-                    value="{{ $def->getTranslation('en') }}" />
-                <label for="relations[translation][en]">English translation</label>
-            </div>
+        {{-- Title --}}
+        <div class="row">
+            <input type="text" name="title" class="text-input" placeholder="e.g. ɔdɔ" value="{{ $def->title }}">
+            <label for="title">Title</label>
+        </div>
 
-            {{-- Meaning --}}
-            <div class="row">
-                <input
-                    type="text"
-                    id="relations[meaning][en]"
-                    name="relations[meaning][en]"
-                    class="en-text-input"
-                    placeholder="e.g. an intense feeling of deep affection."
-                    value="{{ $def->getMeaning('en') }}" />
-                <label for="relations[meaning][en]">English meaning</label>
-            </div>
+        {{-- Alternate spellings --}}
+        <div class="row">
+            <input
+                type="text"
+                id="alt_titles"
+                name="alt_titles"
+                class="text-input"
+                placeholder="e.g. do, dɔ, odo "
+                value="{{ $def->altTitles }}" />
+            <label for="alt_titles">Alternate titles or spellings (seperated by ",")</label>
+        </div>
 
-			{{-- Language --}}
-			<div class="row">
-				<input id="languages" type="text" name="relations[language]" class="text-input remote" value="" />
-				<label for="languages">Languages that use this word. Start typing and select a language from the list. You can drag these around (the first will be considred the "main" language).</label>
-			</div>
+        {{-- Type --}}
+        <div class="row">
+            {!! Form::select('sub_type', $def->getSubTypes(), $def->subType, array('class' => 'en-text-input')) !!}
+            <label for="type">Sub type</label>
+        </div>
 
-			<!-- Form actions -->
-			<div class="row center">
-				<input type="submit" name="finish" value="done !" />
-				<input type="submit" name="new" value="save + add" onclick="return saveAndNew();" />
-				<input type="button" name="cancel" value="return" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;" />
-			</div>
+        {{-- Translation --}}
+        <div class="row">
+            <input
+                type="text"
+                id="relations[practical][eng]"
+                name="relations[practical][eng]"
+                class="en-text-input"
+                placeholder="e.g. love"
+                value="{{ $def->getPracticalTranslation('eng') }}" />
+            <label for="relations[practical][eng]">English translation</label>
+        </div>
 
-            {!! csrf_field() !!}
-			<input type="hidden" name="more" value="0" />
-		</form>
-	</section>
+        {{-- Meaning --}}
+        <div class="row">
+            <input
+                type="text"
+                id="relations[meaning][eng]"
+                name="relations[meaning][eng]"
+                class="en-text-input"
+                placeholder="e.g. an intense feeling of deep affection."
+                value="{{ $def->getMeaning('eng') }}" />
+            <label for="relations[meaning][eng]">English meaning</label>
+        </div>
 
-    @if ($def->exists)
-        <!-- Delete confirmation -->
-        <div class="dialog del">
-            <div>
-                <a href="#" class="close">&#10005;</a>
-                <h1>Really?</h1>
-                <div class="center">
-                    Are you sure you want to delete the definition for
-                    <h2>&ldquo; {{ $def->title }} &rdquo;</h2>
-                    for ever and ever?<br /><br />
-                    <form class="form" method="post" name="delete" action="{{ route('definition.destroy', ['id' => $def->getId()]) }}">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="submit" name="confirm" value="yes, delete {{ $def->title }}" />
-                        <input type="button" name="cancel" value="no, return" onclick="return App.closeDialogs()" />
-			            {!! Form::token() !!}
-                    </form>
-                </div>
+        {{-- Language --}}
+        <div class="row">
+            <input id="languages" type="text" name="relations[language]" class="text-input remote" value="">
+            <label for="languages">
+                Languages that use this word. Start typing and select a language from the list.
+                You can drag these around (the first will be considred the "main" language).
+            </label>
+        </div>
+
+        <!-- Form actions -->
+        <div class="row center">
+            <input type="submit" name="finish" value="done !" disabled>
+            <input type="submit" name="new" value="save + add" onclick="return saveAndNew();" disabled>
+            <input type="button" name="cancel" value="return" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;">
+        </div>
+
+    </form>
+
+    <!-- Delete confirmation -->
+    <div class="dialog del">
+        <div>
+            <a href="#" class="close">&#10005;</a>
+            <h1>Really?</h1>
+            <div class="center">
+                Are you sure you want to delete the definition for
+                <h2>&ldquo; {{ $def->title }} &rdquo;</h2>
+                for ever and ever?
+                <br><br>
+
+                <form
+                    class="form"
+                    method="post"
+                    name="delete"
+                    action="{{ route('definition.destroy', ['id' => $def->uniqueId]) }}">
+
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="submit" name="confirm" value="yes, delete {{ $def->title }}">
+                    <input type="button" name="cancel" value="no, return" onclick="return App.closeDialogs()">
+		            {!! Form::token() !!}
+                </form>
             </div>
         </div>
-    @endif
+    </div>
 
     <script type="text/javascript">
 
@@ -134,5 +135,4 @@
 
     </script>
 
-	@include('partials.footer')
 @stop

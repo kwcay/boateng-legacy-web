@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  */
 namespace App\Models\Definitions;
 
@@ -60,7 +60,9 @@ class Word extends Definition
      */
     public static function search($query, array $options = [])
     {
-        return parent::search($query, array_merge($options, ['type' => static::types()[static::TYPE_WORD]]));
+        return parent::search($query, array_merge($options, [
+            'type' => static::types()[static::TYPE_WORD]
+        ]));
     }
 
     /**
