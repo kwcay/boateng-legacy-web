@@ -9,6 +9,9 @@ var Forms =
      */
     _def: {},
 
+    /**
+     *
+     */
     init: function() {
 
         // Attach helper keyboard to text inputs.
@@ -27,6 +30,9 @@ var Forms =
         $('#keyboard').draggable();
     },
 
+    /**
+     *
+     */
     getDefinitionForm: function(name) {
         return this._def[name];
     },
@@ -232,6 +238,9 @@ var Forms =
         this._def[name].query.focus();
     },
 
+    /**
+     *
+     */
     lookupDefinition: function(name)
     {
         // Performance check
@@ -300,6 +309,9 @@ var Forms =
         return false;
     },
 
+    /**
+     * TODO: when is this method used?
+     */
     setDefinitionResult: function(name, html)
     {
         // Performance check
