@@ -1,3 +1,6 @@
+
+@inject('helper', 'App\Utilities')
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -15,9 +18,9 @@
 		<meta property="og:title" content="@yield('title', 'Di Nkomo: the book of native tongues.')">
 		<meta property="og:desc" content="@yield('description', 'The book of native tongues.')">
 		<meta property="og:type" content="website">
-        <script src="{{ elixir('assets/js/dinkomo.js') }}" type="text/javascript"></script>
+        <script src="{{ $helper->rev('all.js') }}" type="text/javascript"></script>
 		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
-		<link rel="stylesheet" type="text/css" href="{{ elixir('assets/css/dinkomo.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ $helper->rev('all.css') }}">
 	@show
 </head>
 <body>
