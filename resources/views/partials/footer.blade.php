@@ -5,8 +5,7 @@
             <footer>
                 <div class="shortcuts">
                     <a href="{{ route('home') }}" class="fa fa-book fa-fw"></a>
-                    <a href="#" class="fa fa-pencil fa-fw" onclick="return Dialogs.open('resource');"></a>
-                    <a href="#" class="fa fa-globe fa-fw" onclick="return Dialogs.open('language');"></a>
+                    <!-- <a href="#" class="fa fa-plus fa-fw" onclick="return Dialogs.open('resource');"></a> -->
 
                     @if (Auth::check())
                         <a href="{{ route('admin') }}" class="fa fa-cubes fa-fw"></a>

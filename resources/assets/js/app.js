@@ -19,7 +19,6 @@ var App =
             window.location.hostname.match(/.*\.vagrant$/i)) ? true : false;
 
         // Setup AJAX headers
-        this.log('Setting CSRF token for ajax calls: ' + $('meta[name="csrf-token"]').attr('content'));
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

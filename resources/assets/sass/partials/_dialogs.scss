@@ -9,7 +9,7 @@
 	height: 100%;
 	display: none;
 	color: #fff;
-	background: transparent url('../../../assets/img/shade.png') repeat;
+	background: transparent url('/assets/img/shade.png') repeat;
 }
 .dialog > div {
 	position: relative;
@@ -48,17 +48,15 @@
 }
 .dialog .form select {
     margin: 0 4px;
-    padding: 3px 5px 5px;
+    padding: 0px 5px 2px;
     color: #fff;
     font-size: 1.1em;
     text-align: center;
     letter-spacing: 2px;
     border-bottom: 1px solid #aaa;
-    background-color: #333;
+    background-color: #999;
     border: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
+    @include vendor-prefix(appearance, none);
     cursor: pointer;
 }
 .dialog .form input {
@@ -183,7 +181,7 @@
 	height: auto;
 	width: 100%;
 	margin: 10px auto;
-	padding: 10px 0;
+	padding: 10px 0 15px;
 	text-align: center;
 	background-color: #fff;
 	border: 1px solid #ddd;

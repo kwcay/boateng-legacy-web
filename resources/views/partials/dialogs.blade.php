@@ -44,31 +44,6 @@
 	</div>
 </div>
 
-{{-- "Find a language" dialog --}}
-<div class="dialog language">
-	<div>
-		<a href="#" class="close">&#10005;</a>
-
-		<h1>Find a language</h1>
-        <div class="center">
-
-            <br>
-            <form name="findLanguageDialogForm" class="form" onsubmit="return false;">
-
-                <div class="semantic-search">
-                    <input name="language" type="text" class="prompt center" placeholder="e.g. Twi" />
-                    <div class="results"></div>
-                </div>
-
-            </form>
-
-            <script type="text/javascript">
-                Dialogs.setupFindLanguageForm('.dialog.language .semantic-search');
-            </script>
-        </div>
-	</div>
-</div>
-
 {{-- Helper keyboard --}}
 <div id="keyboard">
     <span class="move fa fa-arrows"></span>

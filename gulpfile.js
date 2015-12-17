@@ -72,8 +72,11 @@ var js = {
     dependencies: [
         'bower_components/microplugin/src/microplugin.js',
         'bower_components/jquery/dist/jquery.min.js',
+        'bower_components/jquery-ui/jquery-ui.min.js',
         'bower_components/bootstrap/dist/js/bootstrap.min.js',
-        'bower_components/selectize/dist/js/selectize.min.js'
+        'bower_components/sifter/sifter.min.js',
+        // 'bower_components/selectize/dist/js/selectize.min.js'
+        'bower_components/selectize/dist/js/selectize.js'
     ]
 };
 
@@ -144,7 +147,7 @@ gulp.task('copy', function() {
 
 // Reruns the tasks when a file changes.
 gulp.task('watch', function() {
-    gulp.watch(css.dev.concat('gulpfile.js'), ['css']);
+    gulp.watch(['resources/assets/sass/**/*.scss'].concat('gulpfile.js'), ['css']);
     gulp.watch(js.dev.concat('gulpfile.js'), ['js']);
 });
 

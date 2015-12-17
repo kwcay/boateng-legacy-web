@@ -54,7 +54,7 @@ var Forms =
         var $select = $(input).selectize({
             valueField: 'code',
             labelField: 'name',
-            searchField: ['code', 'name', 'alt_names'],
+            searchField: ['code', 'name', 'altNames'],
             options: items,
             plugins: (plugins || null),
             create: false,
@@ -90,12 +90,12 @@ var Forms =
                 if (!query.trim().length) return callback();
                 $.ajax({
                     url: App.root +'0.1/language/search/' + App.urlencode(query.trim()),
-                    type: 'POST',
+                    type: 'GET',
                     error: function() {
                         callback();
                     },
-                    success: function(obj) {
-                        callback(obj.results);
+                    success: function(results) {
+                        callback(results);
                     }
                 });
             }

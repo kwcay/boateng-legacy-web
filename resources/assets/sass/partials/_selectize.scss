@@ -97,7 +97,7 @@
     position: relative;
 }
 .selectize-dropdown {
-    font-size: 13px;
+    // font-size: 13px;
     line-height: 18px;
     -webkit-font-smoothing: inherit;
 }
@@ -153,24 +153,24 @@ border-radius: 3px 3px 0 0;
 }
 .selectize-control.multi .selectize-input.disabled > div,
 .selectize-control.multi .selectize-input.disabled > div.active {
-color: #ffffff;
-background: #d2d2d2;
-border: 1px solid #aaaaaa;
+    color: #ffffff;
+    background: #d2d2d2;
+    border: 1px solid #aaaaaa;
 }
 .selectize-input > input {
-      display: inline-block !important;
-      padding: 0 !important;
-      min-height: 0 !important;
-      max-height: none !important;
-      max-width: 100% !important;
-      margin: 0 1px !important;
-      text-indent: 0 !important;
-      border: 0 none !important;
-      background: none !important;
-      line-height: inherit !important;
-      -webkit-user-select: auto !important;
-      -webkit-box-shadow: none !important;
-      box-shadow: none !important;
+    display: inline-block !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    max-width: 100% !important;
+    margin: 0 1px !important;
+    text-indent: 0 !important;
+    border: 0 none !important;
+    background: none !important;
+    line-height: inherit !important;
+    -webkit-user-select: auto !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
 }
 .selectize-input > input::-ms-clear {
     display: none;
@@ -184,15 +184,16 @@ border: 1px solid #aaaaaa;
     clear: left;
 }
 .selectize-input.dropdown-active::before {
-content: ' ';
-display: block;
-position: absolute;
-background: #f0f0f0;
-height: 1px;
-bottom: 0;
-left: 0;
-right: 0;
+    content: ' ';
+    display: block;
+    position: absolute;
+    background: #f0f0f0;
+    height: 1px;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
+
 .selectize-dropdown {
     position: absolute;
     z-index: 10;
@@ -200,54 +201,68 @@ right: 0;
     border-top: 0 none;
     background: #eee;
     margin: -1px 0 0 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    -webkit-border-radius: 0 0 3px 3px;
-    -moz-border-radius: 0 0 3px 3px;
-    border-radius: 0 0 3px 3px;
-    -webkit-box-shadow: 2px 2px 2px #eee;
-    box-shadow: 2px 2px 2px #eee;
+    @include vendor-prefix(box-sizing, border-box);
+    @include border-radius(0 0 3px 3px);
+    @include box-shadow(2px 2px 2px #eee);
+
+    [data-selectable] {
+        cursor: pointer;
+        overflow: hidden;
+
+        .highlight {
+            background: #fff;
+            -webkit-border-radius: 1px;
+            -moz-border-radius: 1px;
+            border-radius: 1px;
+        }
+    }
+
+    [data-selectable], .optgroup-header {
+        padding: 5px 8px;
+        font-size: 24px;
+    }
+
+    .optgroup:first-child .optgroup-header {
+        border-top: 0 none;
+    }
+    .optgroup-header {
+        background: #ccc;
+        cursor: default;
+    }
+
+    .active {
+        background-color: #fff;
+
+        &.create {
+            color: #495c68;
+        }
+    }
+
+    .create {
+        color: rgba(48, 48, 48, 0.5);
+    }
+
+    .hint {
+        margin: 0 5px;
+        color: #aaa;
+    }
+
+    .label {
+        color: #333;
+    }
 }
-.selectize-dropdown [data-selectable] {
-    cursor: pointer;
-    overflow: hidden;
-}
-.selectize-dropdown [data-selectable] .highlight {
-    background: #fff;
-    -webkit-border-radius: 1px;
-    -moz-border-radius: 1px;
-    border-radius: 1px;
-}
-.selectize-dropdown [data-selectable],
-.selectize-dropdown .optgroup-header {
-    padding: 5px 8px;
-}
-.selectize-dropdown .optgroup:first-child .optgroup-header {
-    border-top: 0 none;
-}
-.selectize-dropdown .optgroup-header {
-    background: #ccc;
-    cursor: default;
-}
-.selectize-dropdown .active {
-    background-color: #fff;
-}
-.selectize-dropdown .active.create {
-    color: #495c68;
-}
-.selectize-dropdown .create {
-    color: rgba(48, 48, 48, 0.5);
-}
-.selectize-dropdown .hint {
-    margin: 0 5px;
-    color: #aaa;
-}
+
+
+
 .selectize-dropdown-content {
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 200px;
 }
+
+/*
+ * Inputs
+ */
 .selectize-control.single .selectize-input,
 .selectize-control.single .selectize-input input {
     cursor: pointer;

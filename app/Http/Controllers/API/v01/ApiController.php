@@ -112,8 +112,11 @@ class ApiController extends Controller
             switch (strtolower($resource))
             {
                 case 'user':
-                case 'language':
                     $model = null;
+                    break;
+
+                case 'language':
+                    $model = new Language;
                     break;
 
                 default:

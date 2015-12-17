@@ -229,12 +229,13 @@ class DefinitionController extends Controller
 	 */
 	public function store()
     {
+        // Performance check.
         if (!$definition = Definition::getInstance(Request::input('type'))) {
             return redirect(route('home'))->withMessages(['Internal Error.']);
         }
 
         // Retrieve new definition data.
-        $data = Request::only(['title', 'alt_titles', 'type', 'sub_type', 'state', 'relations']);
+        $data = Request::only(['title', 'altTitles', 'type', 'subType', 'state', 'relations']);
         $data['state'] = Auth::guest() ? Definition::STATE_VISIBLE : $data['state'];
 
         $return = Request::input('next') == 'continue' ? 'edit' : 'index';
@@ -251,24 +252,28 @@ class DefinitionController extends Controller
 	public function edit($id)
 	{
         // Retrieve the definition object.
-        if (!$def = Definition::find($id)) {
+        if (!$definition = Definition::find($id)) {
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
-        // Create language options for selectize plugin.
-        $lso = [];
-        foreach ($def->languages as $lang) {
-            $lso[] = [
+        // Language arrays for selectize plugin.
+        $options = $items = [];
+        foreach ($definition->languages as $lang)
+        {
+            // Only the value is used for the selected items.
+            $items[] = $lang->code;
+
+            // The value and name will be json-encoded for the selectize options.
+            $options[] = [
                 'code' => $lang->code,
                 'name' => $lang->name
             ];
         }
 
-        // TODO: update view according to definition type.
-
         return view('forms.definition.default', [
-            'def'       => $def,
-            'options'   => $lso
+            'definition' => $definition,
+            'languageValue' => implode(',', $items),
+            'languageOptions' => $options
         ]);
 	}
 
@@ -282,20 +287,20 @@ class DefinitionController extends Controller
 	public function update($id)
 	{
         // Retrieve the definition object.
-        if (!$def = Definition::find($id)) {
+        if (!$definition = Definition::find($id)) {
             throw new \Exception(Lang::get('errors.resource_not_found'), 404);
         }
 
         $data = Request::only([
-            'title', 'alt_titles', 'data', 'type', 'sub_type', 'tags', 'state', 'relations'
+            'title', 'altTitles', 'type', 'subType', 'state', 'relations'
         ]);
 
-        $data['type'] = $def->rawType;
-        $data['state'] = $def->rawState;
+        $data['type'] = $definition->rawType;
+        $data['state'] = $definition->rawState;
 
         $return = Request::has('add') ? 'add' : 'index';
 
-        return $this->save($def, $data, $return);
+        return $this->save($definition, $data, $return);
 	}
 
     /**

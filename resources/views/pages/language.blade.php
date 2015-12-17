@@ -23,6 +23,15 @@
         {{-- Search form --}}
         @include('partials.lang-search', ['code' => $lang->code, 'name' => $lang->name])
         <br>
+
+        <div class="emphasis">
+            Know a thing or two about <em>{{ $lang->name }}</em>?
+            <br>
+
+            Suggest your own
+            <a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">words</a>
+            or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">sayings</a>.
+        </div>
         <br>
 
         {{-- Language details --}}
@@ -96,7 +105,7 @@
 
     @else
     <div class="center">
-        We have no definitions in this language yet.<br>
+        We have no words in this language yet.<br>
         <em><a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">Be the first to add one!</a></em>
     </div>
     @endif

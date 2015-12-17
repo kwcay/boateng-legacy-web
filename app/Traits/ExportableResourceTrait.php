@@ -1,4 +1,9 @@
-<?php namespace App\Traits;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
+namespace App\Traits;
 
 use Symfony\Component\Yaml\Yaml;
 

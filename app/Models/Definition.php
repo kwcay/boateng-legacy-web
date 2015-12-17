@@ -25,10 +25,11 @@ use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Definition extends Model
 {
-    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
+    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams, CamelCaseAttrs;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
     CONST TYPE_NAME = 1;        // Names.

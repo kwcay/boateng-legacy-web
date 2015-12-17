@@ -27,7 +27,7 @@
 
         {{-- Sub type --}}
         <div class="row">
-            {!! Form::select('sub_type', $word->getSubTypes(), $word->subType, ['class' => 'en-text-input center']) !!}
+            {!! Form::select('subType', $word->getSubTypes(), $word->rawSubType, ['class' => 'en-text-input center']) !!}
         </div>
 
         <div class="row center">
@@ -59,12 +59,12 @@
     </form>
 
     <script type="text/javascript">
-        $(document.definition.title).on('blur', function()
-        {
-            if (!this.value.trim().length) return;
-
-            $(this).addClass('loading');
-        });
+        // $(document.definition.title).on('blur', function()
+        // {
+        //     if (!this.value.trim().length) return;
+        //
+        //     $(this).addClass('loading');
+        // });
     </script>
 
 @stop

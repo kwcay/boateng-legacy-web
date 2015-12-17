@@ -20,15 +20,21 @@
         class="form edit"
         method="post"
         name="definition"
-        action="{{ route('definition.update', ['id' => $def->uniqueId]) }}">
+        action="{{ route('definition.update', ['id' => $definition->uniqueId]) }}">
 
         <input type="hidden" name="_method" value="PUT">
-        <input type="hidden" name="more" value="0">
         {!! csrf_field() !!}
 
         {{-- Title --}}
         <div class="row">
-            <input type="text" name="title" class="text-input" placeholder="e.g. ɔdɔ" value="{{ $def->title }}">
+            <input
+                type="text"
+                name="title"
+                class="text-input"
+                placeholder="e.g. ɔdɔ"
+                value="{{ $definition->title }}"
+                autocomplete="off"
+                required>
             <label for="title">Title</label>
         </div>
 
@@ -36,17 +42,23 @@
         <div class="row">
             <input
                 type="text"
-                id="alt_titles"
-                name="alt_titles"
+                id="altTitles"
+                name="altTitles"
                 class="text-input"
                 placeholder="e.g. do, dɔ, odo "
-                value="{{ $def->altTitles }}" />
-            <label for="alt_titles">Alternate titles or spellings (seperated by ",")</label>
+                value="{{ $definition->altTitles }}"
+                autocomplete="off">
+            <label for="altTitles">Alternate titles or spellings (seperated by ",")</label>
         </div>
 
         {{-- Type --}}
         <div class="row">
-            {!! Form::select('sub_type', $def->getSubTypes(), $def->subType, array('class' => 'en-text-input')) !!}
+            {!! Form::select(
+                'subType',
+                $definition->getSubTypes(),
+                $definition->rawSubType,
+                ['class' => 'en-text-input']
+            ) !!}
             <label for="type">Sub type</label>
         </div>
 
@@ -58,7 +70,9 @@
                 name="relations[practical][eng]"
                 class="en-text-input"
                 placeholder="e.g. love"
-                value="{{ $def->getPracticalTranslation('eng') }}" />
+                value="{{ $definition->getPracticalTranslation('eng') }}"
+                autocomplete="off"
+                required>
             <label for="relations[practical][eng]">English translation</label>
         </div>
 
@@ -70,13 +84,19 @@
                 name="relations[meaning][eng]"
                 class="en-text-input"
                 placeholder="e.g. an intense feeling of deep affection."
-                value="{{ $def->getMeaning('eng') }}" />
+                value="{{ $definition->getMeaning('eng') }}"
+                autocomplete="off">
             <label for="relations[meaning][eng]">English meaning</label>
         </div>
 
         {{-- Language --}}
         <div class="row">
-            <input id="languages" type="text" name="relations[language]" class="text-input remote" value="">
+            <input
+                id="languages"
+                type="text"
+                name="relations[language]"
+                class="text-input remote"
+                value="{{ $languageValue }}">
             <label for="languages">
                 Languages that use this word. Start typing and select a language from the list.
                 You can drag these around (the first will be considred the "main" language).
@@ -85,9 +105,8 @@
 
         <!-- Form actions -->
         <div class="row center">
-            <input type="submit" name="finish" value="done !" disabled>
-            <input type="submit" name="new" value="save + add" onclick="return saveAndNew();" disabled>
-            <input type="button" name="cancel" value="return" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;">
+            <input type="submit" name="finish" value="done !">
+            <input type="button" name="cancel" value="cancel" onclick="return confirm('Cancel editing?') ? App.redirect('') : false;">
         </div>
 
     </form>
@@ -99,7 +118,7 @@
             <h1>Really?</h1>
             <div class="center">
                 Are you sure you want to delete the definition for
-                <h2>&ldquo; {{ $def->title }} &rdquo;</h2>
+                <h2>&ldquo; {{ $definition->title }} &rdquo;</h2>
                 for ever and ever?
                 <br><br>
 
@@ -107,10 +126,10 @@
                     class="form"
                     method="post"
                     name="delete"
-                    action="{{ route('definition.destroy', ['id' => $def->uniqueId]) }}">
+                    action="{{ route('definition.destroy', ['id' => $definition->uniqueId]) }}">
 
                     <input type="hidden" name="_method" value="DELETE">
-                    <input type="submit" name="confirm" value="yes, delete {{ $def->title }}">
+                    <input type="submit" name="confirm" value="yes, delete {{ $definition->title }}">
                     <input type="button" name="cancel" value="no, return" onclick="return App.closeDialogs()">
 		            {!! Form::token() !!}
                 </form>
@@ -120,16 +139,13 @@
 
     <script type="text/javascript">
 
-    // Word types
-    //$('select[name="type"]').selectize();
-
     // Setup language search for "lanuguage" field
-    Forms.setupLangSearch('#languages', {!! json_encode($options) !!}, 20, ['remove_button', 'drag_drop']);
-
-    var saveAndNew = function() {
-        document.definition.more.value = 1;
-        document.definition.submit();
-    };
+    Forms.setupLangSearch(
+        '#languages',
+        {!! json_encode($languageOptions) !!},
+        20,
+        ['remove_button', 'drag_drop']
+    );
 
     //$(document).ready(function() { $('input[name="word"]').focus(); });
 

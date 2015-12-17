@@ -39,18 +39,18 @@ var Dialogs =
     setupAddResourceForm: function(input)
     {
         // Semantic UI search input.
-        $(input).search({
-            apiSettings: {
-                method : 'POST',
-                url: 'language/search/{query}?semantic=1'
-            },
-            searchFields: ['name', 'alt_names'],
-            searchDelay: 500,
-            searchFullText: false,
-            onSelect: function(result, response) {
-                document.addResourceDialogForm.lang.value = result.code;
-            }
-        });
+        // $(input).search({
+        //     apiSettings: {
+        //         method : 'POST',
+        //         url: 'language/search/{query}?semantic=1'
+        //     },
+        //     searchFields: ['name', 'alt_names'],
+        //     searchDelay: 500,
+        //     searchFullText: false,
+        //     onSelect: function(result, response) {
+        //         document.addResourceDialogForm.lang.value = result.code;
+        //     }
+        // });
 
         // Clear input.
         $(input).find('.prompt').val('');
@@ -66,27 +66,5 @@ var Dialogs =
 
         App.redirect(code +'/+'+ $(document.addResourceDialogForm.type).val());
         return false;
-    },
-
-    //
-    // "Find a language" dialog.
-    //
-
-    setupFindLanguageForm: function(input)
-    {
-        // Semantic UI search input.
-        $(input).search({
-            apiSettings: {
-                method : 'POST',
-                url: 'language/search/{query}?semantic=1'
-            },
-            searchFields: ['name', 'alt_names'],
-            searchDelay: 500,
-            searchFullText: false,
-            onSelect: function(result, response) {
-                $(document.findLanguageDialogForm).fadeOut(500);
-                App.redirect(result.code);
-            }
-        });
-    },
+    }
 };
