@@ -218,8 +218,7 @@ border-radius: 3px 3px 0 0;
     }
 
     [data-selectable], .optgroup-header {
-        padding: 5px 8px;
-        font-size: 24px;
+        padding: 15px 8px;
     }
 
     .optgroup:first-child .optgroup-header {
@@ -242,11 +241,12 @@ border-radius: 3px 3px 0 0;
         color: rgba(48, 48, 48, 0.5);
     }
 
+    .hint, .label {
+        font-size: .9em;
+    }
     .hint {
-        margin: 0 5px;
         color: #aaa;
     }
-
     .label {
         color: #333;
     }

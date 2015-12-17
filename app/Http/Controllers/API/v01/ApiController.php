@@ -1,7 +1,8 @@
 <?php
 /**
- * @file    ApiController.php
- * @brief   ...
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ * @version 0.1
  */
 namespace App\Http\Controllers\API\v01;
 
@@ -34,29 +35,31 @@ class ApiController extends Controller
     {
         // Retrieve model.
         if (!$model = $this->getResourceModel($resource)) {
-            return $this->abort(500, 'Invalid resource type.');
+            return response('Invalid resource type.', 500);
         }
 
-        return $this->send($model->count());
+        return $model->count();
     }
 
     /**
      * Resource search.
      *
-     * @param string $resource
+     * @param string $resourceName
      * @param string $query
      */
-    public function search($resource, $query)
+    public function search($resourceName, $query)
     {
         // Retrieve model.
-        if (!$model = $this->getResourceModel($resource)) {
-            return $this->abort(400, 'Invalid resource type.');
+        if (!$model = $this->getResourceModel($resourceName)) {
+            return response('Invalid resource type.', 500);
         }
 
         // Retrieve search options.
         $options = [
+            'offset' => $this->request->input('offset', 0),
+            'limit' => $this->request->input('limit'),
             'lang' => $this->request->input('lang', ''),
-            'method' => $this->request->input('method', 'fulltext')
+            'method' => $this->request->input('method', 'default')
         ];
 
         // Perform search.
@@ -95,21 +98,21 @@ class ApiController extends Controller
     /**
      * Helper method to determine the requested resource's type.
      *
-     * @param string $resource
+     * @param string $resourceName
      * @return mixed
      */
-    public function getResourceModel($resource)
+    public function getResourceModel($resourceName)
     {
         // Retrieve definition model.
         $definitionTypes = array_flip(Definition::types());
-        if (array_key_exists($resource, $definitionTypes)) {
-            $model = Definition::getInstance($definitionTypes[$resource]);
+        if (array_key_exists($resourceName, $definitionTypes)) {
+            $model = Definition::getInstance($definitionTypes[$resourceName]);
         }
 
         // Or another model.
         else
         {
-            switch (strtolower($resource))
+            switch (strtolower($resourceName))
             {
                 case 'user':
                     $model = null;

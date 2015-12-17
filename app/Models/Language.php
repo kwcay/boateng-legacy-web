@@ -16,11 +16,12 @@ use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 
 class Language extends Model
 {
-    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
+    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams, CamelCaseAttrs;
 
     /**
      *

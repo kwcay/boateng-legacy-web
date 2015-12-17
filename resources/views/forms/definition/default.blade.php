@@ -130,7 +130,7 @@
 
                     <input type="hidden" name="_method" value="DELETE">
                     <input type="submit" name="confirm" value="yes, delete {{ $definition->title }}">
-                    <input type="button" name="cancel" value="no, return" onclick="return App.closeDialogs()">
+                    <input type="button" name="cancel" value="no, return" onclick="return Dialogs.close()">
 		            {!! Form::token() !!}
                 </form>
             </div>

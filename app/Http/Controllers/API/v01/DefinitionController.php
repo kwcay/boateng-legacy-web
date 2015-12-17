@@ -34,16 +34,6 @@ class DefinitionController extends Controller
     }
 
     /**
-     *
-     *
-     * TODO: restrict this method.
-     */
-    public function index()
-    {
-        return Request::has('dev') ? Definition::all() : response('Bad Request.', 400);
-    }
-
-    /**
      * Returns a definition resource.
      *
      * @param string $id    Unique ID of definition.
@@ -56,7 +46,7 @@ class DefinitionController extends Controller
             return $definition;
         }
 
-        return response('Definition Nod Found.', 404);
+        return response('Definition Not Found.', 404);
     }
 
     /**

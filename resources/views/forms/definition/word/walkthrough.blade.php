@@ -15,19 +15,35 @@
     <br>
     <br>
 
-    <form class="edit form" method="post" name="definition" action="{{ route('definition.store') }}">
+    <form
+        class="edit form"
+        method="post"
+        name="definition"
+        action="{{ route('definition.store') }}">
+        
         {!! csrf_field() !!}
         <input type="hidden" name="type" value="{{ $type }}">
         <input type="hidden" name="relations[language][]" value="{{ $lang->code }}">
 
         {{-- Word --}}
         <div class="row">
-            <input type="text" name="title" class="text-input center" placeholder="your word" required>
+            <input
+                type="text"
+                name="title"
+                class="text-input center"
+                placeholder="your word"
+                autocomplete="off"
+                required>
         </div>
 
         {{-- Sub type --}}
         <div class="row">
-            {!! Form::select('subType', $word->getSubTypes(), $word->rawSubType, ['class' => 'en-text-input center']) !!}
+            {!! Form::select(
+                'subType',
+                $word->getSubTypes(),
+                $word->rawSubType,
+                ['class' => 'en-text-input center']
+            ) !!}
         </div>
 
         <div class="row center">
@@ -41,6 +57,7 @@
                 name="relations[practical][eng]"
                 class="en-text-input center"
                 placeholder="your translation"
+                autocomplete="off"
                 required>
         </div>
 

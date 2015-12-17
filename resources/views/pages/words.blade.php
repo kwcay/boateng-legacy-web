@@ -4,7 +4,6 @@
 
 @section('body')
 
-
     <h1>{{ $query }}</h1>
 
     <div class="center pad-bottom">
@@ -26,13 +25,27 @@
                     </span>
                     @endif
 
-                    &ldquo; {{ $def->translation['practical']['eng'] }} &rdquo;
+                    &ldquo; {{ $def->getPracticalTranslation('eng') }} &rdquo;
                 </h3>
-                @if (strlen($def->translation['meaning']['eng']))
-                    {{ $def->translation['meaning']['eng'] }}.
+
+                {{-- Append meaning --}}
+                @if ($def->hasMeaning('eng'))
+                    {{ $def->getMeaning('eng') }}.
                 @endif
+
+                {{-- Append alternative spellings --}}
                 @if (strlen($def->altTitles))
-                    Alternatively: {{ $def->altTitles }}
+                    <i>Alternatively</i>: {{ $def->altTitles }}.
+                @endif
+
+                {{-- Add language information --}}
+                @if (count($def->languages) > 1)
+                    <i>Also a word in: </i>
+                    @foreach ($def->languages as $otherLang)
+                        @if ($otherLang->code != $lang->code)
+                            <a href="{{ $otherLang->uri }}">{{ $otherLang->name }}</a>
+                        @endif
+                    @endforeach
                 @endif
             </div>
         @endforeach

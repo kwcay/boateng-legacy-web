@@ -85,7 +85,7 @@ Route::group(['prefix' => '0.1', 'namespace' => 'API\v01', 'middleware' => ['api
     Route::get('{definitionType}/search/{query}', 'ApiController@search');
     Route::get('{definitionType}/title/{title}', 'DefinitionController@findBytitle');
     Route::options('definition/{id?}', 'ApiController@options');
-    Route::resource('definition', 'DefinitionController', ['except' => ['create', 'edit']]);
+    Route::resource('definition', 'DefinitionController', ['except' => ['index', 'create', 'edit']]);
 
     // Language endpoints.
     Route::resource('language', 'LanguageController', ['except' => ['create', 'store', 'destroy']]);
