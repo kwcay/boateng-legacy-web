@@ -1,7 +1,7 @@
 <?php
 /**
- * @file    DataController.php
- * @brief   ...
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
  */
 namespace App\Http\Controllers\Data\v041;
 
@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
+use App\Factories\DataExportFactory as ExportHelper;
 use App\Factories\DataImportFactory as ImportHelper;
 
 class DataController extends Controller
@@ -54,9 +55,34 @@ class DataController extends Controller
 
     /**
      * Exports a resource to file.
+     *
+     * @param string $resourceName
+     * @param string $format
      */
-    public function export()
+    public function export($resourceName, $format)
     {
-        return response('Not Implemented.', 501);
+        // Use the DataExportFactory to export and format data from the database.
+        try
+        {
+            $result = $this->exportHelper->exportToFormat($resourceName, $format);
+        }
+        catch (Exception $e)
+        {
+            return redirect(route('admin.import'))->withMessages([$e->getMessage()]);
+        }
+
+        // Disable compression.
+        @\ini_set('zlib.output_compression', 'Off');
+
+        // Set some cache-busting headers, set the response content, and send everything to client.
+        return $this->response
+            ->header('Pragma', 'public')
+            ->header('Expires', '-1')
+            ->header('Cache-Control', 'public, must-revalidate, post-check=0, pre-check=0')
+            ->header('Content-Type', $result['Content-Type'])
+            ->header('Content-Disposition',
+                $this->response->headers->makeDisposition('attachment', $result['filename']))
+            ->setContent($result['content'])
+            ->send();
     }
 }

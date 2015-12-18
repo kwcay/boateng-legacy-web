@@ -1,6 +1,6 @@
 <?php
 /**
- * This could be moved to a new namespace "App\Helpers" ...
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
  */
 namespace App\Factories;

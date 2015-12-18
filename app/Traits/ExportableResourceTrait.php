@@ -55,7 +55,7 @@ trait ExportableResourceTrait
                 break;
 
             default:
-                throw new \Exception('Invalid export format.');
+                throw new \Exception('Invalid Format.');
         }
 
         return $result;

@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
  */
 namespace App\Factories\DataImport\Definition;
