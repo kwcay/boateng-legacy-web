@@ -89,6 +89,19 @@
             <label for="relations[meaning][eng]">English meaning</label>
         </div>
 
+        {{-- Literal translation --}}
+        <div class="row">
+            <input
+                type="text"
+                id="relations[literal][eng]"
+                name="relations[literal][eng]"
+                class="en-text-input"
+                placeholder=""
+                value="{{ $definition->getLiteralTranslation('eng') }}"
+                autocomplete="off">
+            <label for="relations[literal][eng]">Literal translation</label>
+        </div>
+
         {{-- Language --}}
         <div class="row">
             <input

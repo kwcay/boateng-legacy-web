@@ -33,6 +33,11 @@
                     {{ $def->getMeaning('eng') }}.
                 @endif
 
+                {{-- Append literal meaning --}}
+                @if ($def->hasLiteralTranslation('eng'))
+                    <i>Literally</i>: {{ $def->getLiteralTranslation('eng') }}.
+                @endif
+
                 {{-- Append alternative spellings --}}
                 @if (strlen($def->altTitles))
                     <i>Alternatively</i>: {{ $def->altTitles }}.
