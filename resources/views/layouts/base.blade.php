@@ -18,6 +18,7 @@
         <script src="{{ elixir('assets/js/dinkomo.js') }}" type="text/javascript"></script>
 		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 		<link rel="stylesheet" type="text/css" href="{{ elixir('assets/css/dinkomo.css') }}" />
+        @include('partials.analytics')
 	@show
 </head>
 <body>

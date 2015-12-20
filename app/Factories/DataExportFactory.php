@@ -25,7 +25,7 @@ class DataExportFactory extends BaseFactory
      */
     public function boot()
     {
-        $this->setDataPath(storage_path() .'/app/export');
+
     }
 
     /**
@@ -42,7 +42,7 @@ class DataExportFactory extends BaseFactory
             throw new Exception('Invalid Resource Type.');
         }
 
-        $className = 'App\\Models\\'. ucfirst($resourceType);
+        $className = 'App\\Models\\'. ucfirst($type);
 
         // Double-check data format.
         if (!in_array($format, $className::getExportFormats())) {

@@ -26,9 +26,10 @@ class DataController extends Controller
      * @param Request $request
      * @param Response $response
      */
-    public function __construct(ImportHelper $helper, Request $request, Response $response)
+    public function __construct(ImportHelper $import, ExportHelper $export, Request $request, Response $response)
     {
-        $this->importHelper = $helper;
+        $this->importHelper = $import;
+        $this->exportHelper = $export;
         $this->request = $request;
         $this->response = $response;
 
@@ -64,11 +65,11 @@ class DataController extends Controller
         // Use the DataExportFactory to export and format data from the database.
         try
         {
-            $result = $this->exportHelper->exportToFormat($resourceName, $format);
+            $result = $this->exportHelper->exportResource($resourceName, $format);
         }
         catch (Exception $e)
         {
-            return redirect(route('admin.import'))->withMessages([$e->getMessage()]);
+            return redirect(route('admin.export'))->withMessages([$e->getMessage()]);
         }
 
         // Disable compression.
