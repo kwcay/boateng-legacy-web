@@ -36,6 +36,8 @@ trait ExportableResourceTrait
     }
 
     /**
+     * Converts a resources into the specified format.
+     *
      * @param $data
      * @param string $format
      * @return mixed|string
@@ -61,15 +63,20 @@ trait ExportableResourceTrait
         return $result;
     }
 
+    /**
+     * Returns a list of supported export formats.
+     */
     public static function getExportFormats() {
         $static = new static;
         return isset($static->exportFormats) ? $static->exportFormats : ['yml', 'yaml', 'json'];
     }
 
-    public static function getContentType($format) {
-        return isset(static::$contentTypes[$format]) ? static::$contentTypes[$format] : 'text/plain';
-    }
-
+    /**
+     * Generates a unique filename for the exported file.
+     *
+     * @param string $format
+     * @return string
+     */
     public static function getExportFileName($format = '')
     {
         // Header name.
@@ -86,19 +93,48 @@ trait ExportableResourceTrait
     }
 
     /**
-     * Converts the model instance to an array, and changes the snake_case keys to camelCase.
+     * Returns the content type for the specified format.
      *
-     * @return array
+     * @param string $format
+     * @return string
      */
-    public function toArray()
-    {
-        $camelCasedAttributes = [];
-        $snakeCaseAttributes = parent::toArray();
+    public static function getContentType($format) {
+        return isset(static::$contentTypes[$format]) ? static::$contentTypes[$format] : 'text/plain';
+    }
 
-        foreach ($snakeCaseAttributes as $key => $value) {
-            $camelCasedAttributes[camel_case($key)] = $value;
+    /**
+     * Imports a resource into the database.
+     *
+     * @param array $data   Array of `static` resources.
+     * @return array        Import results.
+     */
+    public static function import(array $data)
+    {
+        $results = [
+            'total' => count($data),
+            'imported' => 0,
+            'skipped' => 0
+        ];
+
+        foreach ($data as $resource)
+        {
+            // Performance check.
+            if (!$resource instanceof static) {
+                $results['skipped']++;
+                continue;
+            }
+
+            // Validate.
+            $test = static::validate($resource->getArrayableAttributes());
+            if ($test->fails()) {
+                $results['skipped']++;
+                continue;
+            }
+
+            // Import resource.
+            $resource->save() ? $results['imported']++ : $results['skipped']++;
         }
 
-        return $camelCasedAttributes;
+        return $results;
     }
 }

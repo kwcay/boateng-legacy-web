@@ -1,5 +1,6 @@
 <?php
 /**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
  */
 namespace App\Models;
@@ -10,10 +11,9 @@ use Log;
 use cebe\markdown\MarkdownExtra;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use App\Traits\HasParamsTrait as HasParams;
+use App\Traits\EmbeddableTrait as Embeddable;
 use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
@@ -21,12 +21,32 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Language extends Model
 {
-    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams, CamelCaseAttrs;
+    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs, Embeddable;
 
     /**
      *
      */
     private $markdown;
+
+    /**
+     * The relations that can be embedded to te model's array form.
+     */
+    protected $embeddableRelations = [
+        'parentLanguage',
+        'firstDefinition',
+        'latestDefinition',
+        'randomDefinition',
+    ];
+
+    /**
+     * The accessors that may be embedded to the model's array form.
+     */
+    protected $embeddableAccessors = [
+        'count',
+        'uri',
+        'editUri',
+        'resourceType',
+    ];
 
 
     //

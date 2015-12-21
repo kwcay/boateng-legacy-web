@@ -12,17 +12,12 @@ use Session;
 use Redirect;
 use Request;
 use Validator;
-
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
 
-
-/**
- *
- */
 class LanguageController extends Controller
 {
     public function __construct()
@@ -42,7 +37,7 @@ class LanguageController extends Controller
     }
 
     /**
-     * Display the language page.
+     * Retrieves a language resource.
      *
      * @param string $id    Either the ISO 639-3 language code or language ID.
      * @return Response
