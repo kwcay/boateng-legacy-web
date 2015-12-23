@@ -1,9 +1,9 @@
 # Di Nkɔmɔ
-*"The book of Native tongues."*
+*"A Collection of Cultures."*
 
 Di Nkɔmɔ is a little project I started in 2014 to help me learn [Twi](http://en.wikipedia.org/wiki/Akan_language), my cultural language.
 
-The web app currently resides at [nkomo.frnk.ca](http://nkomo.frnk.ca) and is based on the [Laravel framework](http://laravel.com).
+The web app currently resides at [dinkomo.frnk.ca](http://dinkomo.frnk.ca) and is based on the [Laravel framework](http://laravel.com).
 
 # Dev environment
 Upgrade MySQL to version 5.6
