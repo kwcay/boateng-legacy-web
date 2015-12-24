@@ -1,0 +1,45 @@
+/**
+ * General
+ */
+section {
+    margin: 0 auto 0;
+}
+section .meta {
+    margin: 20px -20px;
+    font-size: .8em;
+    /*letter-spacing: 1.5px;*/
+}
+section .meta em {
+    font-size: inherit;
+    font-weight: bold;
+}
+
+/**
+ * Word page
+ */
+.definitions {}
+.definition {
+    position: relative;
+    margin: 10px 0 10px 40px;
+    padding-left: 20px;
+    border-left: 1px solid #aaa;
+}
+.definition .or {
+    position: absolute;
+    left: -40px;
+    top: 4px;
+    font-style: italic;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .title {
+        height: auto;
+        font-size: 1.15em;
+    }
+
+    .definition {
+
+    }
+
+}

@@ -1,0 +1,44 @@
+footer  {
+	margin: 40px auto 80px;
+	text-align: center;
+}
+
+footer a {
+    border: none;
+}
+footer a:after {
+	visibility: hidden;
+	transform: scaleX(0);
+}
+footer a:hover, footer a:focus {
+    text-decoration: none;
+}
+
+footer .shortcuts a {
+    
+}
+
+footer .credits {
+    display: block;
+    width: 100%;
+	margin: 15px auto 5px;
+	color: #bbb;
+    font-size: .5em;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    transition: color .3s;
+}
+footer .credits:hover {
+    color: #333;
+}
+footer .credits .ghana {
+    position: relative;
+    margin: 0 10px;
+    top: 8px;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: transparent center center no-repeat url('/assets/img/flag-of-ghana.png');
+    background-size: contain;
+    border-radius: 10px;
+}

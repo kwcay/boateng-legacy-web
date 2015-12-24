@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Traits\HasParamsTrait as HasParams;
 use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 
@@ -25,6 +24,8 @@ class Poem extends Definition
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+
+        $this->attributes['type'] = static::TYPE_POEM;
     }
 
     /**
@@ -49,7 +50,7 @@ class Poem extends Definition
      *
      * TODO: filter by poem type.
      */
-    public static function search($search, $offset = 0, $limit = 1000)
+    public static function search($search, $offset = 0, $limit = 1000, $langCode = false)
     {
         abort(501, 'App\Models\Definitions\Poem::search not implemented.');
     }

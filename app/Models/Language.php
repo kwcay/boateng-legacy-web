@@ -1,4 +1,9 @@
-<?php namespace App\Models;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
+namespace App\Models;
 
 use DB;
 use Log;
@@ -6,34 +11,83 @@ use Log;
 use cebe\markdown\MarkdownExtra;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use App\Traits\HasParamsTrait as HasParams;
+use App\Traits\EmbeddableTrait as Embeddable;
 use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 
 class Language extends Model
 {
-    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
+    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs, Embeddable;
 
+    /**
+     *
+     */
     private $markdown;
 
     /**
-     * @var array   Attributes which aren't mass-assignable.
+     * The relations that can be embedded to te model's array form.
+     */
+    protected $embeddableRelations = [
+        'parentLanguage',
+        'firstDefinition',
+        'latestDefinition',
+        'randomDefinition',
+    ];
+
+    /**
+     * The accessors that may be embedded to the model's array form.
+     */
+    protected $embeddableAccessors = [
+        'count',
+        'uri',
+        'editUri',
+        'resourceType',
+    ];
+
+
+    //
+    //
+    // Attirbutes used by Illuminate\Database\Eloquent\Model
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attributes which aren't mass-assignable.
      */
     protected $guarded = ['id'];
 
     /**
     * The attributes that should be hidden for arrays.
     */
-    protected $hidden = ['id', 'params', 'created_at', 'updated_at', 'deleted_at'];
+    protected $hidden = [
+        'id',
+        'params',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+        'parent',
+        'definitions',
+        'pivot'
+    ];
 
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['parent_name'];
+    protected $appends = [
+        'parentLanguage',
+        'count',
+        'firstDefinition',
+        'latestDefinition',
+        'randomDefinition',
+        'uri',
+        'editUri',
+        'resourceType'
+    ];
 
     /**
      * @var array   Attributes that should be mutated to dates.
@@ -101,16 +155,35 @@ class Language extends Model
         $this->markdown->html5 = true;
     }
 
+
+    //
+    //
+    // Helper methods
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
      * Looks up a language model by code.
      *
-     * @param string $code
-     * @return \App\Models\Language
+     * @param string|\App\Models\Language $code
+     * @return \App\Models\Language|null
      */
-    public static function findByCode($code) {
-        return static::where(['code' => $code])->first();
+    public static function findByCode($code)
+    {
+        // Performance check.
+        if ($code instanceof static) {
+            return $code;
+        }
+
+        // Retrieve langauge by code.
+        $code = static::sanitizeCode($code);
+        return $code ? static::where(['code' => $code])->first() : null;
     }
 
+    /**
+     *
+     */
     public static function search($search, $offset = 0, $limit = 100)
     {
         // Sanitize data.
@@ -127,6 +200,9 @@ class Language extends Model
             // Match the fulltext columns against the search query.
             ->whereRaw('MATCH(l.name, l.alt_names) AGAINST(?)', [$search])
 
+            // Or match the language code.
+            ->orWhere('code', '=', $search)
+
             // Order by relevancy.
             ->orderBy('score', 'DESC')
 
@@ -138,13 +214,21 @@ class Language extends Model
     }
 
     /**
-     * Gets the URI for the language.
-     *
-     * @param bool $full
-     * @return string
+     * @param string $code
+     * @return string|null
      */
-    public function getUri($full = true) {
-        return $full ? url($this->code) : $this->code;
+    public static function sanitizeCode($code)
+    {
+        // Performance check.
+        if (!is_string($code)) {
+            return null;
+        }
+
+        // A language code can contain letters and dashes.
+        $code = preg_replace('/[^a-z\-]/', '', strtolower($code));
+
+        // And will have the format "abc" or "abc-def"
+        return preg_match('/^([a-z]{3}(-[a-z]{3})?)$/', $code) ? $code : null;
     }
 
     /**
@@ -152,9 +236,11 @@ class Language extends Model
      *
      * @param bool $full
      * @return string
+     *
+     * @deprecated  Use url($this->editUri) instead.
      */
     public function getEditUri($full = true) {
-        return route('language.edit', ['code' => $this->code], $full);
+        return route('admin.language.edit', ['code' => $this->code], $full);
     }
 
     // TODO: add description relations for each description (en, fr, ...)
@@ -168,14 +254,147 @@ class Language extends Model
 
     public function setDescription($lang, $desc) {}
 
+
+    //
+    //
+    // Accessors and mutators.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
-     * Accessor for $this->parent_name.
+     * Accessor for $this->parentName.
      *
      * @return string
      */
     public function getParentNameAttribute($data = null) {
-        return $this->getParam('parentName', '');
+        return $this->parent ? $this->parent->name : '';
     }
+
+    /**
+     * Accessor for $this->parentLanguage.
+     *
+     * @return string
+     */
+    public function getParentLanguageAttribute($data = null) {
+        return $this->parent ? $this->parent : null;
+    }
+
+    /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return route('language.show', ['code' => $this->code]);
+    }
+
+    /**
+     * Accessor for $this->editUri.
+     *
+     * @return string
+     */
+    public function getEditUriAttribute() {
+        return route('admin.language.edit', ['code' => $this->code]);
+    }
+
+    /**
+     * Accessor for $this->count.
+     *
+     * @return int
+     */
+    public function getCountAttribute() {
+        return $this->definitions()->count();
+    }
+
+    /**
+     * Accessor for $this->firstDefinition.
+     *
+     * @return array
+     */
+    public function getFirstDefinitionAttribute()
+    {
+        $first = null;
+
+        if ($definition = $this->definitions()->first())
+        {
+            $first = [
+                'title' => $definition->title,
+                'translation' => $definition->translation,
+                'type' => $definition->type,
+                'mainLanguage' => [
+                    'code' => $definition->mainLanguage->code
+                ]
+            ];
+        }
+
+        return $first;
+    }
+
+    /**
+     * Accessor for $this->latestDefinition.
+     *
+     * @return array
+     */
+    public function getLatestDefinitionAttribute()
+    {
+        $latest = null;
+
+        if ($definition = $this->definitions()->orderBy('created_at', 'DESC')->first())
+        {
+            $latest = [
+                'title' => $definition->title,
+                'translation' => $definition->translation,
+                'type' => $definition->type,
+                'mainLanguage' => [
+                    'code' => $definition->mainLanguage->code
+                ]
+            ];
+        }
+
+        return $latest;
+    }
+
+    /**
+     * Accessor for $this->randomDefinition.
+     *
+     * @return array
+     */
+    public function getRandomDefinitionAttribute()
+    {
+        $random = null;
+
+        if ($definition = $this->definitions()->orderByRaw('RAND()')->first())
+        {
+            $random = [
+                'title' => $definition->title,
+                'translation' => $definition->translation,
+                'type' => $definition->type,
+                'mainLanguage' => [
+                    'code' => $definition->mainLanguage->code
+                ]
+            ];
+        }
+
+        return $random;
+    }
+
+    /**
+     * Accessor for $this->resourceType.
+     *
+     * @return string
+     */
+    public function getResourceTypeAttribute() {
+        return 'language';
+    }
+
+
+    //
+    //
+    // Import/export-related methods.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Creates the relation between an language and a definition.

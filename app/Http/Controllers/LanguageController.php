@@ -1,4 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
+namespace App\Http\Controllers;
 
 use Lang;
 use Session;
@@ -12,16 +17,22 @@ use App\Models\Definition;
 use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
 
-
-/**
- *
- */
 class LanguageController extends Controller
 {
     public function __construct()
     {
         // Enable the auth middleware.
-		$this->middleware('auth', ['except' => ['show', 'search']]);
+		$this->middleware('auth', ['except' => ['index', 'show', 'search']]);
+    }
+
+    /**
+     * Lists available languages.
+     *
+     * @return array
+     */
+    public function index()
+    {
+        abort(501);
     }
 
     /**
@@ -37,17 +48,37 @@ class LanguageController extends Controller
             abort(404, 'Can\'t find that languge :(');
         }
 
+        // TODO: count number of words, not all definitions.
+        $total = $lang->definitions()->count();
+        $first = $latest = $random = null;
+
+        // Retrieve first definition.
+        if ($total > 0) {
+            $first = $lang->definitions()->orderBy('created_at', 'asc')->first();
+        }
+
+        // Retrieve latest definition.
+        if ($total > 1) {
+            $latest = $lang->definitions()->orderBy('created_at', 'desc')->first();
+        }
+
+        // Retrieve random definition.
+        if ($total > 2) {
+            $random = Word::random($lang->code);
+        }
+
         return view('pages.language', [
             'lang' => $lang,
-            'random' => Word::random($lang->code),
-            'first' => $lang->definitions()->orderBy('created_at', 'asc')->first(),
-            'latest' => $lang->definitions()->orderBy('created_at', 'desc')->first()
+            'random' => $random,
+            'first' => $first,
+            'latest' => $latest
         ]);
     }
 
 	/**
 	 * Displays the form to add a new language.
 	 *
+     * @param \App\Models\Language $lang
 	 * @return Response
 	 */
 	public function create(Language $lang)
@@ -74,6 +105,8 @@ class LanguageController extends Controller
 
 	/**
 	 * Store a newly created resource in storage.
+     *
+     * TODO: integrate with API.
 	 *
 	 * @return Response
 	 */
@@ -107,6 +140,8 @@ class LanguageController extends Controller
 	/**
 	 * Update the specified resource in storage.
 	 *
+     * TODO: integrate with API.
+     *
 	 * @param  int  $id
 	 * @return Response
 	 */
@@ -125,6 +160,8 @@ class LanguageController extends Controller
 
 	/**
 	 * Remove the specified resource from storage.
+     *
+     * TODO: integrate with API.
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -136,6 +173,8 @@ class LanguageController extends Controller
 
     /**
      * Shortcut to create a new language or save an existing one.
+     *
+     * TODO: integrate with API.
      *
      * @param \App\Models\Language $lang    Language object.
      * @param array $data                   Language details to update.

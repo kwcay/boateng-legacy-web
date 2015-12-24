@@ -1,70 +1,28 @@
-<footer>
-    <div class="shortcuts-wrap">
-        <div class="shortcuts collapsed">
-            <a
-                href="{{ route('home') }}"
-                class="fa fa-home has-inline-tooltip"
-                data-position="top center"></a>
-            <span class="ui popup">Home of Di Nkɔmɔ</span>
 
-            <a
-                href="{{ route('about') }}"
-                class="fa fa-info has-inline-tooltip"
-                onclick="return App.openDialog('info');"
-                data-position="top center"></a>
-            <span class="ui popup">About this app</span>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+            <footer>
+                <div class="shortcuts">
+                    <a href="{{ route('home') }}" class="fa fa-book fa-fw"></a>
+                    <!-- <a href="#" class="fa fa-plus fa-fw" onclick="return Dialogs.open('resource');"></a> -->
 
-            @if (Auth::guest())
-                <a
-                    href="{{ url('login') }}"
-                    class="fa fa-unlock-alt has-inline-tooltip"
-                    onclick="return App.openDialog('login');"
-                    data-position="top center"></a>
-                <span class="ui popup">Login</span>
-            @else
-                <a
-                    href="#"
-                    class="fa fa-wrench has-inline-tooltip"
-                    data-position="top center"></a>
-                <span class="ui popup">Account Settings</span>
-            @endif
+                    @if (Auth::check())
+                        <a href="{{ route('admin') }}" class="fa fa-cubes fa-fw"></a>
+                        <a href="{{ route('auth.logout') }}" class="fa fa-hand-peace-o fa-fw"></a>
+                    @else
+                        <a href="{{ route('auth.login') }}" class="fa fa-user fa-fw"></a>
+                    @endif
+                </div>
 
-            <a
-                href="#"
-                class="fa fa-graduation-cap has-inline-tooltip"
-                onclick="alert('To do: learning games'); return false;"
-                data-position="top center"></a>
-            <span class="ui popup">Learn</span>
-
-            <a
-                href="#"
-                class="fa fa-pencil has-inline-tooltip"
-                onclick="return App.openDialog('resource');"
-                data-position="top center"></a>
-            <span class="ui popup">Edit Di Nkɔmɔ</span>
-
-            @if (Auth::check())
-                <a
-                    href="{{ route('admin') }}"
-                    class="fa fa-cogs has-inline-tooltip"
-                    data-position="top center"></a>
-                <span class="ui popup">Admin</span>
-
-                <a
-                    href="{{ route('auth.logout') }}"
-                    class="fa fa-hand-peace-o has-inline-tooltip"
-                    data-position="top center"></a>
-                <span class="ui popup">Logout</span>
-            @endif
+                <a href="{{ route('about') }}" class="credits">
+                    &copy; 2014 - {{ date('Y') }}
+                    <span class="ghana no-underline"></span>
+                	A <b>Ghanaian</b> app
+                </a>
+            </footer>
         </div>
     </div>
-	<div class="credits">
-		<small>
-            &copy; 2014 - {{ date('Y') }}
-            &nbsp;&ndash;&nbsp;
-			<a href="{{ route('about') }}">A Ghanaian app</a>
-		</small>
-	</div>
-</footer>
+</div>
 
 @include('partials.dialogs')

@@ -1,0 +1,26 @@
+{
+  "name": "dinkomo",
+  "description": "A Collection of Cultures",
+  "main": "public/index.php",
+  "authors": [
+    "frnkly <frank@frnk.ca>"
+  ],
+  "license": "MIT",
+  "homepage": "http://dinkomo.frnk.ca",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.6",
+    "selectize": "~0.12.1",
+    "font-awesome": "~4.5.0",
+    "jquery-ui": "~1.11.4",
+    "sifter": "~0.4.5"
+  }
+}

@@ -1,4 +1,9 @@
-<?php namespace App\Models;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
+namespace App\Models;
 
 use DB;
 use Log;
@@ -13,36 +18,38 @@ use App\Models\Definitions\Phrase;
 use App\Models\Definitions\Story;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Collection;
 use App\Traits\HasParamsTrait as HasParams;
+use App\Traits\EmbeddableTrait as Embeddable;
 use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
-/**
- *
- */
 class Definition extends Model
 {
-    use Validatable, Obfuscatable, Exportable, Importable, SoftDeletes, HasParams;
+    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs, Embeddable;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
-    CONST TYPE_PHRASE = 1;      // Proverbs, sayings, etc.
-    CONST TYPE_POEM = 2;        // Poems, songs, etc.
-    CONST TYPE_STORY = 3;       // Short stories.
+    CONST TYPE_NAME = 1;        // Names.
+    CONST TYPE_PHRASE = 10;     // Proverbs, sayings, etc.
+    CONST TYPE_POEM = 20;       // Poems, songs, etc.
+    CONST TYPE_STORY = 30;      // Short stories.
 
     CONST STATE_HIDDEN = 0;     // Hidden definition.
-    CONST STATE_VISIBLE = 1;    // Default state.
+    CONST STATE_VISIBLE = 10;   // Default state.
+
+    CONST SEARCH_LIMIT = 20;    // Maximum number of results to return on a search.
 
     /**
      * Definition types.
      */
     public $types = [
         0 => 'word',
-        1 => 'phrase',
-        2 => 'poem',
-        3 => 'story',
+        1 => 'name',
+        10 => 'phrase',
+        20 => 'poem',
+        30 => 'story',
     ];
 
     /**
@@ -64,30 +71,47 @@ class Definition extends Model
             'v'     => 'verb',
         ],
 
-        // Types of phrases.
+        // Types of names.
         1 => [
+            'fam'   => 'family',
+            'given' => 'given',
+        ],
+
+        // Types of phrases.
+        10 => [
             'ex'    => 'expression',
             'prov'  => 'proverb',
-            'say'   => 'saying',
+            'sayng' => 'saying',
         ],
 
         //
-        2 => [
+        20 => [
 
         ],
 
         //
-        3 => [
+        30 => [
 
         ]
     ];
 
+    /*
+     * Defaults for definition sub types.
+     */
+    public $defaultSubTypes = [
+        0 => 'n',
+        1 => 'given',
+        10 => 'sayng',
+        20 => '',
+        30 => '',
+    ];
+
     /**
-     * Definition states.
+     * Definition state.
      */
     public $states = [
         0 => 'hidden',
-        1 => 'visible'
+        10 => 'visible'
     ];
 
     /**
@@ -95,6 +119,22 @@ class Definition extends Model
      */
     protected $markdown;
 
+    /**
+     *
+     */
+    public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
+
+
+    //
+    //
+    // Attirbutes used by Illuminate\Database\Eloquent\Model
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Associated MySQL table.
+     */
     protected $table = 'definitions';
 
     /**
@@ -105,12 +145,12 @@ class Definition extends Model
     /**
     * The attributes that should be hidden for arrays.
     */
-    protected $hidden = ['id', 'params', 'created_at', 'updated_at', 'deleted_at', 'languages'];
+    protected $hidden = ['id', 'params', 'updated_at', 'deleted_at', 'languages', 'translations'];
 
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['language', 'uri'];
+    protected $appends = ['translation', 'language', 'mainLanguage', 'resourceType', 'uri', 'uniqueId'];
 
     /**
      * Attributes that should be mutated to dates.
@@ -124,28 +164,16 @@ class Definition extends Model
         'title' => 'string',
         'alt_titles' => 'string',
         'type' => 'integer',
-        'data' => 'string',
-        'tags' => 'string',
-        'state' => 'integer',
         'params' => 'array',
     ];
 
     public $validationRules = [
         'title' => 'required|string|min:2',
         'alt_titles' => 'string|min:2',
-        'data' => 'string',
-        'type' => 'required|integer',
+        'type' => 'integer',
         'sub_type' => 'string',
-        'tags' => 'string|min:2|regex:/^([a-z, \-]+)$/i',
-        'state' => 'required|integer'
+        'state' => 'integer'
     ];
-
-    public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
-
-    /**
-     * Relations to be created when importing this definition.
-     */
-    protected $relationsToBeImported = [];
 
     /**
      * Defines the translation relations.
@@ -160,6 +188,11 @@ class Definition extends Model
     public function languages() {
         return $this->belongsToMany('App\Models\Language', 'definition_language', 'definition_id', 'language_id');
     }
+
+    /**
+     * Relations to be created when importing this definition.
+     */
+    protected $relationsToBeImported = [];
 
     public function __construct(array $attributes = [])
     {
@@ -178,23 +211,41 @@ class Definition extends Model
         $this->markdown->html5 = true;
     }
 
+
+    //
+    //
+    // Helper methods
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
-     * Creates an instance of a definition depending on the type.
+     * Creates an instance of a definition type.
      *
      * @param int $type
-     * @return mixed
+     * @param array $attributes
+     * @return App\Models\Definition|null
      */
-    public static function getInstance($type, $attributes = [], $exists = false)
+    public static function getInstance($type, array $attributes = [])
     {
         // Check that the definition type is valid.
-        $types = (new Definition)->types;
+        $types = static::types();
         if (!array_key_exists($type, $types)) {
             return null;
         }
 
         // Return new instance.
         $className = '\\App\\Models\\Definitions\\'. ucfirst(strtolower($types[$type]));
-        return (new $className)->newInstance($attributes, $exists);
+        return new $className($attributes);
+    }
+
+    /**
+     * Gets the valid definition types.
+     *
+     * @return array
+     */
+    public static function types() {
+        return (new static)->types;
     }
 
     /**
@@ -208,8 +259,20 @@ class Definition extends Model
     }
 
     /**
-     * @param string $lang
-     * @return mixed
+     * Gets the list of sub types for this definition.
+     *
+     * @return array
+     */
+    public function getSubTypes() {
+        // return $this->subTypes[$this->getAttributeFromArray('type')];
+        return $this->subTypes[$this->rawType];
+    }
+
+    /**
+     * Gets a random definition.
+     *
+     * @param App\Models\Language $lang
+     * @return App\Models\Definition
      */
     public static function random($lang = null)
     {
@@ -221,50 +284,140 @@ class Definition extends Model
     }
 
     /**
+     * Searches the database for definitions.
      *
+     * @param string $query     Search query.
+     * @param array $options    Search options.
+     * @return array
      */
-    public static function search($search, $offset = 0, $limit = 1000)
+    public static function search($query, array $options = [])
     {
-        // Sanitize data.
-        $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
+        // Retrieve search parameters.
+        $offset = isset($options['offset']) ? $options['offset'] : 0;
+        $limit = isset($options['limit']) ? $options['limit'] : static::SEARCH_LIMIT;
+        $method = isset($options['method']) ? $options['method'] : 'fulltext';
+
+        switch (strtolower($method))
+        {
+            case 'like':
+                $results = static::likeSearch($query, $offset, $limit, $options);
+                break;
+
+            default:
+                $results = static::fulltextSearch($query, $offset, $limit, $options);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Performs a fulltext search.
+     *
+     * @param string $query     Search query.
+     * @param int $offset       Search offset.
+     * @param int $limit        Search limit (max 50).
+     * @param array $options    Search options.
+     * @return array
+     */
+    public static function fulltextSearch($query, $offset = 0, $limit = 50, array $options = [])
+    {
+        // Sanitize data and retrieve search options.
+        $query = trim(preg_replace('/[\s+]/', ' ', strip_tags($query)));
         $offset = min(0, (int) $offset);
-        $limit = min(1, (int) $limit);
+        $limit = max(1, min(static::SEARCH_LIMIT, (int) $limit));
+        $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
 
-        // Query the database
-        $IDs = DB::table('definitions AS d')
+        $type = null;
+        if (isset($options['type']) && in_array($options['type'], static::types())) {
+            $type = (int) array_flip(static::types())[$options['type']];
+        }
 
-            // Create a temporary score column so we can sort the IDs.
-            ->selectRaw(
-                'd.id, '.
-                'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
-                'MATCH(t.translation, t.meaning, t.literal) AGAINST(?) * 9 AS tran_score, '.
-                'MATCH(d.data) AGAINST(?) * 8 AS data_score, '.
-                'MATCH(d.tags) AGAINST(?) * 5 AS tags_score ',
-                [$search, $search, $search, $search])
+        // Start building our database query.
+        $builder = DB::table('definitions AS d')
 
             // Join the translations table so we can search its columns.
             ->leftJoin('translations AS t', 't.definition_id', '=', 'd.id')
 
+            // Create temporary score columns so we can sort the IDs.
+            ->selectRaw(
+                'd.id, '.
+                'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
+                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) * 8 AS tran_score ',
+                [$query, $query])
+
             // Match the fulltext columns against the search query.
             ->whereRaw(
-                'MATCH(d.title, d.alt_titles) AGAINST(?) '.
-                'OR MATCH(t.translation, t.meaning, t.literal) AGAINST(?) '.
-                'OR MATCH(d.data) AGAINST(?) '.
-                'OR MATCH(d.tags) AGAINST(?) ',
-                [$search, $search, $search, $search])
+                '( MATCH(d.title, d.alt_titles) AGAINST(?) '.
+                'OR MATCH(t.practical, t.literal, t.meaning) AGAINST(?) )',
+                [$query, $query])
 
             // Order by relevancy.
-            ->orderByraw('(title_score + tran_score + data_score + tags_score) DESC')
+            //->orderByraw('(title_score + tran_score + data_score + tags_score) DESC');
+            ->orderByraw('(title_score + tran_score) DESC');
 
-            // Retrieve distcit IDs.
-            ->distinct()->skip($offset)->take($limit)->lists('d.id');
+        // Limit scope to a specific language.
+        if ($lang)
+        {
+            // We join the pivot table so that we may join the language table. Joining the language
+            // table allows us to limit the search to a specific language.
+            $builder->join('definition_language AS pivot', 'pivot.definition_id', '=', 'd.id')
+                ->where('pivot.language_id', DB::raw($lang->id));
+        }
+
+        // Limit scope to a specific definition type.
+        if (is_integer($type)) {
+            $builder->where('d.type', '=', DB::raw($type));
+        }
+
+        // dd($builder->toSql());
+
+        // Retrieve distinct IDs.
+        $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
 
         // Return results.
-        return count($IDs) ? Definition::with('translations')->whereIn('id', $IDs)->get() : [];
+        return count($IDs) ?
+            Definition::with('languages', 'translations')->whereIn('id', $IDs)->get() :
+            new Collection;
     }
 
     /**
+     * Performs a basic comparison search.
+     *
+     * @param string $query     Search query.
+     * @param int $offset       Search offset.
+     * @param int $limit        Search limit (max 50).
+     * @param array $options    Search options.
+     * @return array
+     */
+    public static function likeSearch($query, $offset = 0, $limit = 50, array $options = [])
+    {
+        // Sanitize data.
+        $query = trim(preg_replace('/[\s+]/', ' ', strip_tags($query)));
+        $offset = min(0, (int) $offset);
+        $limit = max(1, min(static::SEARCH_LIMIT, (int) $limit));
+        $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
+
+        // Query builder.
+        $builder = $lang ? $lang->definitions() : static::query();
+
+        // ...
+
+        return [];
+    }
+
+
+    //
+    //
+    // Translations-related methods.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
      * Retrieves a translation relation.
+     *
+     * @param string $lang  A language code.
+     * @return App\Models\Translation|false
      */
     public function getTranslationRelation($lang)
     {
@@ -277,11 +430,15 @@ class Definition extends Model
 
     /**
      * Checks whether the attribute of a translation is empty or not.
+     *
+     * @param string $lang      A language code.
+     * @param string $attribute The attribute to check.
+     * @return bool
      */
     protected function _hasTranslationAttribute($lang, $attribute)
     {
         if ($translation = $this->getTranslationRelation($lang)) {
-            return strlen($translation->$attribute);
+            return (strlen($translation->$attribute));
         }
 
         return false;
@@ -289,6 +446,11 @@ class Definition extends Model
 
     /**
      * Retrieves a translation attribute.
+     *
+     * @param string $lang      A language code.
+     * @param string $attribute The attribute to retrieve.
+     * @param string $default   The default value to return.
+     * @return string
      */
     protected function _getTranslationAttribute($lang, $attribute, $default = null)
     {
@@ -317,33 +479,33 @@ class Definition extends Model
         }
 
         // Create a new translation.
-        elseif ($create === true && $attribute == 'translation')
+        elseif ($create === true && $attribute == 'practical')
         {
             $this->translations()->create([
                 'language' => $lang,
-                'translation' => $data
+                'practical' => $data
             ]);
         }
     }
 
     //
-    // Methods dealing with translations.
+    // Translations attribute.
     //
 
-    public function hasTranslation($lang) {
-        return $this->_hasTranslationAttribute($lang, 'translation');
+    public function hasPracticalTranslation($lang) {
+        return $this->_hasTranslationAttribute($lang, 'practical');
     }
 
-    public function getTranslation($lang = 'en') {
-        return $this->_getTranslationAttribute($lang, 'translation');
+    public function getPracticalTranslation($lang = 'eng') {
+        return $this->_getTranslationAttribute($lang, 'practical');
     }
 
-    public function setTranslation($lang, $translation, $create = false) {
-        return $this->_setTranslationAttribute($lang, 'translation', $translation, $create);
+    public function setPracticalTranslation($lang, $translation, $create = false) {
+        return $this->_setTranslationAttribute($lang, 'practical', $translation, $create);
     }
 
     //
-    // Methods dealing with literal translations.
+    // Literal translations attribute.
     //
 
     public function hasLiteralTranslation($lang) {
@@ -359,7 +521,7 @@ class Definition extends Model
     }
 
     //
-    // Methods dealing with detailed meanings.
+    // Meanings attribute.
     //
 
     public function hasMeaning($lang) {
@@ -374,29 +536,13 @@ class Definition extends Model
         return $this->_setTranslationAttribute($lang, 'meaning', $meaning);
     }
 
-    /**
-     * Gets the list of sub types for this definition.
-     */
-    public function getSubTypes() {
-        return $this->subTypes[$this->getAttributeFromArray('type')];
-    }
 
-    /**
-     * @param bool $full
-     * @return string
-     */
-    public function getUri($full = false) {
-        $path   = $this->mainLanguage->code .'/'. str_replace(' ', '_', $this->title);
-        return $full ? url($path) : $path;
-    }
+    //
+    //
+    // Accessors and mutators.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * @param bool $full
-     * @return string
-     */
-    public function getEditUri($full = true) {
-        return route('definition.edit', ['id' => $this->getId()], $full);
-    }
 
     /**
      * Accessor for $this->mainLanguage.
@@ -406,30 +552,27 @@ class Definition extends Model
      */
     public function getMainLanguageAttribute()
     {
-        static $main = false;
+        $mainLanguage = null;
 
-        if ($main === false)
+        // Loop through related languages.
+        if ($code = $this->getParam('mainLang', false))
         {
-            // Loop through related languages.
-            if ($code = $this->getParam('mainLang', false))
+            foreach ($this->languages as $lang)
             {
-                foreach ($this->languages as $lang)
+                if ($lang->code == $code)
                 {
-                    if ($lang->code == $code)
-                    {
-                        $main = $lang;
-                        break;
-                    }
+                    $mainLanguage = $lang;
+                    break;
                 }
-            }
-
-            // Or pick first language as a default.
-            if ($main === false) {
-                $main = $this->languages()->first();
             }
         }
 
-        return $main;
+        // Or pick first language as a default.
+        if (!$mainLanguage) {
+            $mainLanguage = $this->languages->first();
+        }
+
+        return $mainLanguage;
     }
 
     /**
@@ -440,6 +583,22 @@ class Definition extends Model
      */
     public function getTypeAttribute($type = 0) {
         return Arr::get($this->types, $type, $this->types[0]);
+    }
+
+    /**
+     * Mutator for $this->type.
+     *
+     * @param string|int $type
+     * @return void
+     */
+    public function setTypeAttribute($type)
+    {
+        // Try to find the right type constant.
+        if (in_array(strtolower($type), $this->types)) {
+            $type = array_keys($this->types, strtolower($type))[0];
+        }
+
+        $this->attributes['type'] = $type;
     }
 
     /**
@@ -454,24 +613,25 @@ class Definition extends Model
      */
     public function getSubTypeAttribute($subType = '')
     {
-        // "subType" will be null, since it will try to retrieve it from $this->attribtues['subType']
-        // which doesn't exist. We it to the correct value here.
-        $subType = $this->getAttributeFromArray('sub_type');
+        // "subType" will be null, since it will try to retrieve it from $this->attributes['subType']
+        // which doesn't exist. We set it to the correct value here.
+        if (!$subType = $this->rawSubType)
+        {
+            // Set and return a default type/sub-type.
+            if (!$this->rawType) {
+                $this->attributes['type'] = static::TYPE_WORD;
+            }
+
+            $this->attributes['sub_type'] = $subType = $this->defaultSubTypes[$this->rawType];
+        }
 
         foreach ($this->types as $index => $type) {
-            if (Arr::has($this->subTypes[$index], $subType)) {
-                return Arr::get($this->subTypes[$index], $subType);
+            if (array_has($this->subTypes[$index], $subType)) {
+                return array_get($this->subTypes[$index], $subType);
             }
         }
 
         return $subType;
-    }
-
-    /**
-     * Accessor for $this->rawSubType.
-     */
-    public function getRawSubTypeAttribute($subType = '') {
-        return $this->getAttributeFromArray('sub_type');
     }
 
     /**
@@ -492,13 +652,40 @@ class Definition extends Model
     }
 
     /**
+     * Accessor for $this->rawSubType.
+     */
+    public function getRawSubTypeAttribute($subType = '') {
+        return $this->getAttributeFromArray('sub_type');
+    }
+
+    /**
      * Accessor for $this->state.
      *
      * @param int $state
      * @return string
      */
     public function getStateAttribute($state = 0) {
-        return Arr::get($this->states, $state, $this->states[1]);
+        return array_get($this->states, $state, $this->states[static::STATE_VISIBLE]);
+    }
+
+    /**
+     * Mutator for $this->state.
+     *
+     * @param string $state
+     * @return void
+     */
+    public function setStateAttribute($state)
+    {
+        // If the state is already numeric, assume we're using a constant.
+        if (is_numeric($state) && array_key_exists($state, $this->states)) {
+            $this->attributes['state'] = (int) $state;
+        }
+
+        // Else, try to find the right constant.
+        else {
+            $this->attributes['state'] = is_int(array_search(strtolower($state), $this->states)) ?
+                array_flip($this->states)[$state] : Definition::STATE_VISIBLE;
+        }
     }
 
     /**
@@ -509,16 +696,70 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->language. Used to return information about the main
-     * language when arraying this model.
-     *
-     * @return string
+     * Accessor for $this->language.
      */
-    public function getLanguageAttribute() {
+    public function getLanguageAttribute()
+    {
+        $codes = [];
+
+        foreach ($this->languages as $lang) {
+            $codes[$lang->code] = $lang->name;
+        }
+
+        return $codes;
+    }
+
+    /**
+     * Accessor for $this->practicalTranslations.
+     */
+    public function getPracticalTranslationsAttribute()
+    {
+        $translations = [];
+
+        foreach ($this->translations as $translation) {
+            $translations[$translation->language] = $translation->practical;
+        }
+
+        return $translations;
+    }
+
+    /**
+     * Accessor for $this->literalTranslations.
+     */
+    public function getLiteralTranslationsAttribute()
+    {
+        $literals = [];
+
+        foreach ($this->translations as $translation) {
+            $literals[$translation->language] = $translation->literal;
+        }
+
+        return $literals;
+    }
+
+    /**
+     * Accessor for $this->meanings.
+     */
+    public function getMeaningsAttribute()
+    {
+        $meanings = [];
+
+        foreach ($this->translations as $translation) {
+            $meanings[$translation->language] = $translation->meaning;
+        }
+
+        return $meanings;
+    }
+
+    /**
+     * Accessor for $this->translation. Used to combine translation data when arraying this model.
+     */
+    public function getTranslationAttribute()
+    {
         return [
-            'code' => $this->mainLanguage->code,
-            'name' => $this->mainLanguage->name,
-            'uri' => $this->mainLanguage->getUri(true)
+            'practical' => $this->practicalTranslations,
+            'literal'   => $this->literalTranslations,
+            'meaning'   => $this->meanings
         ];
     }
 
@@ -528,8 +769,40 @@ class Definition extends Model
      * @return string
      */
     public function getUriAttribute() {
-        return $this->getUri(true);
+        return url($this->mainLanguage->code .'/'. str_replace(' ', '_', $this->title));
     }
+
+    /**
+     * Accessor for $this->editUri.
+     *
+     * @return string
+     */
+    public function getEditUriAttribute() {
+        return route('admin.definition.edit', ['id' => $this->getId()]);
+    }
+
+    /**
+     * Accessor for $this->uniqueId.
+     */
+    public function getUniqueIdAttribute() {
+        return $this->getUniqueId();
+    }
+
+    /**
+     * Accessor for $this->resourceType.
+     *
+     * @return string
+     */
+    public function getResourceTypeAttribute() {
+        return 'definition';
+    }
+
+    //
+    //
+    // Import/export-related methods.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      *
@@ -601,6 +874,7 @@ class Definition extends Model
                 $def->translations()->save(new Translation([
                     'language' => $lang,
                     'translation' => $translation,
+                    'literal' => Arr::get($relations['literals'], $lang, ''),
                     'meaning' => Arr::get($relations['meanings'], $lang, '')
                 ]));
             }
@@ -664,14 +938,14 @@ class Definition extends Model
     }
 
     /**
-     * Updates or creates one or more translations.
+     * Updates or creates one or more practical translations.
      *
      * @param array $translations
      */
-    public function updateTranslationRelation(array $translations)
+    public function updatePracticalRelation(array $translations)
     {
         foreach ($translations as $code => $translation) {
-            $this->setTranslation($code, $translation, true);
+            $this->setPracticalTranslation($code, $translation, true);
         }
     }
 

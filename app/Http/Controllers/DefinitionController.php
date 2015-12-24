@@ -1,4 +1,9 @@
-<?php namespace App\Http\Controllers;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
+namespace App\Http\Controllers;
 
 use DB;
 use URL;
@@ -21,7 +26,7 @@ class DefinitionController extends Controller
     public function __construct()
     {
         // Enable the auth middleware.
-		$this->middleware('auth', ['except' => ['show', 'search']]);
+		// $this->middleware('auth', ['except' => ['show', 'search', 'exists']]);
     }
 
     /**
@@ -35,12 +40,6 @@ class DefinitionController extends Controller
      */
     public function show($code, $raw = null)
     {
-        // Redirect if accessing definition directly.
-        if (!$raw) {
-            $def = Definition::find($code);
-            return $def ? redirect($def->getUri(false)) : redirect(route('home'))->withMessages([Lang::get('errors.resource_not_found')]);
-        }
-
         // Retrieve language object
         if (!$lang = Language::findByCode($code)) {
             abort(404, Lang::get('errors.resource_not_found'));
@@ -56,7 +55,6 @@ class DefinitionController extends Controller
 
         // Find definitions matching the query
         $data   = str_replace('_', ' ', $data);
-        $wData  = '(title = :a OR alt_titles LIKE :b or alt_titles LIKE :c or alt_titles LIKE :d)';
         $definitions = $lang->definitions()
             ->with('languages', 'translations')
             ->where('title', '=', $data)
@@ -65,9 +63,9 @@ class DefinitionController extends Controller
         if (!count($definitions))
         {
             // If no definitions were found, check alternate titles...
-            $alts = Definition::search($data, 0, 1);
+            $alts = Definition::search($data, ['offset' => 0, 'limit' => 1]);
             if (count($alts)) {
-                return redirect($alts[0]->getUri(false));
+                return redirect($alts[0]->uri);
             }
 
             abort(404, Lang::get('errors.resource_not_found'));
@@ -89,13 +87,13 @@ class DefinitionController extends Controller
     private function createType($type, $langCode)
     {
         // Make sure we have a logged in user.
-        if (Auth::guest()) {
-            return redirect()->guest(route('auth.login'));
-        }
+        // if (Auth::guest()) {
+        //     return redirect()->guest(route('auth.login'));
+        // }
 
         // Create a specific definition instance.
-        if (!$def = Definition::getInstance($type)) {
-            abort(400);
+        if (!$definition = Definition::getInstance($type)) {
+            abort(500);
         }
 
         // Retrieve language object.
@@ -110,12 +108,16 @@ class DefinitionController extends Controller
         return view($template, [
             'lang' => $lang,
             'type' => $type,
-            $typeName => $def
+            $typeName => $definition
         ]);
     }
 
     public function createWord($langCode) {
         return $this->createType(Definition::TYPE_WORD, $langCode);
+    }
+
+    public function createName($langCode) {
+        return $this->createType(Definition::TYPE_NAME, $langCode);
     }
 
     public function createPhrase($langCode) {
@@ -131,66 +133,25 @@ class DefinitionController extends Controller
     }
 
 	/**
-	 * Displays the form to add a new definition.
-	 *
-	 * @return Response
-	 */
-	public function create(Definition $def)
-	{
-        $lso    = [];
-
-        // Set some defaults.
-        $def->title = Request::get('title', Request::old('title', ''));
-        $def->alt_titles = Request::get('alt_titles', Request::old('alt_titles', ''));
-        $def->type = (int) Request::get('type', Request::old('type', Definition::TYPE_WORD));
-        $def->sub_type = Request::get('sub_type', Request::old('sub_type', 'n'));
-        $def->tags = Request::get('tags', Request::old('tags', ''));
-
-        $translations = (array) Request::get('translations', Request::old('translations', []));
-        $literalTranslations = (array) Request::get('literal_translations', Request::old('literal_translations', []));
-        $meanings = (array) Request::get('meanings', Request::old('meanings', []));
-
-        // Retrieve language data.
-        if ($langCode = Request::get('lang', Request::old('lang')))
-        {
-            $langCode = preg_replace('/[^a-z-]/', '', $langCode);
-
-            if ($lang = Language::findByCode($langCode)) {
-                $lso[] = [
-                    'code' => $lang->code,
-                    'name' =>$lang->name
-                ];
-            }
-        }
-
-        // TODO: update view according to definition type.
-
-        return view('forms.definition.word.default', [
-            'def'       => $def,
-            'options'   => $lso
-        ]);
-	}
-
-	/**
-	 * Store a newly created resource in storage.
+	 * Stores a newly created resource in storage.
 	 *
 	 * @return Response
 	 */
 	public function store()
     {
-        $def = $this->getDefinition();
-        $def->state = Definition::STATE_VISIBLE;
+        // Performance check.
+        if (!$definition = Definition::getInstance(Request::input('type'))) {
+            Session::push('messages', 'Internal Error.');
+            return redirect(route('home'));
+        }
 
-        $data = Request::only([
-            'title', 'alt_titles', 'data', 'type', 'sub_type', 'tags', 'state', 'relations'
-        ]);
+        // Retrieve new definition data.
+        $data = Request::only(['title', 'altTitles', 'type', 'subType', 'state', 'relations']);
+        $data['state'] = Auth::guest() ? Definition::STATE_VISIBLE : $data['state'];
 
-        $data['state'] = 1;
-
-        // Set return route.
         $return = Request::input('next') == 'continue' ? 'edit' : 'index';
 
-        return $this->save($def, $data, $return);
+        return $this->save($definition, $data, $return);
 	}
 
 	/**
@@ -202,24 +163,28 @@ class DefinitionController extends Controller
 	public function edit($id)
 	{
         // Retrieve the definition object.
-        if (!$def = Definition::find($id)) {
+        if (!$definition = Definition::find($id)) {
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
-        // Create language options for selectize plugin.
-        $lso = [];
-        foreach ($def->languages as $lang) {
-            $lso[] = [
+        // Language arrays for selectize plugin.
+        $options = $items = [];
+        foreach ($definition->languages as $lang)
+        {
+            // Only the value is used for the selected items.
+            $items[] = $lang->code;
+
+            // The value and name will be json-encoded for the selectize options.
+            $options[] = [
                 'code' => $lang->code,
                 'name' => $lang->name
             ];
         }
 
-        // TODO: update view according to definition type.
-
-        return view('forms.definition.word.default', [
-            'def'       => $def,
-            'options'   => $lso
+        return view('forms.definition.default', [
+            'definition' => $definition,
+            'languageValue' => implode(',', $items),
+            'languageOptions' => $options
         ]);
 	}
 
@@ -233,20 +198,20 @@ class DefinitionController extends Controller
 	public function update($id)
 	{
         // Retrieve the definition object.
-        if (!$def = Definition::find($id)) {
+        if (!$definition = Definition::find($id)) {
             throw new \Exception(Lang::get('errors.resource_not_found'), 404);
         }
 
         $data = Request::only([
-            'title', 'alt_titles', 'data', 'type', 'sub_type', 'tags', 'state', 'relations'
+            'title', 'altTitles', 'type', 'subType', 'state', 'relations'
         ]);
 
-        $data['type'] = $def->rawType;
-        $data['state'] = $def->rawState;
+        $data['type'] = $definition->rawType;
+        $data['state'] = $definition->rawState;
 
         $return = Request::has('add') ? 'add' : 'index';
 
-        return $this->save($def, $data, $return);
+        return $this->save($definition, $data, $return);
 	}
 
     /**
@@ -288,8 +253,7 @@ class DefinitionController extends Controller
             Request::flashExcept('_token');
 
             // Return to form
-            $return = $def->exists ? route('definition.edit', ['id' => $def->getId()]) : route('definition.create');
-            return redirect(route('definition.edit'))->withErrors($test);
+            return back()->withErrors($test);
         }
 
         // Pull relations.
@@ -309,14 +273,15 @@ class DefinitionController extends Controller
                 {
                     // Check if the language has a parent, and
                     // whether that parent is already in the list.
-                    if (strlen($lang->parent) >= 3 && !in_array($lang->parent, $relations['language'])
-                        && $parent = Language::findByCode($lang->parent))
+                    if (strlen($lang->parentCode) >= 3
+                        && !in_array($lang->parentCode, $relations['language'])
+                        && $lang->parent)
                     {
-                        $relations['language'][] = $parent->code;
+                        $relations['language'][] = $lang->parent->code;
 
                         // Notify the user of the change
                         Session::push('messages',
-                            '<em>'. $parent->name .'</em> is the parent language for <em>'.
+                            '<em>'. $lang->parent->name .'</em> is the parent language for <em>'.
                             $lang->name .'</em>, and was added to the list of languages the word <em>'.
                             $data['title'] .'</em> exists in.');
                     }
@@ -328,60 +293,31 @@ class DefinitionController extends Controller
         $def->fill($data);
         $def->save();
 
-        // Update translations.
+        // Update translations and other relations.
         $def->updateRelations($relations);
 
         // ...
         switch ($return)
         {
             case 'index':
-                $return = $def->getUri(false);
+                $return = $def->uri;
                 break;
 
             case 'edit':
-                $return = route('definition.edit', ['id' => $def->getId()]);
+                $return = route('definition.edit', ['id' => $def->uniqueId]);
                 break;
 
-            case 'add':
-                $return = route('definition.create', ['lang' => $def->mainLanguage->code]);
+            case 'word':
+            case 'phrase':
+                $return = route('definition.create.'. $return, ['lang' => $def->mainLanguage->code]);
                 break;
+
+            default:
+                $return = route('home');
         }
 
         Session::push('messages', 'The details for <em>'. $def->title .'</em> were successfully saved, thanks :)');
         return redirect($return);
-    }
-
-    /**
-     * @param string $query
-     * @return string
-     */
-    public function search($search = '')
-    {
-        // This method should really only be called through the API.
-        if (Request::method() != 'POST' && env('APP_ENV') == 'production') {
-            abort(405);
-        }
-
-        // Performance check
-        $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
-        if (strlen($search) < 2) {
-            return $this->abort(400, 'Query too short');
-        }
-
-        $offset = min(0, (int) Request::get('offset', 0));
-        $limit = min(1, max(100, (int) Request::get('limit', 100)));
-
-        $defs = Definition::search($search, $offset, $limit);
-
-        // Format results
-        $results  = [];
-        if (count($defs)) {
-            foreach ($defs as $def) {
-                $results[] = $def->toArray();
-            }
-        }
-
-        return $this->send(['query' => $search, 'definitions' => $results]);
     }
 
     public function getDefinition()

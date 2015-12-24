@@ -13,7 +13,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Traits\HasParamsTrait as HasParams;
 use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ImportableResourceTrait as Importable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
 
@@ -25,6 +24,8 @@ class Phrase extends Definition
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+
+        $this->attributes['type'] = static::TYPE_PHRASE;
     }
 
     /**
@@ -49,9 +50,11 @@ class Phrase extends Definition
      *
      * TODO: filter by phrase type.
      */
-    public static function search($search, $offset = 0, $limit = 1000)
+    public static function search($query, array $options = [])
     {
-        abort(501, 'App\Models\Definitions\Phrase::search not implemented.');
+        return parent::search($query, array_merge($options, [
+            'type' => static::types()[static::TYPE_PHRASE]
+        ]));
     }
 
     /**

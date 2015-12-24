@@ -1,5 +1,11 @@
-<?php namespace App\Http\Controllers\Auth;
+<?php
+/**
+ *
+ */
+namespace App\Http\Controllers\Auth;
 
+use Request;
+use Session;
 use Validator;
 
 use App\Models\User;
@@ -18,9 +24,28 @@ class AuthController extends Controller
 	 */
 	public function __construct()
 	{
-        // Define rediretion paths (used internally).
         $this->loginPath = route('auth.login');
-        $this->redirectAfterLogout = $this->redirectPath = route('home');
+
+        // Let API know if we're coming from the app.
+
+        // Define rediretion paths (used internally).
+        switch (Request::input('next'))
+        {
+            case 'app':
+                Session::put('next', 'app');
+                $this->redirectPath = 'http://dinkomo.frnk.ca/#/token';
+                $this->redirectAfterLogout = 'http://dinkomo.frnk.ca/';
+                break;
+
+            case 'app.vagrant':
+                Session::put('next', 'app.vagrant');
+                $this->redirectPath = 'http://dinkomo.vagrant/#/token';
+                $this->redirectAfterLogout = 'http://dinkomo.vagrant/';
+                break;
+
+            default:
+                $this->redirectAfterLogout = $this->redirectPath = route('home');
+        }
 
         // Enable the guest middleware.
 		$this->middleware('guest', ['except' => 'getLogout']);

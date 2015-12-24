@@ -1,12 +1,14 @@
 <?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ * @brief   Controls the administration section.
+ */
 namespace App\Http\Controllers;
 
 use App\Models\Language;
 use App\Models\Definition;
 
-/**
- *
- */
 class AdminController extends Controller
 {
 	/**
@@ -14,6 +16,13 @@ class AdminController extends Controller
 	 */
     public function index() {
         return view('admin.index');
+    }
+
+    public function getDefinitionList()
+    {
+
+
+        return view('admin.list.definitions');
     }
 
     public function import() {

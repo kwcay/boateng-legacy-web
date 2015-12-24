@@ -10,6 +10,11 @@ trait ObfuscatableResourceTrait
     protected static $obfuscator;
 
     /**
+     * @var
+     */
+    protected $_id;
+
+    /**
      * @return mixed
      */
     public static function getObfuscator()
@@ -24,13 +29,22 @@ trait ObfuscatableResourceTrait
     /**
      * @return int|string   Obfuscated ID, or 0.
      */
-    public function getId()
+    public function getUniqueId()
     {
-        if (is_null($this->_encodedId)) {
-            $this->_encodedId   = $this->id > 0 ? static::getObfuscator()->encode($this->id) : 0;
+        if (is_null($this->_id)) {
+            $this->_id   = $this->id > 0 ? static::getObfuscator()->encode($this->id) : 0;
         }
 
-        return $this->_encodedId;
+        return $this->_id;
+    }
+
+    /**
+     * @return int|string   Obfuscated ID, or 0.
+     *
+     * @deprecated
+     */
+    public function getId() {
+        return $this->getUniqueId();
     }
 
     /**
@@ -43,8 +57,15 @@ trait ObfuscatableResourceTrait
     public static function find($id, $columns = ['*'])
     {
         // Un-obfuscate ID
-        if (is_string($id) && !is_numeric($id) && strlen($id) >= 8) {
-            $id = static::getObfuscator()->decode($id)[0];
+        if (is_string($id) && !is_numeric($id) && strlen($id) >= 8)
+        {
+            if ($decoded = static::getObfuscator()->decode($id)) {
+                $id = $decoded[0];
+            }
+
+            else {
+                return null;
+            }
         }
 
         return static::query()->find($id, $columns);

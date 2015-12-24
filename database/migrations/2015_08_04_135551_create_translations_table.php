@@ -22,7 +22,8 @@ class CreateTranslationsTable extends Migration
             // Related definition.
             $table->integer('definition_id')->length(9)->unsigned();
             $table->foreign('definition_id')
-                ->references('id')->on('definitions')
+                ->references('id')
+                ->on('definitions')
                 ->onDelete('cascade');
 
             // Translations

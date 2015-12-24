@@ -1,56 +1,87 @@
-@extends('layouts.base')
+@extends('layouts.narrow')
 
 @section('body')
-	@include('partials.header')
 
-	<section>
-		<h1>
-            Suggest a new word<br />
-			<small>
-				<a href="{{ route('language.create')  }}">&rarr; or click here to suggest a language</a>
-			</small>
-		</h1>
-        <br />
-        <br />
+    <h1>
+        Suggest a new word
+        <br>
 
-        <form class="form edit" method="post" name="definition" action="{{ route('definition.store') }}">
-			{!! csrf_field() !!}
-			<input type="hidden" name="type" value="{{ $type }}">
-			<input type="hidden" name="relations[language][]" value="{{ $lang->code }}">
+        <small>
+            <a href="{{ route('language.create')  }}">
+                &rarr; or click here to suggest a language
+            </a>
+        </small>
+    </h1>
+    <br>
+    <br>
 
-			{{-- Word --}}
-			<div class="row">
-				<input type="text" name="title" class="text-input center" placeholder="your word" value="" />
-			</div>
+    <form
+        class="edit form"
+        method="post"
+        name="definition"
+        action="{{ route('definition.store') }}">
+        
+        {!! csrf_field() !!}
+        <input type="hidden" name="type" value="{{ $type }}">
+        <input type="hidden" name="relations[language][]" value="{{ $lang->code }}">
 
-			{{-- Sub type --}}
-			<div class="row">
-				{!! Form::select('sub_type', $word->getSubTypes(), $word->sub_type, ['class' => 'en-text-input center']) !!}
-			</div>
+        {{-- Word --}}
+        <div class="row">
+            <input
+                type="text"
+                name="title"
+                class="text-input center"
+                placeholder="your word"
+                autocomplete="off"
+                required>
+        </div>
 
-            <div class="row center">
-                is a word in <em>{{ $lang->name }}</em> that means
-            </div>
+        {{-- Sub type --}}
+        <div class="row">
+            {!! Form::select(
+                'subType',
+                $word->getSubTypes(),
+                $word->rawSubType,
+                ['class' => 'en-text-input center']
+            ) !!}
+        </div>
 
-            <!-- Translation -->
-            <div class="row">
-                <input type="text" name="relations[translation][en]" class="en-text-input center" placeholder="your translation" value="" />
-            </div>
+        <div class="row center">
+            is a word in <em>{{ $lang->name }}</em> that means
+        </div>
 
-            <div class="row center">
-                in English.
-            </div>
+        <!-- Translation -->
+        <div class="row">
+            <input
+                type="text"
+                name="relations[practical][eng]"
+                class="en-text-input center"
+                placeholder="your translation"
+                autocomplete="off"
+                required>
+        </div>
 
-			<!-- Form actions -->
-            <br />
-            <br />
-			<div class="row center">
-				<input type="submit" name="next" value="continue" />
-				<input type="submit" name="next" value="finish" />
-				<!-- <input type="button" name="cancel" value="return" onclick="return confirm('Cancel?') ? App.redirect('') : false;" /> -->
-			</div>
-		</form>
-	</section>
+        <div class="row center">
+            in English.
+        </div>
 
-	@include('partials.footer')
+        <!-- Form actions -->
+        <br>
+        <br>
+        <div class="row center">
+            <input type="submit" name="next" value="continue">
+            <input type="submit" name="next" value="finish">
+            <input type="button" name="cancel" value="return" onclick="return confirm('Cancel?') ? App.redirect('') : false;">
+        </div>
+    </form>
+
+    <script type="text/javascript">
+        // $(document.definition.title).on('blur', function()
+        // {
+        //     if (!this.value.trim().length) return;
+        //
+        //     $(this).addClass('loading');
+        // });
+    </script>
+
 @stop

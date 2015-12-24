@@ -1,4 +1,7 @@
-
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
 var Forms =
 {
     /**
@@ -6,8 +9,32 @@ var Forms =
      */
     _def: {},
 
+    /**
+     *
+     */
+    init: function() {
+
+        // Attach helper keyboard to text inputs.
+        $('.text-input').focus(function() {
+            App.setKeyboardFocus(this);
+            $('#keyboard').fadeIn(300);
+        });
+
+        // Remove helper keyboard when focus is lost.
+        $('.en-text-input').focus(function() {
+            App.setKeyboardFocus(null);
+            $('#keyboard').fadeOut(300);
+        });
+
+        // Make keyboard draggable.
+        $('#keyboard').draggable();
+    },
+
+    /**
+     *
+     */
     getDefinitionForm: function(name) {
-        return this._def[name]
+        return this._def[name];
     },
 
     /**
@@ -27,7 +54,7 @@ var Forms =
         var $select = $(input).selectize({
             valueField: 'code',
             labelField: 'name',
-            searchField: ['code', 'name', 'alt_names'],
+            searchField: ['code', 'name', 'altNames'],
             options: items,
             plugins: (plugins || null),
             create: false,
@@ -50,8 +77,8 @@ var Forms =
 
                     // Add a short desciption
                     var hint = '';
-                    if (item.alt_names && item.alt_names.length)
-                        hint = '<span class="hint"> &mdash; Also known as '+ item.alt_names + '</span>';
+                    if (item.altNames && item.altNames.length)
+                        hint = '<span class="hint"> &mdash; Also known as '+ item.altNames + '</span>';
 
                     // Return formatted HTML
                     return  '<div>' +
@@ -62,13 +89,13 @@ var Forms =
             load: function(query, callback) {
                 if (!query.trim().length) return callback();
                 $.ajax({
-                    url: App.root +'language/search/' + App.urlencode(query.trim()),
-                    type: 'POST',
+                    url: App.root +'0.1/language/search/' + App.urlencode(query.trim()),
+                    type: 'GET',
                     error: function() {
                         callback();
                     },
-                    success: function(obj) {
-                        callback(obj.results);
+                    success: function(results) {
+                        callback(results);
                     }
                 });
             }
@@ -76,10 +103,8 @@ var Forms =
     },
 
     /**
-     *
      * @param name
      * @param options
-     * @param lang
      */
     setupDefinitionLookup: function(name, options)
     {
@@ -114,32 +139,62 @@ var Forms =
             // Display loading message
             form.results.html('<div class="center">looking up '+ query +'...</div>');
 
+            // Build endpoint.
+            var endpoint = App.root + '0.1';
+            if (options.langCode) {
+                endpoint += '/word/search/' + App.urlencode(query) + '?lang='+ options.langCode;
+            } else {
+                endpoint += '/search/' + App.urlencode(query) + '?method=fulltext';
+            }
+
             // Start ajax request
             $.ajax({
-                url: App.root +'/definition/search/' + App.urlencode(query),
-                type: 'POST',
+                url: endpoint,
+                type: 'GET',
                 error: function(xhr, status, error) {
-                    App.log('XHR error on search form: '+ xhr.status +' ('+ error +')');
-                    form.results.html('<div class="center">Seems like we ran into a snag <span class="fa fa-frown-o"></span> try again?</div>');
+                    App.log('XHR error on search form: '+ error +' ('+ xhr.status +')');
+                    form.results.html(
+                        '<div class="center">'+
+                            'Seems like we ran into a snag <span class="fa fa-frown-o"></span> '+
+                            'please try again later.'+
+                        '</div>');
                 },
-                success: function(obj)
+                success: function(results)
                 {
-                    if (obj.results.definitions.length > 0)
+                    if (results.length > 0)
                     {
                         var html	=
                             '<div class="center">'+
-                            'we found <em>'+ obj.results.definitions.length +'</em> definitions'+
-                            ' for <i>'+ obj.results.query +'</i>.'+
+                            'we found <em>'+ results.length +'</em> results'+
+                            ' for <i>'+ query +'</i>.'+
                             '</div><ol>';
 
-                        $.each(obj.results.definitions, function(i, def) {
-                            html +=
-                                '<li>'+
-                                '<a href="'+ def.uri +'">'+ def.title +'</a>'+
-                                ' <small>('+ def.sub_type +')</small>'+
-                                ' is a '+ def.type +' that means <i>'+ def.translations[0].translation +'</i> in '+
-                                ' <a href="'+ def.language.uri +'">'+ def.language.name +'</a>'+
-                                '</li>';
+                        $.each(results, function(i, res) {
+
+                            switch (res.resourceType)
+                            {
+                                case 'language':
+                                    var parentData = res.parentLanguage ?
+                                        ' is a child language of '+
+                                        '<a href="'+ res.parentLanguage.uri +'">'+
+                                        res.parentLanguage.name +
+                                        '</a>' : '';
+                                    html +=
+                                        '<li>'+
+                                        '<a href="'+ res.uri +'">'+ res.name +'</a>'+
+                                        ' <small>(language)</small>'+ parentData +
+                                        '</li>';
+                                    break;
+
+                                default:
+                                    html +=
+                                        '<li>'+
+                                        '<a href="'+ res.uri +'">'+ res.title +'</a>'+
+                                        ' <small>('+ res.subType +')</small>'+
+                                        ' is a '+ res.type +' that means <i>'+ res.translation.practical.eng +'</i> in '+
+                                        ' <a href="'+ res.mainLanguage.uri +'">'+ res.mainLanguage.name +'</a>'+
+                                        '</li>';
+                            }
                         });
 
                         form.results.html(html +'</ol>');
@@ -183,6 +238,9 @@ var Forms =
         this._def[name].query.focus();
     },
 
+    /**
+     *
+     */
     lookupDefinition: function(name)
     {
         // Performance check
@@ -251,6 +309,9 @@ var Forms =
         return false;
     },
 
+    /**
+     * TODO: when is this method used?
+     */
     setDefinitionResult: function(name, html)
     {
         // Performance check
@@ -260,6 +321,7 @@ var Forms =
     },
 
 	log: function(msg) {
-		if (console) console.log('Forms.js - '+ msg);
+		if (console && this.isLocalEnvironment)
+            console.log('Forms.js - '+ msg);
 	}
 };

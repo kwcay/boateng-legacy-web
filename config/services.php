@@ -14,6 +14,18 @@ return [
 	|
 	*/
 
+    'facebook' => [
+
+    ],
+
+    'google' => [
+
+    ],
+
+    'linkedin' => [
+
+    ],
+
 	'mailgun' => [
 		'domain' => '',
 		'secret' => '',
@@ -33,5 +45,10 @@ return [
 		'model'  => 'User',
 		'secret' => '',
 	],
+
+    'twitter' => [
+        'client_id' => '',
+        'client_secret' => env('TWITTER_API_KEY')
+    ],
 
 ];
