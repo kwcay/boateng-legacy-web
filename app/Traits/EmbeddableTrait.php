@@ -7,5 +7,16 @@ namespace App\Traits;
 
 trait EmbeddableTrait
 {
-    // ...
+    /**
+     *
+     *
+     * @param array|string  $relations
+     * @return
+     */
+    public function embed($relations)
+    {
+
+
+        return $this;
+    }
 }

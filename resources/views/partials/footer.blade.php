@@ -5,6 +5,7 @@
             <footer>
                 <div class="shortcuts">
                     <a href="{{ route('home') }}" class="fa fa-book fa-fw"></a>
+                    <a href="{{ route('about') }}" class="fa fa-question fa-fw"></a>
                     <!-- <a href="#" class="fa fa-plus fa-fw" onclick="return Dialogs.open('resource');"></a> -->
 
                     @if (Auth::check())

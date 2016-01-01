@@ -10,13 +10,16 @@
             <small>A Collection Of Cultures</small>
         </h1>
 
-        <div class="text-center">
-            Di Nkɔmɔ is a project I started in 2014 to help myself learn
-            <a href="/twi">Twi</a>,
-            my native language. It quickly became a cultural repository which I hope will
-            be useful to others.
-            <a href="/twi/di_nkɔmɔ">Di Nkɔmɔ</a>
-            is Twi for chat, or converse.
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 text-center">
+                Di Nkɔmɔ is a project I started in 2014 to help myself learn
+                <a href="/twi">Twi</a>,
+                my native language. It quickly became a cultural repository which I hope will
+                be useful to others. Since the first version of the app, Di Nkɔmɔ has grown from just
+                under 100 Twi words to
+                <a href="{{ route('stats') }}">{{ $defs }} definitions in {{ $langs }} languages</a>
+                and counting.
+            </div>
         </div>
 
         <div class="timeline">
@@ -56,6 +59,7 @@
         </div>
         <br>
 
+        <a href="/twi/di_nkɔmɔ">Di Nkɔmɔ</a> is Twi for chat, or converse.
         This app was built with <a href="http://laravel.com" target="_blank">Laravel</a>,
         <a href="https://angularjs.org" target="_blank">Angular</a> and other great resources such as:
         <br><br>

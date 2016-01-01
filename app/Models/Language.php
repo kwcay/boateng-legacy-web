@@ -2,6 +2,7 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
+ * @brief   Language model
  */
 namespace App\Models;
 
@@ -12,7 +13,6 @@ use cebe\markdown\MarkdownExtra;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasParamsTrait as HasParams;
-use App\Traits\EmbeddableTrait as Embeddable;
 use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
@@ -21,32 +21,12 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Language extends Model
 {
-    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs, Embeddable;
+    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs;
 
     /**
      *
      */
     private $markdown;
-
-    /**
-     * The relations that can be embedded to te model's array form.
-     */
-    protected $embeddableRelations = [
-        'parentLanguage',
-        'firstDefinition',
-        'latestDefinition',
-        'randomDefinition',
-    ];
-
-    /**
-     * The accessors that may be embedded to the model's array form.
-     */
-    protected $embeddableAccessors = [
-        'count',
-        'uri',
-        'editUri',
-        'resourceType',
-    ];
 
 
     //
@@ -79,14 +59,14 @@ class Language extends Model
      * The accessors to append to the model's array form.
      */
     protected $appends = [
-        'parentLanguage',
+        // 'parentLanguage',
         'count',
-        'firstDefinition',
-        'latestDefinition',
-        'randomDefinition',
+        // 'firstDefinition',
+        // 'latestDefinition',
+        // 'randomDefinition',
         'uri',
         'editUri',
-        'resourceType'
+        'resourceType',
     ];
 
     /**
@@ -184,10 +164,10 @@ class Language extends Model
     /**
      *
      */
-    public static function search($search, $offset = 0, $limit = 100)
+    public static function search($term, $offset = 0, $limit = 100)
     {
         // Sanitize data.
-        $search  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $search)));
+        $term  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $term)));
         $offset = min(0, (int) $offset);
         $limit = min(1, (int) $limit);
 
@@ -195,13 +175,13 @@ class Language extends Model
         $IDs = DB::table('languages AS l')
 
             // Create a temporary score column so we can sort the IDs.
-            ->selectRaw('l.id, MATCH(l.name, l.alt_names) AGAINST(?) AS score', [$search])
+            ->selectRaw('l.id, MATCH(l.name, l.alt_names) AGAINST(?) AS score', [$term])
 
             // Match the fulltext columns against the search query.
-            ->whereRaw('MATCH(l.name, l.alt_names) AGAINST(?)', [$search])
+            ->whereRaw('MATCH(l.name, l.alt_names) AGAINST(?)', [$term])
 
             // Or match the language code.
-            ->orWhere('code', '=', $search)
+            ->orWhere('code', '=', $term)
 
             // Order by relevancy.
             ->orderBy('score', 'DESC')

@@ -1,9 +1,8 @@
-@extends('layouts.base')
+@extends('layouts.narrow')
 
 @section('title', 'Di Nkomo: in numbers.')
 
 @section('body')
-	@include('partials.header')
 
 	<section>
 		<h1>Some stats</h1>
@@ -17,5 +16,4 @@
         to date. <a href="#" onclick="return App.openDialog('resource');">Click here</a> to contribute!
 	</section>
 
-	@include('partials.footer')
 @stop

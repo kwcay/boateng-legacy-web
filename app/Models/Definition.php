@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use App\Traits\HasParamsTrait as HasParams;
-use App\Traits\EmbeddableTrait as Embeddable;
 use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
@@ -28,7 +27,7 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Definition extends Model
 {
-    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs, Embeddable;
+    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
     CONST TYPE_NAME = 1;        // Names.
@@ -145,12 +144,26 @@ class Definition extends Model
     /**
     * The attributes that should be hidden for arrays.
     */
-    protected $hidden = ['id', 'params', 'updated_at', 'deleted_at', 'languages', 'translations'];
+    protected $hidden = [
+        'id',
+        'params',
+        'updated_at',
+        'deleted_at',
+        'languages',
+        'translations',
+    ];
 
     /**
      * The accessors to append to the model's array form.
      */
-    protected $appends = ['translation', 'language', 'mainLanguage', 'resourceType', 'uri', 'uniqueId'];
+    protected $appends = [
+        'translation',
+        'language',
+        'mainLanguage',
+        'resourceType',
+        'uri',
+        'uniqueId',
+    ];
 
     /**
      * Attributes that should be mutated to dates.

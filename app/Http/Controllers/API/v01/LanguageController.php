@@ -249,7 +249,7 @@ class LanguageController extends Controller
     /**
      * Shortcut to retrieve a language object.
      *
-     * @param string $id                    Either the ISO 639-3 language code or language ID.
+     * @param string $id    Either the ISO 639-3 language code or language ID.
      * @return \App\Models\Language|null
      */
     private function getLanguage($id)

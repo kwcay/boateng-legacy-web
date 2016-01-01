@@ -22,7 +22,10 @@ class PageController extends Controller
 	 * About the app.
 	 */
 	public function about() {
-		return view('pages.about.index');
+		return view('pages.about.index', [
+            'defs' => Definition::count(),
+            'langs' => Language::count()
+        ]);
 	}
 
 	/**

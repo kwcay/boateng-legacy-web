@@ -2,12 +2,12 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
- * API v0.1
+ * @brief   Route definitions for API v0.1
  */
 
 
 Route::get('/', function() {
-    return 'Di Nkɔmɔ API 0.1 *';
+    return 'Di Nkɔmɔ API 0.1';
 });
 
 // Definition endpoints.
