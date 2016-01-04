@@ -140,7 +140,8 @@ var Forms =
             form.results.html('<div class="center">looking up '+ query +'...</div>');
 
             // Build endpoint.
-            var endpoint = App.root + '0.1';
+            // var endpoint = App.root + '0.1';
+            var endpoint = '/0.1';
             if (options.langCode) {
                 endpoint += '/word/search/' + App.urlencode(query) + '?lang='+ options.langCode;
             } else {
@@ -217,11 +218,9 @@ var Forms =
        }.bind(this._def[name]));
 
        // Submit form.
-       $(document).ready(function() {
-           if (this._def[name].query.val().trim().length > 0) {
-               this._def[name].form.submit();
-           }
-       }.bind(this));
+       if (this._def[name].query.val().trim().length > 0) {
+           this._def[name].form.submit();
+       }
     },
 
     /**
