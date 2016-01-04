@@ -15,7 +15,16 @@
 
 			{{-- Name --}}
 			<div class="row">
-				<input type="text" name="name" class="text-input center" placeholder="your language" value="" required>
+				<div class="col-lg-10 col-lg-offset-1">
+				    <input
+                        type="text"
+                        name="name"
+                        class="text-input center"
+                        placeholder="your language"
+                        value=""
+                        autocomplete="false"
+                        required>
+				</div>
 			</div>
             <br>
 
@@ -25,7 +34,16 @@
 
 			{{-- ISO-639-3 --}}
 			<div class="row">
-				<input type="text" name="code" class="en-text-input center" placeholder="3-letter code" value="" required>
+				<div class="col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
+				    <input
+                        type="text"
+                        name="code"
+                        class="en-text-input center"
+                        placeholder="3-letter code"
+                        value=""
+                        autocomplete="false"
+                        required>
+				</div>
 			</div>
             <br>
 

@@ -113,7 +113,7 @@ class LanguageController extends Controller
 	public function store()
 	{
         // Retrieve the language details.
-        $data = Request::only(['code', 'parent_code', 'name', 'alt_names', 'countries']);
+        $data = Request::only(['code', 'parent_code', 'name', 'alt_names']);
 
         // Set return route.
         $return = Request::input('next') == 'continue' ? 'edit' : 'index';
@@ -153,7 +153,7 @@ class LanguageController extends Controller
         }
 
         // Retrieve the language details.
-        $data = Request::only(['parent_code', 'name', 'alt_names', 'countries']);
+        $data = Request::only(['parent_code', 'name', 'alt_names']);
 
         return $this->save($lang, $data, 'index');
 	}
@@ -183,11 +183,6 @@ class LanguageController extends Controller
      */
     public function save($lang, $data, $return)
     {
-        // ...
-        if (isset($data['countries']) && is_array($data['countries'])) {
-            $data['countries'] = implode(',', $data['countries']);
-        }
-
         // Validate input data
         $test = Language::validate($data);
         if ($test->fails())
@@ -201,12 +196,12 @@ class LanguageController extends Controller
         }
 
         // Parent language details
-        if (strlen($data['parent_code']) >= 3 && $parent = Language::findByCode($data['parent_code'])) {
-            $lang->setParam('parentName', $parent->name);
-        } else {
-            $data['parent_code'] = '';
-            $lang->setParam('parentName', '');
-        }
+        // if (strlen($data['parent_code']) >= 3 && $parent = Language::findByCode($data['parent_code'])) {
+        //     $lang->setParam('parentName', $parent->name);
+        // } else {
+        //     $data['parent_code'] = '';
+        //     $lang->setParam('parentName', '');
+        // }
 
         // Update language details.
         $lang->fill($data);
@@ -216,7 +211,7 @@ class LanguageController extends Controller
         switch ($return)
         {
             case 'index':
-                $return = $lang->getUri(false);
+                $return = $lang->uri;
                 break;
 
             case 'edit':
@@ -280,7 +275,17 @@ class LanguageController extends Controller
             return null;
         }
 
-        $lang = (strlen($id) == 3 || strlen($id) == 7) ? Language::findByCode($id) : Language::find($id);
+        $embed = ['parent'];
+
+        // Find langauge by code.
+        if (strlen($id) == 3 || strlen($id) == 7) {
+            $lang = Language::findByCode($id, $embed);
+        }
+
+        // Find language by ID.
+        else {
+            $lang = Language::with($embed)->find($id);
+        }
 
         return $lang;
     }

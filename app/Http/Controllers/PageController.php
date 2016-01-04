@@ -12,10 +12,17 @@ use App\Models\Definition;
 class PageController extends Controller
 {
 	/**
-	 * Displays main landing page.
+	 * Main landing page.
 	 */
 	public function home() {
 		return view('pages.home');
+	}
+
+	/**
+	 * Contribute page.
+	 */
+	public function contribute() {
+		return view('pages.contribute');
 	}
 
 	/**

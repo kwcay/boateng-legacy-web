@@ -12,7 +12,6 @@ use Log;
 use cebe\markdown\MarkdownExtra;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\HasParamsTrait as HasParams;
 use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ValidatableResourceTrait as Validatable;
 use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
@@ -21,7 +20,7 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Language extends Model
 {
-    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs;
+    use Validatable, Obfuscatable, Exportable, SoftDeletes, CamelCaseAttrs;
 
     /**
      *
@@ -147,9 +146,10 @@ class Language extends Model
      * Looks up a language model by code.
      *
      * @param string|\App\Models\Language $code
+     * @param array $embed
      * @return \App\Models\Language|null
      */
-    public static function findByCode($code)
+    public static function findByCode($code, array $embed = [])
     {
         // Performance check.
         if ($code instanceof static) {
@@ -158,7 +158,7 @@ class Language extends Model
 
         // Retrieve langauge by code.
         $code = static::sanitizeCode($code);
-        return $code ? static::where(['code' => $code])->first() : null;
+        return $code ? static::with($embed)->where(['code' => $code])->first() : null;
     }
 
     /**

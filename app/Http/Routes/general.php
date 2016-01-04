@@ -12,6 +12,7 @@ Route::get('/', 'PageController@home')->name('home');
 Route::get('about', 'PageController@about')->name('about');
 Route::get('about/in-numbers', 'PageController@stats')->name('stats');
 Route::get('about/author', 'PageController@author')->name('author');
+Route::get('contribute', 'PageController@contribute')->name('contribute');
 
 //
 // Language pages.
