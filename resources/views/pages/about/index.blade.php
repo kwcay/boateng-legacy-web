@@ -11,7 +11,7 @@
         </h1>
 
         <div class="row">
-            <div class="col-md-8 col-md-offset-2 text-center">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center">
                 Di Nkɔmɔ is a project I started in 2014 to help myself learn
                 <a href="/twi">Twi</a>,
                 my native language. It quickly became a cultural repository which I hope will
