@@ -54,10 +54,7 @@
                 @endif
 
                 {{-- Back search --}}
-                <br>
-                <a class="more" href="{{ route('language.show', [
-                                        'code' => $def->mainLanguage->code,
-                                        'q' => $def->getPracticalTranslation('eng')]) }}">
+                <a class="more" href="{{ route('home', ['q' => $def->getPracticalTranslation('eng')]) }}">
                     &rarr; more translations for {{ $def->getPracticalTranslation('eng') }}
                 </a>
             </div>
