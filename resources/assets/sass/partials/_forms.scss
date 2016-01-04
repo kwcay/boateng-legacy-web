@@ -148,7 +148,8 @@ a.button:after {
             background-color: rgba(0, 128, 0, 0.4);
         }
         input[name="q"] {
-        	width: 70%;
+            width: 65%;
+            margin: 0 2.5%;
         	text-align: center;
             border-bottom: none;
         }
@@ -161,6 +162,20 @@ a.button:after {
 }
 #results ol li {
     padding: 0 0 5px 15px;
+}
+
+@media (min-width: 600px) {
+    .form.search .input-wrapper {
+        input[type="button"],
+        input[type="submit"] {
+            width: 10%;
+        }
+
+        input[name="q"] {
+            width: 78%;
+            margin: 0 1%;
+        }
+    }
 }
 
 /*
@@ -201,28 +216,4 @@ a.button:after {
     position: absolute;
     right: -30px;
     top: 15px;
-}
-
-@media (max-width: 600px) {
-    .form.search .container {
-        width: 100%;
-        position: relative;
-    }
-
-    .form.search input {
-        font-size: 0.8em;
-    }
-
-    .form.search .container input[name="q"] {
-        width: 65%;
-        margin: 0 2.5%;
-        padding: 0;
-    }
-
-    .form.search .container input[type="button"],
-    .form.search .container input[type="submit"] {
-        width: 15%;
-        margin: 0;
-        padding: 0;
-    }
 }
