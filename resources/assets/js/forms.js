@@ -217,9 +217,11 @@ var Forms =
        }.bind(this._def[name]));
 
        // Submit form.
-       if (this._def[name].query.val().trim().length > 0) {
-           this._def[name].form.submit();
-       }
+       $(document).ready(function() {
+           if (this._def[name].query.val().trim().length > 0) {
+               this._def[name].form.submit();
+           }
+       });
     },
 
     /**
