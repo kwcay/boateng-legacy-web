@@ -221,7 +221,7 @@ var Forms =
            if (this._def[name].query.val().trim().length > 0) {
                this._def[name].form.submit();
            }
-       });
+       }.bind(this));
     },
 
     /**
