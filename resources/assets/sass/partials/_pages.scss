@@ -17,18 +17,25 @@ section .meta em {
 /**
  * Word page
  */
-.definitions {}
-.definition {
-    position: relative;
-    margin: 10px 0 10px 40px;
-    padding-left: 20px;
-    border-left: 1px solid #aaa;
-}
-.definition .or {
-    position: absolute;
-    left: -40px;
-    top: 4px;
-    font-style: italic;
+.definitions {
+
+    .definition {
+        position: relative;
+        margin: 10px 0 10px 40px;
+        padding-left: 20px;
+        border-left: 1px solid #aaa;
+
+        .or {
+            position: absolute;
+            left: -40px;
+            top: 4px;
+            font-style: italic;
+        }
+
+        .more {
+            font-size: .8em;
+        }
+    }
 }
 
 @media only screen and (max-width: 600px) {
@@ -41,5 +48,4 @@ section .meta em {
     .definition {
 
     }
-
 }

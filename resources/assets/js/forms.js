@@ -215,6 +215,11 @@ var Forms =
            this.results.html('<div class="center">Use this <em>&#10548;</em> to lookup words<br />in '+ this.language.name +'.</div>');
            this.query.focus();
        }.bind(this._def[name]));
+
+       // Submit form.
+       if (this._def[name].query.val().trim().length > 0) {
+           this._def[name].form.submit();
+       }
     },
 
     /**
