@@ -64,7 +64,7 @@ class LanguageController extends Controller
 
         // Retrieve random definition.
         if ($total > 2) {
-            $random = Word::random($lang->code);
+            $random = Word::random($lang);
         }
 
         return view('pages.language', [
