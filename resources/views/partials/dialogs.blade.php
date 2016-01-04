@@ -49,7 +49,7 @@
     <span class="move fa fa-arrows"></span>
     <span class="close fa fa-times" onclick="$('#keyboard').fadeOut(300)"></span>
     <a href="#" class="button" onclick="return App.keyboardInput(this.innerHTML)">ɛ</a>
+    <a href="#" class="button" onclick="return App.keyboardInput(this.innerHTML)">ŋ</a>
     <a href="#" class="button" onclick="return App.keyboardInput(this.innerHTML)">ɔ</a>
-    <a href="#" class="button" onclick="return App.keyboardInput(this.innerHTML)">õ</a>
     <span class="title">(helper keyboard)</span>
 </div>
