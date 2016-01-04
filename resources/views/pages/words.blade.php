@@ -54,6 +54,13 @@
                 @endif
 
                 {{-- Back search --}}
+                {{-- Only add a break if there was more info appended to this definition --}}
+                @if ($def->hasMeaning('eng') ||
+                    $def->hasLiteralTranslation('eng') ||
+                    strlen($def->altTitles ||
+                    count($def->languages) > 1))
+                    <br>
+                @endif
                 <a class="more" href="{{ route('home', ['q' => $def->getPracticalTranslation('eng')]) }}">
                     &rarr; more translations for {{ $def->getPracticalTranslation('eng') }}
                 </a>
