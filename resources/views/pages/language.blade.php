@@ -3,6 +3,7 @@
 {{-- Page meta --}}
 @section('title', $lang->name .' - the book of native tongues.')
 @section('description', 'Learn new words and sayings in '. $lang->name)
+@section('keywords', 'free '. $lang->name .' dictionary,'. $lang->name .','. $lang->code)
 
 @section('body')
 

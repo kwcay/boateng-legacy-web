@@ -12,7 +12,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<meta name="author" content="Francis Amankrah">
 		<meta name="description" content="@yield('description', 'The book of native tongues.')">
-		<meta name="keywords" content="dictionary, bilingual, multilingual, translation, twi, ewe, ga, wa, dagbani, igbo">
+		<meta name="keywords" content="@yield('keywords', 'dictionary, bilingual, multilingual, translation')">
 		<meta name="robots" content="index, follow">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta property="og:title" content="@yield('title', 'Di Nkomo: the book of native tongues.')">
@@ -38,9 +38,7 @@
 
     @include('partials.footer')
     <script type="text/javascript">
-        $(document).ready(function(event) {
-            App.init();
-        });
+        $(document).ready(function(event) { App.init(); });
     </script>
 </body>
 </html>
