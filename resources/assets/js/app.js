@@ -18,12 +18,15 @@ var App =
             window.location.hostname.match(/.*\.local$/i) ||
             window.location.hostname.match(/.*\.vagrant$/i)) ? true : false;
 
-        // Setup AJAX headers
+        // Setup AJAX headers.
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        // Setup Bootstrap tooltips.
+        $('[data-toggle="tooltip"]').tooltip();
 
         // Initialize other objects.
         Dialogs.init();

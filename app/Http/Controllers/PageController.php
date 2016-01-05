@@ -25,6 +25,17 @@ class PageController extends Controller
 		return view('pages.contribute');
 	}
 
+    /**
+     * Random definition.
+     */
+    public function random()
+    {
+        // Find a random definition.
+        $definition = Definition::random();
+
+        return redirect($definition->uri);
+    }
+
 	/**
 	 * About the app.
 	 */

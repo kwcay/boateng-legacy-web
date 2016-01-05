@@ -15,7 +15,7 @@
                 Di Nkɔmɔ is a project I started in 2014 to help myself learn
                 <a href="/twi">Twi</a>,
                 my native language. It quickly became a cultural repository which I hope will
-                be useful to others. Since the first version of the app, Di Nkɔmɔ has grown from just
+                be useful to others. Since its inception, Di Nkɔmɔ has grown from just
                 under 100 Twi words to
                 <a href="{{ route('stats') }}">{{ $defs }} definitions in {{ $langs }} languages</a>
                 and counting.
