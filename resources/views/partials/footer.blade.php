@@ -6,8 +6,8 @@
                 <div class="shortcuts">
                     <a
                         href="{{ route('home') }}"
-                        class="fa fa-book fa-fw"
-                        title="Home"
+                        class="fa fa-search fa-fw"
+                        title="Lookup something"
                         data-toggle="tooltip"></a>
                     <a
                         href="{{ route('definition.random') }}"
