@@ -1,8 +1,9 @@
-# Laravel & vendor stuff.
+# Vendor files & environment-specific files.
 /bower_components
 /node_modules
 /vendor
 .env
+/google*.html
 npm-debug.log
 
 # Ignore OSX & Windows generated files.
