@@ -1,9 +1,9 @@
 # Vendor files & environment-specific files.
 /bower_components
+/public/google*.html
 /node_modules
 /vendor
 .env
-/google*.html
 npm-debug.log
 
 # Ignore OSX & Windows generated files.
