@@ -22,7 +22,7 @@ trait ExportableResourceTrait
     {
         // Temporarily disable hidden fields.
         $originallyHidden = $this->hidden;
-        $this->hidden = array_where($this->hidden, function($key, $value) {
+        $this->hidden = $this->hiddenFromExport ?: array_where($this->hidden, function($key, $value) {
             return !in_array($value, ['params', 'created_at', 'deleted_at']);
         });
 

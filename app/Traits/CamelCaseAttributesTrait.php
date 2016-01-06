@@ -33,10 +33,28 @@ trait CamelCaseAttributesTrait
      *
      * @return array
      */
-    public function toArray()
+    public function toArray() {
+        return $this->convertToCamelCase(parent::toArray());
+    }
+
+    /**
+     * Convert the model's attributes to an array, and changes the snake_case keys to camelCase.
+     *
+     * @return array
+     */
+    public function attributesToArray() {
+        return $this->convertToCamelCase(parent::attributesToArray());
+    }
+
+    /**
+     * Converts an array's keys to camelCase.
+     *
+     * @param array $snakeCaseAttributes
+     * @return array
+     */
+    protected function convertToCamelCase(array $snakeCaseAttributes)
     {
         $camelCasedAttributes = [];
-        $snakeCaseAttributes = parent::toArray();
 
         foreach ($snakeCaseAttributes as $key => $value) {
             $camelCasedAttributes[camel_case($key)] = $value;

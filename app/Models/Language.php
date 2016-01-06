@@ -27,14 +27,6 @@ class Language extends Model
      */
     private $markdown;
 
-
-    //
-    //
-    // Attirbutes used by Illuminate\Database\Eloquent\Model
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
     /**
      * Attributes which aren't mass-assignable.
      */
@@ -55,14 +47,28 @@ class Language extends Model
     ];
 
     /**
+     * The attributes that should be hidden from export files.
+     */
+    protected $hiddenFromExport = [
+        'id',
+        'params',
+        'parentLanguage',
+        'firstDefinition',
+        'latestDefinition',
+        'randomDefinition',
+        'uri',
+        'editUri',
+    ];
+
+    /**
      * The accessors to append to the model's array form.
      */
     protected $appends = [
-        // 'parentLanguage',
+        'parentLanguage',
         'count',
-        // 'firstDefinition',
-        // 'latestDefinition',
-        // 'randomDefinition',
+        'firstDefinition',
+        'latestDefinition',
+        'randomDefinition',
         'uri',
         'editUri',
         'resourceType',
