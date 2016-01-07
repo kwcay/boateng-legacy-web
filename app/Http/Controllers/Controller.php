@@ -28,6 +28,41 @@ abstract class Controller extends BaseController
 	}
 
     /**
+     * Gets the embedable relations and attributes that may be appended to a model.
+     *
+     * @param array|string $embed
+     * @param array $appendable
+     * @return array
+     */
+    protected function getEmbedArrays($embed = null, array $appendable = [])
+    {
+        // Relations and attributes to append
+        $embed = is_string($embed) ? @explode(',', $embed) : (array) $embed;
+
+        // Extract the attributes from the list of embeds.
+        $attributes = array_intersect($appendable, $embed);
+
+        // Separate the database relations from the appendable attributes.
+        foreach ($embed as $key => $relation)
+        {
+            // Remove invalid relations.
+            $relation = preg_replace('/[^0-9a-z]/i', '', $relation);
+            if (empty($relation)) {
+                unset($embed[$key]);
+            }
+
+            if (in_array($relation, $attributes)) {
+                unset($embed[$key]);
+            }
+        }
+
+        return [
+            'relations' => $embed,
+            'attributes' => $attributes
+        ];
+    }
+
+    /**
      * @param mixed $data       Data to be sent.
      * @param array $headers    Headers to be sent with response.
      * @return string           JSON-encoded string.
@@ -53,6 +88,8 @@ abstract class Controller extends BaseController
      * @param int $status   The HTTP status to send.
      * @param mixed $data   The data to send to the client.
      * @return Response
+     *
+     * @deprecated
      */
     public function error($status, $msg = '', array $headers = [])
     {
