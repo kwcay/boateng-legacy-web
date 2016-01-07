@@ -12,7 +12,6 @@ use Session;
 use Redirect;
 use Request;
 use Validator;
-use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Definitions\Word;
@@ -44,9 +43,35 @@ class LanguageController extends Controller
      */
     public function show($id)
     {
+        // Relations to embed.
+        $embed = Request::has('embed') ? @explode(',', Request::get('embed')) : [];
+
+        // Extra attributes to embed.
+        $append = array_intersect(Language::$appendable, $embed);
+        foreach ($embed as $key => $relation)
+        {
+            // Remove invalid relations.
+            $relation = preg_replace('/[^0-9a-z]/i', '', $relation);
+            if (empty($relation)) {
+                unset($embed[$key]);
+            }
+
+            // Remove accessors from embed array, since they aren't database relations per say.
+            if (in_array($relation, $append)) {
+                unset($embed[$key]);
+            }
+        }
+
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id, ['parent', 'children'])) {
+        if (!$lang = $this->getLanguage($id, $embed)) {
             return response('Language Not Found.', 404);
+        }
+
+        // Append accessors.
+        if (count($append)) {
+            foreach ($append as $accessor) {
+                $lang->setAttribute($accessor, $lang->$accessor);
+            }
         }
 
         return $lang;

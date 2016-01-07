@@ -157,9 +157,9 @@ class Definition extends Model
      * The accessors to append to the model's array form.
      */
     protected $appends = [
-        'translation',
-        'language',
-        'mainLanguage',
+        // 'translation',
+        // 'language',
+        // 'mainLanguage',
         'resourceType',
         'uri',
         'uniqueId',

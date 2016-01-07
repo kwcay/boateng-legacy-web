@@ -57,17 +57,22 @@ class Language extends Model
     ];
 
     /**
-     * The accessors to append to the model's array form.
+     * The accessors that MUST be appended to the model's array form.
      */
     protected $appends = [
-        // 'parentLanguage',
         'count',
-        // 'firstDefinition',
-        // 'latestDefinition',
-        // 'randomDefinition',
         'uri',
         'editUri',
         'resourceType',
+    ];
+
+    /**
+     * The accessors that CAN be appended to the model's array form.
+     */
+    public static $appendable = [
+        'firstDefinition',
+        'latestDefinition',
+        'randomDefinition',
     ];
 
     /**
@@ -259,7 +264,7 @@ class Language extends Model
      * @return string
      */
     public function getParentLanguageAttribute($data = null) {
-        return $this->parent ? $this->parent : null;
+        return $this->parent ?: null;
     }
 
     /**
