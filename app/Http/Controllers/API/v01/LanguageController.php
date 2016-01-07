@@ -45,7 +45,7 @@ class LanguageController extends Controller
     public function show($id)
     {
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
+        if (!$lang = $this->getLanguage($id, ['parent', 'children'])) {
             return response('Language Not Found.', 404);
         }
 
@@ -250,16 +250,25 @@ class LanguageController extends Controller
      * Shortcut to retrieve a language object.
      *
      * @param string $id    Either the ISO 639-3 language code or language ID.
+     * @param array $embed  Database relations to pre-load.
      * @return \App\Models\Language|null
      */
-    private function getLanguage($id)
+    private function getLanguage($id, array $embed = [])
     {
         // Performance check.
         if (empty($id) || is_numeric($id) || !is_string($id)) {
             return null;
         }
 
-        $lang = (strlen($id) == 3 || strlen($id) == 7) ? Language::findByCode($id) : Language::find($id);
+        // Find language by code.
+        if (strlen($id) == 3 || strlen($id) == 7) {
+            $lang = Language::findByCode($id, $embed);
+        }
+
+        // Or find language by ID.
+        else {
+            $lang = Language::with($embed)->find($id);
+        }
 
         return $lang;
     }

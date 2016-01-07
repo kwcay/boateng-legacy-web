@@ -10,14 +10,14 @@
 
 		{{-- Email --}}
 		<div class="row">
-			<div class="col-xs-12">
+			<div class="col-xs-12 col-md-8 col-md-offset-2">
 			    <input type="email" name="email" placeholder="your email" required autofocus>
 			</div>
 		</div>
 
 		{{-- Password --}}
 		<div class="row">
-			<div class="col-xs-12">
+			<div class="col-xs-12 col-md-8 col-md-offset-2">
 			    <input type="password" name="password" placeholder="your password" required>
 			</div>
 		</div>

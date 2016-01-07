@@ -37,13 +37,10 @@ class Language extends Model
     */
     protected $hidden = [
         'id',
-        'params',
-        'created_at',
         'updated_at',
         'deleted_at',
-        'parent',
         'definitions',
-        'pivot'
+        'pivot',
     ];
 
     /**
@@ -51,24 +48,23 @@ class Language extends Model
      */
     protected $hiddenFromExport = [
         'id',
-        'params',
-        'parentLanguage',
-        'firstDefinition',
-        'latestDefinition',
-        'randomDefinition',
+        'updated_at',
+        'definitions',
+        'pivot',
         'uri',
         'editUri',
+        'resourceType',
     ];
 
     /**
      * The accessors to append to the model's array form.
      */
     protected $appends = [
-        'parentLanguage',
+        // 'parentLanguage',
         'count',
-        'firstDefinition',
-        'latestDefinition',
-        'randomDefinition',
+        // 'firstDefinition',
+        // 'latestDefinition',
+        // 'randomDefinition',
         'uri',
         'editUri',
         'resourceType',
