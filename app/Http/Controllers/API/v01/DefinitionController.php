@@ -41,12 +41,27 @@ class DefinitionController extends Controller
      */
     public function show($id)
     {
+        // List of relations and attributes to append to results.
+        $embed = $this->getEmbedArray(
+            Request::get('embed'),
+            Definition::$appendable
+        );
+
         // Retrieve definition object
-        if ($definition = Definition::find($id)) {
-            return $definition;
+        if (!$definition = Definition::with($embed['relations'])->find($id)) {
+            return response('Definition Not Found.', 404);
         }
 
-        return response('Definition Not Found.', 404);
+        // Append extra attributes.
+        if (count($embed['attributes']))
+        {
+            foreach ($embed['attributes'] as $accessor)
+            {
+                $definition->setAttribute($accessor, $definition->$accessor);
+            }
+        }
+
+        return $definition;
     }
 
     /**
@@ -67,8 +82,26 @@ class DefinitionController extends Controller
         // TODO: add definition type to where clause.
         // ...
 
+        // List of relations and attributes to append to results.
+        $embed = $this->getEmbedArray(
+            Request::get('embed'),
+            Definition::$appendable
+        );
+
         // Lookup definitions with a specific title
-        $definitions = Definition::where('title', '=', $title)->get();
+        $definitions = Definition::with($embed['relations'])->where('title', '=', $title)->get();
+
+        // Append extra attributes.
+        if (count($embed['attributes']) && count($definitions))
+        {
+            foreach ($definitions as $definition)
+            {
+                foreach ($embed['attributes'] as $accessor)
+                {
+                    $definition->setAttribute($accessor, $definition->$accessor);
+                }
+            }
+        }
 
         return $definitions ?: response('Definition Not Found.', 404);
     }
@@ -168,7 +201,7 @@ class DefinitionController extends Controller
 	{
         // TODO ...
 
-        return $this->error(501);
+        return response('Not Implemented.', 501);
 	}
 
     /**
@@ -182,6 +215,6 @@ class DefinitionController extends Controller
 	{
         // TODO ...
 
-        return $this->error(501);
+        return response('Not Implemented.', 501);
 	}
 }

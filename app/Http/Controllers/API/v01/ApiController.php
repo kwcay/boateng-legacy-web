@@ -35,7 +35,7 @@ class ApiController extends Controller
     {
         // Retrieve model.
         if (!$model = $this->getResourceModel($resource)) {
-            return response('Invalid resource type.', 500);
+            return response('Invalid resource type.', 400);
         }
 
         return $model->count();
@@ -51,7 +51,7 @@ class ApiController extends Controller
     {
         // Retrieve model.
         if (!$model = $this->getResourceModel($resourceName)) {
-            return response('Invalid resource type.', 500);
+            return response('Invalid resource type.', 400);
         }
 
         // Retrieve search options.

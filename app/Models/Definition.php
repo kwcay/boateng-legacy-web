@@ -16,9 +16,9 @@ use App\Models\Definitions\Poem;
 use App\Models\Definitions\Word;
 use App\Models\Definitions\Phrase;
 use App\Models\Definitions\Story;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
 use App\Traits\HasParamsTrait as HasParams;
 use App\Traits\ExportableResourceTrait as Exportable;
 use App\Traits\ValidatableResourceTrait as Validatable;
@@ -142,11 +142,10 @@ class Definition extends Model
     protected $guarded = ['id'];
 
     /**
-    * The attributes that should be hidden for arrays.
-    */
+     * The attributes that should be hidden from the model's array form.
+     */
     protected $hidden = [
         'id',
-        'params',
         'updated_at',
         'deleted_at',
         'languages',
@@ -154,15 +153,38 @@ class Definition extends Model
     ];
 
     /**
-     * The accessors to append to the model's array form.
+     * The attributes that should be hidden from the model's array form when exporting data to file.
+     */
+    protected $hiddenFromExport = [
+        'id',
+        'updated_at',
+        'languages',
+        'translations',
+        'uri',
+        'editUri',
+        'resourceType',
+        'uniqueId',
+    ];
+
+    /**
+     * Attributes that SHOULD be appended to the model's array form.
      */
     protected $appends = [
-        // 'translation',
-        // 'language',
-        // 'mainLanguage',
-        'resourceType',
+        'translation',
+        'language',
         'uri',
+        'editUri',
         'uniqueId',
+        'resourceType',
+    ];
+
+    /**
+     * Attributes that CAN be appended to the model's array form.
+     */
+    public static $appendable = [
+        'translation',
+        'language',
+        'mainLanguage',
     ];
 
     /**
@@ -326,16 +348,16 @@ class Definition extends Model
     /**
      * Performs a fulltext search.
      *
-     * @param string $query     Search query.
+     * @param string $term      Search term.
      * @param int $offset       Search offset.
      * @param int $limit        Search limit (max 50).
      * @param array $options    Search options.
      * @return array
      */
-    public static function fulltextSearch($query, $offset = 0, $limit = 50, array $options = [])
+    public static function fulltextSearch($term, $offset = 0, $limit = 50, array $options = [])
     {
         // Sanitize data and retrieve search options.
-        $query = trim(preg_replace('/[\s+]/', ' ', strip_tags($query)));
+        $term = trim(preg_replace('/[\s+]/', ' ', $term));
         $offset = min(0, (int) $offset);
         $limit = max(1, min(static::SEARCH_LIMIT, (int) $limit));
         $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
@@ -356,16 +378,15 @@ class Definition extends Model
                 'd.id, '.
                 'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
                 'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) * 8 AS tran_score ',
-                [$query, $query])
+                [$term, $term])
 
             // Match the fulltext columns against the search query.
             ->whereRaw(
                 '( MATCH(d.title, d.alt_titles) AGAINST(?) '.
                 'OR MATCH(t.practical, t.literal, t.meaning) AGAINST(?) )',
-                [$query, $query])
+                [$term, $term])
 
             // Order by relevancy.
-            //->orderByraw('(title_score + tran_score + data_score + tags_score) DESC');
             ->orderByraw('(title_score + tran_score) DESC');
 
         // Limit scope to a specific language.
@@ -415,7 +436,7 @@ class Definition extends Model
 
         // ...
 
-        return [];
+        return new Collection;
     }
 
 

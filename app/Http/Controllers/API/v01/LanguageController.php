@@ -44,7 +44,7 @@ class LanguageController extends Controller
     public function show($id)
     {
         // Retrieve list of relations and attributes to append to results.
-        $embed = $this->getEmbedArrays(
+        $embed = $this->getEmbedArray(
             Request::get('embed'),
             Language::$appendable
         );
@@ -239,7 +239,7 @@ class LanguageController extends Controller
         // Performance check
         $query  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $query)));
         if (strlen($query) < 2) {
-            return $this->abort(400, 'Query too short');
+            return response('Query Too Short.', 400);
         }
 
         $offset = min(0, (int) Request::get('offset', 0));
@@ -256,8 +256,7 @@ class LanguageController extends Controller
             }
         }
 
-        // return $this->send(['query' => $query, 'results' => $results]);
-        return $this->send($semantic ? $results : compact('query', 'results'));
+        return $semantic ? $results : compact('query', 'results');
     }
 
     /**

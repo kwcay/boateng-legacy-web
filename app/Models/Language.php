@@ -10,6 +10,7 @@ use DB;
 use Log;
 
 use cebe\markdown\MarkdownExtra;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\ExportableResourceTrait as Exportable;
@@ -33,8 +34,8 @@ class Language extends Model
     protected $guarded = ['id'];
 
     /**
-    * The attributes that should be hidden for arrays.
-    */
+     * The attributes that should be hidden from the model's array form.
+     */
     protected $hidden = [
         'id',
         'updated_at',
@@ -44,7 +45,7 @@ class Language extends Model
     ];
 
     /**
-     * The attributes that should be hidden from export files.
+     * The attributes that should be hidden from the model's array form when exporting data to file.
      */
     protected $hiddenFromExport = [
         'id',
@@ -57,7 +58,7 @@ class Language extends Model
     ];
 
     /**
-     * The accessors that MUST be appended to the model's array form.
+     * Attributes that SHOULD be appended to the model's array form.
      */
     protected $appends = [
         'count',
@@ -67,7 +68,7 @@ class Language extends Model
     ];
 
     /**
-     * The accessors that CAN be appended to the model's array form.
+     * Attributes that CAN be appended to the model's array form.
      */
     public static $appendable = [
         'firstDefinition',
@@ -88,8 +89,6 @@ class Language extends Model
         'parent_code' => 'string',
         'name' => 'string',
         'alt_names' => 'string',
-        'countries' => 'string',
-        'params' => 'array'
     ];
 
     /**
@@ -197,7 +196,7 @@ class Language extends Model
             ->distinct()->skip($offset)->take($limit)->lists('l.id');
 
         // Return results.
-        return count($IDs) ? Language::whereIn('id', $IDs)->get() : [];
+        return count($IDs) ? Language::whereIn('id', $IDs)->get() : new Collection;
     }
 
     /**
