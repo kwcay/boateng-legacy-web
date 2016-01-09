@@ -11,12 +11,12 @@
         <base href="{{ Request::root() }}/">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<meta name="author" content="Francis Amankrah">
-		<meta name="description" content="@yield('description', 'The book of native tongues.')">
+		<meta name="description" content="@yield('description', 'A Collection of Cultures.')">
 		<meta name="keywords" content="@yield('keywords', 'dictionary, bilingual, multilingual, translation')">
 		<meta name="robots" content="index, follow">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta property="og:title" content="@yield('title', 'Di Nkomo: the book of native tongues.')">
-		<meta property="og:desc" content="@yield('description', 'The book of native tongues.')">
+		<meta property="og:desc" content="@yield('description', 'A Collection of Cultures.')">
 		<meta property="og:type" content="website">
         <script src="{{ $helper->rev('all.js') }}" type="text/javascript"></script>
 		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->

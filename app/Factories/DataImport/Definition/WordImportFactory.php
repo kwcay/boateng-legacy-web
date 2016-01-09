@@ -34,13 +34,17 @@ class WordImportFactory extends DataImportFactory
             // relations afterwards.
             $word = Word::create(array_only($array, [
                 'title',
+                'altTitles',
                 'alt_titles',
                 'type',
+                'subType',
                 'sub_type',
                 'state',
                 // 'params',
+                'createdAt',
                 'created_at',
-                'deleted_at'
+                'deletedAt',
+                'deleted_at',
             ]));
 
             // TODO: flag relations that couldn't be added.

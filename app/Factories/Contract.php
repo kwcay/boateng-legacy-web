@@ -10,7 +10,7 @@ use Illuminate\Http\Response;
 
 abstract class Contract
 {
-    /**
+    /**t 
      *
      */
     public function __construct(Request $request, Response $response)

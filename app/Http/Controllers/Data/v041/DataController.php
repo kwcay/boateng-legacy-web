@@ -83,7 +83,6 @@ class DataController extends Controller
             ->header('Content-Type', $result['Content-Type'])
             ->header('Content-Disposition',
                 $this->response->headers->makeDisposition('attachment', $result['filename']))
-            ->setContent($result['content'])
-            ->send();
+            ->setContent($result['content']);
     }
 }

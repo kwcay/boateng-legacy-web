@@ -26,11 +26,15 @@ class LanguageImportFactory extends DataImportFactory
             // Create a language object.
             $lang = new Language(array_only($langArray, [
                 'code',
+                'parentCode',
                 'parent_code',
                 'name',
+                'altNames',
                 'alt_names',
+                'createdAt',
                 'created_at',
-                'deleted_at'
+                'deletedAt',
+                'deleted_at',
             ]));
 
             // TODO: relations to be added:

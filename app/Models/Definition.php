@@ -409,9 +409,21 @@ class Definition extends Model
         $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
 
         // Return results.
-        return count($IDs) ?
-            Definition::with('languages', 'translations')->whereIn('id', $IDs)->get() :
-            new Collection;
+        if (count($IDs))
+        {
+            $results = Definition::with('languages', 'translations')->whereIn('id', $IDs)->get();
+
+            foreach ($results as $result) {
+                $result->setAttribute('mainLanguage', $result->mainLanguage);
+            }
+        }
+
+        else {
+            $results = new Collection;
+        }
+
+        // Return results.
+        return $results;
     }
 
     /**
