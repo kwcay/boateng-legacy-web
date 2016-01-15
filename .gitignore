@@ -1,5 +1,6 @@
-# Laravel & vendor stuff.
+# Vendor files & environment-specific files.
 /bower_components
+/public/google*.html
 /node_modules
 /vendor
 .env
