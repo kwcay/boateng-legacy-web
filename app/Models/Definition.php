@@ -370,8 +370,6 @@ class Definition extends Model
         // Limit scope to a specific language.
         if ($lang)
         {
-            // We join the pivot table so that we may join the language table. Joining the language
-            // table allows us to limit the search to a specific language.
             $builder->join('definition_language AS pivot', 'pivot.definition_id', '=', 'd.id')
                 ->where('pivot.language_id', DB::raw($lang->id));
         }
@@ -380,6 +378,8 @@ class Definition extends Model
         if (is_integer($type)) {
             $builder->where('d.type', '=', DB::raw($type));
         }
+
+        // dd($builder->get());
 
         // Retrieve distinct IDs.
         $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
@@ -483,31 +483,6 @@ class Definition extends Model
 
         // Return results.
         return $results;
-    }
-
-    /**
-     * Performs a basic comparison search.
-     *
-     * @param string $query     Search query.
-     * @param int $offset       Search offset.
-     * @param int $limit        Search limit (max 50).
-     * @param array $options    Search options.
-     * @return array
-     */
-    public static function likeSearch($query, $offset = 0, $limit = 50, array $options = [])
-    {
-        // Sanitize data.
-        $query = trim(preg_replace('/[\s+]/', ' ', strip_tags($query)));
-        $offset = min(0, (int) $offset);
-        $limit = max(1, min(static::SEARCH_LIMIT, (int) $limit));
-        $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
-
-        // Query builder.
-        $builder = $lang ? $lang->definitions() : static::query();
-
-        // ...
-
-        return new Collection;
     }
 
 
