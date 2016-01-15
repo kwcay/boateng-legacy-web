@@ -321,32 +321,91 @@ class Definition extends Model
     /**
      * Searches the database for definitions.
      *
-     * @param string $query     Search query.
+     * @param string $term      Search query.
      * @param array $options    Search options.
      * @return array
      */
-    public static function search($query, array $options = [])
+    public static function search($term, array $options = [])
     {
         // Retrieve search parameters.
-        $offset = isset($options['offset']) ? $options['offset'] : 0;
-        $limit = isset($options['limit']) ? $options['limit'] : static::SEARCH_LIMIT;
-        $method = isset($options['method']) ? $options['method'] : 'fulltext';
+        $offset = isset($options['offset']) ? (int) $options['offset'] : 0;
+        $offset = min(0, $offset);
 
-        switch (strtolower($method))
-        {
-            case 'like':
-                $results = static::likeSearch($query, $offset, $limit, $options);
-                break;
+        $limit = isset($options['limit']) ? (int) $options['limit'] : static::SEARCH_LIMIT;
+        $limit = max(1, min(static::SEARCH_LIMIT, $limit));
 
-            default:
-                $results = static::fulltextSearch($query, $offset, $limit, $options);
+        $term = trim(preg_replace('/[\s+]/', ' ', $term));
+
+        $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
+
+        $type = null;
+        if (isset($options['type']) && in_array($options['type'], static::types())) {
+            $type = (int) array_flip(static::types())[$options['type']];
         }
 
+        // Start building our database query.
+        $builder = DB::table('definitions AS d')
+
+            // Join the translations table so we can search its columns.
+            ->leftJoin('translations AS t', 't.definition_id', '=', 'd.id')
+
+            // Create temporary score columns so we can sort the IDs.
+            ->selectRaw(
+                'd.id, d.title, t.practical, t.literal, t.meaning, '.
+                'd.title = ? AS title_score_high, ' .
+                'd.title LIKE ? AS title_score_low, '.
+                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) AS t_score ',
+                [$term, '%'. $term .'%', $term])
+
+            // Match the fulltext columns against the search query.
+            ->whereRaw(
+                'd.title = ? OR '.
+                'd.title LIKE ? OR '.
+                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) ',
+                [$term, '%'. $term .'%', $term])
+
+            // Order by relevancy.
+            ->orderByraw('(title_score_high * 8 + title_score_low + t_score) DESC');
+
+        // Limit scope to a specific language.
+        if ($lang)
+        {
+            // We join the pivot table so that we may join the language table. Joining the language
+            // table allows us to limit the search to a specific language.
+            $builder->join('definition_language AS pivot', 'pivot.definition_id', '=', 'd.id')
+                ->where('pivot.language_id', DB::raw($lang->id));
+        }
+
+        // Limit scope to a specific definition type.
+        if (is_integer($type)) {
+            $builder->where('d.type', '=', DB::raw($type));
+        }
+
+        // Retrieve distinct IDs.
+        $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
+
+        // Return results.
+        if (count($IDs))
+        {
+            $results = Definition::with('languages', 'translations')->whereIn('id', $IDs)->get();
+
+            foreach ($results as $result) {
+                $result->setAttribute('mainLanguage', $result->mainLanguage);
+            }
+        }
+
+        else {
+            $results = new Collection;
+        }
+
+        // Return results.
         return $results;
     }
 
     /**
      * Performs a fulltext search.
+     *
+     * @deprecated
      *
      * @param string $term      Search term.
      * @param int $offset       Search offset.
