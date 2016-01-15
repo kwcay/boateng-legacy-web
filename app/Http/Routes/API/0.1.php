@@ -26,3 +26,6 @@ Route::options('auth/local', 'ApiController@options');
 
 // General lookup
 Route::get('search/{query}', 'ApiController@searchAllResources');
+
+// Sitemap
+Route::get('map', 'ApiController@map');

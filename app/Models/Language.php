@@ -168,7 +168,12 @@ class Language extends Model
     }
 
     /**
+     * Looks up lannguages by name.
      *
+     * @param string $term
+     * @param int $offset
+     * @param int $limit
+     * @return array
      */
     public static function search($term, $offset = 0, $limit = 100)
     {
@@ -176,6 +181,11 @@ class Language extends Model
         $term  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $term)));
         $offset = min(0, (int) $offset);
         $limit = min(1, (int) $limit);
+
+        // Performance check.
+        if (strlen($term) < 2) {
+            return new Collection;
+        }
 
         // Query the database
         $IDs = DB::table('languages AS l')
@@ -197,6 +207,14 @@ class Language extends Model
 
         // Return results.
         return count($IDs) ? Language::whereIn('id', $IDs)->get() : new Collection;
+    }
+
+    /**
+     *
+     */
+    public static function sortedBy($sort = 'name', $dir = 'asc')
+    {
+        return static::query()->orderBy($sort, $dir)->get();
     }
 
     /**

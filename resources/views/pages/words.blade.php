@@ -26,6 +26,11 @@
                     @endif
 
                     &ldquo; {{ $def->getPracticalTranslation('eng') }} &rdquo;
+
+                    {{-- Sub type --}}
+                    <small>
+                        <code>{{ $def->subType }}</code>
+                    </small>
                 </h3>
 
                 {{-- Append meaning --}}

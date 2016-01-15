@@ -38,30 +38,83 @@ class PageController extends Controller
 
 	/**
 	 * About the app.
+     *
+     * @param string $topic
+     * @return View
 	 */
-	public function about() {
-		return view('pages.about.index', [
-            'defs' => Definition::count(),
-            'langs' => Language::count()
-        ]);
+	public function about($topic = '')
+    {
+        $data = [];
+
+        switch ($topic)
+        {
+            // About the author
+            case 'author':
+                $view = 'pages.about.author';
+                break;
+
+            // Statistics and other facts.
+            case 'stats':
+                $view = 'pages.about.stats';
+                $data = [
+                    'totalDefs'     => Definition::count(),
+                    'totalLangs'    => Language::count()
+                ];
+                break;
+
+            case 'story':
+                $view = 'pages.about.story';
+                $data = [
+                    'defs' => Definition::count(),
+                    'langs' => Language::count()
+                ];
+                break;
+
+            default:
+                $view = 'pages.about.index';
+                $data = [
+                    'defs' => Definition::count(),
+                    'langs' => Language::count()
+                ];
+        }
+
+		return view($view, $data);
 	}
 
-	/**
-	 * Statistics and other facts.
-	 */
-	public function stats() {
-		return view('pages.about.stats', [
-            'totalDefs'     => Definition::count(),
-            'totalLangs'    => Language::count()
-        ]);
-	}
+    public function author() {
+        return $this->about('author');
+    }
+    public function stats() {
+        return $this->about('stats');
+    }
+    public function story() {
+        return $this->about('story');
+    }
 
-	/**
-	 * About the author.
-	 */
-	public function author() {
-		return view('pages.about.author');
-	}
+    /**
+     * Sitemap pages.
+     *
+     * @param string $sub
+     * @return View
+     */
+    public function sitemap($sub = '')
+    {
+        switch ($sub)
+        {
+            case 'language':
+                $view = 'pages.sitemap.language';
+                $data = [];
+                break;
+
+            default:
+                $view = 'pages.sitemap.main';
+                $data = [
+                    'languages' => Language::sortedBy('name', 'asc')
+                ];
+        }
+
+        return view($view, $data);
+    }
 
 	/**
 	 * Displays the API description page.
