@@ -16,8 +16,18 @@
                         data-toggle="tooltip"></a>
                     <a
                         href="{{ route('contribute') }}"
-                        class="fa fa-pencil-square-o fa-fw"
-                        title="Contribute to Di Nkɔmɔ"
+                        class="fa fa-plus fa-fw"
+                        title="Add to Di Nkɔmɔ"
+                        data-toggle="tooltip"></a>
+                    <a
+                        href="{{ route('about') }}"
+                        class="fa fa-question fa-fw"
+                        title="About this app"
+                        data-toggle="tooltip"></a>
+                    <a
+                        href="{{ route('sitemap') }}"
+                        class="fa fa-sitemap fa-fw"
+                        title="Sitemap"
                         data-toggle="tooltip"></a>
 
                     @if (Auth::check())
@@ -38,17 +48,6 @@
                             title="Sign in"
                             data-toggle="tooltip"></a>
                     @endif
-
-                    <a
-                        href="{{ route('about') }}"
-                        class="fa fa-question fa-fw"
-                        title="About this app"
-                        data-toggle="tooltip"></a>
-                    <a
-                        href="{{ route('sitemap') }}"
-                        class="fa fa-sitemap fa-fw"
-                        title="Sitemap"
-                        data-toggle="tooltip"></a>
                 </div>
 
                 <a href="{{ route('about') }}" class="credits">

@@ -4,7 +4,13 @@
 
 @section('body')
 
-    <h1>{{ $query }}</h1>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center">
+            <h1 class="emphasis">
+                {{ $query }}
+            </h1>
+        </div>
+    </div>
 
     <div class="center pad-bottom">
         Is a word in <em><a href="{{ $lang->uri }}">{{ $lang->name }}</a></em> that translates to:

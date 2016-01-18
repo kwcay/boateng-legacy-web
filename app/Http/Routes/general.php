@@ -13,7 +13,7 @@ Route::get('about', 'PageController@about')->name('about');
 Route::get('about/author', 'PageController@author')->name('author');
 Route::get('about/in-numbers', 'PageController@stats')->name('stats');
 Route::get('about/story', 'PageController@story')->name('story');
-Route::get('contribute', 'PageController@contribute')->name('contribute');
+Route::get('+', 'PageController@contribute')->name('contribute');
 Route::get('sitemap/{topic?}', 'PageController@sitemap')->name('sitemap');
 
 //
@@ -48,3 +48,5 @@ Route::get('logout', 'Auth\AuthController@getLogout')->name('auth.logout');
 Route::get('home', function() { return redirect(route('home')); });
 Route::get('stats', function() { return redirect(route('stats')); });
 Route::get('in-numbers', function() { return redirect(route('stats')); });
+Route::get('add', function() { return redirect(route('contribute')); });
+Route::get('contribute', function() { return redirect(route('contribute')); });

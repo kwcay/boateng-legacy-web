@@ -12,26 +12,42 @@
 
         <div class="row">
             <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center">
-                Di Nkɔmɔ is a project I started in 2014 to help myself learn
-                <a href="/twi">Twi</a>,
-                my native language. It quickly became a cultural repository which I hope will
-                be useful to others. Since its inception, Di Nkɔmɔ has grown from just
-                under 100 Twi words to
-                <a href="{{ route('stats') }}">{{ $defs }} definitions in {{ $langs }} languages</a>
-                and counting.
+                I started Di Nkɔmɔ in 2014 to help myself learn <a href="/twi">Twi</a>,
+                my native language. With time, I realized that Twi has hidden gems that are not
+                directly translatable into English. As do many other languages, they require
+                context&mdash;a cultural context. And so, in the hopes of capturing and documenting
+                these cultural gems, Di Nkɔmɔ has grown from just under 100 Twi words to
+                <a href="{{ route('stats') }}">{{ $defs }} definitions in {{ $langs }} languages</a>.
             </div>
         </div>
+        <br>
+        <br>
+
+        <h2 class="text-center">
+            Timeline
+        </h2>
 
         <div class="timeline">
 
-            <!-- 100 words -->
+            <!--You -->
             <div class="event">
                 <div class="event-marker"></div>
 
                 <div class="event-details">
-                    <h1>First Milestone</h1>
-                    <p>Reached 100 words.</p>
-                    <span class="date">Sep 2015</span>
+                    <h1>You</h1>
+                    <p>Thanks for checking out the app !</p>
+                    <span class="date">{{ date('M Y') }} <small>i.e. right now</small></span>
+                </div>
+            </div>
+
+            <!-- Ken Ya Innovate -->
+            <div class="event">
+                <div class="event-marker"></div>
+
+                <div class="event-details">
+                    <h1>Innovation Challenge</h1>
+                    <p>Hearing other people's ideas at the Ken_Ya Innovate contest serves as inspiration.</p>
+                    <span class="date">June 2015</span>
                 </div>
             </div>
 
@@ -59,36 +75,13 @@
         </div>
         <br>
 
-        <a href="/twi/di_nkɔmɔ">Di Nkɔmɔ</a> is Twi for chat, or converse.
-        This app was built with <a href="http://laravel.com" target="_blank">Laravel</a>,
-        <a href="https://angularjs.org" target="_blank">Angular</a> and other great resources such as:
-        <br><br>
-
-        <ul>
-            <!-- <li>
-                Asante Twi for Beginners
-            </li> -->
-            <li>
-                <a href="http://www.iso.org/iso/catalogue_detail?csnumber=39534" target="_blank">ISO 639-3</a>
-                codes for the representation of names of languages.
-            </li>
-            <li>
-                The <a href="http://www.ethnologue.com/" target="_blank">Ethnologue's</a>
-                extensive catalog.
-            </li>
-            <li>
-                The <a href="http://glottolog.org/" target="_blank">Glottolog's</a>
-                extensive catalog.
-            </li>
-            <li>
-                <a href="http://cldr.unicode.org" target="_blank">CLDR</a>, or Unicode's Common
-                Locale Data Repository.
-            </li>
-        </ul>
-        <br />
-
-        I've spent a lot of time on this app. If you have any thoughts you'd like to share,
-        <a href="mailto:&#102;&#114;&#97;&#110;&#107;&#64;&#102;&#114;&#110;&#107;&#46;&#99;&#97;">please do</a> !
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center">
+                <a href="/twi/di_nkɔmɔ">Di Nkɔmɔ</a> is Twi for chat, or converse. I've spent a lot of time
+                on this app. If you have any thoughts you'd like to share,
+                <a href="mailto:&#102;&#114;&#97;&#110;&#107;&#64;&#102;&#114;&#110;&#107;&#46;&#99;&#97;">please do</a> !
+            </div>
+        </div>
 	</section>
 
 @stop
