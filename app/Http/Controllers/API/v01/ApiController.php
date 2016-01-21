@@ -44,6 +44,68 @@ class ApiController extends Controller
     }
 
     /**
+     * Generates an OpenSearch description document.
+     */
+    public function openSearchDescription()
+    {
+        // Root element.
+        $root = new \SimpleXMLElement('<OpenSearchDescription ></OpenSearchDescription >');
+        $root->addAttribute('xmlns', 'http://a9.com/-/spec/opensearch/1.1/');
+
+        $root->addChild('ShortName', 'Di Nkɔmɔ');
+        $root->addChild('LongName', 'Di Nkɔmɔ Cultural Reference');
+        $root->addChild('Description', 'Use the Di Nkɔmɔ Cultural Reference to look up words and concepts.');
+        $root->addChild('Tags', 'Di Nkɔmɔ cultural culture language reference dictionary encyclopedia');
+        $root->addChild('Developer', 'Francis Amankrah (frank@frnk.ca)');
+        $root->addChild('Attribution', 'Search data Copyright '. date('Y') .', Di Nkɔmɔ, All Rights Reserved');
+        $root->addChild('SyndicationRight', 'open');
+        $root->addChild('AdultContent', 'false');
+        $root->addChild('OutputEncoding', 'UTF-8');
+        $root->addChild('InputEncoding', 'UTF-8');
+
+        // Sample search
+        $sample = $root->addChild('Query');
+        $sample->addAttribute('role', 'example');
+        $sample->addAttribute('searchTerms', 'hello');
+
+        //
+        // Search results.
+        //
+
+        // URI for Atom format
+        $atom = $root->addChild('Url');
+        $atom->addAttribute('type', 'application/atom+xml');
+        $atom->addAttribute('rel', 'results');
+        $atom->addAttribute('template', url('/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=atom'));
+
+        // URI for RSS format
+        $rss = $root->addChild('Url');
+        $rss->addAttribute('type', 'application/rss+xml');
+        $rss->addAttribute('rel', 'results');
+        $rss->addAttribute('template', url('/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=rss'));
+
+        // URI for JSON format
+        $json = $root->addChild('Url');
+        $json->addAttribute('type', 'application/json');
+        $json->addAttribute('rel', 'results');
+        $json->addAttribute('template', url('/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=json'));
+
+        // URI for HTML format
+        $html = $root->addChild('Url');
+        $html->addAttribute('type', 'text/html');
+        $html->addAttribute('rel', 'results');
+        $html->addAttribute('template', url('/?q={searchTerms}'));
+
+        // Set some cache-busting headers, set the response content, and send everything to client.
+        return $this->response
+            ->header('Pragma', 'public')
+            ->header('Expires', '-1')
+            ->header('Cache-Control', 'public, must-revalidate, post-check=0, pre-check=0')
+            ->header('Content-Type', 'application/opensearchdescription+xml')
+            ->setContent($root->asXML());
+    }
+
+    /**
      * Resource search.
      *
      * @param string $resourceName
@@ -60,8 +122,7 @@ class ApiController extends Controller
         $options = [
             'offset' => $this->request->input('offset', 0),
             'limit' => $this->request->input('limit'),
-            'lang' => $this->request->input('lang', ''),
-            'method' => $this->request->input('method', 'default')
+            'lang' => $this->request->input('lang', '')
         ];
 
         // Perform search.
@@ -86,7 +147,25 @@ class ApiController extends Controller
         // Add countries.
         // ...
 
-        return $results;
+        // Format results.
+        switch (strtolower($this->request->input('format')))
+        {
+            case 'opensearch':
+                return $this->getOpenSearch($results);
+
+            case 'json':
+            default:
+                return $results;
+        }
+    }
+
+    /**
+     * Converts search results to Open Search format.
+     *
+     * @param string $query
+     */
+    private function getOpenSearch(array $data)
+    {
     }
 
     /**
@@ -123,7 +202,7 @@ class ApiController extends Controller
                 if ($definition->mainLanguage->code != $language->code) {
                     continue;
                 }
-                
+
                 $this->addMapEntry($root, $definition->uri, [
                     'lastmod' => $definition->updatedAt,
                     'priority' => 1

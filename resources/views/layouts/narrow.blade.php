@@ -18,6 +18,7 @@
 		<meta property="og:title" content="@yield('title', 'Di Nkomo: the book of native tongues.')">
 		<meta property="og:desc" content="@yield('description', 'A Collection of Cultures.')">
 		<meta property="og:type" content="website">
+        <link rel="search" type="application/opensearchdescription+xml" href="{{ route('api.os') }}" title="Di Nkɔmɔ Cultural Reference">
         <script src="{{ $helper->rev('all.js') }}" type="text/javascript"></script>
 		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 		<link rel="stylesheet" type="text/css" href="{{ $helper->rev('all.css') }}">

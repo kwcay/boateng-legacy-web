@@ -29,3 +29,6 @@ Route::get('search/{query}', 'ApiController@searchAllResources');
 
 // Sitemap
 Route::get('map', 'ApiController@map');
+
+// OpenSearch description.
+Route::get('os', 'ApiController@openSearchDescription')->name('api.os');
