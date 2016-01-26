@@ -1,5 +1,7 @@
 @extends('layouts.narrow')
 
+@section('title', 'About Di Nkomo')
+
 @section('body')
 
 	<section>
@@ -7,7 +9,7 @@
             <span ng-hide="language">Di Nkɔmɔ</span>
 
             <br>
-            <small>A Collection Of Cultures</small>
+            <small>A Cultural Collection</small>
         </h1>
 
         <div class="row">

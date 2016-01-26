@@ -1,5 +1,7 @@
 @extends('layouts.narrow')
 
+@section('title', 'How Di Nkomo Started')
+
 @section('body')
 
 	<section>

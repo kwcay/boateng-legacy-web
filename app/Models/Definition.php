@@ -352,20 +352,22 @@ class Definition extends Model
             // Create temporary score columns so we can sort the IDs.
             ->selectRaw(
                 'd.id, d.title, t.practical, t.literal, t.meaning, '.
-                'd.title = ? AS title_score_high, ' .
-                'd.title LIKE ? AS title_score_low, '.
-                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) AS t_score ',
-                [$term, '%'. $term .'%', $term])
+                'd.title = ? AS d_score, ' .
+                'd.title LIKE ? AS d_score_low, '.
+                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) AS t_score, '.
+                't.practical LIKE ? AS t_score_low ',
+                [$term, '%'. $term .'%', $term, '%'. $term .'%'])
 
-            // Match the fulltext columns against the search query.
+            // Try to search in a relevant way.
             ->whereRaw(
                 'd.title = ? OR '.
                 'd.title LIKE ? OR '.
-                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) ',
-                [$term, '%'. $term .'%', $term])
+                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) OR '.
+                't.practical LIKE ? ',
+                [$term, '%'. $term .'%', $term, '%'. $term .'%'])
 
             // Order by relevancy.
-            ->orderByraw('(title_score_high * 8 + title_score_low + t_score) DESC');
+            ->orderByraw('(d_score * 8 + d_score_low + t_score + t_score_low) DESC');
 
         // Limit scope to a specific language.
         if ($lang)

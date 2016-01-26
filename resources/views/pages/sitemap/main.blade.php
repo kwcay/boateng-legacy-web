@@ -1,5 +1,7 @@
 @extends('layouts.narrow')
 
+@section('title', 'Sitemap - Di Nkomo')
+
 @section('body')
 
 	<section>

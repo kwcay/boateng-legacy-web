@@ -1,6 +1,6 @@
 @extends('layouts.narrow')
 
-@section('title', $query .' is a word in '. $lang->name .' - Di Nkomo: A Collection of Cultures.')
+@section('title', $query .' meaning in '. $lang->name)
 
 @section('body')
 
@@ -78,13 +78,17 @@
             </div>
         @endforeach
     </div>
+    <br>
 
-    <br>
-    <br>
     <div class="">
-        Suggest a new {{ $lang->name }}
+        Suggest a new
         <a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">word</a>
-        or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">saying</a>.
+        or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">saying</a>,
+        or lookup other things in {{ $lang->name }}:
     </div>
+    <br>
+
+    {{-- Search form --}}
+    @include('partials.lang-search', ['code' => $lang->code, 'name' => $lang->name, 'msg' => false])
 
 @stop
