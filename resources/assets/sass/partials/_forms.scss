@@ -122,6 +122,8 @@ a.button:after {
     	width: 100%;
     	// border-bottom: $form-input-border;
         background-color: rgba(0, 128, 0, 0.05);
+        @include border-radius(2px);
+        @include box-shadow(0 0 16px rgba(0, 128, 0, 0.1) inset);
 
         input {
         	float: left;
@@ -145,7 +147,7 @@ a.button:after {
         input[type="submit"]:hover,
         input[type="submit"]:focus {
         	color: #333;
-            background-color: rgba(0, 128, 0, 0.4);
+            background-color: rgba(0, 128, 0, 0.2);
         }
         input[name="q"] {
             width: 65%;

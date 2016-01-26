@@ -183,10 +183,11 @@
 	margin: 10px auto;
 	padding: 10px 0 15px;
 	text-align: center;
-	background-color: #fff;
-	border: 1px solid #ddd;
-	border-radius: 2px;
-	box-shadow: 0 0 16px #eee inset;
+	// background-color: #fff;
+    background-color: rgba(255, 196, 37, 0.05);
+	border: 1px solid rgba(255, 196, 37, 0.2);
+    @include border-radius(2px);
+    @include box-shadow(0 0 16px rgba(255, 196, 37, 0.2) inset);
 }
 
 @media only screen and (max-width: 600px) {
