@@ -71,7 +71,7 @@
                 <div class="event-details">
                     <h1>Birth of Idea</h1>
                     <p>An online Twi dictionary to practice and learn new words.</p>
-                    <span class="date">Early 2014</span>
+                    <span class="date">Late 2013</span>
                 </div>
             </div>
         </div>
