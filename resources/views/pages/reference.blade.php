@@ -4,7 +4,10 @@
 
     <h1>
         Di Nkɔmɔ<br>
-        <small>A Cultural Collection.</small>
+
+        <small>
+            A Cultural Collection.
+        </small>
     </h1>
 
     @include('partials.lang-search')

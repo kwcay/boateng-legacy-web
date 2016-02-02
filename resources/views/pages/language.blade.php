@@ -25,26 +25,12 @@
         @include('partials.lang-search', ['code' => $lang->code, 'name' => $lang->name])
         <br>
 
-        <div class="emphasis">
-            Know a thing or two about <em>{{ $lang->name }}</em>?
-            <br>
-
-            Suggest your own
-            <a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">words</a>
-            or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">sayings</a>.
-        </div>
-        <br>
-
         {{-- Language details --}}
         <h3>A little background on {{ $lang->name }}...</h3>
         <br>
 
         <div class="row">
-            <!-- <div class="col-sm-12 col-md-6 meta">
-                Lorem ipsum...
-            </div> -->
-
-            <div class="col-sm-12 col-md-6 meta">
+            <div class="col-lg-6 meta">
                 <ul class="fa-ul">
                     @if (strlen($lang->altNames))
                     <li>
@@ -101,6 +87,17 @@
                     </li>
                     @endif
                 </ul>
+            </div>
+
+            <div class="col-lg-6 meta">
+                <div class="emphasis">
+                    Know a thing or two about <em>{{ $lang->name }}</em>?
+                    <br>
+
+                    Suggest your own
+                    <a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">words</a>
+                    or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">sayings</a>.
+                </div>
             </div>
         </div>
 

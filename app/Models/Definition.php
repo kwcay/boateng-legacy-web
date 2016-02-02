@@ -347,10 +347,10 @@ class Definition extends Model
 
             // Try to search in a relevant way.
             ->whereRaw(
-                'd.title = ? OR '.
+                '(d.title = ? OR '.
                 'd.title LIKE ? OR '.
                 'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) OR '.
-                't.practical LIKE ? ',
+                't.practical LIKE ?)',
                 [$term, '%'. $term .'%', $term, '%'. $term .'%'])
 
             // Order by relevancy.
@@ -368,6 +368,7 @@ class Definition extends Model
             $builder->where('d.type', '=', DB::raw($type));
         }
 
+        // dd($builder->toSql());
         // dd($builder->get());
 
         // Retrieve distinct IDs.
