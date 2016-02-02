@@ -61,4 +61,13 @@ class Story extends Definition
     public function getSubTypes() {
         return $this->subTypes[Definition::TYPE_STORY];
     }
+
+    /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return url($this->mainLanguage->code .'/_story/'. str_replace(' ', '_', $this->title));
+    }
 }

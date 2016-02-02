@@ -30,13 +30,11 @@ class DefinitionController extends Controller
     }
 
     /**
-     * Displays the word page, with similar definitions.
+     * Displays the word or phrase page, with similar definitions.
      *
      * @param string $code  ISO 639-3 language code.
-     * @param string $raw   Word to be defined.
+     * @param string $raw   Word or phrase to be defined.
      * @return mixed
-     *
-     * TODO: handle different definition types.
      */
     public function show($code, $raw = null)
     {
@@ -46,7 +44,7 @@ class DefinitionController extends Controller
         }
 
         // Check user input.
-        $data   = trim(preg_replace('/[\s]+/', '_', strip_tags($raw)));
+        $data = trim(preg_replace('/[\s]+/', '_', strip_tags($raw)));
         if (strlen($data) < 2) {
             abort(404, Lang::get('errors.resource_not_found'));
         } elseif ($data != $raw) {
@@ -54,10 +52,11 @@ class DefinitionController extends Controller
         }
 
         // Find definitions matching the query
-        $data   = str_replace('_', ' ', $data);
+        $data = str_replace('_', ' ', $data);
         $definitions = $lang->definitions()
             ->with('languages', 'translations')
             ->where('title', '=', $data)
+            ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_PHRASE])
             ->get();
 
         if (!count($definitions))
@@ -71,7 +70,6 @@ class DefinitionController extends Controller
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
-        // TODO: the view will depend on the definition type.
         return view('pages.words', [
             'lang'  => $lang,
             'query' => $data,
@@ -102,13 +100,12 @@ class DefinitionController extends Controller
         }
 
         // Define view.
-        $typeName = Definition::getTypeName($type);
-        $template = 'forms.definition.'. $typeName .'.walkthrough';
+        $template = 'forms.definition.'. Definition::getTypeName($type) .'.walkthrough';
 
         return view($template, [
             'lang' => $lang,
             'type' => $type,
-            $typeName => $definition
+            'definition' => $definition
         ]);
     }
 
@@ -215,27 +212,6 @@ class DefinitionController extends Controller
 	}
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @throws \Exception
-     * @return Response
-     */
-	public function destroy($id)
-	{
-        // Retrieve the definition object.
-        if (!$def = Definition::find($id)) {
-            throw new \Exception(Lang::get('errors.resource_not_found'), 404);
-        }
-
-        // Delete record
-        Session::push('messages', '<em>'. $def->title .'</em> has been succesfully deleted.');
-        $def->delete();
-
-        return redirect(route('home'));
-	}
-
-    /**
      * Shortcut to create a new definition or save an existing one.
      *
      * @param object $def       Definition object.
@@ -296,7 +272,7 @@ class DefinitionController extends Controller
         // Update translations and other relations.
         $def->updateRelations($relations);
 
-        // ...
+        // Redirect user to their requested next step.
         switch ($return)
         {
             case 'index':
@@ -319,6 +295,27 @@ class DefinitionController extends Controller
         Session::push('messages', 'The details for <em>'. $def->title .'</em> were successfully saved, thanks :)');
         return redirect($return);
     }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @throws \Exception
+     * @return Response
+     */
+	public function destroy($id)
+	{
+        // Retrieve the definition object.
+        if (!$def = Definition::find($id)) {
+            throw new \Exception(Lang::get('errors.resource_not_found'), 404);
+        }
+
+        // Delete record
+        Session::push('messages', '<em>'. $def->title .'</em> has been succesfully deleted.');
+        $def->delete();
+
+        return redirect(route('home'));
+	}
 
     public function getDefinition()
     {

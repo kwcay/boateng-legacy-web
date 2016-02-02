@@ -1,43 +1,53 @@
-@extends('layouts.narrow')
+@extends('forms.definition.walkthrough')
 
-@section('body')
+@section('page-title', 'Suggest a new saying or expression')
 
-	<h1>
-        Suggest a new phrase or saying
-        <br>
+@section('form')
 
-		<small>
-			<a href="{{ route('language.create')  }}">
-                &rarr; or click here to suggest a language
-            </a>
-		</small>
-	</h1>
-    <br>
-    <br>
-
-    <form
-        class="edit form"
-        method="post"
-        name="definition"
-        action="{{ route('definition.store') }}">
-
-		{!! csrf_field() !!}
-		<input type="hidden" name="type" value="{{ $type }}">
-		<input type="hidden" name="relations[language][]" value="{{ $lang->code }}">
-
-		{{-- Phrase --}}
-		<div class="row center">
-			In Development.
+    {{-- Phrase --}}
+    <div class="row">
+        <div class="col-sm-12">
+            <input
+                type="text"
+                name="title"
+                class="text-input center"
+                placeholder="your saying or expression"
+                autocomplete="off"
+                required>
         </div>
+    </div>
 
-		<!-- Form actions -->
-        <br>
-        <br>
-		<div class="row center">
-			<input type="submit" name="next" value="continue" disabled>
-			<input type="submit" name="next" value="finish" disabled>
-            <input type="button" name="cancel" value="return" onclick="return confirm('Cancel?') ? App.redirect('') : false;">
-		</div>
-	</form>
+    {{-- Sub type --}}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+            {!! Form::select(
+                'subType',
+                $definition->getSubTypes(),
+                $definition->rawSubType,
+                ['class' => 'en-text-input text-center']
+            ) !!}
+        </div>
+    </div>
+
+    <div class="row center">
+        is a sentence in <em>{{ $lang->name }}</em> that means
+    </div>
+
+    <!-- Translation -->
+    <div class="row">
+        <div class="col-sm-12">
+            <input
+                type="text"
+                name="relations[practical][eng]"
+                class="en-text-input center"
+                placeholder="your translation"
+                autocomplete="off"
+                required>
+        </div>
+    </div>
+
+    <div class="row center">
+        in English.
+    </div>
 
 @stop

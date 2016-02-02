@@ -30,7 +30,6 @@ class Definition extends Model
     use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
-    CONST TYPE_NAME = 1;        // Names.
     CONST TYPE_PHRASE = 10;     // Proverbs, sayings, etc.
     CONST TYPE_POEM = 20;       // Poems, songs, etc.
     CONST TYPE_STORY = 30;      // Short stories.
@@ -45,9 +44,7 @@ class Definition extends Model
      */
     public $types = [
         0 => 'word',
-        1 => 'name',
         10 => 'phrase',
-        20 => 'poem',
         30 => 'story',
     ];
 
@@ -70,27 +67,18 @@ class Definition extends Model
             'v'     => 'verb',
         ],
 
-        // Types of names.
-        1 => [
-            'fam'   => 'family',
-            'given' => 'given',
-        ],
-
         // Types of phrases.
         10 => [
-            'ex'    => 'expression',
-            'prov'  => 'proverb',
-            'sayng' => 'saying',
+            'expression'=> 'common expression',
+            'phrase'    => 'simple phrase',
+            'proverb'   => 'proverb or saying',
         ],
 
-        //
-        20 => [
-
-        ],
-
-        //
+        // Types of stories
         30 => [
-
+            'poem'  => 'poem',
+            'story'  => 'short story',
+            'song'  => 'song',
         ]
     ];
 
@@ -99,10 +87,8 @@ class Definition extends Model
      */
     public $defaultSubTypes = [
         0 => 'n',
-        1 => 'given',
-        10 => 'sayng',
-        20 => '',
-        30 => '',
+        10 => 'proverb',
+        30 => 'story',
     ];
 
     /**
@@ -259,9 +245,10 @@ class Definition extends Model
      *
      * @param int $type
      * @param array $attributes
+     * @param bool $exists
      * @return App\Models\Definition|null
      */
-    public static function getInstance($type, array $attributes = [])
+    public static function getInstance($type, array $attributes = [], $exists = false)
     {
         // Check that the definition type is valid.
         $types = static::types();
@@ -271,7 +258,7 @@ class Definition extends Model
 
         // Return new instance.
         $className = '\\App\\Models\\Definitions\\'. ucfirst(strtolower($types[$type]));
-        return new $className($attributes);
+        return new $className($attributes, $exists);
     }
 
     /**
