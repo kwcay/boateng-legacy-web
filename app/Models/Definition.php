@@ -360,7 +360,7 @@ class Definition extends Model
         if ($lang)
         {
             $builder->join('definition_language AS pivot', 'pivot.definition_id', '=', 'd.id')
-                ->where('pivot.language_id', DB::raw($lang->id));
+                ->where('pivot.language_id', '=', DB::raw($lang->id));
         }
 
         // Limit scope to a specific definition type.

@@ -31,15 +31,17 @@
     </div>
     <br>
 
-    <div class="">
-        Suggest a new
-        <a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">word</a>
-        or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">saying</a>,
-        or lookup other things in {{ $lang->name }}:
-    </div>
-    <br>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center">
+            <div class="emphasis">
+                Know a thing or two in <em>{{ $lang->name }}</em>?
+                <br>
 
-    {{-- Search form --}}
-    @include('partials.lang-search', ['code' => $lang->code, 'name' => $lang->name, 'msg' => false])
+                Suggest your own
+                <a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">words</a>
+                or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">sayings</a>.
+            </div>
+        </div>
+    </div>
 
 @stop

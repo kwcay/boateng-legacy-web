@@ -91,7 +91,7 @@
 
             <div class="col-lg-6 meta">
                 <div class="emphasis">
-                    Know a thing or two about <em>{{ $lang->name }}</em>?
+                    Know a thing or two in <em>{{ $lang->name }}</em>?
                     <br>
 
                     Suggest your own
