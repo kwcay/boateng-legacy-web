@@ -27,7 +27,13 @@ var Forms =
         });
 
         // Make keyboard draggable.
-        $('#keyboard').draggable();
+        $('#keyboard').draggable({
+            drag: function(event) {
+                Utilities.log(event);
+            },
+            scroll: true,
+            scrollSensitivity: 80
+        });
     },
 
     /**

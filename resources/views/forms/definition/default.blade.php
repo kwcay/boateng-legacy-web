@@ -30,6 +30,7 @@
             <input
                 type="text"
                 name="title"
+                id="title"
                 class="text-input"
                 placeholder="e.g. ɔdɔ"
                 value="{{ $definition->title }}"
@@ -53,13 +54,8 @@
 
         {{-- Type --}}
         <div class="row">
-            {!! Form::select(
-                'subType',
-                $definition->getSubTypes(),
-                $definition->rawSubType,
-                ['class' => 'en-text-input']
-            ) !!}
-            <label for="type">Sub type</label>
+            @include('forms.definition.subtypes', ['subType' => $definition->rawSubType])
+            <label for="subType">Sub type</label>
         </div>
 
         {{-- Translation --}}

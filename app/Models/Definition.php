@@ -53,10 +53,10 @@ class Definition extends Model
      */
     public $subTypes = [
 
-        // Parts of speech.
-        // See: http://www.edb.utexas.edu/minliu/pbl/ESOL/help/libry/speech.htm
-        // See: http://www.aims.edu/student/online-writing-lab/grammar/parts-of-speech
         0 => [
+            // Parts of speech.
+            // See: http://www.edb.utexas.edu/minliu/pbl/ESOL/help/libry/speech.htm
+            // See: http://www.aims.edu/student/online-writing-lab/grammar/parts-of-speech
             'adj'   => 'adjective',
             'adv'   => 'adverb',
             'conn'  => 'connective',
@@ -65,6 +65,10 @@ class Definition extends Model
             'pro'   => 'pronoun',
             'n'     => 'noun',
             'v'     => 'verb',
+
+            // Morphemes
+            'prefix'     => 'prefix',
+            'suffix'     => 'suffix',
         ],
 
         // Types of phrases.

@@ -16,7 +16,7 @@ var App =
         this.isLocalEnvironment =
             (window.location.hostname == 'localhost' ||
             window.location.hostname.match(/.*\.local$/i) ||
-            window.location.hostname.match(/.*\.vagrant$/i)) ? true : false;
+            window.location.hostname.match(/.*\.vagrant$/i));
 
         // Setup AJAX headers.
         $.ajaxSetup({
@@ -42,7 +42,7 @@ var App =
     },
 
     /**
-     *
+     * TODO: insert letter at cursor, not at the end of the string.
      */
     keyboardInput: function(letter)
     {
@@ -84,7 +84,8 @@ var App =
 	},
 
 	log: function(msg) {
-		if (console && this.isLocalEnvironment)
+		if (console && this.isLocalEnvironment) {
             console.log('App.js - '+ msg);
+        }
 	}
 };

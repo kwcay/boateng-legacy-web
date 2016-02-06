@@ -12,7 +12,34 @@
                 <a href="{{ route('language.create') }}">suggest a new language</a>.
                 <hr>
 
-                &rarr;&nbsp; Thanks for asking. I'd like to suggest a new definition.
+                &rarr;&nbsp; Thanks for asking. I'd like to suggest a new word in
+                <form class="form" method="post">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                            <input
+                                type="text"
+                                id="languageForWord"
+                                class="text-input center"
+                                placeholder="your language"
+                                autocomplete="off">
+                            </div>
+                        </div>
+                </form>
+                <hr>
+
+                &rarr;&nbsp; Thanks for asking. I'd like to suggest a new saying or expression in
+                <form class="form" method="post">
+                    <div class="row">
+                        <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                            <input
+                                type="text"
+                                id="languageForPhrase"
+                                class="text-input center"
+                                placeholder="your language"
+                                autocomplete="off">
+                            </div>
+                        </div>
+                </form>
                 <hr>
 
                 &rarr;&nbsp; Thanks for asking. I'd like to
@@ -25,5 +52,21 @@
             </div>
         </div>
 	</section>
+
+    <script type="text/javascript">
+
+    $('#languageForWord').langSearch({
+        onItemAdd: function(code) {
+            App.redirect(code + '/+word');
+        }
+    });
+
+    $('#languageForPhrase').langSearch({
+        onItemAdd: function(code) {
+            App.redirect(code + '/+phrase');
+        }
+    });
+
+    </script>
 
 @stop

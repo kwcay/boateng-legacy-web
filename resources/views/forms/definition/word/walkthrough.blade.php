@@ -20,12 +20,7 @@
     {{-- Sub type --}}
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-            {!! Form::select(
-                'subType',
-                $definition->getSubTypes(),
-                $definition->rawSubType,
-                ['class' => 'en-text-input text-center']
-            ) !!}
+            @include('forms.definition.subtypes', ['subType' => $definition->rawSubType])
         </div>
     </div>
 
