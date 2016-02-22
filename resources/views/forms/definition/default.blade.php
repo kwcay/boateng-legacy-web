@@ -82,7 +82,7 @@
                 placeholder="e.g. an intense feeling of deep affection."
                 value="{{ $definition->getMeaning('eng') }}"
                 autocomplete="off">
-            <label for="relations[meaning][eng]">English meaning</label>
+            <label for="relations[meaning][eng]">English meaning or synonyms</label>
         </div>
 
         {{-- Literal translation --}}
