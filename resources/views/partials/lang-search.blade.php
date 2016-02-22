@@ -4,7 +4,7 @@
         <div class="col-xs-12 col-lg-10 col-lg-offset-1">
             <div class="input-wrapper">
                 <input class="remove-btn-style" name="clear" type="button" value="&#10005;">
-                <input name="q" type="text" placeholder="start here" value="{{ Input::get('q') }}"
+                <input name="q" type="text" placeholder="start here" value="{{ Request::input('q') }}"
                     autocomplete="off">
                 <input class="remove-btn-style" type="submit" value="&#10163;">
             </div>
