@@ -12,6 +12,10 @@ class Architecture041 extends Migration
      */
     public function up()
     {
+        return;
+
+
+        
         // Drop all existing tables except for password_resets.
         Schema::hasTable('users') ? Schema::drop('users') : null;
         Schema::hasTable('definition_language') ? Schema::drop('definition_language') : null;

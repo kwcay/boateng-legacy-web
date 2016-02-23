@@ -2,7 +2,6 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
- * @brief   Language model
  */
 namespace App\Models;
 
@@ -191,16 +190,27 @@ class Language extends Model
         $IDs = DB::table('languages AS l')
 
             // Create a temporary score column so we can sort the IDs.
-            ->selectRaw('l.id, MATCH(l.name, l.alt_names) AGAINST(?) AS score', [$term])
+            ->selectRaw(
+                'l.id, l.name,'.
+                'l.name = ? AS name_score, ' .
+                'l.name LIKE ? AS name_score_low, '.
+                'l.alt_names LIKE ? AS alt_score ',
+                [$term, '%'. $term .'%', '%'. $term .'%']
+            )
 
-            // Match the fulltext columns against the search query.
-            ->whereRaw('MATCH(l.name, l.alt_names) AGAINST(?)', [$term])
+            // Try to search in a relevant way.
+            ->whereRaw(
+                '(l.name = ? OR ' .
+                'l.name LIKE ? OR '.
+                'l.alt_names LIKE ?)',
+                [$term, '%'. $term .'%', '%'. $term .'%']
+            )
 
             // Or match the language code.
             ->orWhere('code', '=', $term)
 
             // Order by relevancy.
-            ->orderBy('score', 'DESC')
+            ->orderByraw('(name_score * 3 + name_score_low + alt_score) DESC')
 
             // Retrieve distcit IDs.
             ->distinct()->skip($offset)->take($limit)->lists('l.id');
