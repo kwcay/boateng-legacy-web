@@ -21,7 +21,7 @@ Route::resource('translation',  'TranslationController');
 Route::resource('audio',        'AudioController');
 
 // Resource import.
-Route::post('import', ['as' => 'admin.import.action', 'uses' => 'Data\v041\DataController@import']);
+Route::post('import', ['as' => 'admin.import.action', 'uses' => 'Data\v050\DataController@import']);
 
 // Resource export
 Route::get('export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'Data\v041\DataController@export']);

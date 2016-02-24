@@ -252,12 +252,12 @@ class DataImportFactory extends BaseFactory
                     break;
 
                 case 'definition':
-                    $this->dataModel = 'App\\Models\\Definition\\Word';
+                    $this->dataModel = 'App\\Models\\Definition';
                     break;
 
                 case 'definition/word':
                 case 'definition/phrase':
-                case 'definition/poem':
+                case 'definition/story':
                     $this->dataModel = 'App\\Models\\'. str_replace('/', '\\\\', $this->dataMeta['type']);
             }
         }
@@ -295,11 +295,17 @@ class DataImportFactory extends BaseFactory
         $this->dataArray = $data;
     }
 
+    /**
+     * @param string $msg
+     */
     public function setMessage($msg)
     {
         array_push($this->messages, $msg);
     }
 
+    /**
+     * @return array
+     */
     public function getMessages() {
         return $this->messages;
     }
@@ -347,8 +353,11 @@ class DataImportFactory extends BaseFactory
                 $factory = $this->make('LanguageImportFactory');
                 break;
 
+            case 'App\\Models\\Definition':
             case 'App\\Models\\Definition\\Word':
-                $factory = $this->make('Definition\\WordImportFactory');
+            case 'App\\Models\\Definition\\Phrase':
+            case 'App\\Models\\Definition\\Story':
+                $factory = $this->make('DefinitionImportFactory');
                 break;
 
             default:

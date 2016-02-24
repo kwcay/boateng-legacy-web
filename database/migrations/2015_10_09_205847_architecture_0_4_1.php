@@ -15,7 +15,7 @@ class Architecture041 extends Migration
         return;
 
 
-        
+
         // Drop all existing tables except for password_resets.
         Schema::hasTable('users') ? Schema::drop('users') : null;
         Schema::hasTable('definition_language') ? Schema::drop('definition_language') : null;
@@ -291,26 +291,26 @@ class Architecture041 extends Migration
     public function down()
     {
         // Drop everything except for password_resets and recreate the previous structure.
-        Schema::hasTable('languages') ? DB::statement('ALTER TABLE languages DROP INDEX idx_name') : null;
-        Schema::hasTable('definitions') ? DB::statement('ALTER TABLE definitions DROP INDEX idx_title') : null;
-        Schema::hasTable('translations') ? DB::statement('ALTER TABLE translations DROP INDEX idx_translation') : null;
-        Schema::hasTable('tags') ? DB::statement('ALTER TABLE tags DROP INDEX idx_title') : null;
-        Schema::hasTable('sentences') ? DB::statement('ALTER TABLE sentences DROP INDEX idx_content') : null;
-        Schema::hasTable('data') ? DB::statement('ALTER TABLE data DROP INDEX idx_content') : null;
-        Schema::hasTable('cultures') ? DB::statement('ALTER TABLE cultures DROP INDEX idx_name') : null;
-        Schema::hasTable('countries') ? DB::statement('ALTER TABLE countries DROP INDEX idx_name') : null;
-        $drop = [
-            'country_culture', 'country_language', 'definition_language', 'definition_sentence',
-            'definition_tag', 'language_script', 'permission_role', 'role_user',
-            'scripts', 'tags', 'sentences', 'media', 'cultures', 'countries', 'data',
-            'roles', 'permissions', 'users', 'translations', 'definitions', 'languages',
-        ];
-
-        foreach ($drop as $table) {
-            if (Schema::hasTable($table)) {
-                Schema::drop($table);
-            }
-        }
+        // Schema::hasTable('languages') ? DB::statement('ALTER TABLE languages DROP INDEX idx_name') : null;
+        // Schema::hasTable('definitions') ? DB::statement('ALTER TABLE definitions DROP INDEX idx_title') : null;
+        // Schema::hasTable('translations') ? DB::statement('ALTER TABLE translations DROP INDEX idx_translation') : null;
+        // Schema::hasTable('tags') ? DB::statement('ALTER TABLE tags DROP INDEX idx_title') : null;
+        // Schema::hasTable('sentences') ? DB::statement('ALTER TABLE sentences DROP INDEX idx_content') : null;
+        // Schema::hasTable('data') ? DB::statement('ALTER TABLE data DROP INDEX idx_content') : null;
+        // Schema::hasTable('cultures') ? DB::statement('ALTER TABLE cultures DROP INDEX idx_name') : null;
+        // Schema::hasTable('countries') ? DB::statement('ALTER TABLE countries DROP INDEX idx_name') : null;
+        // $drop = [
+        //     'country_culture', 'country_language', 'definition_language', 'definition_sentence',
+        //     'definition_tag', 'language_script', 'permission_role', 'role_user',
+        //     'scripts', 'tags', 'sentences', 'media', 'cultures', 'countries', 'data',
+        //     'roles', 'permissions', 'users', 'translations', 'definitions', 'languages',
+        // ];
+        //
+        // foreach ($drop as $table) {
+        //     if (Schema::hasTable($table)) {
+        //         Schema::drop($table);
+        //     }
+        // }
 
         Schema::create('users', function(Blueprint $table)
 		{

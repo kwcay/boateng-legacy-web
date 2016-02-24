@@ -51,8 +51,8 @@ class Architecture050 extends Migration
 		});
         DB::statement('CREATE FULLTEXT INDEX idx_transliteration ON languages (transliteration)');
 
-        // Language scripts.
-        Schema::create('scripts', function(Blueprint $table)
+        // Alpabets.
+        Schema::create('alphabets', function(Blueprint $table)
 		{
             $table->engine = 'InnoDB';
 
@@ -60,13 +60,14 @@ class Architecture050 extends Migration
 
             $table->string('name', 100)->unique();
             $table->string('transliteration', 100)->unique();
-            $table->string('abbreviation', 10)->unique();
-            $table->text('alphabet')->nullable();
+            $table->string('code', 10)->unique();
+            $table->string('script_code', 4)->nullable();
+            $table->text('letters')->nullable();
 
 			$table->timestamps();
             $table->softDeletes();
 		});
-        DB::statement('CREATE FULLTEXT INDEX idx_transliteration ON scripts (transliteration)');
+        DB::statement('CREATE FULLTEXT INDEX idx_transliteration ON alphabets (transliteration)');
 
         // Definitions.
         Schema::create('definitions', function(Blueprint $table)
@@ -98,10 +99,10 @@ class Architecture050 extends Migration
                 ->on('definitions')
                 ->onDelete('cascade');
 
-            $table->integer('script_id')->unsigned();
-            $table->foreign('script_id')
+            $table->integer('alphabet_id')->unsigned();
+            $table->foreign('alphabet_id')
                 ->references('id')
-                ->on('scripts')
+                ->on('alphabets')
                 ->onDelete('cascade');
 
             $table->string('title', 400);
@@ -213,7 +214,7 @@ class Architecture050 extends Migration
 
             $table->string('name', 400);
             $table->string('alt_names', 400)->nullable();
-            $table->string('code', 3)->unique();
+            $table->string('code', 2)->unique();
 
             $table->timestamps();
         });
@@ -241,7 +242,7 @@ class Architecture050 extends Migration
             'country_language',
             'definition_language',
             'definition_tag',
-            'language_script',
+            'alphabet_language',
         ];
 
         foreach ($pivots as $pivot)
@@ -268,7 +269,7 @@ class Architecture050 extends Migration
         // Drop everything except for password_resets. The migration for 0.4.1 will recreate
         // the previous sctructure.
         Schema::hasTable('languages') ? DB::statement('ALTER TABLE languages DROP INDEX idx_transliteration') : null;
-        Schema::hasTable('scripts') ? DB::statement('ALTER TABLE scripts DROP INDEX idx_transliteration') : null;
+        Schema::hasTable('alphabets') ? DB::statement('ALTER TABLE alphabets DROP INDEX idx_transliteration') : null;
         Schema::hasTable('definition_titles') ? DB::statement('ALTER TABLE definition_titles DROP INDEX idx_transliteration') : null;
         Schema::hasTable('translations') ? DB::statement('ALTER TABLE translations DROP INDEX idx_practical') : null;
         Schema::hasTable('translations') ? DB::statement('ALTER TABLE translations DROP INDEX idx_literal') : null;
@@ -279,9 +280,9 @@ class Architecture050 extends Migration
         Schema::hasTable('countries') ? DB::statement('ALTER TABLE countries DROP INDEX idx_name') : null;
         $drop = [
             'country_culture', 'country_language', 'definition_language', 'definition_sentence',
-            'definition_tag', 'language_script', 'permission_role', 'role_user',
+            'definition_tag', 'alphabet_language', 'permission_role', 'role_user',
             'users', 'countries', 'cultures', 'data', 'tags', 'translations', 'media',
-            'definition_titles', 'definitions', 'scripts', 'languages',
+            'definition_titles', 'definitions', 'alphabets', 'languages',
         ];
 
         foreach ($drop as $table) {

@@ -31,8 +31,7 @@ class Definition extends Model
 
     CONST TYPE_WORD = 0;        // Regular definitions.
     CONST TYPE_PHRASE = 10;     // Proverbs, sayings, etc.
-    CONST TYPE_POEM = 20;       // Poems, songs, etc.
-    CONST TYPE_STORY = 30;      // Short stories.
+    CONST TYPE_STORY = 30;      // Short stories, poems, songs, etc.
 
     CONST STATE_HIDDEN = 0;     // Hidden definition.
     CONST STATE_VISIBLE = 10;   // Default state.
@@ -204,7 +203,14 @@ class Definition extends Model
      * Defines the translation relations.
      */
     public function translations() {
-        return $this->hasMany('App\Models\Translation', 'definition_id');
+        return $this->hasMany('App\Models\Translation');
+    }
+
+    /**
+     * Defines the title relations.
+     */
+    public function titles() {
+        return $this->hasMany('App\Models\DefinitionTitle');
     }
 
     /**
@@ -254,6 +260,11 @@ class Definition extends Model
      */
     public static function getInstance($type, array $attributes = [], $exists = false)
     {
+        // Return a general instance.
+        if ($type == 'Definition' || $type == 'App\\Models\\Definition') {
+            return new Definition($attributes, $exists);
+        }
+
         // Check that the definition type is valid.
         $types = static::types();
         if (!array_key_exists($type, $types)) {
@@ -285,6 +296,29 @@ class Definition extends Model
     }
 
     /**
+     * Returns the constant value of a definition type.
+     *
+     * @param string $typeName
+     * @return int
+     */
+    public static function getTypeConstant($type, $default = 0)
+    {
+        switch (strtolower(trim($type)))
+        {
+            case 'word':
+                return static::TYPE_WORD;
+
+            case 'phrase':
+                return static::TYPE_PHRASE;
+
+            case 'story':
+                return static::TYPE_STORY;
+        }
+
+        return $default;
+    }
+
+    /**
      * Gets the list of sub types for this definition.
      *
      * @return array
@@ -292,6 +326,28 @@ class Definition extends Model
     public function getSubTypes() {
         // return $this->subTypes[$this->getAttributeFromArray('type')];
         return $this->subTypes[$this->rawType];
+    }
+
+    /**
+     * Gets the abbreviation for a sub type.
+     *
+     * @param int|string $type
+     */
+    public static function getSubTypeAbbreviation($type, $subType)
+    {
+        // Make sure we have a type constant.
+        $type = is_numeric($type) ? (int) $type : static::getTypeConstant($type);
+
+        // Find the sub type abbreviation.
+        foreach ((new static)->subTypes as $abbr => $sub)
+        {
+            if ($sub == $subType) {
+                return $abbr;
+            }
+        }
+
+        // If no sub type was found, return a default value.
+        return (new static)->defaultSubTypes[$type];
     }
 
     /**
@@ -337,28 +393,51 @@ class Definition extends Model
         // Start building our database query.
         $builder = DB::table('definitions AS d')
 
+            // Join the titles table so we can search its columns.
+            ->leftJoin('definition_titles AS i', 'i.definition_id', '=', 'd.id')
+
             // Join the translations table so we can search its columns.
             ->leftJoin('translations AS t', 't.definition_id', '=', 'd.id')
 
             // Create temporary score columns so we can sort the IDs.
             ->selectRaw(
-                'd.id, d.title, t.practical, t.literal, t.meaning, '.
-                'd.title = ? AS d_score, ' .
-                'd.title LIKE ? AS d_score_low, '.
-                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) AS t_score, '.
-                't.practical LIKE ? AS t_score_low ',
-                [$term, '%'. $term .'%', $term, '%'. $term .'%'])
+                'd.id, i.title, i.transliteration, t.practical, t.literal, t.meaning, '.
+                'i.title = ? AS title_score, ' .
+                'i.title LIKE ? AS title_score_low, '.
+                'MATCH(i.transliteration) AGAINST(?) AS transliteration_score, '.
+                'MATCH(t.practical) AGAINST(?) AS practical_score, '.
+                't.practical LIKE ? AS practical_score_low, '.
+                'MATCH(t.literal) AGAINST(?) AS literal_score, '.
+                'MATCH(t.meaning) AGAINST(?) AS meaning_score ',
+                [$term, '%'. $term .'%', $term, $term, '%'. $term .'%', $term, $term]
+            )
 
             // Try to search in a relevant way.
             ->whereRaw(
-                '(d.title = ? OR '.
-                'd.title LIKE ? OR '.
-                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) OR '.
-                't.practical LIKE ?)',
-                [$term, '%'. $term .'%', $term, '%'. $term .'%'])
+                '('.
+                    'i.title = ? OR '.
+                    'i.title LIKE ? OR '.
+                    'MATCH(i.transliteration) AGAINST(?) OR '.
+                    'MATCH(t.practical) AGAINST(?) OR '.
+                    't.practical LIKE ? OR '.
+                    'MATCH(t.literal) AGAINST(?) OR '.
+                    'MATCH(t.meaning) AGAINST(?)'.
+                ')',
+                [$term, '%'. $term .'%', $term, $term, '%'. $term .'%', $term, $term]
+            )
 
             // Order by relevancy.
-            ->orderByraw('(d_score * 8 + d_score_low + t_score + t_score_low) DESC');
+            ->orderByraw(
+                '('.
+                    'title_score * 3 + '.
+                    'title_score_low + '.
+                    'transliteration_score + '.
+                    'practical_score + '.
+                    'practical_score_low * 0.5 +'.
+                    'literal_score +'.
+                    'meaning_score +'.
+                ') DESC'
+            );
 
         // Limit scope to a specific language.
         if ($lang)

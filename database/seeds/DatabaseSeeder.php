@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Copyright Di Nkomo(TM) 2016, all rights reserved
+ *
+ */
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,11 +15,7 @@ class DatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		Model::unguard();
-
-		$this->command->info('Seeding database.');
-
-		// $this->call('UserTableSeeder');
+        $this->call('CountrySeeder');
+        $this->call('AlphabetSeeder');
 	}
-
 }

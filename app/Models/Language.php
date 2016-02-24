@@ -128,6 +128,15 @@ class Language extends Model
     }
 
     /**
+     * Alphabets this language uses.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function alphabets() {
+        return $this->belongsToMany('App\Models\Alphabet');
+    }
+
+    /**
      * @param array $attributes
      */
     public function __construct(array $attributes = [])
@@ -195,22 +204,24 @@ class Language extends Model
                 'l.name = ? AS name_score, ' .
                 'l.name LIKE ? AS name_score_low, '.
                 'l.alt_names LIKE ? AS alt_score ',
-                [$term, '%'. $term .'%', '%'. $term .'%']
+                'MATCH(l.transliteration) AGAINST(?) AS transliteration_score, '.
+                [$term, '%'. $term .'%', '%'. $term .'%', $term]
             )
 
             // Try to search in a relevant way.
             ->whereRaw(
                 '(l.name = ? OR ' .
                 'l.name LIKE ? OR '.
-                'l.alt_names LIKE ?)',
-                [$term, '%'. $term .'%', '%'. $term .'%']
+                'l.alt_names LIKE ? OR '.
+                'MATCH(l.transliteration) AGAINST(?))',
+                [$term, '%'. $term .'%', '%'. $term .'%', $term]
             )
 
             // Or match the language code.
             ->orWhere('code', '=', $term)
 
             // Order by relevancy.
-            ->orderByraw('(name_score * 3 + name_score_low + alt_score) DESC')
+            ->orderByraw('(name_score * 3 + transliteration_score * 2 + name_score_low + alt_score) DESC')
 
             // Retrieve distcit IDs.
             ->distinct()->skip($offset)->take($limit)->lists('l.id');
