@@ -10,9 +10,11 @@ Route::get('/', function() {
     return 'Di Nkɔmɔ API 0.1';
 });
 
+// General resource endpoints.
+Route::get('{resourceName}/count', 'ApiController@count');
+Route::get('{resourceName}/search/{query}', 'ApiController@search');
+
 // Definition endpoints.
-Route::get('{definitionType}/count', 'ApiController@count');
-Route::get('{definitionType}/search/{query}', 'ApiController@search');
 Route::get('{definitionType}/title/{title}', 'DefinitionController@findBytitle');
 Route::options('definition/{id?}', 'ApiController@options');
 Route::resource('definition', 'DefinitionController', ['except' => ['index', 'create', 'edit']]);

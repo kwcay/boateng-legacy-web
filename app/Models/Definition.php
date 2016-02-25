@@ -401,15 +401,16 @@ class Definition extends Model
 
             // Create temporary score columns so we can sort the IDs.
             ->selectRaw(
-                'd.id, i.title, i.transliteration, t.practical, t.literal, t.meaning, '.
+                'd.id, '.
                 'i.title = ? AS title_score, ' .
                 'i.title LIKE ? AS title_score_low, '.
                 'MATCH(i.transliteration) AGAINST(?) AS transliteration_score, '.
                 'MATCH(t.practical) AGAINST(?) AS practical_score, '.
                 't.practical LIKE ? AS practical_score_low, '.
+                't.practical = ? AS practical_score_multiplier, '.
                 'MATCH(t.literal) AGAINST(?) AS literal_score, '.
                 'MATCH(t.meaning) AGAINST(?) AS meaning_score ',
-                [$term, '%'. $term .'%', $term, $term, '%'. $term .'%', $term, $term]
+                [$term, '%'. $term .'%', $term, $term, '%'. $term .'%', $term, $term, $term]
             )
 
             // Try to search in a relevant way.
@@ -429,13 +430,13 @@ class Definition extends Model
             // Order by relevancy.
             ->orderByraw(
                 '('.
-                    'title_score * 3 + '.
-                    'title_score_low + '.
+                    'title_score * 10 + '.
+                    'title_score_low * 1.5 + '.
                     'transliteration_score + '.
-                    'practical_score + '.
+                    'practical_score * (practical_score_multiplier + 0.8) + '.
                     'practical_score_low * 0.5 +'.
-                    'literal_score +'.
-                    'meaning_score +'.
+                    'literal_score * 0.8 +'.
+                    'meaning_score * 0.8'.
                 ') DESC'
             );
 
@@ -455,16 +456,17 @@ class Definition extends Model
         // dd($builder->get());
 
         // Retrieve distinct IDs.
-        $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
+        $IDs = $builder->distinct()->skip($offset)->take($limit)->pluck('d.id');
 
         // Return results.
         if (count($IDs))
         {
-            $results = Definition::with('languages', 'translations')->whereIn('id', $IDs)->get();
+            $results = static::with('languages', 'translations')->whereIn('id', $IDs)->get();
+            dd($results);
 
-            foreach ($results as $result) {
-                $result->setAttribute('mainLanguage', $result->mainLanguage);
-            }
+            // foreach ($results as $result) {
+            //     $result->setAttribute('mainLanguage', $result->mainLanguage);
+            // }
         }
 
         else {

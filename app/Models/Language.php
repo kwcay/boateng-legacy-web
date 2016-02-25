@@ -76,11 +76,6 @@ class Language extends Model
     ];
 
     /**
-     * @var array   Attributes that should be mutated to dates.
-     */
-    protected $dates = ['deleted_at'];
-
-    /**
      * @var array
      */
     protected $casts = [
@@ -88,6 +83,26 @@ class Language extends Model
         'parent_code' => 'string',
         'name' => 'string',
         'alt_names' => 'string',
+    ];
+
+    /**
+     * Attributes that should be mutated to dates.
+     */
+    protected $dates = ['deleted_at'];
+
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+        'code',
+        'parentCode',
+        'name',
+        'transliteration',
+        'altNames',
+        'createdAt',
+        'deletedAt',
     ];
 
     /**
@@ -188,7 +203,7 @@ class Language extends Model
         // Sanitize data.
         $term  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $term)));
         $offset = min(0, (int) $offset);
-        $limit = min(1, (int) $limit);
+        $limit = min(100, (int) $limit);
 
         // Performance check.
         if (strlen($term) < 2) {
@@ -200,34 +215,46 @@ class Language extends Model
 
             // Create a temporary score column so we can sort the IDs.
             ->selectRaw(
-                'l.id, l.name,'.
+                'l.id,'.
+                'l.code = ? AS code_score, ' .
+                'l.parent_code = ? AS code_score_low, ' .
                 'l.name = ? AS name_score, ' .
                 'l.name LIKE ? AS name_score_low, '.
-                'l.alt_names LIKE ? AS alt_score ',
-                'MATCH(l.transliteration) AGAINST(?) AS transliteration_score, '.
-                [$term, '%'. $term .'%', '%'. $term .'%', $term]
+                'l.alt_names LIKE ? AS alt_score, '.
+                'MATCH(l.transliteration) AGAINST(?) AS transliteration_score ',
+                [$term, $term, $term, '%'. $term .'%', '%'. $term .'%', $term]
             )
 
             // Try to search in a relevant way.
             ->whereRaw(
-                '(l.name = ? OR ' .
+                '(l.code = ? OR ' .
+                'l.parent_code = ? OR ' .
+                'l.name = ? OR ' .
                 'l.name LIKE ? OR '.
                 'l.alt_names LIKE ? OR '.
                 'MATCH(l.transliteration) AGAINST(?))',
-                [$term, '%'. $term .'%', '%'. $term .'%', $term]
+                [$term, $term, $term, '%'. $term .'%', '%'. $term .'%', $term]
             )
 
-            // Or match the language code.
-            ->orWhere('code', '=', $term)
-
             // Order by relevancy.
-            ->orderByraw('(name_score * 3 + transliteration_score * 2 + name_score_low + alt_score) DESC')
+            ->orderByraw(
+                '('.
+                    'code_score * 3 + '.
+                    'name_score * 3 + '.
+                    'transliteration_score * 2 + '.
+                    'code_score_low * 1.5 + '.
+                    'name_score_low + '.
+                    'alt_score'.
+                ') DESC'
+            )
 
             // Retrieve distcit IDs.
             ->distinct()->skip($offset)->take($limit)->lists('l.id');
+        //     ->distinct()->get();
+        // dd($IDs);
 
         // Return results.
-        return count($IDs) ? Language::whereIn('id', $IDs)->get() : new Collection;
+        return count($IDs) ? static::whereIn('id', $IDs)->get() : new Collection;
     }
 
     /**
