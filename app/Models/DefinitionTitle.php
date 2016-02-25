@@ -51,10 +51,16 @@ class DefinitionTitle extends Model
     public static $appendable = [];
 
     /**
-     *
+     * Alphabet this title is written in.
      */
-    public function alphabet()
-    {
+    public function alphabet() {
         return $this->belongsTo('App\Models\Alphabet');
+    }
+
+    /**
+     * Definition this title belongs to.
+     */
+    public function definition() {
+        return $this->belongsTo('App\Models\Definition');
     }
 }

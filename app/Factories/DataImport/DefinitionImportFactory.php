@@ -40,7 +40,9 @@ class DefinitionImportFactory extends DataImportFactory
 
             elseif (array_key_exists('title', $data) && is_string($data['title']))
             {
-                $titles[] = new DefinitionTitle(['title' => trim($data['title'])]);
+                $titles[] = new DefinitionTitle([
+                    'title' => trim($data['title'])
+                ]);
 
                 // Create a title record for each altTitle from the old format.
                 if (array_key_exists('altTitles', $data) && is_string($data['altTitles']))
@@ -73,7 +75,7 @@ class DefinitionImportFactory extends DataImportFactory
                 $literal    = isset($data['translation']['literal']) ? $data['translation']['literal'] : [];
                 $meaning    = isset($data['translation']['meaning']) ? $data['translation']['meaning'] : [];
 
-                foreach ($practical as $lang => $data)
+                foreach ($practical as $lang => $practicalTranslation)
                 {
                     // Make sure we have a 3-letter code.
                     $langCode = $lang == 'en' ? 'eng' : $lang;
@@ -150,7 +152,7 @@ class DefinitionImportFactory extends DataImportFactory
             $definition->translations()->saveMany($translations);
 
             // Add data relation.
-            if (array_key_exists($data, 'data') && is_array($data['data']))
+            if (array_key_exists('data', $data) && is_array($data['data']))
             {
 
             }

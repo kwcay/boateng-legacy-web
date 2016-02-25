@@ -99,7 +99,7 @@ class Architecture050 extends Migration
                 ->on('definitions')
                 ->onDelete('cascade');
 
-            $table->integer('alphabet_id')->unsigned();
+            $table->integer('alphabet_id')->unsigned()->nullable();
             $table->foreign('alphabet_id')
                 ->references('id')
                 ->on('alphabets')
