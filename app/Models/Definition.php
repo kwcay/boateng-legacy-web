@@ -387,7 +387,7 @@ class Definition extends Model
 
         $type = null;
         if (isset($options['type']) && in_array($options['type'], static::types())) {
-            $type = (int) array_flip(static::types())[$options['type']];
+            $type = static::getTypeConstant($options['type']);
         }
 
         // Start building our database query.
@@ -455,23 +455,44 @@ class Definition extends Model
         // dd($builder->toSql());
         // dd($builder->get());
 
-        // Retrieve distinct IDs.
-        $IDs = $builder->distinct()->skip($offset)->take($limit)->pluck('d.id');
+        // Retrieve distinct definitions.
+        $scores = $builder->distinct()->skip($offset)->take($limit)->get();
 
-        // Return results.
-        if (count($IDs))
+        if (count($scores))
         {
-            $results = static::with('languages', 'translations')->whereIn('id', $IDs)->get();
-            dd($results);
+            // Order of results.
+            $IDs = array_map(function($score) {
+                return $score->id;
+            }, $scores);
+            $order = array_flip($IDs);
 
-            // foreach ($results as $result) {
-            //     $result->setAttribute('mainLanguage', $result->mainLanguage);
-            // }
+            // Pull results, with relations, from the DB.
+            $unsorted = Definition::with('languages', 'translations')->whereIn('id', $IDs)->get();
+
+            // Sort results.
+            $results = collect(array_sort($unsorted, function($definition) use($order) {
+                return $order[$definition->id];
+            })
+            );
         }
 
         else {
             $results = new Collection;
         }
+
+        // // Return results.
+        // if (count($IDs))
+        // {
+        //     $results = Definition::with('languages', 'translations')->whereIn('id', $IDs)->get();
+        //
+        //     // foreach ($results as $result) {
+        //     //     $result->setAttribute('mainLanguage', $result->mainLanguage);
+        //     // }
+        // }
+        //
+        // else {
+        //     $results = new Collection;
+        // }
 
         // Return results.
         return $results;

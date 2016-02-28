@@ -16,7 +16,7 @@
         @endif
 
         {{ $lang->name }}<br>
-        <small>A Cultural Collection.</small>
+        <small>A Cultural Reference.</small>
     </h1>
 
     @if ($lang->definitions->count())

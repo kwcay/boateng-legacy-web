@@ -6,7 +6,7 @@
         Di Nkɔmɔ<br>
 
         <small>
-            A Cultural Collection.
+            A Cultural Reference.
         </small>
     </h1>
 

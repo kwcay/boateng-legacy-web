@@ -137,8 +137,8 @@ class DefinitionImportFactory extends DataImportFactory
                 'main_language_code' => array_get($data, 'mainLanguageCode', ''),
                 'rating' => array_get($data, 'rating', 1),
                 'meta' => array_get($data, 'meta', ''),
-                'created_at' => array_get($data, 'created_at', ''),
-                'deleted_at' => array_get($data, 'deleted_at', ''),
+                'created_at' => array_get($data, 'createdAt', null),
+                'deleted_at' => array_get($data, 'deletedAt', null),
             ];
 
             // Create a definition object and save it right away, so that we can add the
