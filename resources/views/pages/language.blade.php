@@ -21,8 +21,16 @@
 
     @if ($lang->definitions->count())
 
-        {{-- Search form --}}
-        @include('partials.lang-search', ['code' => $lang->code, 'name' => $lang->name])
+        {{-- Form --}}
+        @include('partials.dictionary-form', ['code' => $lang->code])
+
+        {{-- Results / Twitter pitch --}}
+        <div id="results">
+            <div class="text-center">
+                Use this <em>&#10548;</em> to lookup words<br>
+                and sayings in {{ $lang->name }}.
+            </div>
+        </div>
         <br>
 
         {{-- Language details --}}
