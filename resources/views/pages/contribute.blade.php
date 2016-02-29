@@ -12,7 +12,7 @@
                 <a href="{{ route('language.create') }}">suggest a new language</a>.
                 <hr>
 
-                &rarr;&nbsp; Thanks for asking. I'd like to suggest a new word in
+                &rarr;&nbsp; Thanks for asking. I'd like to suggest a new <em>word</em> in
                 <form class="form" method="post">
                     <div class="row">
                         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
@@ -27,7 +27,7 @@
                 </form>
                 <hr>
 
-                &rarr;&nbsp; Thanks for asking. I'd like to suggest a new saying or expression in
+                &rarr;&nbsp; Thanks for asking. I'd like to suggest a new <em>saying or expression</em> in
                 <form class="form" method="post">
                     <div class="row">
                         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">

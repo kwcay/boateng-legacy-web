@@ -6,11 +6,11 @@ var Dialogs =
 {
     init: function() {
 
-        	// Attach event listeners.
-        	$('.close').click(App.closeDialogs.bind(App));
-            // $('.has-tooltip').popup({on: 'hover'});
-            // $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
-            $('.has-dropdown-menu').dropdown();
+    	// Attach event listeners.
+    	$('.close').click(App.closeDialogs.bind(App));
+        // $('.has-tooltip').popup({on: 'hover'});
+        // $('.has-inline-tooltip').popup({inline: true, on: 'hover'});
+        $('.has-dropdown-menu').dropdown();
     },
 
     open: function(dialog)

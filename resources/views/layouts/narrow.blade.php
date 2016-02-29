@@ -38,8 +38,5 @@
 	</div>
 
     @include('partials.footer')
-    <script type="text/javascript">
-        $(document).ready(function(event) { App.init(); });
-    </script>
 </body>
 </html>

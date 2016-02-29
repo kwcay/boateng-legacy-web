@@ -95,14 +95,24 @@ var Utilities =
      * @return void
      */
     info: function(msg) {
-        if (this.isLocalEnvironment && console && typeof console.info == 'function') {
+
+        if (App.isLocalEnvironment && console && typeof console.info == 'function') {
             console.info(msg);
         }
     },
 
+    /**
+     * Logs an error message to the console.
+     *
+     * @param string msg
+     * @return bool
+     */
     error: function(msg) {
-        if (this.isLocalEnvironment && console && typeof console.error == 'function') {
+
+        if (console && typeof console.error == 'function') {
             console.error(msg);
         }
+
+        return false;
     }
 };

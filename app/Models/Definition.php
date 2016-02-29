@@ -137,8 +137,8 @@ class Definition extends Model
         'id',
         'updated_at',
         'deleted_at',
-        'languages',
-        'translations',
+        // 'languages',
+        // 'translations',
     ];
 
     /**
@@ -455,44 +455,51 @@ class Definition extends Model
         // dd($builder->toSql());
         // dd($builder->get());
 
-        // Retrieve distinct definitions.
-        $scores = $builder->distinct()->skip($offset)->take($limit)->get();
+        // Retrieve IDs and scores of the results.
+        $rawScores = $builder
+                        ->distinct()
+                        ->skip($offset)
+                        ->take($limit)
+                        ->get();
 
-        if (count($scores))
+        // Format results.
+        if (count($rawScores))
         {
-            // Order of results.
-            $IDs = array_map(function($score) {
-                return $score->id;
-            }, $scores);
-            $order = array_flip($IDs);
+            // Create an array of result IDs so we can retrieve the definition models from the DB.
+            $IDs = array_map(function($scored) { return $scored->id; }, $rawScores);
 
-            // Pull results, with relations, from the DB.
-            $unsorted = Definition::with('languages', 'translations')->whereIn('id', $IDs)->get();
+            // Key raw scores by ID.
+            $scores = collect($rawScores)->keyBy('id');
 
-            // Sort results.
-            $results = collect(array_sort($unsorted, function($definition) use($order) {
-                return $order[$definition->id];
-            })
-            );
+            // Pull results and their relations from the DB.
+            $unsorted = Definition::with('languages', 'titles.alphabet', 'translations')
+                            ->whereIn('id', $IDs)->get();
+
+            // Add scores to definition models.
+            foreach ($unsorted as $definition)
+            {
+                $score = $scores[$definition->id];
+                $definition->score = (
+                    $score->title_score * 10 +
+                    $score->title_score_low * 1.5 +
+                    $score->transliteration_score +
+                    $score->practical_score * ($score->practical_score_multiplier + 0.8) +
+                    $score->practical_score_low * 0.5 +
+                    $score->literal_score * 0.8 +
+                    $score->meaning_score * 0.8
+                );
+
+                $definition->setAttribute('mainLanguage', $definition->mainLanguage);
+            }
+
+            $results = $unsorted->sortByDesc(function($definition) {
+                return $definition->score;
+            })->values();
         }
 
         else {
             $results = new Collection;
         }
-
-        // // Return results.
-        // if (count($IDs))
-        // {
-        //     $results = Definition::with('languages', 'translations')->whereIn('id', $IDs)->get();
-        //
-        //     // foreach ($results as $result) {
-        //     //     $result->setAttribute('mainLanguage', $result->mainLanguage);
-        //     // }
-        // }
-        //
-        // else {
-        //     $results = new Collection;
-        // }
 
         // Return results.
         return $results;

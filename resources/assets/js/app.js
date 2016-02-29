@@ -13,10 +13,11 @@ var App =
         this.root = $('base').attr('href');
 
         // Set the environment of the app.
-        this.isLocalEnvironment =
-            (window.location.hostname == 'localhost' ||
+        this.isLocalEnvironment = (
+            window.location.hostname == 'localhost' ||
             window.location.hostname.match(/.*\.local$/i) ||
-            window.location.hostname.match(/.*\.vagrant$/i));
+            window.location.hostname.match(/.*\.vagrant$/i)
+        ) ? true : false;
 
         // Setup AJAX headers.
         $.ajaxSetup({
@@ -25,13 +26,17 @@ var App =
             }
         });
 
-        // Setup Bootstrap tooltips.
-        $('[data-toggle="tooltip"]').tooltip();
-
         // Initialize other objects.
-        Dialogs.init();
-        Forms.init();
-        this.log('App initialized.');
+        $(document).ready(function() {
+
+            Dialogs.init();
+            Forms.init();
+
+            // Setup Bootstrap tooltips.
+            $('[data-toggle="tooltip"]').tooltip();
+
+            this.log('App initialized.');
+        }.bind(this));
 	},
 
     /**
@@ -89,3 +94,5 @@ var App =
         }
 	}
 };
+
+App.init();

@@ -193,6 +193,8 @@ class Language extends Model
     /**
      * Looks up lannguages by name.
      *
+     * @todo Update method to match the one in App\Models\Defintion.
+     *
      * @param string $term
      * @param int $offset
      * @param int $limit
