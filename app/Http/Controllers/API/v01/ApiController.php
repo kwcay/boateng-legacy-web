@@ -8,8 +8,10 @@ namespace App\Http\Controllers\API\v01;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 
 use App\Http\Requests;
+use App\Models\Country;
 use App\Models\Definition;
 use App\Models\Definition\Name;
 use App\Models\Definition\Phrase;
@@ -118,10 +120,10 @@ class ApiController extends Controller
             return response('Invalid resource type.', 400);
         }
 
-        // Retrieve search options.
+        // Retrieve search parameters.
         $options = [
             'offset' => $this->request->input('offset', 0),
-            'limit' => $this->request->input('limit'),
+            'limit' => $this->request->input('limit', $model::SEARCH_LIMIT),
             'lang' => $this->request->input('lang', '')
         ];
 
@@ -137,21 +139,43 @@ class ApiController extends Controller
      */
     public function searchAllResources($query)
     {
-        // Lookup all definitions.
-        $options = [];
-        $results = Definition::search($query, $options);
+        // Retrieve search parameters (omit "offset" and "limit").
+        $options = ['lang' => $this->request->input('lang', '')];
+
+        // Lookup countries.
+        $results = new Collection;
+
+        // Add cultures.
+        // ...
+
+        // Add definitions.
+        $results = $results->merge(Definition::search($query, $options));
 
         // Add languages.
-        $results = $results->merge(Language::search($query));
+        $results = $results->merge(Language::search($query, $options));
 
-        // Add countries.
-        // ...
+        // Sort results by score.
+        $results = $results->sortByDesc(function($result) {
+            return $result->score;
+        })->values();
+
+        // Apply "offset" and "limit" search parameters.
+        $limit = max([
+            Country::SEARCH_LIMIT,
+            Definition::SEARCH_LIMIT,
+            Language::SEARCH_LIMIT
+        ]);
+
+        $results = $results->slice(
+            $this->request->input('offset', 0),
+            $this->request->input('limit', $limit)
+        );
 
         // Format results.
         switch (strtolower($this->request->input('format')))
         {
             case 'opensearch':
-                return $this->getOpenSearch($results);
+                return $this->getOpenSearchResults($results);
 
             case 'json':
             default:
@@ -162,9 +186,10 @@ class ApiController extends Controller
     /**
      * Converts search results to Open Search format.
      *
-     * @param string $query
+     * @param Illuminate\Support\Collection
+     * @return array
      */
-    private function getOpenSearch(array $data)
+    private function getOpenSearchResults(Collection $data)
     {
     }
 

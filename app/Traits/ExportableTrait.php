@@ -7,7 +7,7 @@ namespace App\Traits;
 
 use Symfony\Component\Yaml\Yaml;
 
-trait ExportableResourceTrait
+trait ExportableTrait
 {
     public static $contentTypes = [
         'json' => 'application/json',

@@ -12,15 +12,20 @@ use cebe\markdown\MarkdownExtra;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ValidatableResourceTrait as Validatable;
-use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+
+use App\Traits\ExportableTrait as Exportable;
+use App\Traits\SearchableTrait as Searchable;
+use App\Traits\ValidatableTrait as Validatable;
+use App\Traits\ObfuscatableTrait as Obfuscatable;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 
 class Language extends Model
 {
-    use Validatable, Obfuscatable, Exportable, SoftDeletes, CamelCaseAttrs;
+    use CamelCaseAttrs, Exportable, Obfuscatable, Searchable, SoftDeletes, Validatable;
+
+    CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
+    CONST SEARCH_QUERY_LENGTH = 2;  // Minimum length of search query.
 
     /**
      *
@@ -191,75 +196,6 @@ class Language extends Model
     }
 
     /**
-     * Looks up lannguages by name.
-     *
-     * @todo Update method to match the one in App\Models\Defintion.
-     *
-     * @param string $term
-     * @param int $offset
-     * @param int $limit
-     * @return array
-     */
-    public static function search($term, $offset = 0, $limit = 100)
-    {
-        // Sanitize data.
-        $term  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $term)));
-        $offset = min(0, (int) $offset);
-        $limit = min(100, (int) $limit);
-
-        // Performance check.
-        if (strlen($term) < 2) {
-            return new Collection;
-        }
-
-        // Query the database
-        $IDs = DB::table('languages AS l')
-
-            // Create a temporary score column so we can sort the IDs.
-            ->selectRaw(
-                'l.id,'.
-                'l.code = ? AS code_score, ' .
-                'l.parent_code = ? AS code_score_low, ' .
-                'l.name = ? AS name_score, ' .
-                'l.name LIKE ? AS name_score_low, '.
-                'l.alt_names LIKE ? AS alt_score, '.
-                'MATCH(l.transliteration) AGAINST(?) AS transliteration_score ',
-                [$term, $term, $term, '%'. $term .'%', '%'. $term .'%', $term]
-            )
-
-            // Try to search in a relevant way.
-            ->whereRaw(
-                '(l.code = ? OR ' .
-                'l.parent_code = ? OR ' .
-                'l.name = ? OR ' .
-                'l.name LIKE ? OR '.
-                'l.alt_names LIKE ? OR '.
-                'MATCH(l.transliteration) AGAINST(?))',
-                [$term, $term, $term, '%'. $term .'%', '%'. $term .'%', $term]
-            )
-
-            // Order by relevancy.
-            ->orderByraw(
-                '('.
-                    'code_score * 3 + '.
-                    'name_score * 3 + '.
-                    'transliteration_score * 2 + '.
-                    'code_score_low * 1.5 + '.
-                    'name_score_low + '.
-                    'alt_score'.
-                ') DESC'
-            )
-
-            // Retrieve distcit IDs.
-            ->distinct()->skip($offset)->take($limit)->lists('l.id');
-        //     ->distinct()->get();
-        // dd($IDs);
-
-        // Return results.
-        return count($IDs) ? static::whereIn('id', $IDs)->get() : new Collection;
-    }
-
-    /**
      *
      */
     public static function sortedBy($sort = 'name', $dir = 'asc')
@@ -284,6 +220,116 @@ class Language extends Model
         // And will have the format "abc" or "abc-def"
         return preg_match('/^([a-z]{3}(-[a-z]{3})?)$/', $code) ? $code : null;
     }
+
+
+    //
+    //
+    // Search-related methods.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * @param string $term      Search query.
+     * @param array $options    Search options.
+     * @return Builder
+     */
+    protected static function getSearchQueryBuilder($term, array $options = [])
+    {
+        $builder = DB::table('languages AS l')
+
+            // Create a temporary score column so we can sort the IDs.
+            ->selectRaw(
+                'l.id,'.
+                'l.code = ? AS code_score, ' .
+                'l.parent_code = ? AS code_score_low, ' .
+                'l.name = ? AS name_score, ' .
+                'l.name LIKE ? AS name_score_low, '.
+                'l.alt_names LIKE ? AS alt_score, '.
+                'MATCH(l.transliteration) AGAINST(?) AS transliteration_score ',
+                [$term, $term, $term, '%'. $term .'%', '%'. $term .'%', $term]
+            )
+
+            // Try to search in a relevant way.
+            ->whereRaw(
+                '(l.code = ? OR ' .
+                'l.parent_code = ? OR ' .
+                'l.name = ? OR ' .
+                'l.name LIKE ? OR '.
+                'l.alt_names LIKE ? OR '.
+                'MATCH(l.transliteration) AGAINST(?))',
+                [$term, $term, $term, '%'. $term .'%', '%'. $term .'%', $term]
+            );
+
+        return $builder;
+    }
+
+    /**
+     * Scores a language model between 0 and 1.
+     *
+     * @param object $rawScore
+     * @return float
+     */
+    protected static function getSearchScore($rawScore)
+    {
+        return (
+            $rawScore->code_score * 3 +
+            $rawScore->name_score * 3 +
+            $rawScore->transliteration_score * 2 +
+            $rawScore->code_score_low * 1.5 +
+            $rawScore->name_score_low +
+            $rawScore->alt_score
+        );
+    }
+
+    /**
+     * @param array $IDs
+     * @return \Illuminate\Support\Collection
+     */
+    protected static function getSearchResults(array $IDs) {
+        return static::whereIn('id', $IDs)->get();
+    }
+
+    /**
+     * Normalizes the search score and formats a model for search results.
+     *
+     * @param object $language
+     * @param object $scores
+     * @param float $maxScore
+     */
+    protected static function normalizeSearchResult($language, $scores, $maxScore)
+    {
+        // If the language name is an exact match, assign max score.
+        if ($scores->name_score > 0) {
+            $language->score = 1;
+        }
+
+        // If language code is an exact match, assign second-highest score.
+        elseif ($scores->code_score > 0) {
+            $language->score = 0.97;
+        }
+
+        // If language's parent code is an exact match, assign third-highest score.
+        elseif ($scores->code_score_low > 0) {
+            $language->score = 0.92;
+        }
+
+        // In any other case, assign a score out of 0.9.
+        else {
+            $language->score = $scores->total * 0.9 / $maxScore;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Gets the URI to the language edit form.

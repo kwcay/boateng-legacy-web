@@ -2,7 +2,7 @@
 
 use App;
 
-trait ObfuscatableResourceTrait
+trait ObfuscatableTrait
 {
     /**
      * @var

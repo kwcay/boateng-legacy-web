@@ -8,7 +8,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Traits\ExportableResourceTrait;
+use App\Traits\ExportableTrait;
 use App\Traits\ImportableResourceTrait;
 use Illuminate\Http\Request;
 
@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
  */
 class UserController extends Controller {
 
-    use ExportableResourceTrait, ImportableResourceTrait;
+    use ExportableTrait, ImportableResourceTrait;
 
     /**
      * @param $format

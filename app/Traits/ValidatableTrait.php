@@ -2,7 +2,7 @@
 
 use Validator;
 
-trait ValidatableResourceTrait
+trait ValidatableTrait
 {
     /**
      * @param $data

@@ -4,9 +4,9 @@ use URL;
 
 use App\Models\Language;
 use Illuminate\Support\Arr;
-use App\Traits\ValidatableResourceTrait as Validatable;
-use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
-use App\Traits\ExportableResourceTrait as Exportable;
+use App\Traits\ValidatableTrait as Validatable;
+use App\Traits\ObfuscatableTrait as Obfuscatable;
+use App\Traits\ExportableTrait as Exportable;
 use App\Traits\ImportableResourceTrait as Importable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

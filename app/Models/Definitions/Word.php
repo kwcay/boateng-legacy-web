@@ -16,9 +16,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Traits\HasParamsTrait as HasParams;
-use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ValidatableResourceTrait as Validatable;
-use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+use App\Traits\ExportableTrait as Exportable;
+use App\Traits\ValidatableTrait as Validatable;
+use App\Traits\ObfuscatableTrait as Obfuscatable;
 
 /**
  *

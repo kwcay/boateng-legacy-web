@@ -19,15 +19,17 @@ use App\Models\Definitions\Story;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 use App\Traits\HasParamsTrait as HasParams;
-use App\Traits\ExportableResourceTrait as Exportable;
-use App\Traits\ValidatableResourceTrait as Validatable;
-use App\Traits\ObfuscatableResourceTrait as Obfuscatable;
+use App\Traits\ExportableTrait as Exportable;
+use App\Traits\SearchableTrait as Searchable;
+use App\Traits\ValidatableTrait as Validatable;
+use App\Traits\ObfuscatableTrait as Obfuscatable;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Definition extends Model
 {
-    use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams, CamelCaseAttrs;
+    use CamelCaseAttrs, Exportable, Obfuscatable, Searchable, SoftDeletes, Validatable, HasParams;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
     CONST TYPE_PHRASE = 10;     // Proverbs, sayings, etc.
@@ -36,7 +38,8 @@ class Definition extends Model
     CONST STATE_HIDDEN = 0;     // Hidden definition.
     CONST STATE_VISIBLE = 10;   // Default state.
 
-    CONST SEARCH_LIMIT = 20;    // Maximum number of results to return on a search.
+    CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
+    CONST SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.
 
     /**
      * Definition types.
@@ -365,32 +368,21 @@ class Definition extends Model
         return $query->with('languages', 'translations')->orderByRaw('RAND()')->first();
     }
 
+
+    //
+    //
+    // Search-related methods.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
-     * Searches the database for definitions.
-     *
      * @param string $term      Search query.
      * @param array $options    Search options.
-     * @return array
+     * @return Builder
      */
-    public static function search($term, array $options = [])
+    protected static function getSearchQueryBuilder($term, array $options = [])
     {
-        // Retrieve search parameters.
-        $offset = isset($options['offset']) ? (int) $options['offset'] : 0;
-        $offset = min(0, $offset);
-
-        $limit = isset($options['limit']) ? (int) $options['limit'] : static::SEARCH_LIMIT;
-        $limit = max(1, min(static::SEARCH_LIMIT, $limit));
-
-        $term = trim(preg_replace('/[\s+]/', ' ', $term));
-
-        $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
-
-        $type = null;
-        if (isset($options['type']) && in_array($options['type'], static::types())) {
-            $type = static::getTypeConstant($options['type']);
-        }
-
-        // Start building our database query.
         $builder = DB::table('definitions AS d')
 
             // Join the titles table so we can search its columns.
@@ -425,167 +417,79 @@ class Definition extends Model
                     'MATCH(t.meaning) AGAINST(?)'.
                 ')',
                 [$term, '%'. $term .'%', $term, $term, '%'. $term .'%', $term, $term]
-            )
-
-            // Order by relevancy.
-            ->orderByraw(
-                '('.
-                    'title_score * 10 + '.
-                    'title_score_low * 1.5 + '.
-                    'transliteration_score + '.
-                    'practical_score * (practical_score_multiplier + 0.8) + '.
-                    'practical_score_low * 0.5 +'.
-                    'literal_score * 0.8 +'.
-                    'meaning_score * 0.8'.
-                ') DESC'
             );
 
         // Limit scope to a specific language.
-        if ($lang)
+        if (isset($options['lang']) && $lang = Language::findByCode($options['lang']))
         {
             $builder->join('definition_language AS pivot', 'pivot.definition_id', '=', 'd.id')
                 ->where('pivot.language_id', '=', DB::raw($lang->id));
         }
 
         // Limit scope to a specific definition type.
-        if (is_integer($type)) {
-            $builder->where('d.type', '=', DB::raw($type));
+        if ( isset($options['type']) && in_array($options['type'], static::types()) ) {
+            $builder->where('d.type', '=', DB::raw(static::getTypeConstant($options['type'])));
         }
 
-        // dd($builder->toSql());
-        // dd($builder->get());
-
-        // Retrieve IDs and scores of the results.
-        $rawScores = $builder
-                        ->distinct()
-                        ->skip($offset)
-                        ->take($limit)
-                        ->get();
-
-        // Format results.
-        if (count($rawScores))
-        {
-            // Create an array of result IDs so we can retrieve the definition models from the DB.
-            $IDs = array_map(function($scored) { return $scored->id; }, $rawScores);
-
-            // Key raw scores by ID.
-            $scores = collect($rawScores)->keyBy('id');
-
-            // Pull results and their relations from the DB.
-            $unsorted = Definition::with('languages', 'titles.alphabet', 'translations')
-                            ->whereIn('id', $IDs)->get();
-
-            // Add scores to definition models.
-            foreach ($unsorted as $definition)
-            {
-                $score = $scores[$definition->id];
-                $definition->score = (
-                    $score->title_score * 10 +
-                    $score->title_score_low * 1.5 +
-                    $score->transliteration_score +
-                    $score->practical_score * ($score->practical_score_multiplier + 0.8) +
-                    $score->practical_score_low * 0.5 +
-                    $score->literal_score * 0.8 +
-                    $score->meaning_score * 0.8
-                );
-
-                $definition->setAttribute('mainLanguage', $definition->mainLanguage);
-            }
-
-            $results = $unsorted->sortByDesc(function($definition) {
-                return $definition->score;
-            })->values();
-        }
-
-        else {
-            $results = new Collection;
-        }
-
-        // Return results.
-        return $results;
+        return $builder;
     }
 
     /**
-     * Performs a fulltext search.
+     * Scores a definition model between 0 and 1.
      *
-     * @deprecated
-     *
-     * @param string $term      Search term.
-     * @param int $offset       Search offset.
-     * @param int $limit        Search limit (max 50).
-     * @param array $options    Search options.
-     * @return array
+     * @param object $rawScore
+     * @return float
      */
-    public static function fulltextSearch($term, $offset = 0, $limit = 50, array $options = [])
+    protected static function getSearchScore($rawScore)
     {
-        // Sanitize data and retrieve search options.
-        $term = trim(preg_replace('/[\s+]/', ' ', $term));
-        $offset = min(0, (int) $offset);
-        $limit = max(1, min(static::SEARCH_LIMIT, (int) $limit));
-        $lang = isset($options['lang']) ? Language::findByCode($options['lang']) : null;
+        return (
+            $rawScore->title_score * 10 +
+            $rawScore->title_score_low * 1.5 +
+            $rawScore->transliteration_score +
+            $rawScore->practical_score * ($rawScore->practical_score_multiplier + 0.8) +
+            $rawScore->practical_score_low * 0.5 +
+            $rawScore->literal_score * 0.8 +
+            $rawScore->meaning_score * 0.8
+        );
+    }
 
-        $type = null;
-        if (isset($options['type']) && in_array($options['type'], static::types())) {
-            $type = (int) array_flip(static::types())[$options['type']];
+    /**
+     * Retrieves definitions and their relations in the context of a search.
+     *
+     * @param array $IDs
+     * @return \Illuminate\Support\Collection
+     */
+    protected static function getSearchResults(array $IDs) {
+        return Definition::with('languages', 'titles.alphabet', 'translations')
+                        ->whereIn('id', $IDs)->get();
+    }
+
+    /**
+     * Normalizes the search score and formats a model for search results.
+     *
+     * @param object $definition
+     * @param object $scores
+     * @param float $maxScore
+     */
+    protected static function normalizeSearchResult($definition, $scores, $maxScore)
+    {
+        // If a title is an exact match, assign max score.
+        if ($scores->title_score > 0) {
+            $definition->score = 1;
         }
 
-        // Start building our database query.
-        $builder = DB::table('definitions AS d')
-
-            // Join the translations table so we can search its columns.
-            ->leftJoin('translations AS t', 't.definition_id', '=', 'd.id')
-
-            // Create temporary score columns so we can sort the IDs.
-            ->selectRaw(
-                'd.id, '.
-                'MATCH(d.title, d.alt_titles) AGAINST(?) * 10 AS title_score, '.
-                'MATCH(t.practical, t.literal, t.meaning) AGAINST(?) * 8 AS tran_score ',
-                [$term, $term])
-
-            // Match the fulltext columns against the search query.
-            ->whereRaw(
-                '( MATCH(d.title, d.alt_titles) AGAINST(?) '.
-                'OR MATCH(t.practical, t.literal, t.meaning) AGAINST(?) )',
-                [$term, $term])
-
-            // Order by relevancy.
-            ->orderByraw('(title_score + tran_score) DESC');
-
-        // Limit scope to a specific language.
-        if ($lang)
-        {
-            // We join the pivot table so that we may join the language table. Joining the language
-            // table allows us to limit the search to a specific language.
-            $builder->join('definition_language AS pivot', 'pivot.definition_id', '=', 'd.id')
-                ->where('pivot.language_id', DB::raw($lang->id));
+        // If a translation is an exact match, assign second-highest score.
+        elseif ($scores->practical_score_multiplier > 0) {
+            $definition->score = 0.95;
         }
 
-        // Limit scope to a specific definition type.
-        if (is_integer($type)) {
-            $builder->where('d.type', '=', DB::raw($type));
-        }
-
-        // dd($builder->toSql());
-
-        // Retrieve distinct IDs.
-        $IDs = $builder->distinct()->skip($offset)->take($limit)->lists('d.id');
-
-        // Return results.
-        if (count($IDs))
-        {
-            $results = Definition::with('languages', 'translations')->whereIn('id', $IDs)->get();
-
-            foreach ($results as $result) {
-                $result->setAttribute('mainLanguage', $result->mainLanguage);
-            }
-        }
-
+        // In any other case, assign a score out of 0.9.
         else {
-            $results = new Collection;
+            $definition->score = $scores->total * 0.9 / $maxScore;
         }
 
-        // Return results.
-        return $results;
+        // Main language attribute.
+        $definition->setAttribute('mainLanguage', $definition->mainLanguage);
     }
 
 
