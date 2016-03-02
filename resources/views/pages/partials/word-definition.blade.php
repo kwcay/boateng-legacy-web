@@ -17,36 +17,42 @@
 {{-- Append meaning --}}
 @if ($def->hasMeaning('eng'))
     {{ $def->getMeaning('eng') }}.
+    <br>
 @endif
 
 {{-- Append literal meaning --}}
 @if ($def->hasLiteralTranslation('eng'))
-    <i>Literally</i>: {{ $def->getLiteralTranslation('eng') }}.
+    <span class="meta-label">&rarr; Literally:</span>
+    <span class="meta-data">{{ $def->getLiteralTranslation('eng') }}</span>
+    <br>
 @endif
 
 {{-- Append alternative spellings --}}
-@if (strlen($def->altTitles))
-    <i>Alternatively</i>: {{ $def->altTitles }}.
+@if (count($def->titles) > 1)
+    <span class="meta-label">&rarr; Spellings:</span>
+    <span class="meta-data">{{ $def->titles->implode('title', ', ') }}</span>
+    <br>
 @endif
 
 {{-- Add language information --}}
 @if (count($def->languages) > 1)
-    <i>Also a word in: </i>
-    @foreach ($def->languages as $otherLang)
-        @if ($otherLang->code != $lang->code)
-            <a href="{{ $otherLang->uri }}">{{ $otherLang->name }}</a>
-        @endif
-    @endforeach
+    <span class="meta-label">&rarr; Also a word in:</span>
+
+    <span class="meta-data">
+        @foreach ($def->languages as $otherLang)
+            @if ($otherLang->code != $lang->code)
+                <a href="{{ $otherLang->uri }}">{{ $otherLang->name }}</a>
+            @endif
+        @endforeach
+    </span>
+
+    <br>
 @endif
 
 {{-- Back search --}}
-{{-- Only add a break if there was more info appended to this definition --}}
-@if ($def->hasMeaning('eng') ||
-    $def->hasLiteralTranslation('eng') ||
-    strlen($def->altTitles ||
-    count($def->languages) > 1))
-    <br>
-@endif
-<a class="more" href="{{ route('home', ['q' => $def->getPracticalTranslation('eng')]) }}">
-    &rarr; more translations for {{ $def->getPracticalTranslation('eng') }}
-</a>
+<span class="meta-label">
+    Find more translations for
+    <a href="{{ route('home', ['q' => $def->getPracticalTranslation('eng')]) }}">
+        {{ $def->getPracticalTranslation('eng') }}
+    </a>
+</span>

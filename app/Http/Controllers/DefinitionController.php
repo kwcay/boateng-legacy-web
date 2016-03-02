@@ -14,12 +14,12 @@ use Session;
 use Redirect;
 use Validator;
 
+use Illuminate\Support\Arr;
+
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Definitions\Word;
-use Illuminate\Support\Arr;
-
 
 class DefinitionController extends Controller
 {
@@ -44,25 +44,31 @@ class DefinitionController extends Controller
         }
 
         // Check user input.
-        $data = trim(preg_replace('/[\s]+/', '_', strip_tags($raw)));
-        if (strlen($data) < 2) {
+        $str = trim(preg_replace('/[\s]+/', '_', strip_tags($raw)));
+        if (strlen($str) < 2) {
             abort(404, Lang::get('errors.resource_not_found'));
-        } elseif ($data != $raw) {
-            return redirect($lang->code .'/'. $data);
+        } elseif ($str != $raw) {
+            return redirect($lang->code .'/'. $str);
         }
 
         // Find definitions matching the query
-        $data = str_replace('_', ' ', $data);
+        $str = str_replace('_', ' ', $str);
         $definitions = $lang->definitions()
-            ->with('languages', 'translations')
-            ->where('title', '=', $data)
-            ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_PHRASE])
-            ->get();
+                        ->with('languages', 'translations', 'titles')
+                        ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_PHRASE])
+                        ->whereHas('titles', function($query) use($str) {
+                            $query->where('title', $str);
+                        })->get();
+        // $definitions = $lang->definitions()
+        //     ->with('languages', 'translations')
+        //     ->where('title', '=', $data)
+        //     ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_PHRASE])
+        //     ->get();
 
         if (!count($definitions))
         {
             // If no definitions were found, check alternate titles...
-            $alts = Definition::search($data, ['offset' => 0, 'limit' => 1]);
+            $alts = Definition::search($str, ['offset' => 0, 'limit' => 1]);
             if (count($alts)) {
                 return redirect($alts[0]->uri);
             }
@@ -70,9 +76,9 @@ class DefinitionController extends Controller
             abort(404, Lang::get('errors.resource_not_found'));
         }
 
-        return view('pages.words', [
+        return view('pages.definitions', [
             'lang'  => $lang,
-            'query' => $data,
+            'query' => $str,
             'definitions' => $definitions
         ]);
     }

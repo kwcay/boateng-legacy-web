@@ -98,11 +98,13 @@ class Definition extends Model
     ];
 
     /**
-     * Definition state.
+     * Rating of definition
+     *
+     * @todo Define how to use this
      */
-    public $states = [
+    public $ratings = [
         0 => 'hidden',
-        10 => 'visible'
+        1 => 'visible',
     ];
 
     /**
@@ -189,11 +191,13 @@ class Definition extends Model
      */
     protected $casts = [
         'title' => 'string',
-        'alt_titles' => 'string',
         'type' => 'integer',
         'params' => 'array',
     ];
 
+    /**
+     *
+     */
     public $validationRules = [
         'title' => 'required|string|min:2',
         'alt_titles' => 'string|min:2',
@@ -228,21 +232,16 @@ class Definition extends Model
      */
     protected $relationsToBeImported = [];
 
+    /**
+     *
+     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
 
-        // Set some default values.
-        // foreach ($this->validationRules as $key => $rule)
-        // {
-        //     if (!array_key_exists($key, $this->attributes)) {
-        //         $this->attributes[$key] = strpos($rule, 'integer') ? 0 : '';
-        //     }
-        // }
-
         // Markdown parser.
-        $this->markdown = new MarkdownExtra;
-        $this->markdown->html5 = true;
+        // $this->markdown = new MarkdownExtra;
+        // $this->markdown->html5 = true;
     }
 
 
@@ -746,6 +745,20 @@ class Definition extends Model
     }
 
     /**
+     * Accessor for $this->altTitles
+     */
+    public function getAltTitlesAttribute($altTitles = '')
+    {
+        $str = '';
+
+        if (count($this->titles) > 1) {
+            $str = $this->titles->slice(1)->implode('title', ', ');
+        }
+
+        return $str;
+    }
+
+    /**
      * Accessor for $this->state.
      *
      * @param int $state
@@ -856,7 +869,7 @@ class Definition extends Model
      * @return string
      */
     public function getUriAttribute() {
-        return url($this->mainLanguage->code .'/'. str_replace(' ', '_', $this->title));
+        return url($this->mainLanguage->code .'/'. str_replace(' ', '_', $this->titles[0]->title));
     }
 
     /**

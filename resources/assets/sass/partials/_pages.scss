@@ -21,9 +21,17 @@ section .meta em {
 
     .definition {
         position: relative;
-        margin: 10px 0 20px 40px;
+        margin: 20px 0 40px 40px;
         padding-left: 20px;
         border-left: 1px solid #aaa;
+
+        h3 {
+            font-size: 1.4em;
+
+            small {
+                font-size: 0.5em;
+            }
+        }
 
         .or {
             position: absolute;
@@ -32,8 +40,13 @@ section .meta em {
             font-style: italic;
         }
 
-        .more {
-            font-size: .8em;
+        .meta-label {
+            margin-left: 10px;
+            font-size: .7em;
+            letter-spacing: 1.5px;
+        }
+        .meta-data {
+
         }
     }
 }
