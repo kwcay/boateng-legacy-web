@@ -25,34 +25,21 @@
         <input type="hidden" name="_method" value="PUT">
         {!! csrf_field() !!}
 
-        {{-- Title --}}
+        {{-- Titles --}}
         <div class="row">
             <input
                 type="text"
-                name="title"
-                id="title"
+                name="relations[titleStr]"
+                id="relations[titleStr]"
                 class="text-input"
-                placeholder="e.g. ɔdɔ"
-                value="{{ $definition->title }}"
+                placeholder="e.g. ɔdɔ, dɔ"
+                value="{{ $definition->titles->implode('title', ', ') }}"
                 autocomplete="off"
                 required>
-            <label for="title">Title</label>
+            <label for="relations[titleStr]">Spellings (separated by &ldquo;,&rdquo;)</label>
         </div>
 
-        {{-- Alternate spellings --}}
-        <div class="row">
-            <input
-                type="text"
-                id="altTitles"
-                name="altTitles"
-                class="text-input"
-                placeholder="e.g. do, dɔ, odo "
-                value="{{ $definition->altTitles }}"
-                autocomplete="off">
-            <label for="altTitles">Alternate titles or spellings (seperated by ",")</label>
-        </div>
-
-        {{-- Type --}}
+        {{-- Sub type --}}
         <div class="row">
             @include('forms.definition.subtypes', ['subType' => $definition->rawSubType])
             <label for="subType">Sub type</label>
@@ -105,7 +92,7 @@
                 type="text"
                 name="relations[language]"
                 class="text-input remote"
-                value="{{ $languageValue }}">
+                value="{{ $definition->languages->implode('code', ',') }}">
             <label for="languages">
                 Languages that use this word. Start typing and select a language from the list.
                 You can drag these around (the first will be considred the "main" language).

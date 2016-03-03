@@ -23,13 +23,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasParamsTrait as HasParams;
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
-use App\Traits\ValidatableTrait as Validatable;
 use App\Traits\ObfuscatableTrait as Obfuscatable;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Definition extends Model
 {
-    use CamelCaseAttrs, Exportable, Obfuscatable, Searchable, SoftDeletes, Validatable, HasParams;
+    use CamelCaseAttrs, Exportable, Obfuscatable, Searchable, SoftDeletes, HasParams;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
     CONST TYPE_PHRASE = 10;     // Proverbs, sayings, etc.
@@ -37,6 +36,10 @@ class Definition extends Model
 
     CONST STATE_HIDDEN = 0;     // Hidden definition.
     CONST STATE_VISIBLE = 10;   // Default state.
+
+    CONST RATING_DEFAULT = 1;       // Default rating.
+    CONST RATING_HAS_LITERAL = 5;   // Rating for definitions with literal translations.
+    CONST RATING_FULL_TRANS = 10;   // Rating for definitions with literal translations & meanings.
 
     CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
     CONST SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.
@@ -193,17 +196,6 @@ class Definition extends Model
         'title' => 'string',
         'type' => 'integer',
         'params' => 'array',
-    ];
-
-    /**
-     *
-     */
-    public $validationRules = [
-        'title' => 'required|string|min:2',
-        'alt_titles' => 'string|min:2',
-        'type' => 'integer',
-        'sub_type' => 'string',
-        'state' => 'integer'
     ];
 
     /**

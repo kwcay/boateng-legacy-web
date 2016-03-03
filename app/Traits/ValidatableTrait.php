@@ -1,4 +1,9 @@
-<?php namespace App\Traits;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved
+ *
+ */
+namespace App\Traits;
 
 use Validator;
 
@@ -16,4 +21,3 @@ trait ValidatableTrait
         return Validator::make($data, (new static)->validationRules);
     }
 }
-

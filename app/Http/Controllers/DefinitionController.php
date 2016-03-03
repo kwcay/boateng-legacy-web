@@ -119,16 +119,8 @@ class DefinitionController extends Controller
         return $this->createType(Definition::TYPE_WORD, $langCode);
     }
 
-    public function createName($langCode) {
-        return $this->createType(Definition::TYPE_NAME, $langCode);
-    }
-
     public function createPhrase($langCode) {
         return $this->createType(Definition::TYPE_PHRASE, $langCode);
-    }
-
-    public function createPoem($langCode) {
-        return $this->createType(Definition::TYPE_POEM, $langCode);
     }
 
     public function createStory($langCode) {
@@ -149,8 +141,7 @@ class DefinitionController extends Controller
         }
 
         // Retrieve new definition data.
-        $data = Request::only(['title', 'altTitles', 'type', 'subType', 'state', 'relations']);
-        $data['state'] = Auth::guest() ? Definition::STATE_VISIBLE : $data['state'];
+        $data = Request::only(['type', 'subType', 'relations']);
 
         $return = Request::input('next') == 'continue' ? 'edit' : 'index';
 
@@ -186,7 +177,6 @@ class DefinitionController extends Controller
 
         return view('forms.definition.default', [
             'definition' => $definition,
-            'languageValue' => implode(',', $items),
             'languageOptions' => $options
         ]);
 	}
@@ -206,11 +196,8 @@ class DefinitionController extends Controller
         }
 
         $data = Request::only([
-            'title', 'altTitles', 'type', 'subType', 'state', 'relations'
+            'subType', 'relations'
         ]);
-
-        $data['type'] = $definition->rawType;
-        $data['state'] = $definition->rawState;
 
         $return = Request::has('add') ? 'add' : 'index';
 
@@ -227,19 +214,37 @@ class DefinitionController extends Controller
      */
     private function save(Definition $def, array $data, $return)
     {
-        // Validate input data
-        $test = Definition::validate($data);
-        if ($test->fails())
+        // Make sure we have valid titles.
+        $titles = [];
+        $titleStr = trim(@$data['relations']['titleStr']);
+        foreach (@explode(',', $titleStr) as $title)
         {
-            // Flash input data to session
+            $title = trim($title);
+
+            if (strlen($title)) {
+                $titles[] = $title;
+            }
+        }
+
+        if (!count($titles))
+        {
+            // Flash input data to session.
             Request::flashExcept('_token');
 
+            // Notify the user of their mistake.
+            Session::push('messages', 'Please double-check the spelling of your definition.');
+
             // Return to form
-            return back()->withErrors($test);
+            return back();
         }
 
         // Pull relations.
         $relations = (array) Arr::pull($data, 'relations');
+
+        // Save titles.
+        // TODO.
+        Session::push('messages', 'TODO: save definitions');
+        return back();
 
         // Check languages, suggest other languages (esp. parents)
         if (isset($relations['language']))
@@ -270,6 +275,9 @@ class DefinitionController extends Controller
                 }
             }
         }
+
+        // Set rating.
+        // TODO.
 
         // Update definition details.
         $def->fill($data);
