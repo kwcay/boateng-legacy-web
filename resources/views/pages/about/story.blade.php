@@ -14,7 +14,8 @@
 
         <div class="row">
             <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center">
-                I started Di Nkɔmɔ in 2014 to help myself learn <a href="/twi">Twi</a>,
+                I started Di Nkɔmɔ in 2014 to help myself learn
+                <a href="{{ route('language.show', ['code' => 'twi']) }}">Twi</a>,
                 my native language. With time, I realized that Twi has hidden gems that are not
                 directly translatable into English. As do many other languages, they require
                 context&mdash;a cultural context. And so, in the hopes of capturing and documenting
@@ -48,7 +49,11 @@
 
                 <div class="event-details">
                     <h1>Innovation Challenge</h1>
-                    <p>Hearing other people's ideas at the Ken_Ya Innovate contest serves as inspiration.</p>
+                    <p>
+                        Hearing other people's ideas at the
+                        <a href="https://socialinnovationchallenges.splashthat.com/" target="_blank">Ken_Ya Innovate</a>
+                        challenge serves as inspiration.
+                    </p>
                     <span class="date">June 2015</span>
                 </div>
             </div>
@@ -59,7 +64,10 @@
 
                 <div class="event-details">
                     <h1>Trip to Ghana</h1>
-                    <p>Learning Dagbani, idea expands to include words and concepts from other languages.</p>
+                    <p>
+                        Learning <a href="{{ route('language.show', ['code' => 'dag']) }}">Dagbani</a>,
+                        idea expands to include words and concepts from other languages.
+                    </p>
                     <span class="date">May 2014</span>
                 </div>
             </div>

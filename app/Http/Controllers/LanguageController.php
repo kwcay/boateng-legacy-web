@@ -54,12 +54,12 @@ class LanguageController extends Controller
 
         // Retrieve first definition.
         if ($total > 0) {
-            $first = $lang->definitions()->orderBy('created_at', 'asc')->first();
+            $first = $lang->definitions()->with('titles')->orderBy('created_at', 'asc')->first();
         }
 
         // Retrieve latest definition.
         if ($total > 1) {
-            $latest = $lang->definitions()->orderBy('created_at', 'desc')->first();
+            $latest = $lang->definitions()->with('titles')->orderBy('created_at', 'desc')->first();
         }
 
         // Retrieve random definition.

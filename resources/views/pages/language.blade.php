@@ -71,14 +71,14 @@
                             @if ($first)
                             The first word was
                             <a href="{{ $first->uri }}">
-                                {{ $first->title }}
+                                {{ $first->titles[0]->title }}
                             </a>
                             @endif
 
                             @if ($latest)
                             , and the latest word is
                             <a href="{{ $latest->uri }}">
-                                {{ $latest->title }}
+                                {{ $latest->titles[0]->title }}
                             </a>
                             @endif
                         .
@@ -88,7 +88,7 @@
                     <li>
                         <i class="fa-li fa fa-asterisk"></i>
                         <a href="{{ $random->uri }}">
-                            {{ $random->title }}
+                            {{ $random->titles[0]->title }}
                         </a>
 
                         is a random word in {{ $lang->name }}.

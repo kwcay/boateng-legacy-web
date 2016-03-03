@@ -364,7 +364,7 @@ class Definition extends Model
         $query = $lang instanceof Language ? $lang->definitions() : static::query();
 
         // Return a random definition.
-        return $query->with('languages', 'translations')->orderByRaw('RAND()')->first();
+        return $query->with('languages', 'translations', 'titles')->orderByRaw('RAND()')->first();
     }
 
 
