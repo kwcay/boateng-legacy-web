@@ -23,7 +23,7 @@
 
         {!! csrf_field() !!}
         <input type="hidden" name="type" value="{{ $type }}">
-        <input type="hidden" name="relations[language][]" value="{{ $lang->code }}">
+        <input type="hidden" name="languages[]" value="{{ $lang->code }}">
 
         @yield('form')
 

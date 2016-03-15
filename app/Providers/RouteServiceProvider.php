@@ -14,11 +14,6 @@ class RouteServiceProvider extends ServiceProvider {
 	 */
 	protected $namespace = 'App\Http\Controllers';
 
-    /**
-     * Namespace for API controller.
-     */
-    protected $apiNamespace = 'App\Http\Controllers\API\v01';
-
 	/**
 	 * Define your route model bindings, pattern filters, etc.
 	 *
@@ -35,17 +30,17 @@ class RouteServiceProvider extends ServiceProvider {
 	}
 
 	/**
-	 * Define the routes for the application.
+	 * Defines the routes for the application.
 	 *
 	 * @param  \Illuminate\Routing\Router  $router
 	 * @return void
 	 */
 	public function map(Router $router)
 	{
-        // API routes.
+        // Routes for API v0.1
 		$router->group([
-            'prefix' => '0.1',
-            'namespace' => $this->apiNamespace,
+            'prefix' => 'api/0.1',
+            'namespace' => 'App\Http\Controllers\API\v01',
             'middleware' => ['api.headers'/*, 'api.auth'*/]],
             function($router) {
     			require app_path('Http/Routes/API/0.1.php');

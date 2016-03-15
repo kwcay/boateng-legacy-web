@@ -12,6 +12,7 @@ use Illuminate\Support\Collection;
 
 use App\Http\Requests;
 use App\Models\Country;
+use App\Models\Alphabet;
 use App\Models\Definition;
 use App\Models\Definition\Name;
 use App\Models\Definition\Phrase;
@@ -288,6 +289,10 @@ class ApiController extends Controller
             {
                 case 'user':
                     $model = null;
+                    break;
+
+                case 'alphabet':
+                    $model = new Alphabet;
                     break;
 
                 case 'language':

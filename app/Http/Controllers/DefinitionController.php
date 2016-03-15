@@ -19,6 +19,7 @@ use Illuminate\Support\Arr;
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
+use App\Models\DefinitionTitle as Title;
 use App\Models\Definitions\Word;
 
 class DefinitionController extends Controller
@@ -140,8 +141,57 @@ class DefinitionController extends Controller
             return redirect(route('home'));
         }
 
+        // Check definition titles.
+        if (!$titles = $this->getTitles(Request::input('titleStr'), Request::input('titles'))) {
+            return back();
+        }
+
+        // Check translations.
+        if (!$translations = $this->getTranslations(Request::input('translations'))) {
+            return back();
+        }
+
+        // Check languagees
+        if (!$languageData = $this->getLanguages(Request::input('languages'), $titles[0]->title)) {
+            return back();
+        }
+        $languages = $languageData[0];
+        $mainLanguage = $languageData[1];
+
+        // Attach language alphabet to titles.
+        if ($mainLanguage && $mainLanguage->alphabets)
+        {
+            dd($mainLanguage->alphabets);
+
+            foreach ($titles as $title)
+            {
+                if (!$title->alphabetId) {
+                    $title->alphabetId = null;
+                }
+            }
+        }
+
+        // Set rating. This will change depending on the data related to this record.
+        $definition->rating = Definition::RATING_DEFAULT;
+
+
+
         // Retrieve new definition data.
-        $data = Request::only(['type', 'subType', 'relations']);
+        $data = Request::only(['type', 'subType', 'titleStr', 'languages', 'relations']);
+
+        // Definition subtype.
+        // ...
+
+        // Check translation relations.
+        $translations = [];
+        if (isset($data['translations']))
+        {
+
+        }
+
+        if (empty($translations)) {
+
+        }
 
         $return = Request::input('next') == 'continue' ? 'edit' : 'index';
 
@@ -195,9 +245,7 @@ class DefinitionController extends Controller
             throw new \Exception(Lang::get('errors.resource_not_found'), 404);
         }
 
-        $data = Request::only([
-            'subType', 'relations'
-        ]);
+        $data = Request::only(['subType', 'titleStr', 'languages', 'relations']);
 
         $return = Request::has('add') ? 'add' : 'index';
 
@@ -207,81 +255,33 @@ class DefinitionController extends Controller
     /**
      * Shortcut to create a new definition or save an existing one.
      *
-     * @param object $def       Definition object.
-     * @param array $data       Definition details to update.
-     * @param string $return    Relative URI to redirect to.
+     * @param object $definition    Definition object.
+     * @param array $data           Definition details to update.
+     * @param string $return        Relative URI to redirect to.
      * @return mixed
      */
-    private function save(Definition $def, array $data, $return)
+    private function save(Definition $definition, array $data, $return)
     {
-        // Make sure we have valid titles.
-        $titles = [];
-        $titleStr = trim(@$data['relations']['titleStr']);
-        foreach (@explode(',', $titleStr) as $title)
-        {
-            $title = trim($title);
-
-            if (strlen($title)) {
-                $titles[] = $title;
-            }
-        }
-
-        if (!count($titles))
-        {
-            // Flash input data to session.
-            Request::flashExcept('_token');
-
-            // Notify the user of their mistake.
-            Session::push('messages', 'Please double-check the spelling of your definition.');
-
-            // Return to form
-            return back();
-        }
+        // TODO: move each step to its own method, and let the "store" and "update" methods
+        // decide how to save the definition and its relations.
 
         // Pull relations.
         $relations = (array) Arr::pull($data, 'relations');
+
+        // Main language
+        $mainLanguage = null;
+
+        // Update definition details.
+        // $definition->fill($data);
+        // $definition->save();
 
         // Save titles.
         // TODO.
         Session::push('messages', 'TODO: save definitions');
         return back();
 
-        // Check languages, suggest other languages (esp. parents)
-        if (isset($relations['language']))
-        {
-            // Make sure we have an array.
-            $relations['language']  = is_array($relations['language'])
-                ? $relations['language'] :
-                @explode(',', $relations['language']);
-
-            foreach ($relations['language'] as $code)
-            {
-                if ($lang = Language::findByCode($code))
-                {
-                    // Check if the language has a parent, and
-                    // whether that parent is already in the list.
-                    if (strlen($lang->parentCode) >= 3
-                        && !in_array($lang->parentCode, $relations['language'])
-                        && $lang->parent)
-                    {
-                        $relations['language'][] = $lang->parent->code;
-
-                        // Notify the user of the change
-                        Session::push('messages',
-                            '<em>'. $lang->parent->name .'</em> is the parent language for <em>'.
-                            $lang->name .'</em>, and was added to the list of languages the word <em>'.
-                            $data['title'] .'</em> exists in.');
-                    }
-                }
-            }
-        }
-
         // Set rating.
         // TODO.
-
-        // Update definition details.
-        $def->fill($data);
-        $def->save();
 
         // Update translations and other relations.
         $def->updateRelations($relations);
@@ -331,20 +331,112 @@ class DefinitionController extends Controller
         return redirect(route('home'));
 	}
 
-    public function getDefinition()
+    /**
+     * Retrieves definition titles from request.
+     *
+     * @param string $titleStr
+     * @param array $titleArray
+     * @return array|false
+     */
+    protected function getTitles($titleStr = null, $titleArray = null)
     {
-        $type = Request::input('type');
+        $titles = [];
 
-        switch ($type)
+        // Retrieve titles from title string.
+        $titleStr = trim($titleStr);
+        if (strlen($titleStr))
         {
-            case Definition::TYPE_WORD:
-                $def = new Word;
-                break;
+            foreach (@explode(',', $titleStr) as $title)
+            {
+                $title = trim($title);
 
-            default:
-                $def = new Definition;
+                if (strlen($title)) {
+                    $titles[] = new Title([
+                        'title' => $title
+                    ]);
+                }
+            }
         }
 
-        return $def;
+        // Retrieve other, individually specified titles.
+        // ...
+
+        if (!count($titles))
+        {
+            // Flash input data to session.
+            Request::flashExcept('_token');
+
+            // Notify the user of their mistake.
+            Session::push('messages', 'Please double-check the spelling of your definition.');
+
+            return false;
+        }
+
+        return $titles;
+    }
+
+    /**
+     * Retrieves language data from request.
+     *
+     * @param array|string $raw
+     * @param string $title
+     */
+    protected getLanguages($raw, $title)
+    {
+        // Make sure we have an array of language codes.
+        $raw = is_array($raw) ? $raw : @explode(',', $raw);
+
+        $languages = [];
+        $mainLanguage = null;
+
+        foreach ($raw as $code)
+        {
+            if ($lang = Language::findByCode($code))
+            {
+                $languages[] = $lang->id;
+
+                if (!$mainLanguage) {
+                    $mainLanguage = $lang;
+                }
+
+                // Check if the language has a parent, and whether that parent is already
+                // in the list.
+                if (strlen($lang->parentCode) >= 3 && !in_array($lang->parentCode, $languages) && $lang->parent)
+                {
+                    $languages[] = $lang->parent->id;
+
+                    // Notify the user of the change
+                    Session::push('messages',
+                        '<em>'. $lang->parent->name .'</em> is the parent language for <em>'.
+                        $lang->name .'</em>, and was added to the list of languages the expression <em>'.
+                        $title .'</em> exists in.');
+                }
+            }
+        }
+
+        // Make sure we have a valid language.
+        if (!count($langauges))
+        {
+            // Flash input data to session.
+            Request::flashExcept('_token');
+
+            // Notify the user of their mistake.
+            Session::push('messages', 'Make sure to select a valid language, or enter a 3-letter language code.');
+
+            return false;
+        }
+
+        return [$languages, $mainLanguage];
+    }
+
+    /**
+     * Retrieves translation data from the request.
+     *
+     * @param array $translations
+     * @return array|false
+     */
+    protected function getTranslations($translations)
+    {
+        return false;
     }
 }

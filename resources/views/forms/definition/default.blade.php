@@ -29,14 +29,14 @@
         <div class="row">
             <input
                 type="text"
-                name="relations[titleStr]"
-                id="relations[titleStr]"
+                name="titleStr"
+                id="titleStr"
                 class="text-input"
                 placeholder="e.g. ɔdɔ, dɔ"
                 value="{{ $definition->titles->implode('title', ', ') }}"
                 autocomplete="off"
                 required>
-            <label for="relations[titleStr]">Spellings (separated by &ldquo;,&rdquo;)</label>
+            <label for="titleStr">Spellings (separated by &ldquo;,&rdquo;)</label>
         </div>
 
         {{-- Sub type --}}
@@ -90,7 +90,7 @@
             <input
                 id="languages"
                 type="text"
-                name="relations[language]"
+                name="languages"
                 class="text-input remote"
                 value="{{ $definition->languages->implode('code', ',') }}">
             <label for="languages">

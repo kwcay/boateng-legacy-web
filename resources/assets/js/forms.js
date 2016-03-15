@@ -95,7 +95,7 @@ var Forms =
             load: function(query, callback) {
                 if (!query.trim().length) return callback();
                 $.ajax({
-                    url: App.root +'0.1/language/search/' + App.urlencode(query.trim()),
+                    url: App.root +'api/0.1/language/search/' + App.urlencode(query.trim()),
                     type: 'GET',
                     error: function() {
                         callback();
@@ -147,7 +147,7 @@ var Forms =
 
             // Build endpoint.
             // var endpoint = App.root + '0.1';
-            var endpoint = '/0.1';
+            var endpoint = '/api/0.1';
             if (options.langCode) {
                 endpoint += '/word/search/' + App.urlencode(query) + '?lang='+ options.langCode;
             } else {
@@ -269,7 +269,7 @@ var Forms =
 
         // Start ajax request
         $.ajax({
-            url: App.root +'/definition/search/' + App.urlencode(query),
+            url: App.root +'/api/definition/search/' + App.urlencode(query),
             type: 'POST',
 
             // onError

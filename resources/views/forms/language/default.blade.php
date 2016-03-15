@@ -73,6 +73,19 @@
 				<label for="parent">Parent language (if applicable)</label>
 			</div>
 
+            {{-- Alphabets --}}
+            <div class="row">
+                <input
+                    id="alphabets"
+                    type="text"
+                    name="alphabets"
+                    class="text-input"
+                    value="{{ $lang->alphabets->implode('name', ',') }}">
+                <label for="alphabets">
+                    Alphabets this language is written in
+                </label>
+            </div>
+
 			{{-- Country list --}}
 			<div class="row">
                 <select id="countries" name="countries[]" class="en-text-input" multiple disabled>
@@ -109,6 +122,10 @@
 	</section>
 
     <script type="text/javascript">
+
+    $('#alphabets').alphabetField({
+        selectizeItems: {!! json_encode($lang->alphabets->pluck('name', 'code')->toArray()) !!}
+    });
 
     // Setup language search for "parent" field
     @if ($lang->parent)

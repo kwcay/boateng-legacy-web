@@ -9,7 +9,7 @@
         <div class="col-lg-6 col-lg-offset-3">
             <input
                 type="text"
-                name="title"
+                name="titleStr"
                 class="text-input center"
                 placeholder="your word"
                 autocomplete="off"
@@ -33,7 +33,7 @@
         <div class="col-lg-6 col-lg-offset-3">
             <input
                 type="text"
-                name="relations[practical][eng]"
+                name="translations[practical][eng]"
                 class="en-text-input center"
                 placeholder="your translation"
                 autocomplete="off"

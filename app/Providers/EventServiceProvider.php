@@ -1,4 +1,9 @@
-<?php namespace App\Providers;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
+ *
+ */
+namespace App\Providers;
 
 use Illuminate\Contracts\Events\Dispatcher as DispatcherContract;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -11,9 +16,9 @@ class EventServiceProvider extends ServiceProvider {
 	 * @var array
 	 */
 	protected $listen = [
-		'event.name' => [
-			'EventListener',
-		],
+        // 'Illuminate\Routing\Events\RouteMatched' => [
+        //     'App\Listeners\ApiAuthentication',
+        // ],
 	];
 
 	/**
@@ -28,5 +33,4 @@ class EventServiceProvider extends ServiceProvider {
 
 		//
 	}
-
 }

@@ -1,4 +1,9 @@
-<?php namespace App\Providers;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
+ *
+ */
+namespace App\Providers;
 
 use App\Models\Language;
 use App\Models\Definition;
@@ -19,6 +24,9 @@ class AppServiceProvider extends ServiceProvider {
 		// Register event listeners for Definition model.
 		Definition::saving(['\\App\\Models\\Definition', 'checkAttributes']);
 		Definition::saved(['\\App\\Models\\Definition', 'importRelations']);
+
+        // Set application timezone.
+        date_default_timezone_set('UTC');
 	}
 
 	/**

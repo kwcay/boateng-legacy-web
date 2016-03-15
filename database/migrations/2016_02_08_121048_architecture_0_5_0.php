@@ -60,7 +60,7 @@ class Architecture050 extends Migration
 
             $table->string('name', 100)->unique();
             $table->string('transliteration', 100)->unique();
-            $table->string('code', 10)->unique();
+            $table->string('code', 20)->unique();
             $table->string('script_code', 4)->nullable();
             $table->text('letters')->nullable();
 

@@ -130,7 +130,7 @@ class LanguageController extends Controller
 	public function edit($id)
 	{
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
+        if (!$lang = $this->getLanguage($id, ['parent', 'alphabets'])) {
             abort(404, Lang::get('errors.resource_not_foud'));
         }
 
@@ -265,17 +265,15 @@ class LanguageController extends Controller
     /**
      * Shortcut to retrieve a language object.
      *
-     * @param string $id                    Either the ISO 639-3 language code or language ID.
+     * @param string $id    Either the ISO 639-3 language code or language ID.
      * @return \App\Models\Language|null
      */
-    private function getLanguage($id)
+    private function getLanguage($id, array $embed = ['parent'])
     {
         // Performance check.
         if (empty($id) || is_numeric($id) || !is_string($id)) {
             return null;
         }
-
-        $embed = ['parent'];
 
         // Find langauge by code.
         if (strlen($id) == 3 || strlen($id) == 7) {

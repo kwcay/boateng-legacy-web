@@ -36,7 +36,7 @@ var DiNkomoDictionary = function(options) {
     form.clearedContainer = form.container.html();
 
     // API endpoint.
-    form.endpoint = '/0.1/search/:query';
+    form.endpoint = '/api/0.1/search/:query';
 
     /**
      * On submit event listener for search form.
@@ -61,8 +61,7 @@ var DiNkomoDictionary = function(options) {
 
         // Start ajax request
         $.ajax({
-            url: form.endpoint.replace(':query', App.urlencode(query)) +
-                    '?lang='+ (options.langCode || ''),
+            url: form.endpoint.replace(':query', App.urlencode(query)) + '?lang='+ (options.langCode || ''),
             type: 'GET',
             error: form.onSubmitError,
             success: function(results)

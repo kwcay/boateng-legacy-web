@@ -8,20 +8,38 @@
     /**
      *
      */
-    $.fn.langSearch = function( options ) {
+    $.fn.alphabetField = function( options ) {
 
         // Add "remote" class.
         this.addClass('remote');
+
+        // Convert selectize items to array of objects
+        if (typeof options.selectizeItems === 'object')
+        {
+            if (!Array.isArray(options.selectizeItems) || typeof options.selectizeItems.length === undefined)
+            {
+                var itemsArray = [];
+
+                for (var key in options.selectizeItems)
+                {
+                    var item = {};
+                    item[key] = options.selectizeItems[key];
+                    itemsArray.push(item);
+                }
+
+                options.selectizeItems = itemsArray;
+            }
+        }
 
         // Initialize selectize input.
         var $select = this.selectize({
             valueField: 'code',
             labelField: 'name',
-            searchField: ['code', 'name', 'altNames'],
+            searchField: ['code', 'name', 'transliteration'],
             options: options.selectizeItems,
             plugins: (options.selectizePlugins || null),
             create: false,
-            maxItems: (options.maxItems || 1),
+            maxItems: (options.maxItems || 10),
             render: {
 
                 /**
@@ -36,28 +54,12 @@
                 /**
                  *
                  */
-                score: function(search) {
-                    return this.getScoreFunction(search);
-                },
-
-                /**
-                 *
-                 */
                 option: function(item, escape)
                 {
-                    // Language title
-                    var title   = item.name;
-                    if (item.parentName && item.parentName.length)
-                        title += ' (a sub-language of '+ item.parentName +')';
-
-                    // Add a short desciption
-                    var hint = '';
-                    if (item.altNames && item.altNames.length)
-                        hint = '<span class="hint"> &mdash; Also known as '+ item.altNames + '</span>';
-
                     // Return formatted HTML
                     return  '<div>' +
-                                '<span class="label">' + escape(title) + '</span>' + hint +
+                                '<span class="label">' + escape(item.name) + '</span>' +
+                                ' (' + escape(item.code) + ')' +
                             '</div>';
                 }
             },
@@ -68,7 +70,7 @@
             load: function(query, callback) {
                 if (!query.trim().length) return callback();
                 $.ajax({
-                    url: App.root +'api/0.1/language/search/' + App.urlencode(query.trim()),
+                    url:  '/api/0.1/alphabet/search/' + App.urlencode(query.trim()),
                     type: 'GET',
                     error: function() {
                         callback();
