@@ -61,6 +61,6 @@ class DefinitionTitle extends Model
      * Definition this title belongs to.
      */
     public function definition() {
-        return $this->belongsTo('App\Models\Definition');
+        return $this->belongsTo('App\Models\Definition', 'definition_id');
     }
 }

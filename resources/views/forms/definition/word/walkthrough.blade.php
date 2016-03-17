@@ -12,6 +12,7 @@
                 name="titleStr"
                 class="text-input center"
                 placeholder="your word"
+                value="{{ Request::old('titleStr') }}"
                 autocomplete="off"
                 required>
         </div>
@@ -33,9 +34,10 @@
         <div class="col-lg-6 col-lg-offset-3">
             <input
                 type="text"
-                name="translations[practical][eng]"
+                name="translations[eng][practical]"
                 class="en-text-input center"
                 placeholder="your translation"
+                value="{{ Request::old('translations[eng][practical]') }}"
                 autocomplete="off"
                 required>
         </div>

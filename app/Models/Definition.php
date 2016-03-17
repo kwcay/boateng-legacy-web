@@ -169,6 +169,7 @@ class Definition extends Model
     protected $appends = [
         'translation',
         'language',
+        'titlesArray',
         'uri',
         'editUri',
         'uniqueId',
@@ -202,14 +203,14 @@ class Definition extends Model
      * Defines the translation relations.
      */
     public function translations() {
-        return $this->hasMany('App\Models\Translation');
+        return $this->hasMany('App\Models\Translation', 'definition_id');
     }
 
     /**
      * Defines the title relations.
      */
     public function titles() {
-        return $this->hasMany('App\Models\DefinitionTitle');
+        return $this->hasMany('App\Models\DefinitionTitle', 'definition_id');
     }
 
     /**
@@ -734,6 +735,10 @@ class Definition extends Model
      */
     public function getRawSubTypeAttribute($subType = '') {
         return $this->getAttributeFromArray('sub_type');
+    }
+
+    public function getTitlesArrayAttribute($titles) {
+        return $this->titles;
     }
 
     /**

@@ -49,22 +49,22 @@
         <div class="row">
             <input
                 type="text"
-                id="relations[practical][eng]"
-                name="relations[practical][eng]"
+                id="translations[eng][practical]"
+                name="translations[eng][practical]"
                 class="en-text-input"
                 placeholder="e.g. love"
                 value="{{ $definition->getPracticalTranslation('eng') }}"
                 autocomplete="off"
                 required>
-            <label for="relations[practical][eng]">English translation</label>
+            <label for="translations[eng][practical]">English translation</label>
         </div>
 
         {{-- Meaning --}}
         <div class="row">
             <input
                 type="text"
-                id="relations[meaning][eng]"
-                name="relations[meaning][eng]"
+                id="translations[eng][meaning]"
+                name="translations[eng][meaning]"
                 class="en-text-input"
                 placeholder="e.g. an intense feeling of deep affection."
                 value="{{ $definition->getMeaning('eng') }}"
@@ -76,13 +76,13 @@
         <div class="row">
             <input
                 type="text"
-                id="relations[literal][eng]"
-                name="relations[literal][eng]"
+                id="translations[eng][literal]"
+                name="translations[eng][literal]"
                 class="en-text-input"
                 placeholder=""
                 value="{{ $definition->getLiteralTranslation('eng') }}"
                 autocomplete="off">
-            <label for="relations[literal][eng]">Literal translation</label>
+            <label for="translations[eng][literal]">Literal translation</label>
         </div>
 
         {{-- Language --}}
