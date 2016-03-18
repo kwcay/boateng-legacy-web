@@ -134,9 +134,9 @@ class DefinitionImportFactory extends DataImportFactory
             $attributes = [
                 'type' => Definition::getTypeConstant($data['type']),
                 'sub_type' => Definition::getSubTypeAbbreviation(Definition::getTypeConstant($data['type']), $data['subType']),
-                'main_language_code' => array_get($data, 'mainLanguageCode', null),
+                'main_language_code' => array_get($data, 'mainLanguageCode', $languages[0]->code),
                 'rating' => array_get($data, 'rating', 1),
-                'meta' => array_get($data, 'meta', null),
+                'meta' => array_get($data, 'meta', ''),
                 'created_at' => array_get($data, 'createdAt', null),
                 'deleted_at' => array_get($data, 'deletedAt', null),
             ];
