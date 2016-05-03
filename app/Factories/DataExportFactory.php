@@ -13,6 +13,17 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 class DataExportFactory extends BaseFactory
 {
     /**
+     * Exportable resources.
+     *
+     * @var array
+     */
+    protected $supportedResources = [
+        'alphabet',
+        'definition',
+        'language'
+    ];
+
+    /**
      * Supported export formats.
      */
     protected $exportFormats = [
@@ -31,14 +42,14 @@ class DataExportFactory extends BaseFactory
     /**
      * Exports a resource to file.
      *
-     * @throws \Exception
      * @param string $type
      * @param string $format
+     * @throws \Exception
      */
     public function exportResource($type, $format)
     {
         // Quick check.
-        if (!in_array($type, ['language', 'definition'])) {
+        if (!in_array($type, $this->supportedResources)) {
             throw new Exception('Invalid Resource Type.');
         }
 
@@ -55,7 +66,7 @@ class DataExportFactory extends BaseFactory
             'meta' => [
                 'type' => $type,
                 'total' => count($data),
-                'schema' => '1',
+                'schema' => 'dinkomo-1',
             ],
             'data' => []
         ];

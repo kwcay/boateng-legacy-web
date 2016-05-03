@@ -68,7 +68,7 @@ trait ExportableTrait
      */
     public static function getExportFormats() {
         $static = new static;
-        return isset($static->exportFormats) ? $static->exportFormats : ['yml', 'yaml', 'json'];
+        return isset($static->exportFormats) ? $static->exportFormats : ['yml', 'yaml', 'js', 'json'];
     }
 
     /**

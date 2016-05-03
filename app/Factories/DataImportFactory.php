@@ -325,7 +325,7 @@ class DataImportFactory extends BaseFactory
         // Build checksum.
         switch (@$this->dataMeta['schema'])
         {
-            case '1':
+            case 'dinkomo-1':
             default:
                 $checksum = md5(json_encode($this->dataArray));
         }

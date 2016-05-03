@@ -29,10 +29,6 @@ class ExportController extends Controller
         $this->exportHelper = $helper;
         $this->request = $request;
         $this->response = $response;
-
-        // Define the directory to upload data.
-        // @deprecated 2016-05-03
-        $this->dataPath = storage_path() .'/app/import';
     }
 
     /**

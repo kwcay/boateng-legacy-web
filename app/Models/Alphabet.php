@@ -6,19 +6,25 @@
 namespace App\Models;
 
 use DB;
-
 use Illuminate\Database\Eloquent\Model;
-
+use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
 use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Alphabet extends Model
 {
-    use CamelCaseAttrs, ObfuscatesID, Searchable;
+    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable;
 
     CONST SEARCH_LIMIT = 10;        // Maximum number of results to return on a search.
     CONST SEARCH_QUERY_LENGTH = 3;  // Minimum length of search query.
+
+    /**
+     * The attributes that should be hidden from the model's array form when exporting data to file.
+     */
+    protected $hiddenFromExport = [
+        'id',
+    ];
 
 
     //
