@@ -13,52 +13,95 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 class DataImportFactory extends BaseFactory
 {
     /**
+     * Supported file formats
+     *
+     * @var array
+     */
+    protected $supportedFormats = [
+        'bgl',
+        'dict', 'dictd',
+        'gz', 'tar.gz', 'nko',
+        'js', 'json',
+        'yml', 'yaml',
+        'xml',
+    ];
+
+    /**
+     * Supported MIME types
+     *
+     * @var array
+     */
+    protected $supportedMimeTypes = [
+        'text/plain'
+    ];
+
+    /**
      * Directory to temporarily store data files.
+     *
+     * @var string
      */
     private $rawDataPath;
 
     /**
-     * ...
+     *
+     *
+     * @var File
      */
     protected $rawDataFile;
 
     /**
      *
+     *
+     * @var string
      */
     protected $fileName;
 
     /**
      * Original format of data (e.g. YAML, JSON, etc.)
+     *
+     * @var string
      */
-    protected $rawFormat;
+    protected $dataFormat;
 
     /**
      * Stores the raw data file to be parsed.
+     *
+     * @var string
      */
     protected $rawDataString;
 
     /**
      * Fully parsed data object (including meta data).
+     *
+     * @var array
      */
     protected $rawDataObject;
 
     /**
      * Model associated with data.
+     *
+     * @var string
      */
     protected $dataModel;
 
     /**
      * Meta data
+     *
+     * @var array
      */
     protected $dataMeta;
 
     /**
      * Array containing a set of data.
+     *
+     * @var array
      */
     protected $dataSet;
 
     /**
      *
+     *
+     * @var array
      */
     protected $messages = [];
 
@@ -71,8 +114,16 @@ class DataImportFactory extends BaseFactory
     }
 
     /**
+     * Sets the path where data files should be uploaded to.
      *
-     *
+     * @param string $directory
+     */
+    public function setDataPath($path)
+    {
+        $this->rawDataPath = $path;
+    }
+
+    /**
      * @param File $rawDataFile
      * @return DataImportFactory
      */
@@ -80,88 +131,87 @@ class DataImportFactory extends BaseFactory
     {
         $this->setDataFile($rawDataFile);
 
-        // Combined data files.
-
-        // TODO: handle ZIP/TAR files. Create new DataImportFactory object for each data file.
-        // and call this method on each object. Maybe: wrap each in their own try/catch block.
-
         // Move data file so we can manipulate it.
         $movedDataFile = $this->rawDataFile->move($this->rawDataPath, $this->getFileName());
 
-        // Read contents of file.
-        $this->setRawData(file_get_contents($this->rawDataPath .'/'. $this->getFileName()));
-
-        // Delete uploaded file.
-        unlink($this->rawDataPath .'/'. $this->getFileName());
-
-        // Parse raw data into an array.
-        $this->parseRawData();
-
-        // We're now ready to import the data set.
-        return $this->importDataSet();
-    }
-
-    /**
-     *
-     */
-    public function parseRawData()
-    {
-        // Performance check.
-        if (strlen($this->rawDataString) < 1) {
-            throw new Exception('No data received.');
-        }
-
-        switch ($this->rawFormat)
+        // Open/parse data file.
+        switch ($this->dataFormat)
         {
-            case 'yml':
-            case 'yaml':
-                $this->rawDataObject = Yaml::parse($this->rawDataString);
-                break;
-
+            // Single data file.
             case 'js':
             case 'json':
-                $this->rawDataObject = json_decode($this->rawDataString, true);
-                if (json_last_error() != JSON_ERROR_NONE) {
-                    throw new Exception(json_last_error_msg());
-                }
+            case 'yml':
+            case 'yaml':
+
+                // Read contents of file.
+                $this->setRawData(file_get_contents($this->rawDataPath .'/'. $this->getFileName()));
+
+                // Parse raw data into an array.
+                $this->parseRawData();
+
+                // Import a simple data set
+                $results = $this->importDataSet();
                 break;
 
+            // Combined data file.
+            case 'gz':
+            case 'tar.gz':
+            case 'nko':
+                throw new Exception('Combined data file not yet supported :/');
+                break;
+
+            // Other unsupported formats.
             case 'bgl':
             case 'dict':
             case 'dictd':
             case 'xml':
             default:
-                throw new Exception('Unsuported data format.');
+                throw new Exception('"'. $this->dataFormat .'" format not yet supported :/');
                 break;
         }
 
-        // Check that data really was parsed.
-        if (!is_array($this->rawDataObject) || empty($this->rawDataObject)) {
-            throw new Exception('Invalid data.');
+        // Delete uploaded file.
+        unlink($this->rawDataPath .'/'. $this->getFileName());
+
+        return $results;
+    }
+
+    /**
+     * @param File $rawDataFile
+     */
+    public function setDataFile(File $rawDataFile)
+    {
+        $this->rawDataFile = $rawDataFile;
+
+        // Performance check.
+        if (!in_array($this->rawDataFile->getMimeType(), $this->supportedMimeTypes))
+        {
+            throw new Exception('Unsupported MIME type :/');
         }
 
-        // Check format of array.
-        if (!isset($this->rawDataObject['meta']) || !isset($this->rawDataObject['data'])) {
-            throw new Exception('Invalid data format.');
+        // We use the file extension only for parsing purposes.
+        $this->setDataFormat($this->rawDataFile->getClientOriginalExtension());
+
+        // Reset other properties.
+        $this->fileName = null;
+        $this->rawDataObject = null;
+        $this->dataMeta = null;
+        $this->dataArray = null;
+        $this->dataModel = null;
+    }
+
+    /**
+     * @param string $format
+     */
+    public function setDataFormat($format)
+    {
+        $this->dataFormat = strtolower(preg_replace('/[^a-z\.]/i', '', $format));
+
+        // Performance check
+        if (!in_array($this->dataFormat, $this->supportedFormats))
+        {
+            throw new Exception('Unsupported file format :/');
         }
-
-        $this->setDataMeta($this->rawDataObject['meta']);
-        $this->setDataArray($this->rawDataObject['data']);
-        if (!is_array($this->dataArray) || empty($this->dataArray)) {
-            throw new Exception('No data found.');
-        }
-
-        // Data integrity check.
-        if (!$this->isDataIntegral()) {
-            throw new Exception('Checksum failed.');
-        }
-
-        // Set data model.
-        $this->setDataModel();
-
-        // Remove duplicates.
-        $this->dataArray = array_map('unserialize',
-                                array_unique(array_map('serialize', $this->dataArray)));
     }
 
     /**
@@ -184,50 +234,6 @@ class DataImportFactory extends BaseFactory
     }
 
     /**
-     * Sets the path where data files should be uploaded to.
-     *
-     * @param string $directory
-     */
-    public function setDataPath($path)
-    {
-        $this->rawDataPath = $path;
-    }
-
-    /**
-     * Sets the data file to work with.
-     *
-     * @param File $rawDataFile
-     */
-    public function setDataFile(File $rawDataFile)
-    {
-        $this->rawDataFile = $rawDataFile;
-
-        // Performance check.
-        // TODO: check mime type for ZIP/TAR files as well.
-        if ($this->rawDataFile->getMimeType() != 'text/plain') {
-            throw new Exception('Invalid file type.');
-        }
-
-        // We use the file extension only for parsing purposes.
-        $this->setDataFormat($this->rawDataFile->getClientOriginalExtension());
-
-        // Reset other properties.
-        // TODO
-    }
-
-    /**
-     *
-     *
-     * @param string $format
-     */
-    public function setDataFormat($format)
-    {
-        $this->rawFormat = strtolower(preg_replace('/[^a-z]/i', '', $format));
-    }
-
-    /**
-     *
-     *
      * @param string $raw
      */
     public function setRawData($raw)
@@ -236,7 +242,108 @@ class DataImportFactory extends BaseFactory
     }
 
     /**
+     * Parses a single, native data file.
+     */
+    public function parseRawData()
+    {
+        // Performance check.
+        if (strlen($this->rawDataString) < 1) {
+            throw new Exception('No data received.');
+        }
+
+        switch ($this->dataFormat)
+        {
+            case 'yml':
+            case 'yaml':
+                $this->rawDataObject = Yaml::parse($this->rawDataString);
+                break;
+
+            case 'js':
+            case 'json':
+                $this->rawDataObject = json_decode($this->rawDataString, true);
+                if (json_last_error() != JSON_ERROR_NONE) {
+                    throw new Exception(json_last_error_msg());
+                }
+                break;
+        }
+
+        // Check that data really was parsed.
+        if (!is_array($this->rawDataObject) || empty($this->rawDataObject)) {
+            throw new Exception('Invalid data.');
+        }
+
+        // Check format of array.
+        if (!isset($this->rawDataObject['meta']) || !isset($this->rawDataObject['data'])) {
+            throw new Exception('Invalid data structure.');
+        }
+
+        $this->setDataMeta($this->rawDataObject['meta']);
+        $this->setDataArray($this->rawDataObject['data']);
+        if (!is_array($this->dataArray) || empty($this->dataArray)) {
+            throw new Exception('No data found.');
+        }
+
+        // Data integrity check.
+        if (!$this->isDataIntegral()) {
+            throw new Exception('Checksum failed.');
+        }
+
+        // Set data model.
+        $this->setDataModel();
+
+        // Remove duplicates.
+        $this->dataArray = array_map('unserialize',
+                                array_unique(array_map('serialize', $this->dataArray)));
+    }
+
+    /**
+     * @param array $meta
+     */
+    public function setDataMeta(array $meta)
+    {
+        $this->dataMeta = $meta;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function setDataArray(array $data)
+    {
+        $this->dataArray = $data;
+    }
+
+    /**
+     * Checksum.
+     */
+    public function isDataIntegral()
+    {
+        // Performance check.
+        if (!$this->hasValidDataFile() || !isset($this->dataMeta['checksum'])) {
+            return false;
+        }
+
+        // Build checksum.
+        switch (@$this->dataMeta['schema'])
+        {
+            case '1':
+            default:
+                $checksum = md5(json_encode($this->dataArray));
+        }
+
+        return $this->dataMeta['checksum'] === $checksum;
+    }
+
+    /**
+     * Returns true if $this->rawDataFile is a valid file.
      *
+     * @return bool
+     */
+    public function hasValidDataFile() {
+        return $this->rawDataFile instanceof File;
+    }
+
+    /**
+     * Determines the data type and associates it with the related model.
      *
      * @param mixed $model
      */
@@ -273,64 +380,6 @@ class DataImportFactory extends BaseFactory
         elseif (is_string($model)) {
             $this->dataModel = $model;
         }
-    }
-
-    /**
-     * ...
-     *
-     * @param array $meta
-     */
-    public function setDataMeta(array $meta)
-    {
-        $this->dataMeta = $meta;
-    }
-
-    /**
-     * ...
-     *
-     * @param array $data
-     */
-    public function setDataArray(array $data)
-    {
-        $this->dataArray = $data;
-    }
-
-    /**
-     * @param string $msg
-     */
-    public function setMessage($msg)
-    {
-        array_push($this->messages, $msg);
-    }
-
-    /**
-     * @return array
-     */
-    public function getMessages() {
-        return $this->messages;
-    }
-
-    /**
-     * Returns true if $this->rawDataFile is a valid file.
-     *
-     * @return bool
-     */
-    public function hasValidDataFile() {
-        return $this->rawDataFile instanceof File;
-    }
-
-    public function isDataIntegral()
-    {
-        // Performance check.
-        if (!$this->hasValidDataFile() || !isset($this->dataMeta['checksum'])) {
-            return false;
-        }
-
-        // Build checksum.
-        // TODO: support different checksum algorithms.
-        $checksum = md5(json_encode($this->dataArray));
-
-        return $this->dataMeta['checksum'] === $checksum;
     }
 
     /**
@@ -371,5 +420,20 @@ class DataImportFactory extends BaseFactory
         // TODO: check for infinite loops?
 
         return $factory->importDataSet();
+    }
+
+    /**
+     * @param string $msg
+     */
+    public function setMessage($msg)
+    {
+        array_push($this->messages, $msg);
+    }
+
+    /**
+     * @return array
+     */
+    public function getMessages() {
+        return $this->messages;
     }
 }

@@ -2,9 +2,8 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
- * @deprecated
  */
-namespace App\Http\Controllers\Data\v050;
+namespace App\Http\Controllers;
 
 use Session;
 use Redirect;
@@ -15,44 +14,25 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 use App\Factories\DataExportFactory as ExportHelper;
-use App\Factories\DataImportFactory as ImportHelper;
 
-class DataController extends Controller
+class ExportController extends Controller
 {
-
     /**
      * Injects the dependencies into the controller.
      *
-     * @param ImportHelper $helper
+     * @param ExportHelper $helper
      * @param Request $request
      * @param Response $response
      */
-    public function __construct(ImportHelper $import, ExportHelper $export, Request $request, Response $response)
+    public function __construct(ExportHelper $helper, Request $request, Response $response)
     {
-        $this->importHelper = $import;
-        $this->exportHelper = $export;
+        $this->exportHelper = $helper;
         $this->request = $request;
         $this->response = $response;
 
         // Define the directory to upload data.
+        // @deprecated 2016-05-03
         $this->dataPath = storage_path() .'/app/import';
-    }
-    /**
-     * Imports data into the database.
-     */
-    public function import()
-    {
-        // Use the DataImportFactory to parse and import data into the database.
-        try
-        {
-            $result = $this->importHelper->importFromFile($this->request->file('data'));
-        }
-        catch (Exception $e)
-        {
-            return redirect(route('admin.import'))->withMessages([$e->getMessage()]);
-        }
-
-        return redirect(route('admin.import'))->withMessages($result->getMessages());
     }
 
     /**

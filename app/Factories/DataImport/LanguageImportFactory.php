@@ -22,9 +22,6 @@ class LanguageImportFactory extends DataImportFactory
      */
     public function importDataSet()
     {
-        // Stores loaded alphabets.
-        $loadedAlphabets = [];
-
         // Loop through languages and import them one by one.
         $saved = $skipped = 0;
         foreach ($this->dataArray as $langArray)
@@ -49,7 +46,8 @@ class LanguageImportFactory extends DataImportFactory
             // Add alphabets.
             if (array_key_exists('alphabets', $langArray) && is_array($langArray['alphabets']))
             {
-
+                // TODO
+                // ...
             }
 
             // Or try to find alphabets for this language.
