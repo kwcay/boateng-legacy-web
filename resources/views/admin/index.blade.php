@@ -19,9 +19,9 @@
 	    <li>
 	        <a href="{{ route('admin.export') }}">Export data.</a>
 	    </li>
+	    <li>
+	        <a href="{{ route('admin.backup') }}">Backups.</a>
+	    </li>
 	</ul>
-
-    <h2>Backups</h2>
-    Coming soon...
 
 @stop
