@@ -19,6 +19,7 @@ class DataExportFactory extends BaseFactory
      */
     protected $supportedResources = [
         'alphabet',
+        'country',
         'definition',
         'language'
     ];

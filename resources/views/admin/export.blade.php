@@ -14,7 +14,12 @@
 	<h2>Alphabets</h2>
 	    Available in
         <a href="{{ route('export.resource', ['resource' => 'alphabet', 'format' => 'json']) }}">json</a> and
-        <a href="{{ route('export.resource', ['resource' => 'alphabet', 'format' => 'yaml']) }}">yaml</a> formats.
+        <a href="{{ route('export.resource', ['resource' => 'alphabet', 'format' => 'yaml']) }}">yaml</a> formats
+
+	<h2>Countries</h2>
+	    Available in
+        <a href="{{ route('export.resource', ['resource' => 'country', 'format' => 'json']) }}">json</a> and
+        <a href="{{ route('export.resource', ['resource' => 'country', 'format' => 'yaml']) }}">yaml</a> formats.
 
     <h2>Definitions</h2>
         Available in
