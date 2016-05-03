@@ -201,7 +201,7 @@ class DefinitionController extends Controller
 
         else
         {
-            Session::push('messages', 'The details for <em>'. $definition->title .
+            Session::push('messages', 'The details for <em>'. $definition->titles[0]->title .
                 '</em> were successfully saved, thanks :)');
 
             $rdir = Request::input('next') == 'continue' ?
@@ -284,22 +284,26 @@ class DefinitionController extends Controller
         $definition->rating = Definition::RATING_DEFAULT;
 
         // TODO: update rating based on related data...
-
-        Session::push('messages', 'TODO: update relations...');
-        return redirect($definition->uri);
+        // ...
 
         // Create definition.
         if (!$definition->save()) {
             abort(500, 'Could not save definition.');
         }
 
-        // Save relations.
+        // Update titles.
+        $definition->titles()->delete();
         $definition->titles()->saveMany($titles);
+
+        // Update translations.
+        $definition->translations()->delete();
         $definition->translations()->saveMany($translations);
+
+        // Update languages.
         $definition->languages()->sync($languages);
 
         // TODO: handle AJAX requests.
-        Session::push('messages', 'The details for <em>'. $definition->title .
+        Session::push('messages', 'The details for <em>'. $definition->titles[0]->title .
             '</em> were successfully saved, thanks :)');
 
         $rdir = Request::input('next') == 'continue' ?
@@ -382,7 +386,7 @@ class DefinitionController extends Controller
         }
 
         // Delete record
-        Session::push('messages', '<em>'. $def->title .'</em> has been succesfully deleted.');
+        Session::push('messages', '<em>'. $def->titles[0]->title .'</em> has been succesfully deleted.');
         $def->delete();
 
         return redirect(route('home'));

@@ -14,4 +14,15 @@
         <option value="prefix"{{ $subType == 'prefix' ? ' selected' : '' }}>prefix</option>
         <option value="suffix"{{ $subType == 'suffix' ? ' selected' : '' }}>suffix</option>
     </optgroup>
+    <optgroup label="Phrases">
+        <option value="expression"{{ $subType == 'expression' ? ' selected' : '' }}>
+            common expression
+        </option>
+        <option value="phrase"{{ $subType == 'phrase' ? ' selected' : '' }}>
+            simple phrase
+        </option>
+        <option value="proverb"{{ $subType == 'proverb' ? ' selected' : '' }}>
+            proverb or saying
+        </option>
+    </optgroup>
 </select>

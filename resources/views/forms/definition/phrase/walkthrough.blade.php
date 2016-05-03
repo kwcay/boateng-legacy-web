@@ -9,9 +9,10 @@
         <div class="col-sm-12">
             <input
                 type="text"
-                name="title"
+                name="titleStr"
                 class="text-input center"
                 placeholder="your saying or expression"
+                value="{{ Request::old('titleStr') }}"
                 autocomplete="off"
                 required>
         </div>
@@ -38,9 +39,10 @@
         <div class="col-sm-12">
             <input
                 type="text"
-                name="relations[practical][eng]"
+                name="translations[eng][practical]"
                 class="en-text-input center"
                 placeholder="your translation"
+                value="{{ Request::old('translations[eng][practical]') }}"
                 autocomplete="off"
                 required>
         </div>

@@ -14,6 +14,41 @@
     </small>
 </h3>
 
+{{-- Append meaning --}}
+@if ($def->hasMeaning('eng'))
+    {{ $def->getMeaning('eng') }}.
+    <br>
+@endif
+
+{{-- Append literal meaning --}}
+@if ($def->hasLiteralTranslation('eng'))
+    <span class="meta-label">&rarr; Literally:</span>
+    <span class="meta-data">{{ $def->getLiteralTranslation('eng') }}</span>
+    <br>
+@endif
+
+{{-- Append alternative spellings --}}
+@if (count($def->titles) > 1)
+    <span class="meta-label">&rarr; Spellings:</span>
+    <span class="meta-data">{{ $def->titles->implode('title', ', ') }}</span>
+    <br>
+@endif
+
+{{-- Add language information --}}
+@if (count($def->languages) > 1)
+    <span class="meta-label">&rarr; Also an expression in:</span>
+
+    <span class="meta-data">
+        @foreach ($def->languages as $otherLang)
+            @if ($otherLang->code != $lang->code)
+                <a href="{{ $otherLang->uri }}">{{ $otherLang->name }}</a>
+            @endif
+        @endforeach
+    </span>
+
+    <br>
+@endif
+
 {{-- Word by word lookup --}}
 <span class="meta-label">
     Lookup the <a href="{{ $lang->uri }}">{{ $lang->name }}</a> words:
