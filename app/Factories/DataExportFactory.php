@@ -54,7 +54,8 @@ class DataExportFactory extends BaseFactory
         $export = [
             'meta' => [
                 'type' => $type,
-                'total' => count($data)
+                'total' => count($data),
+                'schema' => '1',
             ],
             'data' => []
         ];

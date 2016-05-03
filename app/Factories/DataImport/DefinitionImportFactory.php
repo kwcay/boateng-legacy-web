@@ -17,46 +17,33 @@ use App\Factories\DataImportFactory;
 class DefinitionImportFactory extends DataImportFactory
 {
     /**
+     * Stores loaded languages.
+     */
+    private $_languages = [];
+
+    /**
      *
      */
     public function importDataSet()
     {
-        // Stores loaded languages.
-        $loadedLanguages = [];
-
         // Loop through definitions and import them one by one.
         $saved = $skipped = 0;
         foreach ($this->dataArray as $data)
         {
-            // Determine definition titles.
+            // Definition titles
             $titles = [];
+            $titleData = [];
 
-            if (array_key_exists('titles', $data) && is_array($data['titles']))
-            {
-                foreach ($data['titles'] as $titleData) {
-                    $titles[] = new DefinitionTitle($titleData);
-                }
+            if (array_key_exists('titles', $data) && is_array($data['titles'])) {
+                $titleData = $data['titles'];
+            } elseif (array_key_exists('titlesArray', $data) && is_array($data['titlesArray'])) {
+                $titleData = $data['titlesArray'];
             }
 
-            elseif (array_key_exists('title', $data) && is_string($data['title']))
+            if (count($titleData))
             {
-                $titles[] = new DefinitionTitle([
-                    'title' => trim($data['title'])
-                ]);
-
-                // Create a title record for each altTitle from the old format.
-                if (array_key_exists('altTitles', $data) && is_string($data['altTitles']))
-                {
-                    $altTitles = @explode(',', $data['altTitles']);
-
-                    foreach ($altTitles as $alt)
-                    {
-                        $alt = trim($alt);
-
-                        if (strlen($alt)) {
-                            $titles[] = new DefinitionTitle(['title' => $alt]);
-                        }
-                    }
+                foreach ($titleData as $title) {
+                    $titles[] = new DefinitionTitle($title);
                 }
             }
 
@@ -75,16 +62,13 @@ class DefinitionImportFactory extends DataImportFactory
                 $literal    = isset($data['translation']['literal']) ? $data['translation']['literal'] : [];
                 $meaning    = isset($data['translation']['meaning']) ? $data['translation']['meaning'] : [];
 
-                foreach ($practical as $lang => $practicalTranslation)
+                foreach ($practical as $langCode => $practicalTranslation)
                 {
-                    // Make sure we have a 3-letter code.
-                    $langCode = $lang == 'en' ? 'eng' : $lang;
-
                     $translations[] = new Translation([
                         'language' => $langCode,
-                        'practical' => $practical[$lang],
-                        'literal' => $literal[$lang],
-                        'meaning' => $meaning[$lang]
+                        'practical' => $practical[$langCode],
+                        'literal' => $literal[$langCode],
+                        'meaning' => $meaning[$langCode]
                     ]);
                 }
             }
@@ -102,20 +86,20 @@ class DefinitionImportFactory extends DataImportFactory
                 foreach ($data['language'] as $code => $name)
                 {
                     // Check if language has already been loaded.
-                    if (isset($loadedLanguages[$code])) {
-                        $languages[] = $loadedLanguages[$code];
+                    if (isset($this->_languages[$code])) {
+                        $languages[] = $this->_languages[$code];
                     }
 
                     // If not, attempt to retrieve it from the database.
                     elseif ($lang = Language::findByCode($code)) {
                         $languages[] = $lang;
-                        $loadedLanguages[$code] = $lang;
+                        $this->_languages[$code] = $lang;
                     }
 
                     // If the language is not in our database, try to create a record for it.
                     elseif ($lang = Language::create(['code' => $code, 'name' => $name])) {
                         $languages[] = $lang;
-                        $loadedLanguages[] = $lang;
+                        $this->_languages[] = $lang;
                     }
 
                     else {
@@ -143,7 +127,7 @@ class DefinitionImportFactory extends DataImportFactory
 
             // Create a definition object and save it right away, so that we can add the
             // relations afterwards.
-            $definition = Definition::create($attributes);
+            $definition = Definition::firstOrCreate($attributes);
 
             // Add definition titles.
             $definition->titles()->saveMany($titles);
@@ -154,19 +138,21 @@ class DefinitionImportFactory extends DataImportFactory
             // Add data relation.
             if (array_key_exists('data', $data) && is_array($data['data']))
             {
-
+                // TODO ...
             }
 
             // Add media relation.
             if (array_key_exists('media', $data) && is_array($data['media']))
             {
-
+                // TODO ...
             }
 
             // Add tag relations.
             if (array_key_exists('tags', $data))
             {
                 $tags = @explode(',', $data['tags']);
+
+                // TODO ...
             }
 
             // Add languages.
@@ -181,7 +167,7 @@ class DefinitionImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' definitions added to database.');
+        $this->setMessage('Updated '. $saved .' of '. ($saved + $skipped) .' definitions.');
 
         return $this;
     }
