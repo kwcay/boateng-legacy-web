@@ -56,6 +56,7 @@
     @foreach (@explode(' ', $def->titles[0]->title) as $word)
         <a
             href="{{ route('language.show', ['code' => $def->mainLanguage->code, 'q' => $word]) }}"
+            target="_blank"
             style="margin: 0 5px;">
 
             {{ $word }}
