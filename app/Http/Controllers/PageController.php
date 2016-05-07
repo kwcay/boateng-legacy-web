@@ -70,6 +70,14 @@ class PageController extends Controller
                 ];
                 break;
 
+            case 'sponsors':
+                $view = 'pages.about.sponsors';
+                break;
+
+            case 'team':
+                $view = 'pages.about.team.index';
+                break;
+
             default:
                 $view = 'pages.about.index';
                 $data = [
@@ -89,6 +97,12 @@ class PageController extends Controller
     }
     public function story() {
         return $this->about('story');
+    }
+    public function team() {
+        return $this->about('team');
+    }
+    public function sponsors() {
+        return $this->about('sponsors');
     }
 
     /**

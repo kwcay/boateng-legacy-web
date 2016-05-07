@@ -13,6 +13,8 @@ Route::get('about', 'PageController@about')->name('about');
 Route::get('about/author', 'PageController@author')->name('author');
 Route::get('about/in-numbers', 'PageController@stats')->name('stats');
 Route::get('about/story', 'PageController@story')->name('story');
+Route::get('about/supporters', 'PageController@sponsors')->name('sponsors');
+Route::get('about/team', 'PageController@team')->name('team');
 Route::get('+', 'PageController@contribute')->name('contribute');
 Route::get('sitemap/{topic?}', 'PageController@sitemap')->name('sitemap');
 
