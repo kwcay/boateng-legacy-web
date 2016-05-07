@@ -222,7 +222,7 @@ class ApiController extends Controller
                 'priority' => 0.8
             ]);
 
-            foreach ($language->definitions as $definition)
+            foreach ($language->definitions()->limit(200)->orderBy('created_at', 'desc')->get() as $definition)
             {
                 // Only add definitions where the main language is the current one.
                 if ($definition->mainLanguage->code != $language->code) {
