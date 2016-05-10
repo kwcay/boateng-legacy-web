@@ -1,11 +1,9 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
+ * Copyright Di Nkomo(TM) 2016, all rights reserved
  *
- *
- * TODO: determine if this controller is needed...
  */
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use DB;
 use URL;
@@ -23,25 +21,25 @@ use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Translation;
 use App\Models\Definitions\Word;
+use App\Http\Controllers\Controller;
 use App\Models\DefinitionTitle as Title;
 
 class DefinitionController extends Controller
 {
-    public function __construct()
-    {
-        // Enable the auth middleware.
-		// $this->middleware('auth', ['except' => ['show', 'search', 'exists']]);
-    }
-
     /**
      *
      */
     public function index()
     {
         $limit = 30;
-        $order = 'desc';
+        $orderBy = 'id';
+        $orderDir = 'desc';
 
-        return view('');
+        $definitions = Definition::take($limit)->orderBy($orderBy, $orderDir)->get();
+
+        return view('admin.definitions.index', [
+            'definitions' => $definitions
+        ]);
     }
 
     /**

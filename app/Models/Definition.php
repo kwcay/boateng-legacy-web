@@ -108,6 +108,7 @@ class Definition extends Model
     public $ratings = [
         0 => 'hidden',
         1 => 'visible',
+        5 => 'reviewed',
     ];
 
     /**

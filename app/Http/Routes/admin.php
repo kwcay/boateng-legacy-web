@@ -10,15 +10,17 @@ Route::get('/',         ['as' => 'admin', 'uses' => 'AdminController@index']);
 Route::get('import',    ['as' => 'admin.import', 'uses' => 'AdminController@import']);
 Route::get('export',    ['as' => 'admin.export', 'uses' => 'AdminController@export']);
 Route::get('backup',    ['as' => 'admin.backup', 'uses' => 'AdminController@backup']);
-// Route::get('list/def',  'AdminController@getDefinitionList')->name('admin.list.definitions');
-Route::get('list/def',  ['as' => 'admin.list.definitions', 'uses' => 'AdminController@getDefinitionList']);
-// Route::get('list/lang', 'AdminController@getLanguageList')->name('admin.list.languages');
-Route::get('list/lang', ['as' => 'admin.list.languages', 'uses' => 'AdminController@getLanguageList']);
+Route::get('list/def',  'AdminController@getDefinitionList')->name('admin.list.definitions');
+// Route::get('list/def',  ['as' => 'admin.list.definitions', 'uses' => 'AdminController@getDefinitionList']);
+Route::get('list/lang', 'AdminController@getLanguageList')->name('admin.list.languages');
+// Route::get('list/lang', ['as' => 'admin.list.languages', 'uses' => 'AdminController@getLanguageList']);
 
 // Resources
-Route::resource('language',     'LanguageController');
-Route::resource('definition',   'DefinitionController');
-Route::resource('translation',  'TranslationController');
+Route::resource('alphabets',    'Admin\AlphabetController');
+Route::resource('countries',    'Admin\CountryController');
+Route::resource('languages',    'Admin\LanguageController');
+Route::resource('definitions',  'Admin\DefinitionController');
+Route::resource('translations', 'Admin\TranslationController');
 Route::resource('audio',        'AudioController');
 
 // Resource import.
