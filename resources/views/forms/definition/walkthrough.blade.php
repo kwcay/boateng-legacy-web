@@ -31,8 +31,8 @@
         <br>
         <br>
         <div class="row center">
-            <input type="submit" name="next" value="continue">
-            <input type="submit" name="next" value="finish">
+            <input type="submit" name="return" value="continue">
+            <input type="submit" name="return" value="finish">
             <input type="button" name="cancel" value="return" onclick="return confirm('Cancel?') ? App.redirect('') : false;">
         </div>
     </form>

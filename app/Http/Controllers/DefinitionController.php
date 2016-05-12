@@ -217,7 +217,7 @@ class DefinitionController extends Controller
             Session::push('messages', 'The details for <em>'. $definition->titles[0]->title .
                 '</em> were successfully saved, thanks :)');
 
-            $rdir = Request::input('next') == 'continue' ?
+            $rdir = Request::input('return') == 'continue' ?
                 route('definition.edit', ['id' => $definition->uniqueId]) :
                 $definition->uri;
 

@@ -9,6 +9,7 @@
         <option value="pro"{{ $subType == 'pro' ? ' selected' : '' }}>pronoun</option>
         <option value="n"{{ $subType == 'n' ? ' selected' : '' }}>noun</option>
         <option value="v"{{ $subType == 'v' ? ' selected' : '' }}>verb</option>
+        <option value="intv"{{ $subType == 'intv' ? ' selected' : '' }}>intransitive verb</option>
     </optgroup>
     <optgroup label="Morphemes">
         <option value="prefix"{{ $subType == 'prefix' ? ' selected' : '' }}>prefix</option>

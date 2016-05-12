@@ -10,7 +10,7 @@ trait ObfuscatableTrait
     protected static $obfuscator;
 
     /**
-     * @var
+     * @var string
      */
     protected $_id;
 
@@ -31,8 +31,11 @@ trait ObfuscatableTrait
      */
     public function getUniqueId()
     {
-        if (is_null($this->_id)) {
-            $this->_id   = $this->id > 0 ? static::getObfuscator()->encode($this->id) : 0;
+        if (is_null($this->_id))
+        {
+            $this->obfuscatorId = $this->obfuscatorId ?: 3;
+            $this->_id = $this->id > 0 ?
+                static::getObfuscator()->encode($this->obfuscatorId, $this->id) : 0;
         }
 
         return $this->_id;
@@ -58,7 +61,7 @@ trait ObfuscatableTrait
         if (is_string($id) && !is_numeric($id) && strlen($id) >= 8)
         {
             if ($decoded = static::getObfuscator()->decode($id)) {
-                $id = $decoded[0];
+                $id = $decoded[1];
             }
 
             else {

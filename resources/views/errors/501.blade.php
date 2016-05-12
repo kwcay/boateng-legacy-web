@@ -7,7 +7,7 @@
 	<header>~·~</header>
     <section>
         <div class="large">501</div>
-        Not Implemented.
+        {{ trans('errors.not_implemented') }}
     </section>
 </body>
 </html>

@@ -39,12 +39,4 @@ class CountryController extends Controller
      *
      */
     protected $defaultOrderDirection = 'asc';
-
-    /**
-     *
-     */
-    protected function getModelQueryBuilder()
-    {
-        return Country::query();
-    }
 }

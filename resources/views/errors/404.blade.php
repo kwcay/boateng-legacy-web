@@ -7,7 +7,7 @@
 	<header>~·~</header>
     <section>
         <div class="large">404</div>
-        Not Found.
+        {{ trans('errors.resource_not_found') }}
     </section>
 </body>
 </html>

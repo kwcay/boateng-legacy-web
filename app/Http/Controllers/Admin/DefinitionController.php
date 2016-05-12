@@ -55,14 +55,6 @@ class DefinitionController extends Controller
     protected $defaultOrderDirection = 'desc';
 
     /**
-     *
-     */
-    protected function getModelQueryBuilder()
-    {
-        return Definition::query();
-    }
-
-    /**
      * Displays the word or phrase page, with similar definitions.
      *
      * @param string $code  ISO 639-3 language code.
@@ -253,7 +245,7 @@ class DefinitionController extends Controller
 	{
         // Retrieve the definition object.
         if (!$definition = Definition::find($id)) {
-            abort(404, Lang::get('errors.resource_not_found'));
+            abort(404);
         }
 
         // Language arrays for selectize plugin.
@@ -270,8 +262,8 @@ class DefinitionController extends Controller
             ];
         }
 
-        return view('forms.definition.default', [
-            'definition' => $definition,
+        return view('admin.definition.edit', [
+            'model' => $definition,
             'languageOptions' => $options
         ]);
 	}
@@ -287,7 +279,7 @@ class DefinitionController extends Controller
 	{
         // Retrieve the definition object.
         if (!$definition = Definition::find($id)) {
-            throw new \Exception(Lang::get('errors.resource_not_found'), 404);
+            abort(404);
         }
 
         // Check definition titles.
@@ -307,6 +299,9 @@ class DefinitionController extends Controller
 
         $languages = $languageData[0];
         $mainLanguage = $languageData[1];
+
+        // Definition type
+        $definition->type = Request::input('type');
 
         // Definition sub-type.
         $definition->subType = Request::input('subType');
@@ -337,11 +332,28 @@ class DefinitionController extends Controller
         Session::push('messages', 'The details for <em>'. $definition->titles[0]->title .
             '</em> were successfully saved, thanks :)');
 
-        $rdir = Request::input('next') == 'continue' ?
-            route('definition.edit', ['id' => $definition->uniqueId]) :
-            $definition->uri;
+        // Return URI
+        switch (Request::input('return'))
+        {
+            case 'admin':
+                $return = route('admin.definition.index');
+                break;
 
-        return redirect($rdir);
+            case 'edit':
+                $return = $definition->editUri;
+                break;
+
+            case 'continue':
+                $return = route('definition.edit', ['id' => $definition->uniqueId]);
+                break;
+
+            case 'finish':
+            case 'summary':
+            default:
+                $return = $definition->uri;
+        }
+
+        return redirect($return);
 	}
 
     /**
@@ -478,7 +490,7 @@ class DefinitionController extends Controller
         // Make sure we have an array of language codes.
         $raw = is_array($raw) ? $raw : @explode(',', $raw);
 
-        $languages = [];
+        $languages = $languageObjects = [];
         $mainLanguage = null;
 
         foreach ($raw as $code)
@@ -486,22 +498,10 @@ class DefinitionController extends Controller
             if ($lang = Language::findByCode($code))
             {
                 $languages[] = $lang->id;
+                $languageObjects[] = $lang;
 
                 if (!$mainLanguage) {
                     $mainLanguage = $lang;
-                }
-
-                // Check if the language has a parent, and whether that parent is already
-                // in the list.
-                if (strlen($lang->parentCode) >= 3 && !in_array($lang->parentCode, $languages) && $lang->parent)
-                {
-                    $languages[] = $lang->parent->id;
-
-                    // Notify the user of the change
-                    Session::push('messages',
-                        '<em>'. $lang->parent->name .'</em> is the parent language for <em>'.
-                        $lang->name .'</em>, and was added to the list of languages the expression <em>'.
-                        $title .'</em> exists in.');
                 }
             }
         }
@@ -516,6 +516,22 @@ class DefinitionController extends Controller
             Session::push('messages', 'Make sure to select a valid language, or enter a 3-letter language code.');
 
             return false;
+        }
+
+        // Check if the languages have a parents, and whether those parents are already
+        // in the list.
+        foreach ($languageObjects as $lang)
+        {
+            if (strlen($lang->parentCode) >= 3 && $lang->parent && !in_array($lang->parent->id, $languages))
+            {
+                $languages[] = $lang->parent->id;
+
+                // Notify the user of the change
+                Session::push('messages',
+                    '<em>'. $lang->parent->name .'</em> is the parent language for <em>'.
+                    $lang->name .'</em>, and was added to the list of languages the expression <em>'.
+                    $title .'</em> exists in.');
+            }
         }
 
         return [$languages, $mainLanguage];

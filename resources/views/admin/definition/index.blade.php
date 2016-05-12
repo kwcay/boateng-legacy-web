@@ -36,35 +36,30 @@
     <table class="table table-striped table-hover text-center">
         <thead>
             <tr>
-                <td>ID</td>
+                <td></td>
                 <td>Title</td>
-                <td>Language</td>
-                <td>Rating</td>
-                <td title="Date on which definition was added to database">
-                    Date
-                </td>
+                <td>Translation</td>
+                <td>Type</td>
             </tr>
         </thead>
 
         <tbody>
             @foreach ($paginator as $definition)
             <tr>
-                <td class="text-muted" title="# {{ $definition->id }}" style="cursor: normal">
-                    {{ $definition->uniqueId }}
+                <td>
+                    <span class="fa fa-square-o"></span>
                 </td>
                 <td>
-                    <a href="#">
+                    <a href="{{ route('admin.definition.edit', ['id' => $definition->uniqueId, 'next' => 'admin']) }}">
                         {{ $definition->titles->implode('title', ', ') }}
                     </a>
                 </td>
                 <td>
-                    {{ $definition->languages->implode('name', ', ') }}
+                    {{ $definition->getPracticalTranslation('eng') }}
                 </td>
                 <td>
-                    {{ $definition->rating }}
-                </td>
-                <td>
-                    {{ date('M Y', strtotime($definition->createdAt)) }}
+                    {{ $definition->subType }}
+                    ({{ $definition->type }})
                 </td>
             </tr>
             @endforeach

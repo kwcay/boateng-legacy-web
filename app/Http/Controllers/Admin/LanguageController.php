@@ -51,14 +51,6 @@ class LanguageController extends Controller
     protected $defaultOrderDirection = 'asc';
 
     /**
-     *
-     */
-    protected function getModelQueryBuilder()
-    {
-        return Language::query();
-    }
-
-    /**
      * Display the language page.
      *
      * @param string $id    Either the ISO 639-3 language code or language ID.

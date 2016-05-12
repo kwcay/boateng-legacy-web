@@ -70,6 +70,7 @@ class Definition extends Model
             'pro'   => 'pronoun',
             'n'     => 'noun',
             'v'     => 'verb',
+            'intv'  => 'intransitive verb',
 
             // Morphemes
             'prefix'     => 'prefix',
@@ -96,7 +97,7 @@ class Definition extends Model
      */
     public $defaultSubTypes = [
         0 => 'n',
-        10 => 'proverb',
+        10 => 'expression',
         30 => 'story',
     ];
 
@@ -120,6 +121,11 @@ class Definition extends Model
      *
      */
     public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
+
+    /**
+     * @var int
+     */
+    public $obfuscatorId = 77;
 
 
     //
@@ -876,7 +882,7 @@ class Definition extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('admin.definition.edit', ['id' => $this->getId()]);
+        return route('admin.definition.edit', ['id' => $this->getUniqueId(), 'next' => 'summary']);
     }
 
     /**

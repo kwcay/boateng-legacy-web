@@ -33,6 +33,11 @@ class Language extends Model
     private $markdown;
 
     /**
+     * @var int
+     */
+    public $obfuscatorId = 34;
+
+    /**
      * Attributes which aren't mass-assignable.
      */
     protected $guarded = ['id'];

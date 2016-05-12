@@ -20,6 +20,11 @@ class Alphabet extends Model
     CONST SEARCH_QUERY_LENGTH = 3;  // Minimum length of search query.
 
     /**
+     * @var int
+     */
+    public $obfuscatorId = 92;
+
+    /**
      * The attributes that should be hidden from the model's array form when exporting data to file.
      */
     protected $hiddenFromExport = [

@@ -40,12 +40,4 @@ class AlphabetController extends Controller
      *
      */
     protected $defaultOrderDirection = 'asc';
-
-    /**
-     *
-     */
-    protected function getModelQueryBuilder()
-    {
-        return Alphabet::query();
-    }
 }
