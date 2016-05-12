@@ -8,13 +8,13 @@
 
     <em>{{ App\Models\Translation::count() }}</em> translations and
     <em>{{ App\Models\Definition::count() }}</em>
-        <a href="{{ route('admin.definitions.index') }}">definitions</a> in
+        <a href="{{ route('admin.definition.index') }}">definitions</a> in
     <em>{{ App\Models\Language::count() }}</em>
-        <a href="{{ route('admin.languages.index') }}">languages</a>, written in
+        <a href="{{ route('admin.language.index') }}">languages</a>, written in
     <em>{{ App\Models\Alphabet::count() }}</em>
-        <a href="{{ route('admin.alphabets.index') }}">alphabets</a> spread accross
+        <a href="{{ route('admin.alphabet.index') }}">alphabets</a> spread accross
     <em>{{ App\Models\Country::count() }}</em>
-        <a href="{{ route('admin.countries.index') }}">countries</a>.
+        <a href="{{ route('admin.country.index') }}">countries</a>.
 
     <h2>Import/Export</h2>
 	<ul>

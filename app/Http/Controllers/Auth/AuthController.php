@@ -44,7 +44,7 @@ class AuthController extends Controller
                 break;
 
             default:
-                $this->redirectAfterLogout = $this->redirectPath = route('home');
+                $this->redirectAfterLogout = $this->redirectPath = route('admin.index');
         }
 
         // Enable the guest middleware.

@@ -21,25 +21,45 @@ use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Translation;
 use App\Models\Definitions\Word;
-use App\Http\Controllers\Controller;
 use App\Models\DefinitionTitle as Title;
+use App\Http\Controllers\Admin\BaseController as Controller;
 
 class DefinitionController extends Controller
 {
     /**
      *
      */
-    public function index()
+    protected $name = 'definition';
+
+    /**
+     *
+     */
+    protected $queryLimit = 50;
+
+    /**
+     *
+     */
+    protected $supportedOrderColumns = [
+        'id',
+        'createdAt',
+    ];
+
+    /**
+     *
+     */
+    protected $defaultOrderColumn = 'id';
+
+    /**
+     *
+     */
+    protected $defaultOrderDirection = 'desc';
+
+    /**
+     *
+     */
+    protected function getModelQueryBuilder()
     {
-        $limit = 30;
-        $orderBy = 'id';
-        $orderDir = 'desc';
-
-        $definitions = Definition::take($limit)->orderBy($orderBy, $orderDir)->get();
-
-        return view('admin.definitions.index', [
-            'definitions' => $definitions
-        ]);
+        return Definition::query();
     }
 
     /**

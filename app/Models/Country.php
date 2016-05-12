@@ -8,11 +8,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
+use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Country extends Model
 {
-    use CamelCaseAttrs, Exportable, Searchable;
+    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable;
 
     CONST SEARCH_LIMIT = 40;        // Maximum number of results to return on a search.
     CONST SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.

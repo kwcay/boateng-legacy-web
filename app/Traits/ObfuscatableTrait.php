@@ -39,11 +39,9 @@ trait ObfuscatableTrait
     }
 
     /**
-     * @return int|string   Obfuscated ID, or 0.
-     *
-     * @deprecated
+     * Accessor for $this->uniqueId.
      */
-    public function getId() {
+    public function getUniqueIdAttribute() {
         return $this->getUniqueId();
     }
 

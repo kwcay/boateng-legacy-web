@@ -32,7 +32,7 @@
 
                     @if (Auth::check())
                         <a
-                            href="{{ route('admin') }}"
+                            href="{{ route('admin.index') }}"
                             class="fa fa-cubes fa-fw"
                             title="Admin"
                             data-toggle="tooltip"></a>

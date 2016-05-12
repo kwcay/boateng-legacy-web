@@ -880,13 +880,6 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->uniqueId.
-     */
-    public function getUniqueIdAttribute() {
-        return $this->getUniqueId();
-    }
-
-    /**
      * Accessor for $this->resourceType.
      *
      * @return string

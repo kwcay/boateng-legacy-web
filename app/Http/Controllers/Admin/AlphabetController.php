@@ -6,23 +6,46 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Alphabet;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController as Controller;
 
 class AlphabetController extends Controller
 {
     /**
      *
      */
-    public function index()
+    protected $name = 'alphabet';
+
+    /**
+     *
+     */
+    protected $queryLimit = 20;
+
+    /**
+     *
+     */
+    protected $supportedOrderColumns = [
+        'id',
+        'name',
+        'code',
+        'scriptCode',
+        'createdAt',
+    ];
+
+    /**
+     *
+     */
+    protected $defaultOrderColumn = 'name';
+
+    /**
+     *
+     */
+    protected $defaultOrderDirection = 'asc';
+
+    /**
+     *
+     */
+    protected function getModelQueryBuilder()
     {
-        $limit = 30;
-        $orderBy = 'id';
-        $orderDir = 'desc';
-
-        $alphabets = Alphabet::take($limit)->orderBy($orderBy, $orderDir)->get();
-
-        return view('admin.alphabets.index', [
-            'alphabets' => $alphabets
-        ]);
+        return Alphabet::query();
     }
 }

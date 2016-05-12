@@ -16,32 +16,46 @@ use App\Models\Country;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Definitions\Word;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController as Controller;
 
 class LanguageController extends Controller
 {
-    public function __construct()
-    {
-        // Enable the auth middleware.
-		$this->middleware('auth', ['except' => ['index', 'show', 'search']]);
-    }
+    /**
+     *
+     */
+    protected $name = 'language';
 
     /**
-     * Lists languages.
      *
-     * @return View
      */
-    public function index()
+    protected $queryLimit = 20;
+
+    /**
+     *
+     */
+    protected $supportedOrderColumns = [
+        'id',
+        'code',
+        'name',
+        'createdAt',
+    ];
+
+    /**
+     *
+     */
+    protected $defaultOrderColumn = 'name';
+
+    /**
+     *
+     */
+    protected $defaultOrderDirection = 'asc';
+
+    /**
+     *
+     */
+    protected function getModelQueryBuilder()
     {
-        $limit = 30;
-        $orderBy = 'id';
-        $orderDir = 'desc';
-
-        $languages = Language::take($limit)->orderBy($orderBy, $orderDir)->get();
-
-        return view('admin.languages.index', [
-            'languages' => $languages
-        ]);
+        return Language::query();
     }
 
     /**

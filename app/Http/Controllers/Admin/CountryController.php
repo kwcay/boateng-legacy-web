@@ -6,23 +6,45 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Country;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController as Controller;
 
 class CountryController extends Controller
 {
     /**
      *
      */
-    public function index()
+    protected $name = 'country';
+
+    /**
+     *
+     */
+    protected $queryLimit = 20;
+
+    /**
+     *
+     */
+    protected $supportedOrderColumns = [
+        'id',
+        'name',
+        'code',
+        'createdAt',
+    ];
+
+    /**
+     *
+     */
+    protected $defaultOrderColumn = 'name';
+
+    /**
+     *
+     */
+    protected $defaultOrderDirection = 'asc';
+
+    /**
+     *
+     */
+    protected function getModelQueryBuilder()
     {
-        $limit = 30;
-        $orderBy = 'id';
-        $orderDir = 'desc';
-
-        $countries = Country::take($limit)->orderBy($orderBy, $orderDir)->get();
-
-        return view('admin.countries.index', [
-            'countries' => $countries
-        ]);
+        return Country::query();
     }
 }
