@@ -134,7 +134,7 @@ class DefinitionController extends Controller
         return $this->createType(Definition::TYPE_WORD, $langCode);
     }
 
-    public function createPhrase($langCode) {
+    public function createExpression($langCode) {
         return $this->createType(Definition::TYPE_EXPRESSION, $langCode);
     }
 
@@ -372,7 +372,7 @@ class DefinitionController extends Controller
                 break;
 
             case 'word':
-            case 'phrase':
+            case 'expression':
                 $return = route('definition.create.'. $return, ['lang' => $def->mainLanguage->code]);
                 break;
 

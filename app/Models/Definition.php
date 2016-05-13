@@ -14,7 +14,7 @@ use Illuminate\Support\Arr;
 use cebe\markdown\MarkdownExtra;
 use App\Models\Definitions\Poem;
 use App\Models\Definitions\Word;
-use App\Models\Definitions\Phrase;
+use App\Models\Definitions\Expression;
 use App\Models\Definitions\Story;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -310,7 +310,7 @@ class Definition extends Model
             case 'word':
                 return static::TYPE_WORD;
 
-            case 'phrase':
+            case 'expression':
                 return static::TYPE_EXPRESSION;
 
             case 'story':
@@ -882,7 +882,7 @@ class Definition extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('admin.definition.edit', ['id' => $this->getUniqueId(), 'next' => 'summary']);
+        return route('admin.definition.edit', ['id' => $this->getUniqueId(), 'return' => 'summary']);
     }
 
     /**

@@ -144,7 +144,7 @@ class DefinitionController extends Controller
         return $this->createType(Definition::TYPE_WORD, $langCode);
     }
 
-    public function createPhrase($langCode) {
+    public function createExpression($langCode) {
         return $this->createType(Definition::TYPE_EXPRESSION, $langCode);
     }
 
@@ -402,7 +402,7 @@ class DefinitionController extends Controller
                 break;
 
             case 'word':
-            case 'phrase':
+            case 'expression':
                 $return = route('definition.create.'. $return, ['lang' => $def->mainLanguage->code]);
                 break;
 
@@ -428,11 +428,30 @@ class DefinitionController extends Controller
             throw new \Exception(Lang::get('errors.resource_not_found'), 404);
         }
 
+        // Retrieve main language
+        $lang = $def->mainLanguage;
+
         // Delete record
         Session::push('messages', '<em>'. $def->titles[0]->title .'</em> has been succesfully deleted.');
         $def->delete();
 
-        return redirect(route('home'));
+        // Return URI
+        switch (Request::input('return'))
+        {
+            case 'admin':
+                $return = route('admin.definition.index');
+                break;
+
+            case 'home':
+                $return = route('home');
+
+            case 'language':
+            default:
+                $return = $lang->uri;
+                break;
+        }
+
+        return redirect($return);
 	}
 
     /**

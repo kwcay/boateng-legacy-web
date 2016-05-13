@@ -33,7 +33,7 @@
                         <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
                             <input
                                 type="text"
-                                id="languageForPhrase"
+                                id="languageForExpression"
                                 class="text-input center"
                                 placeholder="your language"
                                 autocomplete="off">
@@ -61,9 +61,9 @@
         }
     });
 
-    $('#languageForPhrase').langSearch({
+    $('#languageForExpression').langSearch({
         onItemAdd: function(code) {
-            App.redirect(code + '/+phrase');
+            App.redirect(code + '/+expression');
         }
     });
 

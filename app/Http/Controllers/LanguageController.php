@@ -19,12 +19,6 @@ use App\Http\Controllers\Controller;
 
 class LanguageController extends Controller
 {
-    public function __construct()
-    {
-        // Enable the auth middleware.
-		$this->middleware('auth', ['except' => ['index', 'show', 'search']]);
-    }
-
     /**
      * Lists available languages.
      *
@@ -131,7 +125,7 @@ class LanguageController extends Controller
 	{
         // Retrieve the language object.
         if (!$lang = $this->getLanguage($id, ['parent', 'alphabets'])) {
-            abort(404, Lang::get('errors.resource_not_foud'));
+            abort(404);
         }
 
         return view('forms.language.default')->withLang($lang);

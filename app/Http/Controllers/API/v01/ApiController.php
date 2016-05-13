@@ -15,7 +15,7 @@ use App\Models\Country;
 use App\Models\Alphabet;
 use App\Models\Definition;
 use App\Models\Definition\Name;
-use App\Models\Definition\Phrase;
+use App\Models\Definition\Expression;
 use App\Models\Definition\Poem;
 use App\Models\Definition\Story;
 use App\Models\Definition\Word;

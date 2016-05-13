@@ -19,7 +19,7 @@ use App\Traits\ObfuscatableTrait as Obfuscatable;
 /**
  *
  */
-class Phrase extends Definition
+class Expression extends Definition
 {
     public function __construct(array $attributes = [])
     {
@@ -38,7 +38,7 @@ class Phrase extends Definition
      */
     public static function random($lang = null)
     {
-        abort(501, 'App\Models\Definitions\Phrase::random not implemented.');
+        abort(501, 'App\Models\Definitions\Expression::random not implemented.');
     }
 
     /**

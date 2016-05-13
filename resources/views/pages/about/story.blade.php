@@ -20,7 +20,9 @@
                 directly translatable into English. As do many other languages, they require
                 context&mdash;a cultural context. And so, in the hopes of capturing and documenting
                 these cultural gems, Di Nkɔmɔ has grown from just under 100 Twi words to
-                <a href="{{ route('stats') }}">{{ $defs }} definitions in {{ $langs }} languages</a>.
+                <a href="{{ route('stats') }}">
+                    {{ number_format($defs) }} definitions in {{ number_format($langs) }} languages
+                </a>.
             </div>
         </div>
         <br>
@@ -43,7 +45,7 @@
                 </div>
             </div>
 
-            <!-- Series of milestones -->
+            <!-- Dictionary milestones -->
             <div class="event">
                 <div class="event-marker"></div>
 
@@ -51,14 +53,22 @@
                     <h1>Dictionary Milestones</h1>
                     <p>
                         800th word: &quot;<a href="/twi/korɔkorɔ">korɔkorɔ</a>&quot; meaning &quot;pamper&quot; in
-                        <a href="{{ route('language.show', ['code' => 'twi']) }}">Twi</a>
+                        <a href="{{ route('language.show', ['code' => 'twi']) }}">Twi</a>.
                         <br>
 
                         900th word: &quot;<a href="/dag/chana">chana</a>&quot; meaning &quot;go&quot; in
-                        <a href="{{ route('language.show', ['code' => 'dag']) }}">Dagbani</a>
+                        <a href="{{ route('language.show', ['code' => 'dag']) }}">Dagbani</a>.
                         <br>
 
-                        1,000th word...
+                        <em>
+                            1,000th word: &quot;<a href="/hau/malami">malami</a>&quot; meaning &quot;teacher&quot; in
+                            <a href="{{ route('language.show', ['code' => 'hau']) }}">Hausa</a>.
+                        </em>
+                        <br>
+
+                        10th language:
+                        <a href="{{ route('language.show', ['code' => 'dua']) }}">Duala</a>, spoken
+                        mainly in Cameroun.
                     </p>
                     <span class="date">May 2016</span>
                 </div>

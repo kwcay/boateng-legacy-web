@@ -363,7 +363,7 @@ class DataImportFactory extends BaseFactory
                     break;
 
                 case 'definition/word':
-                case 'definition/phrase':
+                case 'definition/expression':
                 case 'definition/story':
                     $this->dataModel = 'App\\Models\\'. str_replace('/', '\\\\', $this->dataMeta['type']);
             }
@@ -404,7 +404,7 @@ class DataImportFactory extends BaseFactory
 
             case 'App\\Models\\Definition':
             case 'App\\Models\\Definition\\Word':
-            case 'App\\Models\\Definition\\Phrase':
+            case 'App\\Models\\Definition\\Expression':
             case 'App\\Models\\Definition\\Story':
                 $factory = $this->make('DefinitionImportFactory');
                 break;

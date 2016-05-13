@@ -24,14 +24,14 @@ Route::get('sitemap/{topic?}', 'PageController@sitemap')->name('sitemap');
 Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
 Route::get('{code}', 'LanguageController@show')->name('language.show');
 Route::resource('language', 'LanguageController', [
-    'only' => ['store', 'update', 'destroy']
+    'only' => ['store', 'edit', 'update', 'destroy']
 ]);
 
 //
 // Definition pages.
 //
 Route::get('{code}/+word', 'DefinitionController@createWord')->name('definition.create.word');
-Route::get('{code}/+phrase', 'DefinitionController@createPhrase')->name('definition.create.phrase');
+Route::get('{code}/+expression', 'DefinitionController@createexpression')->name('definition.create.expression');
 Route::get('{code}/{definition}', 'DefinitionController@show')->name('definition.show');
 Route::get('random', 'PageController@random')->name('definition.random');
 Route::resource('definition', 'DefinitionController', [

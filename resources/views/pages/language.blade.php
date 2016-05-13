@@ -104,7 +104,7 @@
 
                     Suggest your own
                     <a href="{{ route('definition.create.word', ['lang' => $lang->code]) }}">words</a>
-                    or <a href="{{ route('definition.create.phrase', ['lang' => $lang->code]) }}">sayings</a>.
+                    or <a href="{{ route('definition.create.expression', ['lang' => $lang->code]) }}">sayings</a>.
                 </div>
             </div>
         </div>
