@@ -25,7 +25,7 @@ class Phrase extends Definition
     {
         parent::__construct($attributes);
 
-        $this->attributes['type'] = static::TYPE_PHRASE;
+        $this->attributes['type'] = static::TYPE_EXPRESSION;
     }
 
     /**
@@ -53,7 +53,7 @@ class Phrase extends Definition
     public static function search($query, array $options = [])
     {
         return parent::search($query, array_merge($options, [
-            'type' => static::types()[static::TYPE_PHRASE]
+            'type' => static::types()[static::TYPE_EXPRESSION]
         ]));
     }
 
@@ -61,6 +61,6 @@ class Phrase extends Definition
      * Gets the list of sub types for this definition.
      */
     public function getSubTypes() {
-        return $this->subTypes[Definition::TYPE_PHRASE];
+        return $this->subTypes[Definition::TYPE_EXPRESSION];
     }
 }

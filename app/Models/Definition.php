@@ -31,7 +31,7 @@ class Definition extends Model
     use CamelCaseAttrs, Exportable, Obfuscatable, Searchable, SoftDeletes, HasParams;
 
     CONST TYPE_WORD = 0;        // Regular definitions.
-    CONST TYPE_PHRASE = 10;     // Proverbs, sayings, etc.
+    CONST TYPE_EXPRESSION = 10;     // Proverbs, sayings, etc.
     CONST TYPE_STORY = 30;      // Short stories, poems, songs, etc.
 
     CONST STATE_HIDDEN = 0;     // Hidden definition.
@@ -49,7 +49,7 @@ class Definition extends Model
      */
     public $types = [
         0 => 'word',
-        10 => 'phrase',
+        10 => 'expression',
         30 => 'story',
     ];
 
@@ -311,7 +311,7 @@ class Definition extends Model
                 return static::TYPE_WORD;
 
             case 'phrase':
-                return static::TYPE_PHRASE;
+                return static::TYPE_EXPRESSION;
 
             case 'story':
                 return static::TYPE_STORY;

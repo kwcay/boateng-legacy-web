@@ -79,7 +79,7 @@ class Architecture050 extends Migration
             $table->tinyInteger('type')->unsigned();
             $table->string('sub_type', 10);
             $table->string('main_language_code', 7);
-            $table->tinyInteger('rating');
+            $table->tinyInteger('rating')->unsigned();
             $table->text('meta');
 
 			$table->timestamps();

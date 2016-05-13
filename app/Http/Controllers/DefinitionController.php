@@ -70,14 +70,14 @@ class DefinitionController extends Controller
         $str = str_replace('_', ' ', $str);
         $definitions = $lang->definitions()
                         ->with('languages', 'translations', 'titles')
-                        ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_PHRASE])
+                        ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_EXPRESSION])
                         ->whereHas('titles', function($query) use($str) {
                             $query->where('title', $str);
                         })->get();
         // $definitions = $lang->definitions()
         //     ->with('languages', 'translations')
         //     ->where('title', '=', $data)
-        //     ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_PHRASE])
+        //     ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_EXPRESSION])
         //     ->get();
 
         if (!count($definitions))
@@ -135,7 +135,7 @@ class DefinitionController extends Controller
     }
 
     public function createPhrase($langCode) {
-        return $this->createType(Definition::TYPE_PHRASE, $langCode);
+        return $this->createType(Definition::TYPE_EXPRESSION, $langCode);
     }
 
     public function createStory($langCode) {
@@ -175,7 +175,7 @@ class DefinitionController extends Controller
 
         // Attach language alphabet to titles.
         // TODO: Check request for ID of default alphabet to use.
-        if ($mainLanguage && $mainLanguage->alphabets)
+        if ($mainLanguage && $mainLanguage->alphabets->count())
         {
             $defaultAlphabet = $mainLanguage->alphabets->first();
 

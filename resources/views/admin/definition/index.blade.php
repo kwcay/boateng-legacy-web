@@ -50,7 +50,7 @@
                     <span class="fa fa-square-o"></span>
                 </td>
                 <td>
-                    <a href="{{ route('admin.definition.edit', ['id' => $definition->uniqueId, 'next' => 'admin']) }}">
+                    <a href="{{ route('admin.definition.edit', ['id' => $definition->uniqueId, 'return' => 'admin']) }}">
                         {{ $definition->titles->implode('title', ', ') }}
                     </a>
                 </td>
