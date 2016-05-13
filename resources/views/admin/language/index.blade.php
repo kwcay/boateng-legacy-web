@@ -34,7 +34,6 @@
     <table class="table table-striped table-hover text-center">
         <thead>
             <tr>
-                <td>ID</td>
                 <td>Name</td>
                 <td title="Language code based on ISO-639-3 standard">
                     Code
@@ -48,9 +47,6 @@
         <tbody>
             @foreach ($paginator as $language)
             <tr>
-                <td class="text-muted" title="# {{ $language->id }}">
-                    {{ $language->uniqueId }}
-                </td>
                 <td>
                     <a href="#">
                         {{ $language->name }}

@@ -6,6 +6,7 @@
  */
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\Language;
 use App\Models\Definition;
 
@@ -56,9 +57,29 @@ class PageController extends Controller
             // Statistics and other facts.
             case 'stats':
                 $view = 'pages.about.stats';
+
+                // Retrieve top languages.
+                $topLangs = [];
+                $topLangQuery = DB::table('definitions')
+                                ->selectRaw('main_language_code AS code')
+                                ->selectRaw('COUNT(main_language_code) AS total')
+                                ->whereRaw('LENGTH(main_language_code) > 2')
+                                ->groupBy('code')
+                                ->orderBy('total', 'desc')
+                                ->get();
+
+                for ($i = 0; $i < min(3, count($topLangQuery)); $i++)
+                {
+                    $lang = Language::findByCode($topLangQuery[$i]->code);
+                    $topLangs[] = [
+                        'name' => $lang->name,
+                        'code' => $lang->code,
+                        'total' => $topLangQuery[$i]->total,
+                    ];
+                }
+
                 $data = [
-                    'totalDefs'     => Definition::count(),
-                    'totalLangs'    => Language::count()
+                    'topLanguages' => $topLangs
                 ];
                 break;
 

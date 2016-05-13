@@ -18,10 +18,29 @@
                 <br>
                 <br>
 
-                Language is, truly, a bearer and medium through which culture is experienced and transmitted.
-                It might not be enough to save all these treasures, but the {{ $totalDefs }} definitions
-                in {{ $totalLangs }} languages stored in Di Nkɔmɔ are safe and sound. You're welcome :)
+                Language is, truly, a bearer and medium through which culture is experienced and
+                transmitted. It might not be enough to save all these treasures, but the
+                {{ number_format(App\Models\Definition::count()) }} definitions in
+                {{ number_format(App\Models\Language::count()) }} languages stored in Di Nkɔmɔ are
+                safe and sound. You're welcome :)
                 Feel free to <a href="{{ route('contribute') }}">add your own</a>.
+            </div>
+        </div>
+        <br>
+
+        <h1>Top languages</h1>
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+                <ol>
+                    @foreach($topLanguages as $language)
+                    <li>
+                        <a href="/{{ $language['code'] }}">
+                            {{ $language['name'] }}
+                        </a>
+                        with a total of {{ $language['total'] }} definitions.
+                    </li>
+                    @endforeach
+                </ol>
             </div>
         </div>
 	</section>
