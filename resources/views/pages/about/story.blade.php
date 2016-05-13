@@ -43,6 +43,27 @@
                 </div>
             </div>
 
+            <!-- Series of milestones -->
+            <div class="event">
+                <div class="event-marker"></div>
+
+                <div class="event-details">
+                    <h1>Dictionary Milestones</h1>
+                    <p>
+                        800th word: &quot;<a href="/twi/korɔkorɔ">korɔkorɔ</a>&quot; meaning &quot;pamper&quot; in
+                        <a href="{{ route('language.show', ['code' => 'twi']) }}">Twi</a>
+                        <br>
+
+                        900th word: &quot;<a href="/dag/chana">chana</a>&quot; meaning &quot;go&quot; in
+                        <a href="{{ route('language.show', ['code' => 'dag']) }}">Dagbani</a>
+                        <br>
+
+                        1,000th word...
+                    </p>
+                    <span class="date">May 2016</span>
+                </div>
+            </div>
+
             <!-- Ken Ya Innovate -->
             <div class="event">
                 <div class="event-marker"></div>
