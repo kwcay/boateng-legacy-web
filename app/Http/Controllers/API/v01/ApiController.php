@@ -79,19 +79,19 @@ class ApiController extends Controller
         $atom = $root->addChild('Url');
         $atom->addAttribute('type', 'application/atom+xml');
         $atom->addAttribute('rel', 'results');
-        $atom->addAttribute('template', url('/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=atom'));
+        $atom->addAttribute('template', url('/api/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=atom'));
 
         // URI for RSS format
         $rss = $root->addChild('Url');
         $rss->addAttribute('type', 'application/rss+xml');
         $rss->addAttribute('rel', 'results');
-        $rss->addAttribute('template', url('/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=rss'));
+        $rss->addAttribute('template', url('/api/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=rss'));
 
         // URI for JSON format
         $json = $root->addChild('Url');
         $json->addAttribute('type', 'application/json');
         $json->addAttribute('rel', 'results');
-        $json->addAttribute('template', url('/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=json'));
+        $json->addAttribute('template', url('/api/0.1/search/{searchTerms}?limit={count}&amp;offset={startIndex}&amp;format=json'));
 
         // URI for HTML format
         $html = $root->addChild('Url');
@@ -145,6 +145,7 @@ class ApiController extends Controller
 
         // Lookup countries.
         $results = new Collection;
+        // ...
 
         // Add cultures.
         // ...

@@ -49,6 +49,35 @@ trait ObfuscatableTrait
     }
 
     /**
+     * Decodes an ID.
+     *
+     * @param int|string $encodedId
+     * @return int|null
+     */
+    public static function decodeId($encodedId)
+    {
+        $id = 0;
+
+        // Un-obfuscate ID
+        if (is_string($encodedId) && !is_numeric($encodedId) && strlen($encodedId) >= 8)
+        {
+            if ($decoded = static::getObfuscator()->decode($encodedId)) {
+                $id = $decoded[1];
+            }
+
+            else {
+                $id = null;
+            }
+        }
+
+        elseif (is_numeric($encodedId)) {
+            $id = (int) $encodedId;
+        }
+
+        return $id;
+    }
+
+    /**
      * Find a model by its primary key.
      *
      * @param int|string $id
@@ -57,19 +86,11 @@ trait ObfuscatableTrait
      */
     public static function find($id, $columns = ['*'])
     {
-        // Un-obfuscate ID
-        if (is_string($id) && !is_numeric($id) && strlen($id) >= 8)
-        {
-            if ($decoded = static::getObfuscator()->decode($id)) {
-                $id = $decoded[1];
-            }
-
-            else {
-                return null;
-            }
+        if ($id = static::decodeId($id)) {
+            return static::query()->find($id, $columns);
         }
 
-        return static::query()->find($id, $columns);
+        return null;
     }
 
     /**

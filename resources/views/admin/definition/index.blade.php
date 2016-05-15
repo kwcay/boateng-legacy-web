@@ -118,6 +118,18 @@
                                 <span class="fa fa-cog fa-fw"></span>
                             </button>
                             <ul class="dropdown-menu">
+                                @if ($definition->deletedAt)
+                                <li>
+                                    <a href="#">
+                                        Restore
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        Force delete
+                                    </a>
+                                </li>
+                                @else
                                 <li>
                                     <a href="{{ $definition->uri }}" target="_blank">
                                         View
@@ -134,14 +146,21 @@
                                         Delete
                                     </a>
                                 </li>
+                                @endif
                             </ul>
                         </div>
                     </div>
                 </td>
                 <td>
-                    <span title="Added on {{ date('m j, Y', strtotime($definition->createdAt)) }}">
-                        {{ $definition->titles->implode('title', ', ') }}
-                    </span>
+                    @if ($definition->deletedAt)
+                        <del title="Deleted on {{ date('m j, Y', strtotime($definition->deletedAt)) }}">
+                            {{ $definition->titles->implode('title', ', ') }}
+                        </del>
+                    @else
+                        <span title="Added on {{ date('m j, Y', strtotime($definition->createdAt)) }}">
+                            {{ $definition->titles->implode('title', ', ') }}
+                        </span>
+                    @endif
                 </td>
                 <td>
                     <a

@@ -197,6 +197,9 @@ class DefinitionController extends Controller
             }
         }
 
+        // Definition main language.
+        $definition->mainLanguageCode = $mainLanguage->code;
+
         // Definition sub-type.
         $definition->subType = Request::input('subType');
 
@@ -299,6 +302,9 @@ class DefinitionController extends Controller
 
         $languages = $languageData[0];
         $mainLanguage = $languageData[1];
+
+        // Definition main language.
+        $definition->mainLanguageCode = $mainLanguage->code;
 
         // Definition type
         $definition->type = Request::input('type');

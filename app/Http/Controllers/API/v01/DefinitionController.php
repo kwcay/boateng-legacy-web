@@ -41,6 +41,11 @@ class DefinitionController extends Controller
      */
     public function show($id)
     {
+        // Performance check.
+        if (!$id = Definition::decodeId($id)) {
+            return response('Invalid Definition ID.', 400);
+        }
+
         // List of relations and attributes to append to results.
         $embed = $this->getEmbedArray(
             Request::get('embed'),

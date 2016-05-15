@@ -108,7 +108,7 @@ class Definition extends Model
      */
     public $ratings = [
         0 => 'hidden',
-        1 => 'visible',
+        1 => 'unrated',
         5 => 'reviewed',
     ];
 
@@ -150,10 +150,9 @@ class Definition extends Model
      */
     protected $hidden = [
         'id',
-        'updated_at',
-        'deleted_at',
-        // 'languages',
-        // 'translations',
+        'titles',
+        'languages',
+        'translations',
     ];
 
     /**
@@ -174,11 +173,6 @@ class Definition extends Model
      * Attributes that SHOULD be appended to the model's array form.
      */
     protected $appends = [
-        'translation',
-        'language',
-        'titlesArray',
-        'uri',
-        'editUri',
         'uniqueId',
         'resourceType',
     ];
@@ -187,9 +181,14 @@ class Definition extends Model
      * Attributes that CAN be appended to the model's array form.
      */
     public static $appendable = [
+        'uri',
+        'editUri',
+        'mainTitle',
+        'titleString',
+        'titleList',
         'translation',
-        'language',
         'mainLanguage',
+        'languageList',
     ];
 
     /**
@@ -749,7 +748,38 @@ class Definition extends Model
     }
 
     /**
+     * Accessor for $this->mainTitle
+     *
+     * @return string
+     */
+    public function getMainTitleAttribute($title = '') {
+        return $this->titles[0]->title;
+    }
+
+    /**
+     * Accessor for $this->titleString
+     *
+     * @return string
+     */
+    public function getTitleStringAttribute($str = '') {
+        return $this->titles->implode('title', ', ');
+    }
+
+    /**
+     * Accessor for $this->titleList
+     *
+     * @return array
+     */
+    public function getTitleListAttribute($list = []) {
+        return $this->titles;
+    }
+
+    /**
      * Accessor for $this->altTitles
+     *
+     * @deprecated  2016-05-15
+     *
+     * @return string
      */
     public function getAltTitlesAttribute($altTitles = '')
     {
@@ -800,9 +830,11 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->language.
+     * Accessor for $this->languageList.
+     *
+     * @return array
      */
-    public function getLanguageAttribute()
+    public function getLanguageListAttribute()
     {
         $codes = [];
 
@@ -811,6 +843,15 @@ class Definition extends Model
         }
 
         return $codes;
+    }
+
+    /**
+     * Accessor for $this->language.
+     *
+     * @return array
+     */
+    public function getLanguageAttribute() {
+        return $this->getLanguageListAttribute();
     }
 
     /**
