@@ -22,7 +22,7 @@ class LanguageController extends Controller
     public function __construct()
     {
         // Enable the auth middleware.
-		$this->middleware('auth', ['except' => ['index', 'show', 'search']]);
+		// $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
     }
 
     /**
@@ -279,7 +279,12 @@ class LanguageController extends Controller
         }
 
         // Or find language by ID.
-        else {
+        else
+        {
+            if (!$id = Language::decodeId($id)) {
+                return null;
+            }
+
             $lang = Language::with($embed)->find($id);
         }
 

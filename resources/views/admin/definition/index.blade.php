@@ -2,9 +2,7 @@
 
 @section('body')
 
-    <h1>
-        Definitions
-    </h1>
+    <h1>Definitions</h1>
 
     <ol class="breadcrumb">
         <li>

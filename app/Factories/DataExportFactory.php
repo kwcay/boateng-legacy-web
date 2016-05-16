@@ -67,7 +67,7 @@ class DataExportFactory extends BaseFactory
             'meta' => [
                 'type' => $type,
                 'total' => count($data),
-                'schema' => 'dinkomo-1',
+                'schema' => 'dinkomo-0.2',
             ],
             'data' => []
         ];
@@ -77,6 +77,8 @@ class DataExportFactory extends BaseFactory
         }
 
         $export['meta']['checksum'] = md5(json_encode($export['data']));
+
+        // dd($export);
 
         return [
             'Content-Type' => $className::getContentType($format),

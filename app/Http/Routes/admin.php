@@ -29,4 +29,4 @@ Route::post('import', ['as' => 'admin.import.action', 'uses' => 'ImportControlle
 
 // Resource export
 // Route::get('export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'Data\v041\DataController@export']);
-Route::get('export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'ExportController@export']);
+Route::get('export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'Admin\ExportController@export']);

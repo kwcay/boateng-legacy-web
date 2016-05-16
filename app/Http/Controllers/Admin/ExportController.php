@@ -3,16 +3,12 @@
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
  */
-namespace App\Http\Controllers;
-
-use Session;
-use Redirect;
+namespace App\Http\Controllers\Admin;
 
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-
 use App\Factories\DataExportFactory as ExportHelper;
 
 class ExportController extends Controller

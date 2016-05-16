@@ -30,6 +30,61 @@ class Definition extends Model
 {
     use CamelCaseAttrs, Exportable, Obfuscatable, Searchable, SoftDeletes, HasParams;
 
+
+    //
+    //
+    // Attributes used by App\Traits\ObfuscatableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * @var int
+     */
+    public $obfuscatorId = 77;
+
+
+    //
+    //
+    // Attributes used by App\Traits\ExportableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Supported export formats.
+     */
+    public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
+
+    /**
+     * Attributes that should be hidden when exporting data to file.
+     *
+     * @var array
+     */
+    protected $hiddenOnExport = [
+        'uniqueId',
+        'resourceType',
+    ];
+
+    /**
+     * Attributes that should be appended when exporting data to file.
+     *
+     * @var array
+     */
+    protected $appendsOnExport = [
+        'titleList',
+        'translation',
+        'languageList',
+    ];
+
+
+    //
+    //
+    // Main attributes
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     CONST TYPE_WORD = 0;        // Regular definitions.
     CONST TYPE_EXPRESSION = 10;     // Proverbs, sayings, etc.
     CONST TYPE_STORY = 30;      // Short stories, poems, songs, etc.
@@ -118,24 +173,6 @@ class Definition extends Model
     protected $markdown;
 
     /**
-     *
-     */
-    public $exportFormats = ['yml', 'yaml', 'json', 'bgl', 'dict'];
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 77;
-
-
-    //
-    //
-    // Attirbutes used by Illuminate\Database\Eloquent\Model
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
      * Associated MySQL table.
      */
     protected $table = 'definitions';
@@ -153,20 +190,6 @@ class Definition extends Model
         'titles',
         'languages',
         'translations',
-    ];
-
-    /**
-     * The attributes that should be hidden from the model's array form when exporting data to file.
-     */
-    protected $hiddenFromExport = [
-        'id',
-        'updated_at',
-        'languages',
-        'translations',
-        'uri',
-        'editUri',
-        'resourceType',
-        'uniqueId',
     ];
 
     /**
@@ -205,6 +228,14 @@ class Definition extends Model
         'params' => 'array',
     ];
 
+
+    //
+    //
+    // Relations
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     /**
      * Defines the translation relations.
      */
@@ -230,6 +261,14 @@ class Definition extends Model
      * Relations to be created when importing this definition.
      */
     protected $relationsToBeImported = [];
+
+
+    //
+    //
+    // Main methods
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      *

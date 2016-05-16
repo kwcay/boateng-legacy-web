@@ -22,9 +22,15 @@ trait ExportableTrait
     {
         // Temporarily disable hidden fields.
         $originallyHidden = $this->hidden;
-        $this->hidden = $this->hiddenFromExport ?: array_where($this->hidden, function($key, $value) {
+        $this->hidden = $this->hiddenOnExport ?: array_where($this->hidden, function($key, $value) {
             return !in_array($value, ['params', 'created_at', 'deleted_at']);
         });
+
+        // Include all apendable attributes.
+        $appendable = $this->appendsOnExport ?: [];
+        foreach ($appendable as $accessor) {
+            $this->setAttribute($accessor, $this->$accessor);
+        }
 
         // Retrieve attributes and relations.
         $attributes = $this->attributesToArray();
@@ -68,7 +74,7 @@ trait ExportableTrait
      */
     public static function getExportFormats() {
         $static = new static;
-        return isset($static->exportFormats) ? $static->exportFormats : ['yml', 'yaml', 'js', 'json'];
+        return $static->exportFormats ?: ['yml', 'yaml', 'js', 'json'];
     }
 
     /**
@@ -99,7 +105,7 @@ trait ExportableTrait
      * @return string
      */
     public static function getContentType($format) {
-        return isset(static::$contentTypes[$format]) ? static::$contentTypes[$format] : 'text/plain';
+        return static::$contentTypes[$format] ?: 'text/plain';
     }
 
     /**

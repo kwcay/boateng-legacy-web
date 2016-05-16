@@ -5,17 +5,11 @@
  */
 namespace App\Http\Controllers\Admin;
 
-use DB;
-use URL;
-use Auth;
 use Lang;
 use Request;
 use Session;
 use Redirect;
-use Validator;
-
 use Illuminate\Support\Arr;
-
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
