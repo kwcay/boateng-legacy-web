@@ -62,7 +62,7 @@ class DataExportFactory extends BaseFactory
         }
 
         // Format the data to be exported.
-        $data = $className::all();
+        $data = $className::withTrashed()->all();
         $export = [
             'meta' => [
                 'type' => $type,

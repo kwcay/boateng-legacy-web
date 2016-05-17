@@ -31,13 +31,14 @@ class DefinitionImportFactory extends DataImportFactory
         foreach ($this->dataArray as $data)
         {
             // Definition titles
-            $titles = [];
-            $titleData = [];
+            $titles = $titleData = [];
 
             if (array_key_exists('titles', $data) && is_array($data['titles'])) {
                 $titleData = $data['titles'];
             } elseif (array_key_exists('titlesArray', $data) && is_array($data['titlesArray'])) {
                 $titleData = $data['titlesArray'];
+            } elseif (array_key_exists('titleList', $data) && is_array($data['titleList'])) {
+                $titleData = $data['titleList'];
             }
 
             if (count($titleData))
@@ -80,31 +81,34 @@ class DefinitionImportFactory extends DataImportFactory
             }
 
             // Retrieve languages.
-            $languages = [];
-            if (array_key_exists('language', $data) && is_array($data['language']))
+            $languages = $languageData = [];
+            if (array_key_exists('language', $data) && is_array($data['language'])) {
+                $languageData = $data['language'];
+            } elseif (array_key_exists('languageList', $data) && is_array($data['languageList'])) {
+                $languageData = $data['languageList'];
+            }
+
+            foreach ($languageData as $code => $name)
             {
-                foreach ($data['language'] as $code => $name)
-                {
-                    // Check if language has already been loaded.
-                    if (isset($this->_languages[$code])) {
-                        $languages[] = $this->_languages[$code];
-                    }
+                // Check if language has already been loaded.
+                if (isset($this->_languages[$code])) {
+                    $languages[] = $this->_languages[$code];
+                }
 
-                    // If not, attempt to retrieve it from the database.
-                    elseif ($lang = Language::findByCode($code)) {
-                        $languages[] = $lang;
-                        $this->_languages[$code] = $lang;
-                    }
+                // If not, attempt to retrieve it from the database.
+                elseif ($lang = Language::findByCode($code)) {
+                    $languages[] = $lang;
+                    $this->_languages[$code] = $lang;
+                }
 
-                    // If the language is not in our database, try to create a record for it.
-                    elseif ($lang = Language::create(['code' => $code, 'name' => $name])) {
-                        $languages[] = $lang;
-                        $this->_languages[] = $lang;
-                    }
+                // If the language is not in our database, try to create a record for it.
+                elseif ($lang = Language::create(['code' => $code, 'name' => $name])) {
+                    $languages[] = $lang;
+                    $this->_languages[] = $lang;
+                }
 
-                    else {
-                        $this->setMessage('Could not add related language "'. $code .'".');
-                    }
+                else {
+                    $this->setMessage('Could not add related language "'. $code .'".');
                 }
             }
 
