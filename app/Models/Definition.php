@@ -525,8 +525,12 @@ class Definition extends Model
             $definition->score = $scores->total * 0.9 / $maxScore;
         }
 
-        // Main language attribute.
+        // Embeds.
+        $definition->setAttribute('uri', $definition->uri);
+        $definition->setAttribute('mainTitle', $definition->mainTitle);
+        $definition->setAttribute('translation', $definition->translation);
         $definition->setAttribute('mainLanguage', $definition->mainLanguage);
+        $definition->mainLanguage->setAttribute('uri', $definition->mainLanguage->uri);
     }
 
 

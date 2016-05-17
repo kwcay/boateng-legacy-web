@@ -132,6 +132,7 @@ class Language extends Model
         'definitionsCount',
         'uri',
         'editUri',
+        'parentUri',
         'firstDefinition',
         'latestDefinition',
         'randomDefinition',
@@ -311,6 +312,15 @@ class Language extends Model
      */
     public function getParentNameAttribute($data = null) {
         return $this->parent ? $this->parent->name : '';
+    }
+
+    /**
+     * Accessor for $this->parentUri.
+     *
+     * @return string
+     */
+    public function getParentUriAttribute($data = null) {
+        return $this->parent ? $this->parent->uri : '';
     }
 
     /**
@@ -530,6 +540,11 @@ class Language extends Model
         else {
             $language->score = $scores->total * 0.9 / $maxScore;
         }
+
+        // Embeds.
+        $language->setAttribute('uri', $language->uri);
+        $language->setAttribute('parentName', $language->parentName);
+        $language->setAttribute('parentUri', $language->parentUri);
     }
 
 

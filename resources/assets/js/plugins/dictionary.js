@@ -139,11 +139,11 @@ var DiNkomoDictionary = function(options) {
                 '</a> ';
 
         // Add parent language.
-        if (language.parentLanguage) {
+        if (language.parentCode.length >= 3) {
             row +=
             'is a child language of ' +
-            '<a href="' + language.parentLanguage.uri + '">' +
-                language.parentLanguage.name +
+            '<a href="' + language.parentUri + '">' +
+                language.parentName +
             '</a>';
         }
 
@@ -166,7 +166,7 @@ var DiNkomoDictionary = function(options) {
         var row =
             '<li>' +
                 '<a href="' + definition.uri + '">' +
-                    definition.titles[0].title +
+                    definition.mainTitle +
                 '</a> ' +
                 '<small>' +
                     '(' + definition.subType + ')' +

@@ -7,9 +7,6 @@
     <h2>Overview</h2>
     <ul>
         <li>
-            {{ number_format(App\Models\Translation::count()) }} translations
-        </li>
-        <li>
             <a href="{{ route('admin.definition.index') }}">
                 {{ number_format(App\Models\Definition::count()) }} definitions
             </a>
