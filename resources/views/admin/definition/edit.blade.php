@@ -192,7 +192,7 @@
             <label for="translations[eng][literal]">Literal translation</label>
         </div>
 
-        {{-- Language --}}
+        {{-- Languages --}}
         <div class="row">
             <input
                 id="languages"
@@ -206,7 +206,19 @@
             </label>
         </div>
 
-        <!-- Form actions -->
+        {{-- Tags --}}
+        <div class="row">
+            <input
+                id="tags"
+                type="text"
+                name="tags"
+                class="text-input remote"
+                value="{{ $model->tags->implode('title', ',') }}">
+            <label for="tags">
+                Tags
+            </label>
+        </div>
+
         <div class="row center">
             <input type="submit" name="finish" value="save">
         </div>
@@ -259,6 +271,8 @@
         20,
         ['remove_button', 'drag_drop']
     );
+
+    $('#tags').tagSearch();
 
     </script>
 @stop

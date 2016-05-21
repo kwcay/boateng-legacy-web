@@ -19,6 +19,9 @@ Route::get('{definitionType}/title/{title}', 'DefinitionController@findBytitle')
 Route::options('definition/{id?}', 'ApiController@options');
 Route::resource('definition', 'DefinitionController', ['except' => ['index', 'create', 'edit']]);
 
+// Tag endpoints
+Route::resource('tag', 'TagController', ['except' => ['create', 'edit']]);
+
 // Language endpoints.
 Route::resource('language', 'LanguageController', ['except' => ['create', 'store', 'destroy']]);
 

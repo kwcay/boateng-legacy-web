@@ -33,20 +33,7 @@ class Definition extends Model
 
     //
     //
-    // Attributes used by App\Traits\ObfuscatableTrait
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////
-
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 77;
-
-
-    //
-    //
-    // Attributes used by App\Traits\ExportableTrait
+    // Attributes for App\Traits\ExportableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -80,6 +67,30 @@ class Definition extends Model
 
     //
     //
+    // Attributes for App\Traits\ObfuscatableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * @var int
+     */
+    public $obfuscatorId = 77;
+
+
+    //
+    //
+    // Attributes for App\Traits\SearchableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
+    CONST SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.
+
+
+    //
+    //
     // Main attributes
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,9 +106,6 @@ class Definition extends Model
     CONST RATING_DEFAULT = 1;       // Default rating.
     CONST RATING_HAS_LITERAL = 5;   // Rating for definitions with literal translations.
     CONST RATING_FULL_TRANS = 10;   // Rating for definitions with literal translations & meanings.
-
-    CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
-    CONST SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.
 
     /**
      * Definition types.
@@ -188,6 +196,7 @@ class Definition extends Model
     protected $hidden = [
         'id',
         'titles',
+        'tags',
         'languages',
         'translations',
     ];
@@ -212,6 +221,7 @@ class Definition extends Model
         'translation',
         'mainLanguage',
         'languageList',
+        'tagList',
     ];
 
     /**
@@ -255,6 +265,13 @@ class Definition extends Model
      */
     public function languages() {
         return $this->belongsToMany('App\Models\Language', 'definition_language', 'definition_id', 'language_id');
+    }
+
+    /**
+     * Defines the tag relations.
+     */
+    public function tags() {
+        return $this->belongsToMany('App\Models\Tag', 'definition_tag', 'definition_id', 'tag_id');
     }
 
     /**
@@ -877,7 +894,7 @@ class Definition extends Model
      *
      * @return array
      */
-    public function getLanguageListAttribute()
+    public function getLanguageListAttribute($list = [])
     {
         $codes = [];
 
@@ -886,6 +903,15 @@ class Definition extends Model
         }
 
         return $codes;
+    }
+
+    /**
+     * Accessor for $this->tagList
+     *
+     * @return array
+     */
+    public function getTagListAttribute($tags = []) {
+        return $this->tags;
     }
 
     /**

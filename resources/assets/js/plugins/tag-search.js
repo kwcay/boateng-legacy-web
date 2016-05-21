@@ -8,7 +8,7 @@
     /**
      *
      */
-    $.fn.langSearch = function( options ) {
+    $.fn.tagSearch = function( options ) {
 
         options = options || {};
 
@@ -17,13 +17,13 @@
 
         // Initialize selectize input.
         var $select = this.selectize({
-            valueField: 'code',
-            labelField: 'name',
-            searchField: ['code', 'name', 'altNames'],
+            valueField: 'uniqueId',
+            labelField: 'title',
+            searchField: ['title'],
             options: options.selectizeItems,
             plugins: (options.selectizePlugins || null),
-            create: false,
-            maxItems: (options.maxItems || 1),
+            create: true,
+            maxItems: (options.maxItems || 20),
             render: {
 
                 /**
@@ -31,7 +31,7 @@
                  */
                 item: function(item, escape) {
                     return  '<div>' +
-                                '<span class="name">' + escape(item.name) + '</span>' +
+                                '<span class="name">' + escape(item.title) + '</span>' +
                             '</div>';
                 },
 
@@ -43,23 +43,13 @@
                 },
 
                 /**
-                 *
+                 * @param object item
+                 * @param function escpae
                  */
                 option: function(item, escape)
                 {
-                    // Language title
-                    var title   = item.name;
-                    if (item.parentName && item.parentName.length)
-                        title += ' (a sub-language of '+ item.parentName +')';
-
-                    // Add a short desciption
-                    var hint = '';
-                    if (item.altNames && item.altNames.length)
-                        hint = '<span class="hint"> &mdash; Also known as '+ item.altNames + '</span>';
-
-                    // Return formatted HTML
                     return  '<div>' +
-                                '<span class="label">' + escape(title) + '</span>' + hint +
+                                '<span class="label">' + escape(item.title) + '</span>' +
                             '</div>';
                 }
             },
@@ -68,9 +58,11 @@
              *
              */
             load: function(query, callback) {
+
                 if (!query.trim().length) return callback();
+
                 $.ajax({
-                    url: App.root +'api/0.1/language/search/' + App.urlencode(query.trim()),
+                    url: App.root +'api/0.1/tag/search/' + App.urlencode(query.trim()),
                     type: 'GET',
                     error: function() {
                         callback();

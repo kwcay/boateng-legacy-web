@@ -9,8 +9,10 @@ use Lang;
 use Request;
 use Session;
 use Redirect;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Arr;
 use App\Http\Requests;
+use App\Models\Tag;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Translation;
@@ -312,7 +314,7 @@ class DefinitionController extends Controller
         // TODO: update rating based on related data...
         // ...
 
-        // Create definition.
+        // Update definition.
         if (!$definition->save()) {
             abort(500, 'Could not save definition.');
         }
@@ -320,6 +322,10 @@ class DefinitionController extends Controller
         // Update titles.
         $definition->titles()->delete();
         $definition->titles()->saveMany($titles);
+
+        // Update tags.
+        $tags = $this->getTags(Request::input('tags'));
+        $definition->tags()->sync($tags);
 
         // Update translations.
         $definition->translations()->delete();
@@ -496,6 +502,48 @@ class DefinitionController extends Controller
         }
 
         return $titles;
+    }
+
+    /**
+     * Retrieves tags from request.
+     *
+     * @param string $tagStr
+     * @return array
+     */
+    protected function getTags($tagStr)
+    {
+        $tags = [];
+
+        // Retrieve tag objects.
+        $tagStr = trim($tagStr);
+        if (strlen($tagStr))
+        {
+            foreach (@explode(',', $tagStr) as $tagId)
+            {
+                $tagId = trim($tagId);
+
+                if (strlen($tagId))
+                {
+                    // Find tag by ID.
+                    if ($tag = Tag::find($tagId)) {
+                        $tags[] = $tag->id;
+                    }
+
+                    // Find tag by title.
+                    elseif ($tag = Tag::where('title', '=', $tagId)->first()) {
+                        $tags[] = $tag->id;
+                    }
+
+                    // New tag.
+                    else {
+                        $tag = Tag::create(['title' => $tagId]);
+                        $tags[] = $tag->id;
+                    }
+                }
+            }
+        }
+
+        return $tags;
     }
 
     /**

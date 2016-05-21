@@ -60,8 +60,8 @@ trait SearchableTrait
                 static::normalizeSearchResult($model, $scores[$model->id], $maxScore);
             }
 
-            $results = $unsorted->sortByDesc(function($definition) {
-                return $definition->score;
+            $results = $unsorted->sortByDesc(function($searchable) {
+                return $searchable->score;
             })->values();
         }
 

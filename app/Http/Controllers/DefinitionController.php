@@ -69,7 +69,7 @@ class DefinitionController extends Controller
         // Find definitions matching the query
         $str = str_replace('_', ' ', $str);
         $definitions = $lang->definitions()
-                        ->with('languages', 'translations', 'titles')
+                        ->with('languages', 'translations', 'titles', 'tags')
                         ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_EXPRESSION])
                         ->whereHas('titles', function($query) use($str) {
                             $query->where('title', $str);

@@ -19,6 +19,13 @@ a.fa, a.fa:visited {
 	margin: 0 5px;
 	transition: color .25s;
 }
+a.tag, a.tag:visited {
+    margin: 0 4px;
+    padding: 0 2px;
+    letter-spacing: 2px;
+    background-color: rgba(0, 128, 0, 0.2);
+    transition: background-color .2s;
+}
 a:after {
 	content: "";
 	position: absolute;
@@ -30,7 +37,7 @@ a:after {
 	transform: scaleX(1);
 	transition: all .2s ease-in-out;
 }
-a.fa:after {
+a.fa:after, a.tag:after {
 	visibility: hidden;
 	transform: scaleX(0);
 }
@@ -47,6 +54,9 @@ a:hover:after {
 }
 a.fa:hover {
 	color: #85cdff;
+}
+a.tag:hover {
+    background-color: #eee;
 }
 em {
 	font-style: normal;

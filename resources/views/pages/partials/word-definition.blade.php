@@ -49,6 +49,21 @@
     <br>
 @endif
 
+{{-- Tags --}}
+@if (count($def->tags))
+    <span class="meta-label">&rarr; Tagged:</span>
+
+    <span class="meta-data">
+        @foreach ($def->tags as $tag)
+            <a href="#" class="tag">
+                #{{ $tag->title }}
+            </a>
+        @endforeach
+    </span>
+
+    <br>
+@endif
+
 {{-- Back search --}}
 <span class="meta-label">
     Find more translations for
