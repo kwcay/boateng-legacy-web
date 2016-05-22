@@ -60,6 +60,7 @@ class Definition extends Model
      */
     protected $appendsOnExport = [
         'titleList',
+        'tagList',
         'translation',
         'languageList',
     ];
