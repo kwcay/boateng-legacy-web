@@ -60,7 +60,7 @@ class Definition extends Model
      */
     protected $appendsOnExport = [
         'titleList',
-        'tagList',
+        'tagString',
         'translation',
         'languageList',
     ];
@@ -219,10 +219,11 @@ class Definition extends Model
         'mainTitle',
         'titleString',
         'titleList',
+        'tagString',
+        'tagList',
         'translation',
         'mainLanguage',
         'languageList',
-        'tagList',
     ];
 
     /**
@@ -904,6 +905,15 @@ class Definition extends Model
         }
 
         return $codes;
+    }
+
+    /**
+     * Accessor for $this->tagString
+     *
+     * @return array
+     */
+    public function getTagStringAttribute($tags = '') {
+        return $this->tags->implode('title', ', ');
     }
 
     /**
