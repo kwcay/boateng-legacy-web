@@ -8,6 +8,7 @@ namespace App\Models;
 use DB;
 use Log;
 
+use App\Models\Tag;
 use App\Models\Language;
 use App\Models\Translation;
 use Illuminate\Support\Arr;
@@ -60,7 +61,7 @@ class Definition extends Model
      */
     protected $appendsOnExport = [
         'titleList',
-        'tagString',
+        'tagList',
         'translation',
         'languageList',
     ];
@@ -88,6 +89,13 @@ class Definition extends Model
 
     CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
     CONST SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.
+
+    /**
+     * Indicates whether search results can be filtered by tags.
+     *
+     * @var bool
+     */
+    public static $searchIsTaggable = true;
 
 
     //
@@ -219,7 +227,6 @@ class Definition extends Model
         'mainTitle',
         'titleString',
         'titleList',
-        'tagString',
         'tagList',
         'translation',
         'mainLanguage',
@@ -485,6 +492,15 @@ class Definition extends Model
         // Limit scope to a specific definition type.
         if ( isset($options['type']) && in_array($options['type'], static::types()) ) {
             $builder->where('d.type', '=', DB::raw(static::getTypeConstant($options['type'])));
+        }
+
+        // Limit scope to certain tags
+        if (isset($options['tags']) && count($options['tags']))
+        {
+            $tagIds = Tag::whereIn('title', $options['tags'])->lists('id');
+
+            $builder->join('definition_tag AS tag_pivot', 'tag_pivot.definition_id', '=', 'd.id')
+                ->whereIn('tag_pivot.tag_id', $tagIds);
         }
 
         return $builder;
@@ -908,21 +924,19 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->tagString
-     *
-     * @return array
-     */
-    public function getTagStringAttribute($tags = '') {
-        return $this->tags->implode('title', ', ');
-    }
-
-    /**
      * Accessor for $this->tagList
      *
      * @return array
      */
-    public function getTagListAttribute($tags = []) {
-        return $this->tags;
+    public function getTagListAttribute($tags = [])
+    {
+        $list = [];
+
+        foreach ($this->tags as $tag) {
+            $list[] = $tag->title;
+        }
+
+        return $list;
     }
 
     /**

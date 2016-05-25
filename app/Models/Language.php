@@ -80,6 +80,13 @@ class Language extends Model
     CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
     CONST SEARCH_QUERY_LENGTH = 2;  // Minimum length of search query.
 
+    /**
+     * Indicates whether search results can be filtered by tags.
+     *
+     * @var bool
+     */
+    public static $searchIsTaggable = false;
+
 
     //
     //

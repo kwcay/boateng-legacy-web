@@ -18,6 +18,10 @@
                 Definitions
             </a>
             &bull;
+            <a href="{{ route('admin.tag.index') }}">
+                Tags
+            </a>
+            &bull;
             <a href="{{ route('admin.language.index') }}">
                 Languages
             </a>

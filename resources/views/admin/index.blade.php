@@ -12,6 +12,11 @@
             </a>
         </li>
         <li>
+            <a href="{{ route('admin.tag.index') }}">
+                {{ number_format(App\Models\Tag::count()) }} tags
+            </a>
+        </li>
+        <li>
             <a href="{{ route('admin.language.index') }}">
                 {{ number_format(App\Models\Language::count()) }} languages
             </a>

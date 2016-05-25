@@ -55,7 +55,7 @@
 
     <span class="meta-data">
         @foreach ($def->tags as $tag)
-            <a href="#" class="tag">
+            <a href="{{ route('home', ['q' => '#'. $tag->title]) }}" class="tag">
                 #{{ $tag->title }}
             </a>
         @endforeach

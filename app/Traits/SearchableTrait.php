@@ -19,12 +19,30 @@ trait SearchableTrait
     public static function search($term, array $options = [])
     {
         // Format search parameters.
-        $term = trim(preg_replace('/[\s+]/', ' ', $term));
+        $term = $fullTerm = trim(preg_replace('/[\s+]/', ' ', $term));
         $offset = min(0, array_get($options, 'offset', 0));
         $limit = max(1, min(static::SEARCH_LIMIT, array_get($options, 'limit', static::SEARCH_LIMIT)));
 
+        // Retrieve tags. We look for the occurence of "#" before doing a preg_match
+        // for performance.
+        if (strpos($term, '#') !== false && preg_match('/#([a-z0-9\-_]+)/i', $term) > 0)
+        {
+            $options['tags'] = isset($options['tags']) ? $options['tags'] : [];
+
+            preg_match_all('/#([a-z0-9\-_]+)/i', $term, $matches);
+
+            foreach ($matches[1] as $tag)
+            {
+                $options['tags'][] = $tag;
+                $term = preg_replace("/#{$tag}/", '', $term);
+            }
+
+            $term = trim($term);
+        }
+
         // Performance check.
-        if (strlen($term) < static::SEARCH_QUERY_LENGTH) {
+        $lengthCheck = static::$searchIsTaggable ? $fullTerm : $term;
+        if (strlen($lengthCheck) < static::SEARCH_QUERY_LENGTH) {
             return new Collection;
         }
 

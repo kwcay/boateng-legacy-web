@@ -20,6 +20,7 @@ Route::resource('alphabet',     'Admin\AlphabetController');
 Route::resource('country',      'Admin\CountryController');
 Route::resource('language',     'Admin\LanguageController');
 Route::resource('definition',   'Admin\DefinitionController');
+Route::resource('tag',          'Admin\TagController');
 Route::resource('translation',  'Admin\TranslationController');
 Route::resource('audio',        'AudioController');
 

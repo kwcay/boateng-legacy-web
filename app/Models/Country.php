@@ -19,6 +19,13 @@ class Country extends Model
     CONST SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.
 
     /**
+     * Indicates whether search results can be filtered by tags.
+     *
+     * @var bool
+     */
+    public static $searchIsTaggable = false;
+
+    /**
      * @var int
      */
     public $obfuscatorId = 11;

@@ -9,6 +9,7 @@ use Lang;
 use Request;
 use Session;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BaseController extends Controller
 {
@@ -72,12 +73,14 @@ class BaseController extends Controller
         $dir = in_array($dir, ['asc', 'desc']) ? $dir : $this->defaultOrderDirection;
         $this->setParam('dir', $dir);
 
+        // Add trashed items.
+        if (in_array(SoftDeletes::class, class_uses_recursive(get_class($builder)))) {
+            $builder = $builder->withTrashed();
+        }
+
         // Paginator
         $page = $this->setParam('page', $this->getParam('page', 1));
-        $paginator = $builder
-                        ->withTrashed()
-                        ->orderBy($order, $dir)
-                        ->paginate($limit, ['*'], 'page', $page);
+        $paginator = $builder->orderBy($order, $dir)->paginate($limit, ['*'], 'page', $page);
 
         return view("admin.{$this->name}.index", compact([
             'total', 'limit', 'order', 'dir', 'paginator'

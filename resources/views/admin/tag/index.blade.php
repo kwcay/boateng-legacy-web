@@ -2,7 +2,7 @@
 
 @section('body')
 
-    <h1>Alphabets</h1>
+    <h1>Definition tags</h1>
 
     <ol class="breadcrumb">
         <li>
@@ -16,10 +16,6 @@
             </span>
             <a href="{{ route('admin.definition.index') }}">
                 Definitions
-            </a>
-            &bull;
-            <a href="{{ route('admin.tag.index') }}">
-                Tags
             </a>
             &bull;
             <a href="{{ route('admin.language.index') }}">
@@ -39,32 +35,20 @@
         <thead>
             <tr>
                 <td>ID</td>
-                <td>Name</td>
-                <td title="Alphabet code based on ISO 15924 standard for scripts">
-                    Code
-                </td>
-                <td title="Date on which alphabet was added to database">
-                    Date
-                </td>
+                <td>title</td>
             </tr>
         </thead>
 
         <tbody>
-            @foreach ($paginator as $alphabet)
+            @foreach ($paginator as $tag)
             <tr>
-                <td class="text-muted" title="# {{ $alphabet->id }}">
-                    {{ $alphabet->uniqueId }}
+                <td class="text-muted" title="# {{ $tag->id }}">
+                    {{ $tag->uniqueId }}
                 </td>
                 <td>
                     <a href="#">
-                        {{ $alphabet->name }}
+                        {{ $tag->title }}
                     </a>
-                </td>
-                <td>
-                    {{ $alphabet->code }}
-                </td>
-                <td>
-                    {{ date('M Y', strtotime($alphabet->createdAt)) }}
                 </td>
             </tr>
             @endforeach
