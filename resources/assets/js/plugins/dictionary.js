@@ -139,7 +139,7 @@ var DiNkomoDictionary = function(options) {
                 '</a> ';
 
         // Add parent language.
-        if (language.parentCode.length >= 3) {
+        if (language.parentCode && language.parentCode.length >= 3) {
             row +=
             'is a child language of ' +
             '<a href="' + language.parentUri + '">' +

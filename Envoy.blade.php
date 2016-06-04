@@ -138,6 +138,8 @@
     git config core.ignorecase false
     git reset --hard origin/master
     git pull
+    # mkdir -p ./storage
+    # chmod -Rf 1777 ./storage
     git status
 
 @endtask
@@ -149,6 +151,8 @@
     git config core.ignorecase false
     git reset --hard origin/master
     git pull
+    # mkdir -p ./storage
+    # chmod -Rf 1777 ./storage
     git status
 
 @endtask
