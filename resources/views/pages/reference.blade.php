@@ -3,10 +3,11 @@
 @section('body')
 
     <h1>
-        Di Nkɔmɔ<br>
+        Di Nkɔmɔ
+        <br>
 
         <small>
-            A Cultural Reference.
+            @lang('branding.tag_line')
         </small>
     </h1>
 

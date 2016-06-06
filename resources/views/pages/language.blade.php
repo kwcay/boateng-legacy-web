@@ -16,7 +16,9 @@
         @endif
 
         {{ $lang->name }}<br>
-        <small>A Cultural Reference.</small>
+        <small>
+            @lang('branding.language_tag_line', ['lang' => $lang->name])
+        </small>
     </h1>
 
     @if ($lang->definitions->count())

@@ -1,6 +1,3 @@
-
-@inject('helper', 'App\Utilities')
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,21 +8,25 @@
         <base href="{{ Request::root() }}/">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<meta name="author" content="Francis Amankrah">
-		<meta name="description" content="@yield('description', 'A Cultural Reference.')">
+		<meta name="description" content="@yield('description', 'A reference of cultures past and present.')">
 		<meta name="keywords" content="@yield('keywords', 'dictionary, bilingual, multilingual, translation')">
 		<meta name="robots" content="index, follow">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<meta property="og:title" content="@yield('title', 'Di Nkomo: the book of native tongues.')">
-		<meta property="og:desc" content="@yield('description', 'A Cultural Reference.')">
+		<meta property="og:title" content="@yield('title', 'Di Nkɔmɔ: A reference of cultures past and present.')">
+		<meta property="og:desc" content="@yield('description', 'A reference of cultures past and present.')">
 		<meta property="og:type" content="website">
-        <link rel="search" type="application/opensearchdescription+xml" href="{{ route('api.os') }}" title="Di Nkɔmɔ Cultural Reference">
-        <script src="{{ $helper->rev('all.js') }}" type="text/javascript"></script>
-		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
-		<link rel="stylesheet" type="text/css" href="{{ $helper->rev('all.css') }}">
-        @include('partials.analytics')
+        <link
+            rel="search"
+            type="application/opensearchdescription+xml"
+            href="{{ route('api.os') }}" title="Di Nkɔmɔ Cultural Reference">
 	@show
 </head>
 <body>
+
+    <script src="{{ App\Utilities::rev('all.js') }}" type="text/javascript"></script>
+    <!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+    <link rel="stylesheet" type="text/css" href="{{ App\Utilities::rev('all.css') }}">
+    @include('partials.analytics')
 
     @include('partials.header')
 

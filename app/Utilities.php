@@ -5,9 +5,7 @@
  */
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Utilities extends Model
+class Utilities
 {
     /**
      * Retrieves the revisioned asset file.
