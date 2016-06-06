@@ -21,11 +21,9 @@ Route::get('sitemap/{topic?}', 'PageController@sitemap')->name('sitemap');
 //
 // Language pages.
 //
-Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
 Route::get('{code}', 'LanguageController@show')->name('language.show');
-Route::resource('language', 'LanguageController', [
-    'only' => ['store', 'edit', 'update', 'destroy']
-]);
+Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
+Route::post('language', 'LanguageController@store')->name('language.store');
 
 //
 // Definition pages.

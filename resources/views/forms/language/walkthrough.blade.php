@@ -3,8 +3,14 @@
 @section('body')
 
 	<section>
-		<h1>Suggest a new language</h1>
-        <br>
+		<h1>
+            Suggest a new language
+            <br>
+
+            <small>
+                And help improve @lang('branding.name') for everyone.
+            </small>
+        </h1>
 
 		<form class="form edit" method="post" action="{{ route('language.store') }}">
 			{!! csrf_field() !!}
@@ -29,7 +35,8 @@
             <br>
 
             <div class="row center">
-                which has the 3-letter <a href="http://en.wikipedia.org/wiki/ISO_639-3" target="_blank">ISO-639-3</a> code
+                which has the 3-letter
+                <a href="http://en.wikipedia.org/wiki/ISO_639-3" target="_blank">ISO-639-3</a> code
             </div>
 
 			{{-- ISO-639-3 --}}
@@ -54,8 +61,8 @@
 
         	{{-- Form actions --}}
 			<div class="row center">
-				<input type="submit" name="next" value="continue">
-				<input type="submit" name="next" value="finish">
+				<input type="submit" name="return" value="continue">
+				<input type="submit" name="return" value="finish">
 			</div>
 		</form>
 	</section>

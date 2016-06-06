@@ -7,13 +7,9 @@
         <br>
 
         <small>
-            <a href="{{ route('language.create')  }}">
-                &rarr; or click here to suggest a language
-            </a>
+            And help improve @lang('branding.name') for everyone.
         </small>
     </h1>
-    <br>
-    <br>
 
     <form
         class="edit form"
@@ -27,7 +23,7 @@
 
         @yield('form')
 
-        <!-- Form actions -->
+        {{-- Form actions --}}
         <br>
         <br>
         <div class="row center">
