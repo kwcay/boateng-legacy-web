@@ -37,7 +37,7 @@
                         <a href="/{{ $language['code'] }}">
                             {{ $language['name'] }}
                         </a>
-                        with a total of {{ $language['total'] }} definitions.
+                        with a total of {{ number_format($language['total']) }} definitions.
                     </li>
                     @endforeach
                 </ol>

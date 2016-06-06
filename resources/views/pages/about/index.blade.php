@@ -6,10 +6,12 @@
 
 	<section>
         <h1>
-            <span ng-hide="language">Di Nkɔmɔ</span>
-
+            Di Nkɔmɔ
             <br>
-            <small>A Cultural Reference</small>
+
+            <small>
+                @lang('branding.tag_line')
+            </small>
         </h1>
 
         <div class="row">
@@ -21,7 +23,7 @@
                 It started as an online dictionary for those languages outside the mainstream
                 (95% of all languages
                 <a href="{{ route('stats') }}">fall within that category</a>).
-                Yet, language by itself doesn't always fully convey a thought or meaning. For
+                Yet, language by itself doesn't always convey a full thought or meaning. For
                 instance, the literal translation of <a href="/twi/Twereduampɔn">Twereduampɔn</a>
                 (a <a href="{{ route('language.show', ['code' => 'twi']) }}">Twi</a> word for God)
                 is <q>the tree one leans against and does not fall.</q> Doesn't this

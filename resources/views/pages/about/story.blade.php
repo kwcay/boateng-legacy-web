@@ -67,8 +67,8 @@
                         <br>
 
                         10th language:
-                        <a href="{{ route('language.show', ['code' => 'dua']) }}">Duala</a>, spoken
-                        mainly in Cameroun.
+                        <a href="{{ route('language.show', ['code' => 'dua']) }}">Duala</a>, mainly
+                        spoken in Cameroun.
                     </p>
                     <span class="date">May 2016</span>
                 </div>
