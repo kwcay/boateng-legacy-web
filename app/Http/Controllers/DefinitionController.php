@@ -5,22 +5,13 @@
  */
 namespace App\Http\Controllers;
 
-use DB;
-use URL;
 use Auth;
-use Lang;
 use Request;
 use Session;
-use Redirect;
-use Validator;
-
-use Illuminate\Support\Arr;
-
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Translation;
-use App\Models\Definitions\Word;
 use App\Models\DefinitionTitle as Title;
 
 class DefinitionController extends Controller
@@ -94,7 +85,7 @@ class DefinitionController extends Controller
 
         // Retrieve language object.
         if (!$lang = Language::findByCode($langCode)) {
-            abort(404, Lang::get('errors.resource_not_found'));
+            abort(404);
         }
 
         // Define view.
@@ -171,13 +162,14 @@ class DefinitionController extends Controller
         $definition->subType = Request::input('subType');
 
         // Definition rating
-        $definition->rating = Definition::RATING_DEFAULT;
-
-        // TODO: update rating based on related data...
+        $definition->rating = Auth::check() ?
+            Definition::RATING_AUTHENTICATED :
+            Definition::RATING_DEFAULT;
 
         // Create definition.
         if (!$definition->save()) {
-            abort(500, 'Could not save definition.');
+            Session::push('messages', 'Could not save definition.');
+            return back();
         }
 
         // Save relations.
@@ -185,204 +177,14 @@ class DefinitionController extends Controller
         $definition->translations()->saveMany($translations);
         $definition->languages()->sync($languages);
 
-        // Send response.
-        if (Request::ajax())
-        {
-            // TODO
-            return response($definition, 200);
-        }
-
-        else
-        {
-            Session::push('messages', 'The details for <em>'. $definition->titles[0]->title .
-                '</em> were successfully saved, thanks :)');
-
-            $rdir = Request::input('return') == 'continue' ?
-                route('definition.edit', ['id' => $definition->uniqueId]) :
-                $definition->uri;
-
-            return redirect($rdir);
-        }
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-     * @param string $id    Definition ID
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-        // Retrieve the definition object.
-        if (!$definition = Definition::find($id)) {
-            abort(404, Lang::get('errors.resource_not_found'));
-        }
-
-        // Language arrays for selectize plugin.
-        $options = $items = [];
-        foreach ($definition->languages as $lang)
-        {
-            // Only the value is used for the selected items.
-            $items[] = $lang->code;
-
-            // The value and name will be json-encoded for the selectize options.
-            $options[] = [
-                'code' => $lang->code,
-                'name' => $lang->name
-            ];
-        }
-
-        return view('forms.definition.default', [
-            'definition' => $definition,
-            'languageOptions' => $options
-        ]);
-	}
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int $id
-     * @throws \Exception
-     * @return Response
-     */
-	public function update($id)
-	{
-        // Retrieve the definition object.
-        if (!$definition = Definition::find($id)) {
-            throw new \Exception(Lang::get('errors.resource_not_found'), 404);
-        }
-
-        // Check definition titles.
-        if (!$titles = $this->getTitles(Request::input('titleStr'), Request::input('titles'))) {
-            return back();
-        }
-
-        // Check translations.
-        if (!$translations = $this->getTranslations(Request::input('translations'))) {
-            return back();
-        }
-
-        // Check languages
-        if (!$languageData = $this->getLanguages(Request::input('languages'), $titles[0]->title)) {
-            return back();
-        }
-
-        $languages = $languageData[0];
-        $mainLanguage = $languageData[1];
-
-        // Definition sub-type.
-        $definition->subType = Request::input('subType');
-
-        // Definition rating
-        $definition->rating = Definition::RATING_DEFAULT;
-
-        // TODO: update rating based on related data...
-        // ...
-
-        // Create definition.
-        if (!$definition->save()) {
-            abort(500, 'Could not save definition.');
-        }
-
-        // Update titles.
-        $definition->titles()->delete();
-        $definition->titles()->saveMany($titles);
-
-        // Update translations.
-        $definition->translations()->delete();
-        $definition->translations()->saveMany($translations);
-
-        // Update languages.
-        $definition->languages()->sync($languages);
-
-        // TODO: handle AJAX requests.
         Session::push('messages', 'The details for <em>'. $definition->titles[0]->title .
             '</em> were successfully saved, thanks :)');
 
-        $rdir = Request::input('next') == 'continue' ?
-            route('definition.edit', ['id' => $definition->uniqueId]) :
+        $rdir = Request::input('return') == 'continue' ?
+            route('admin.definition.edit', $definition->uniqueId) :
             $definition->uri;
 
         return redirect($rdir);
-	}
-
-    /**
-     * Shortcut to create a new definition or save an existing one.
-     *
-     * @param object $definition    Definition object.
-     * @param array $data           Definition details to update.
-     * @param string $return        Relative URI to redirect to.
-     * @return mixed
-     */
-    private function save(Definition $definition, array $data, $return)
-    {
-        // TODO: move each step to its own method, and let the "store" and "update" methods
-        // decide how to save the definition and its relations.
-
-        // Pull relations.
-        $relations = (array) Arr::pull($data, 'relations');
-
-        // Main language
-        $mainLanguage = null;
-
-        // Update definition details.
-        // $definition->fill($data);
-        // $definition->save();
-
-        // Save titles.
-        // TODO.
-        Session::push('messages', 'TODO: save definitions');
-        return back();
-
-        // Set rating.
-        // TODO.
-
-        // Update translations and other relations.
-        $def->updateRelations($relations);
-
-        // Redirect user to their requested next step.
-        switch ($return)
-        {
-            case 'index':
-                $return = $def->uri;
-                break;
-
-            case 'edit':
-                $return = route('definition.edit', ['id' => $def->uniqueId]);
-                break;
-
-            case 'word':
-            case 'expression':
-                $return = route('definition.create.'. $return, ['lang' => $def->mainLanguage->code]);
-                break;
-
-            default:
-                $return = route('home');
-        }
-
-        Session::push('messages', 'The details for <em>'. $def->title .'</em> were successfully saved, thanks :)');
-        return redirect($return);
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int $id
-     * @throws \Exception
-     * @return Response
-     */
-	public function destroy($id)
-	{
-        // Retrieve the definition object.
-        if (!$def = Definition::find($id)) {
-            throw new \Exception(Lang::get('errors.resource_not_found'), 404);
-        }
-
-        // Delete record
-        Session::push('messages', '<em>'. $def->titles[0]->title .'</em> has been succesfully deleted.');
-        $def->delete();
-
-        return redirect(route('home'));
 	}
 
     /**

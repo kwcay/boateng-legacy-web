@@ -113,6 +113,7 @@ class Definition extends Model
     CONST STATE_VISIBLE = 10;   // Default state.
 
     CONST RATING_DEFAULT = 1;       // Default rating.
+    CONST RATING_AUTHENTICATED = 3; // Rating for definitions added by an authenticated user.
     CONST RATING_HAS_LITERAL = 5;   // Rating for definitions with literal translations.
     CONST RATING_FULL_TRANS = 10;   // Rating for definitions with literal translations & meanings.
 

@@ -8,6 +8,7 @@ namespace App\Http\Controllers\Admin;
 use Lang;
 use Request;
 use Session;
+use Exception;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

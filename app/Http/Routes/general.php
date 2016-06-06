@@ -34,9 +34,7 @@ Route::get('{code}/+word', 'DefinitionController@createWord')->name('definition.
 Route::get('{code}/+expression', 'DefinitionController@createexpression')->name('definition.create.expression');
 Route::get('{code}/{definition}', 'DefinitionController@show')->name('definition.show');
 Route::get('random', 'PageController@random')->name('definition.random');
-Route::resource('definition', 'DefinitionController', [
-    'only' => ['store', 'edit', 'update', 'destroy']
-]);
+Route::post('definition', 'DefinitionController@store')->name('definition.store');
 
 
 //

@@ -31,9 +31,17 @@
         <br>
         <br>
         <div class="row center">
+            @if (Auth::check())
             <input type="submit" name="return" value="continue">
             <input type="submit" name="return" value="finish">
-            <input type="button" name="cancel" value="return" onclick="return confirm('Cancel?') ? App.redirect('') : false;">
+            @else
+            <input type="submit" name="return" value="save">
+            @endif
+            <input
+                type="button"
+                name="cancel"
+                value="cancel"
+                onclick="return confirm('Cancel?') ? App.redirect('{{ $lang->code }}') : false;">
         </div>
     </form>
 
