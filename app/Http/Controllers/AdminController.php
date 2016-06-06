@@ -18,13 +18,6 @@ class AdminController extends Controller
         return view('admin.index');
     }
 
-    public function getDefinitionList()
-    {
-
-
-        return view('admin.list.definitions');
-    }
-
     public function import() {
         return view('admin.import');
     }
