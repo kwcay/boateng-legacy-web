@@ -1007,8 +1007,15 @@ class Definition extends Model
      *
      * @return string
      */
-    public function getUriAttribute() {
-        return url($this->mainLanguage->code .'/'. str_replace(' ', '_', $this->titles[0]->title));
+    public function getUriAttribute()
+    {
+        // Remove white spaces.
+        $slug = str_replace(' ', '_', $this->titles[0]->title);
+
+        // Remove question marks.
+        $slug = str_replace('?', '__', $slug);
+
+        return url($this->mainLanguage->code .'/'. $slug);
     }
 
     /**

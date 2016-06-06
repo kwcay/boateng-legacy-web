@@ -74,7 +74,7 @@
             target="_blank"
             style="margin: 0 5px;">
 
-            {{ $word }}
+            {{ str_replace(['?', '!', ','], '', $word) }}
         </a>
     @endforeach
 </span>

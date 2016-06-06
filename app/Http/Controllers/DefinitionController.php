@@ -2,8 +2,6 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
- *
- * TODO: determine if this controller is needed...
  */
 namespace App\Http\Controllers;
 
@@ -27,23 +25,6 @@ use App\Models\DefinitionTitle as Title;
 
 class DefinitionController extends Controller
 {
-    public function __construct()
-    {
-        // Enable the auth middleware.
-		// $this->middleware('auth', ['except' => ['show', 'search', 'exists']]);
-    }
-
-    /**
-     *
-     */
-    public function index()
-    {
-        $limit = 30;
-        $order = 'desc';
-
-        return view('');
-    }
-
     /**
      * Displays the word or phrase page, with similar definitions.
      *
@@ -55,18 +36,19 @@ class DefinitionController extends Controller
     {
         // Retrieve language object
         if (!$lang = Language::findByCode($code)) {
-            abort(404, Lang::get('errors.resource_not_found'));
+            abort(404);
         }
 
         // Check user input.
         $str = trim(preg_replace('/[\s]+/', '_', strip_tags($raw)));
         if (strlen($str) < 2) {
-            abort(404, Lang::get('errors.resource_not_found'));
+            abort(404);
         } elseif ($str != $raw) {
             return redirect($lang->code .'/'. $str);
         }
 
         // Find definitions matching the query
+        $str = str_replace('__', '?', $str);
         $str = str_replace('_', ' ', $str);
         $definitions = $lang->definitions()
                         ->with('languages', 'translations', 'titles', 'tags')
@@ -74,11 +56,6 @@ class DefinitionController extends Controller
                         ->whereHas('titles', function($query) use($str) {
                             $query->where('title', $str);
                         })->get();
-        // $definitions = $lang->definitions()
-        //     ->with('languages', 'translations')
-        //     ->where('title', '=', $data)
-        //     ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_EXPRESSION])
-        //     ->get();
 
         if (!count($definitions))
         {
@@ -88,7 +65,7 @@ class DefinitionController extends Controller
                 return redirect($alts[0]->uri);
             }
 
-            abort(404, Lang::get('errors.resource_not_found'));
+            abort(404);
         }
 
         return view('pages.definitions', [
