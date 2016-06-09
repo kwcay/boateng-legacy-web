@@ -1,39 +1,8 @@
-@extends('layouts.admin')
+@extends('admin.layouts.index')
 
-@section('body')
+@section('page-title', 'Countries')
 
-    <h1>Countries</h1>
-
-    <ol class="breadcrumb">
-        <li>
-            <a href="{{ route('admin.index') }}">Administration</a>
-        </li>
-        <li class="active">
-            Countries
-
-            <span style="margin: 0 10px">
-                &rarr;
-            </span>
-            <a href="{{ route('admin.definition.index') }}">
-                Definitions
-            </a>
-            &bull;
-            <a href="{{ route('admin.tag.index') }}">
-                Tags
-            </a>
-            &bull;
-            <a href="{{ route('admin.language.index') }}">
-                Languages
-            </a>
-            &bull;
-            <a href="{{ route('admin.alphabet.index') }}">
-                Alphabets
-            </a>
-        </li>
-    </ol>
-
-    {{-- Pagination links --}}
-    @include('admin.partials.pagination')
+@section('data')
 
     <table class="table table-striped table-hover text-center">
         <thead>
@@ -64,7 +33,5 @@
             @endforeach
         </tbody>
     </table>
-
-    {{-- Pagination links --}}
-    @include('admin.partials.pagination')
+    
 @stop

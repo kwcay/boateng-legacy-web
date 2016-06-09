@@ -18,17 +18,17 @@ class AlphabetController extends Controller
     /**
      *
      */
-    protected $queryLimit = 20;
+    protected $defaultQueryLimit = 20;
 
     /**
      *
      */
     protected $supportedOrderColumns = [
-        'id',
-        'name',
-        'code',
-        'scriptCode',
-        'createdAt',
+        'id' => 'ID',
+        'name' => 'Name',
+        'code' => 'Code',
+        'scriptCode' => 'Script code',
+        'createdAt' => 'Created date',
     ];
 
     /**

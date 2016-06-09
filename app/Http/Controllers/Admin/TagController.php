@@ -18,14 +18,14 @@ class TagController extends Controller
     /**
      *
      */
-    protected $queryLimit = 20;
+    protected $defaultQueryLimit = 20;
 
     /**
      *
      */
     protected $supportedOrderColumns = [
-        'id',
-        'title',
+        'id' => 'ID',
+        'title' => 'Title',
     ];
 
     /**

@@ -18,22 +18,22 @@ class CountryController extends Controller
     /**
      *
      */
-    protected $queryLimit = 20;
+    protected $defaultQueryLimit = 20;
 
     /**
      *
      */
     protected $supportedOrderColumns = [
-        'id',
-        'name',
-        'code',
-        'createdAt',
+        'id' => 'ID',
+        'name' => 'Name',
+        'code' => 'ISO 3166-1 code',
+        'createdAt' => 'Created date',
     ];
 
     /**
      *
      */
-    protected $defaultOrderColumn = 'name';
+    protected $defaultOrderColumn = 'code';
 
     /**
      *

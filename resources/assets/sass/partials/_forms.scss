@@ -11,18 +11,22 @@ $form-input-border: 2px solid #aaa;
 .form {}
 .form input,
 .form textarea,
-.form select {
+.form select,
+.form-like {
 	border: none;
 	background-color: transparent;
 	font: normal 24px/1.618 'sinanova', Serif;
     @include vendor-prefix(appearance, none);
 }
-.form input:focus {
+.form input:focus,
+.form-like:focus {
 	outline: none;
     @include vendor-prefix(tap-highlight-color, rgba(255, 255, 255, 0))
 }
 .form input[type="button"],
-.form input[type="submit"] {
+.form input[type="submit"],
+input[type="button"].form-like,
+input[type="submit"].form-like {
     cursor: pointer;
 }
 
@@ -44,8 +48,8 @@ $form-input-border: 2px solid #aaa;
 .form .row input[type="email"],
 .form .row input[type="password"],
 .form .row textarea,
-.form .row select {
-    width: 100%;
+.form .row select,
+.form-like {
     font-size: 1.1em;
     color: #000;
     border-bottom: $form-input-border;
@@ -53,27 +57,51 @@ $form-input-border: 2px solid #aaa;
 }
 .form .row input[type="text"],
 .form .row input[type="email"],
-.form .row input[type="password"] {
+.form .row input[type="password"],
+.form .row textarea,
+.form .row select {
+    width: 100%;
+
+    &.inline {
+        width: auto;
+        margin: auto 4px;
+    }
+}
+.form .row input[type="text"],
+.form .row input[type="email"],
+.form .row input[type="password"],
+input[type="text"].form-like,
+input[type="email"].form-like,
+input[type="password"].form-like {
     padding: 10px 5px;
 }
-.form .row textarea {
+.form .row textarea,
+textarea.form-like {
     height: 200px;
 }
 .form input[type="text"]:focus,
 .form input[type="email"]:focus,
 .form input[type="password"]:focus,
 .form .row textarea:focus,
-.form .row select:focus {
+.form .row select:focus,
+input[type="text"].form-like:focus,
+input[type="email"].form-like:focus,
+input[type="password"].form-like:focus,
+textarea.form-like:focus,
+select.form-like:focus {
     outline: none;
     border-bottom-color: #333;
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }
-.form .row input.loading {
+.form .row input.loading,
+.form-like.loading {
     color: #999;
     background-color: #ccc;
 }
 .form input[type="button"],
 .form input[type="submit"],
+input[type="button"].form-like,
+input[type="submit"].form-like,
 a.button {
     position: relative;
     cursor: pointer;
@@ -89,14 +117,20 @@ a.button {
 }
 .form input[type="button"]:hover,
 .form input[type="submit"]:hover,
+input[type="button"].form-like:hover,
+input[type="submit"].form-like:hover,
 a.button:hover,
 .form input[type="button"]:focus,
 .form input[type="submit"]:focus,
+input[type="button"].form-like:focus,
+input[type="submit"].form-like:focus,
 a.button:focus {
     background-color: #e6e6e6;
 }
 .form input[type="button"]:active,
 .form input[type="submit"]:active,
+input[type="button"].form-like:active,
+input[type="submit"].form-like:active,
 a.button:active {
     top: 1px;
     left: 1px;
@@ -106,7 +140,12 @@ a.button:after {
     visibility: hidden;
     @include transform(scaleX(0));
 }
-.form .row input[disabled] {
+.form .row input[disabled],
+.form .row textarea[disabled],
+.form .row select[disabled],
+input[disabled].form-like,
+textarea[disabled].form-like,
+select[disabled].form-like {
     color: #999;
 }
 

@@ -28,22 +28,22 @@ class LanguageController extends Controller
     /**
      *
      */
-    protected $queryLimit = 20;
+    protected $defaultQueryLimit = 20;
 
     /**
      *
      */
     protected $supportedOrderColumns = [
-        'id',
-        'code',
-        'name',
-        'createdAt',
+        'id' => 'ID',
+        'code' => 'ISO 639-3 code',
+        'name' => 'Name',
+        'createdAt' => 'Created date',
     ];
 
     /**
      *
      */
-    protected $defaultOrderColumn = 'name';
+    protected $defaultOrderColumn = 'code';
 
     /**
      *

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class BaseController extends Controller
 {
     /**
-     *
+     * @var string
      */
     protected $name;
 
@@ -61,17 +61,29 @@ class BaseController extends Controller
         $builder = $this->getModel();
         $total = $builder->count();
 
-        $limit = (int) $this->getParam('limit', $this->queryLimit);
-        $limit = max($limit, $this->queryLimit);
+        $limit = (int) $this->getParam('limit', $this->defaultQueryLimit);
+        $limit = max($limit, 1);
         $limit = min($limit, $total);
         $this->setParam('limit', $limit);
 
+        $limits = [];
+        if ($total > 10)    $limits[10] = 10;
+        if ($total > 20)    $limits[20] = 20;
+        if ($total > 30)    $limits[30] = 30;
+        if ($total > 50)    $limits[50] = 50;
+        if ($total > 100)    $limits[100] = 100;
+        $limits[$total] = $total;
+
+        $orders = collect($this->supportedOrderColumns);
         $order = $this->getParam('order', $this->defaultOrderColumn);
-        $order = in_array($order, $this->supportedOrderColumns) ? $order : $this->defaultOrderColumn;
+        $order = $orders->has($order) ? $order : $this->defaultOrderColumn;
+        // $order = in_array($order, $this->supportedOrderColumns) ? $order : $this->defaultOrderColumn;
         $this->setParam('order', $order);
 
+        $dirs = collect(['asc' => 'ascending', 'desc' => 'descending']);
         $dir = strtolower($this->getParam('dir', $this->defaultOrderDirection));
-        $dir = in_array($dir, ['asc', 'desc']) ? $dir : $this->defaultOrderDirection;
+        $dir = $dirs->has($dir) ? $dir : $this->defaultOrderDirection;
+        // $dir = in_array($dir, ['asc', 'desc']) ? $dir : $this->defaultOrderDirection;
         $this->setParam('dir', $dir);
 
         // Add trashed items.
@@ -84,7 +96,14 @@ class BaseController extends Controller
         $paginator = $builder->orderBy($order, $dir)->paginate($limit, ['*'], 'page', $page);
 
         return view("admin.{$this->name}.index", compact([
-            'total', 'limit', 'order', 'dir', 'paginator'
+            'total',
+            'limit',
+            'limits',
+            'order',
+            'orders',
+            'dir',
+            'dirs',
+            'paginator'
         ]));
     }
 

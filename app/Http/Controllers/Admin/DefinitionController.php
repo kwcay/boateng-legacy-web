@@ -23,21 +23,21 @@ use App\Http\Controllers\Admin\BaseController as Controller;
 class DefinitionController extends Controller
 {
     /**
-     *
+     * @var string
      */
     protected $name = 'definition';
 
     /**
      *
      */
-    protected $queryLimit = 50;
+    protected $defaultQueryLimit = 50;
 
     /**
      *
      */
     protected $supportedOrderColumns = [
-        'id',
-        'createdAt',
+        'id' => 'ID',
+        'createdAt' => 'Created date',
     ];
 
     /**
@@ -49,104 +49,6 @@ class DefinitionController extends Controller
      *
      */
     protected $defaultOrderDirection = 'desc';
-
-    /**
-     * Displays the word or phrase page, with similar definitions.
-     *
-     * @param string $code  ISO 639-3 language code.
-     * @param string $raw   Word or phrase to be defined.
-     * @return mixed
-     */
-    public function show($code, $raw = null)
-    {
-        // Retrieve language object
-        if (!$lang = Language::findByCode($code)) {
-            abort(404, Lang::get('errors.resource_not_found'));
-        }
-
-        // Check user input.
-        $str = trim(preg_replace('/[\s]+/', '_', strip_tags($raw)));
-        if (strlen($str) < 2) {
-            abort(404, Lang::get('errors.resource_not_found'));
-        } elseif ($str != $raw) {
-            return redirect($lang->code .'/'. $str);
-        }
-
-        // Find definitions matching the query
-        $str = str_replace('_', ' ', $str);
-        $definitions = $lang->definitions()
-                        ->with('languages', 'translations', 'titles')
-                        ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_EXPRESSION])
-                        ->whereHas('titles', function($query) use($str) {
-                            $query->where('title', $str);
-                        })->get();
-        // $definitions = $lang->definitions()
-        //     ->with('languages', 'translations')
-        //     ->where('title', '=', $data)
-        //     ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_EXPRESSION])
-        //     ->get();
-
-        if (!count($definitions))
-        {
-            // If no definitions were found, check alternate titles...
-            $alts = Definition::search($str, ['offset' => 0, 'limit' => 1]);
-            if (count($alts)) {
-                return redirect($alts[0]->uri);
-            }
-
-            abort(404, Lang::get('errors.resource_not_found'));
-        }
-
-        return view('pages.definitions', [
-            'lang'  => $lang,
-            'query' => $str,
-            'definitions' => $definitions
-        ]);
-    }
-
-	/**
-	 * Displays the form to add a new definition.
-	 *
-	 * @return Response
-	 */
-    private function createType($type, $langCode)
-    {
-        // Make sure we have a logged in user.
-        // if (Auth::guest()) {
-        //     return redirect()->guest(route('auth.login'));
-        // }
-
-        // Create a specific definition instance.
-        if (!$definition = Definition::getInstance($type)) {
-            abort(500);
-        }
-
-        // Retrieve language object.
-        if (!$lang = Language::findByCode($langCode)) {
-            abort(404, Lang::get('errors.resource_not_found'));
-        }
-
-        // Define view.
-        $template = 'forms.definition.'. Definition::getTypeName($type) .'.walkthrough';
-
-        return view($template, [
-            'lang' => $lang,
-            'type' => $type,
-            'definition' => $definition
-        ]);
-    }
-
-    public function createWord($langCode) {
-        return $this->createType(Definition::TYPE_WORD, $langCode);
-    }
-
-    public function createExpression($langCode) {
-        return $this->createType(Definition::TYPE_EXPRESSION, $langCode);
-    }
-
-    public function createStory($langCode) {
-        return $this->createType(Definition::TYPE_STORY, $langCode);
-    }
 
 	/**
 	 * Stores a newly created resource in storage.
