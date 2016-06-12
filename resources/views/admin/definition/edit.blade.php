@@ -206,6 +206,19 @@
             </label>
         </div>
 
+        {{-- Related definitions --}}
+        <div class="row">
+            <input
+                id="tags"
+                type="text"
+                name="tags"
+                class="text-input remote"
+                value="{{ $model->tags->implode('title', ',') }}">
+            <label for="tags">
+                Tags
+            </label>
+        </div>
+
         {{-- Tags --}}
         <div class="row">
             <input

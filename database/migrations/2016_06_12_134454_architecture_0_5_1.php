@@ -18,6 +18,12 @@ class Architecture051 extends Migration
             $table->dropColumn('reference');
         });
 
+        // Add related_definitions column to definitions table
+        Schema::table('definitions', function(Blueprint $table)
+		{
+            $table->text('related_definitions');
+        });
+
         // Create references table.
         Schema::create('references', function(Blueprint $table)
         {
@@ -60,6 +66,12 @@ class Architecture051 extends Migration
         // Drop references table.
         Schema::hasTable('references') ? DB::statement('ALTER TABLE `references` DROP INDEX idx_reference') : null;
         Schema::hasTable('references') ? Schema::drop('references') : null;
+
+        // Remove related_definitions column from definitions table
+        Schema::table('definitions', function(Blueprint $table)
+		{
+            $table->dropColumn('related_definitions');
+        });
 
         // Create reference column on definition_titles table
         Schema::table('definition_titles', function(Blueprint $table)
