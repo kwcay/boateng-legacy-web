@@ -17,6 +17,14 @@ class Translation extends Model
 {
     use Validatable, Obfuscatable, Exportable, SoftDeletes, HasParams;
 
+
+    //
+    //
+    // Main attributes
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private $markdown;
 
     /**
@@ -51,17 +59,13 @@ class Translation extends Model
      */
     protected $touches = ['definition'];
 
-    /**
-     * @param array $attributes
-     */
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
 
-        // Markdown parser.
-        $this->markdown = new MarkdownExtra;
-        $this->markdown->html5 = true;
-    }
+    //
+    //
+    // Relations
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Defines relation to Definition model.
@@ -79,5 +83,25 @@ class Translation extends Model
      */
     public function references() {
         return $this->morphToMany('App\Models\Reference', 'referenceable');
+    }
+
+
+    //
+    //
+    // Main methods
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+
+        // Markdown parser.
+        // $this->markdown = new MarkdownExtra;
+        // $this->markdown->html5 = true;
     }
 }

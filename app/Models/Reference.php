@@ -88,6 +88,41 @@ class Reference extends Model
 
     //
     //
+    // Relations
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Defines relation to Translation model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
+     */
+    public function translations() {
+        return $this->morphedByMany('App\Models\Translation', 'referenceable');
+    }
+
+    /**
+     * Defines relation to Data model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
+     */
+    public function data() {
+        return $this->morphedByMany('App\Models\Data', 'referenceable');
+    }
+
+    /**
+     * Defines relation to Media model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphedByMany
+     */
+    public function media() {
+        return $this->morphedByMany('App\Models\Media', 'referenceable');
+    }
+
+
+    //
+    //
     // Methods for App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
