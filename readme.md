@@ -1,9 +1,7 @@
 # Di Nkɔmɔ
-*"A Collection of Cultures."*
+*"A reference of cultures past and present."*
 
-Di Nkɔmɔ is a little project I started in 2014 to help me learn [Twi](http://en.wikipedia.org/wiki/Akan_language), my cultural language.
-
-The web app currently resides at [dinkomo.frnk.ca](http://dinkomo.frnk.ca) and is based on the [Laravel framework](http://laravel.com).
+Di Nkɔmɔ is a free, online reference for the cultures of the world. See the live app at [dinkomo.frnk.ca](http://dinkomo.frnk.ca).
 
 # Installation
 
@@ -22,8 +20,9 @@ Upgrade MySQL to version 5.6 and install php5-curl
     sudo apt-get upgrade
     sudo apt-get install mysql-server-5.6 php5-curl
 
-Pull the documents
+Pull the repository
 
+    cd path/where/app/will/reside
     git clone https://github.com/frnkly/dinkomo.git
     cd dinkomo
 
@@ -39,6 +38,3 @@ Create the database
     mysql -h localhost -u root -p...
     show databases;
     create database dinkomo;
-
-# TODOs
-- Replace bower components with corresponding node modules.
