@@ -211,9 +211,9 @@
             <input
                 id="relatedDefinitions"
                 type="text"
-                name="related_definitions"
+                name="relatedDefinitions"
                 class="text-input remote"
-                value="{{ $model->relatedDefinitionList->implode('titleString', '|') }}">
+                value="{{ $model->relatedDefinitionList->implode('uniqueId', ',') }}">
             <label for="relatedDefinitions">
                 Related definitions
             </label>
@@ -286,8 +286,10 @@
     );
 
     $('#tags').tagSearch();
-
-    $('#relatedDefinitions').definitionLookup();
+    $('#relatedDefinitions').definitionLookup({
+        lang: '{{ $model->mainLanguageCode }}',
+        options: {!! json_encode($relatedDefinitionOptions) !!}
+    });
 
     </script>
 @stop

@@ -149,6 +149,14 @@ class DefinitionController extends Controller
             abort(404);
         }
 
+        // Related definition array for selectize plugin.
+        $relatedDefinitions = $definition->relatedDefinitionList->map(function($item) {
+            return [
+                'uniqueId' => $item->uniqueId,
+                'mainTitle' => $item->mainTitle,
+            ];
+        });
+
         // Language arrays for selectize plugin.
         $options = $items = [];
         foreach ($definition->languages as $lang)
@@ -165,6 +173,7 @@ class DefinitionController extends Controller
 
         return view('admin.definition.edit', [
             'model' => $definition,
+            'relatedDefinitionOptions' => $relatedDefinitions,
             'languageOptions' => $options
         ]);
 	}
@@ -209,6 +218,15 @@ class DefinitionController extends Controller
 
         // Definition sub-type.
         $definition->subType = Request::input('subType');
+
+        // Related definitions.
+        $related = $this->getRelatedDefinitions(Request::input('relatedDefinitions'));
+        $definition->relatedDefinitions = $related->map(function($item, $key) {
+            return $item->id;
+        });
+
+        // TODO: Update related definition records
+        // ...
 
         // Definition rating
         $definition->rating = Definition::RATING_DEFAULT;
@@ -552,5 +570,36 @@ class DefinitionController extends Controller
         }
 
         return $translations;
+    }
+
+    /**
+     * Retrieves related definitions from request.
+     *
+     * @param array $raw
+     * @return Collection
+     */
+    public function getRelatedDefinitions($raw = '')
+    {
+        // Performance check.
+        $raw = trim($raw);
+        if (!strlen($raw)) {
+            return new Collection;
+        }
+
+        // Un-obfuscate IDs.
+        $ids = [];
+        foreach (@explode(',', $raw) as $id)
+        {
+            if ($id = Definition::decodeId($id)) {
+                $ids[] = $id;
+            }
+        }
+
+        // Performance check.
+        if (!count($ids)) {
+            return new Collection;
+        }
+
+        return Definition::whereIn('id', $ids)->get();
     }
 }

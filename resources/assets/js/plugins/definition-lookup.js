@@ -7,11 +7,11 @@
     /**
      *
      */
-    $.fn.definitionLookup = function() {
+    $.fn.definitionLookup = function( setup ) {
 
-        var $resLookup = this.resourceLookup({
+        var $resLookup = this.resourceLookup($.extend(setup, {
             labelField: 'mainTitle',
-            apiEndpoint: App.root + 'api/0.1/definition/search/:query',
+            apiEndpoint: App.root + 'api/0.1/definition/search/:query?lang=' + (setup.lang || ''),
             render:
             {
                 option: function(item, escape) {
@@ -23,7 +23,7 @@
                             '</div>';
                 }
             }
-        });
+        }));
 
         return this;
     };

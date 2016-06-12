@@ -12,6 +12,7 @@
         // Selectize setup.
         setup = setup || {};
         setup.valueField = setup.valueField || 'uniqueId';
+        setup.delimiter = setup.delimiter || ',';
         setup.labelField = setup.labelField || 'title';
         setup.searchField = setup.searchField || [setup.labelField];
         setup.options = setup.options || setup.selectizeItems;

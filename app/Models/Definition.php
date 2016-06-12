@@ -887,7 +887,7 @@ class Definition extends Model
      */
     public function getRelatedDefinitionListAttribute()
     {
-        if (empty($this->relatedDefinitions)) {
+        if (!count($this->relatedDefinitions)) {
             return new Collection;
         }
 
