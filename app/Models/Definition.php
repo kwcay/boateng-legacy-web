@@ -257,28 +257,36 @@ class Definition extends Model
 
 
     /**
-     * Defines the translation relations.
+     * Defines relation to Translation model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function translations() {
         return $this->hasMany('App\Models\Translation', 'definition_id');
     }
 
     /**
-     * Defines the title relations.
+     * Defines relation to DefinitionTitle model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function titles() {
         return $this->hasMany('App\Models\DefinitionTitle', 'definition_id');
     }
 
     /**
-     * Defines the language relations.
+     * Defines relation to Language model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function languages() {
         return $this->belongsToMany('App\Models\Language', 'definition_language', 'definition_id', 'language_id');
     }
 
     /**
-     * Defines the tag relations.
+     * Defines relation to Tag model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function tags() {
         return $this->belongsToMany('App\Models\Tag', 'definition_tag', 'definition_id', 'tag_id');

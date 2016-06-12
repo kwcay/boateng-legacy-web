@@ -63,7 +63,21 @@ class Translation extends Model
         $this->markdown->html5 = true;
     }
 
+    /**
+     * Defines relation to Definition model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function definition() {
         return $this->belongsTo('App\Models\Definition');
+    }
+
+    /**
+     * Defines relation to Reference model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function references() {
+        return $this->morphToMany('App\Models\Reference', 'referenceable');
     }
 }

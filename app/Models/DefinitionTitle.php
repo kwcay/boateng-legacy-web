@@ -51,14 +51,18 @@ class DefinitionTitle extends Model
     public static $appendable = [];
 
     /**
-     * Alphabet this title is written in.
+     * Defines relation to Alphabet model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function alphabet() {
         return $this->belongsTo('App\Models\Alphabet');
     }
 
     /**
-     * Definition this title belongs to.
+     * Defines relation to Definition model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function definition() {
         return $this->belongsTo('App\Models\Definition', 'definition_id');

@@ -62,7 +62,7 @@ class Alphabet extends Model
     protected $dates = ['deleted_at'];
 
     /**
-     * Languages using this alphabet.
+     * Defines relation to Language model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

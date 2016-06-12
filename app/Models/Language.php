@@ -196,7 +196,7 @@ class Language extends Model
 
 
     /**
-     * Parent relation.
+     * Defines relation to Language model (parent relation).
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -205,7 +205,7 @@ class Language extends Model
     }
 
     /**
-     * Children relation.
+     * Defines relation to Language model (children relation).
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -214,7 +214,7 @@ class Language extends Model
     }
 
     /**
-     * Definitions relation.
+     * Defines relation to Definition model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -223,7 +223,7 @@ class Language extends Model
     }
 
     /**
-     * Alphabets this language uses.
+     * Defines relation to Alphabet model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
