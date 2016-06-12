@@ -289,6 +289,7 @@ class ApiController extends Controller
             switch (strtolower($resourceName))
             {
                 case 'alphabet':
+                case 'definition':
                 case 'language':
                 case 'tag':
                     $className = '\\App\\Models\\'. ucfirst(strtolower($resourceName));

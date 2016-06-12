@@ -206,6 +206,7 @@ class Definition extends Model
     protected $hidden = [
         'id',
         'titles',
+        'related_definitions',
         'tags',
         'languages',
         'translations',
@@ -228,6 +229,7 @@ class Definition extends Model
         'mainTitle',
         'titleString',
         'titleList',
+        'relatedDefinitionList',
         'tagList',
         'translation',
         'mainLanguage',
@@ -245,7 +247,8 @@ class Definition extends Model
     protected $casts = [
         'title' => 'string',
         'type' => 'integer',
-        'params' => 'array',
+        'related_definitions' => 'array',
+        'meta' => 'array',
     ];
 
 
@@ -877,6 +880,18 @@ class Definition extends Model
         }
 
         return $str;
+    }
+
+    /**
+     * Accessor for $this->relatedDefinitionList
+     */
+    public function getRelatedDefinitionListAttribute()
+    {
+        if (empty($this->relatedDefinitions)) {
+            return new Collection;
+        }
+
+        return Definition::whereIn('id', $this->relatedDefinitions)->get();
     }
 
     /**

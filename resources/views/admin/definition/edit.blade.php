@@ -209,13 +209,13 @@
         {{-- Related definitions --}}
         <div class="row">
             <input
-                id="tags"
+                id="relatedDefinitions"
                 type="text"
-                name="tags"
+                name="related_definitions"
                 class="text-input remote"
-                value="{{ $model->tags->implode('title', ',') }}">
-            <label for="tags">
-                Tags
+                value="{{ $model->relatedDefinitionList->implode('titleString', '|') }}">
+            <label for="relatedDefinitions">
+                Related definitions
             </label>
         </div>
 
@@ -286,6 +286,8 @@
     );
 
     $('#tags').tagSearch();
+
+    $('#relatedDefinitions').definitionLookup();
 
     </script>
 @stop
