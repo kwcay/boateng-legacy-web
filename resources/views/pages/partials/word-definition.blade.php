@@ -49,6 +49,19 @@
     <br>
 @endif
 
+{{-- Related definitions --}}
+@if (count($def->relatedDefinitionList))
+    <span class="meta-label">&rarr; Related:</span>
+
+    <span class="meta-data">
+        @foreach ($def->relatedDefinitionList as $related)
+            <a href="{{ $related->uri }}">{{ $related->mainTitle }}</a>
+        @endforeach
+    </span>
+
+    <br>
+@endif
+
 {{-- Tags --}}
 @if (count($def->tags))
     <span class="meta-label">&rarr; Tagged:</span>

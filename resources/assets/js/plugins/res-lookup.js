@@ -19,6 +19,7 @@
         setup.selectizePlugins = setup.selectizePlugins || null;
         setup.create = setup.create || false;
         setup.maxItems = setup.maxItems || 20;
+        setup.loadThrottle = setup.loadThrottle || 600;
         setup.render = setup.render || {};
 
         // Default to tag API endpoint.

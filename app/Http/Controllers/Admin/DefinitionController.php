@@ -221,12 +221,48 @@ class DefinitionController extends Controller
 
         // Related definitions.
         $related = $this->getRelatedDefinitions(Request::input('relatedDefinitions'));
-        $definition->relatedDefinitions = $related->map(function($item, $key) {
+        $oldRelatedIDs = $definition->relatedDefinitions;
+        $newRelatedIDs = $definition->relatedDefinitions = $related->map(function($item, $key) {
             return $item->id;
         });
 
-        // TODO: Update related definition records
-        // ...
+        // Update related definition records.
+        // TODO: this can be done in a cleaner way...
+        $addRelated = collect($newRelatedIDs)->diff($oldRelatedIDs);
+        $removeRelated = collect($oldRelatedIDs)->diff($newRelatedIDs);
+        if (count($addRelated))
+        {
+            foreach ($addRelated as $id)
+            {
+                if ($def = Definition::find($id))
+                {
+                    if (!$def->relatedDefinitions || !in_array($definition->id, $def->relatedDefinitions))
+                    {
+                        $defRelated = (array) $def->relatedDefinitions;
+                        $defRelated[] = $definition->id;
+                        $def->relatedDefinitions = $defRelated;
+                        $def->save();
+                    }
+                }
+            }
+        }
+        if (count($removeRelated))
+        {
+            foreach ($removeRelated as $id)
+            {
+                if ($def = Definition::find($id))
+                {
+                    if ($def->relatedDefinitions && in_array($definition->id, $def->relatedDefinitions))
+                    {
+                        $defRelated = (array) $def->relatedDefinitions;
+                        $key = array_search($definition->id, $defRelated);
+                        array_splice($defRelated, $key, 1);
+                        $def->relatedDefinitions = $defRelated;
+                        $def->save();
+                    }
+                }
+            }
+        }
 
         // Definition rating
         $definition->rating = Definition::RATING_DEFAULT;

@@ -15,11 +15,19 @@
             render:
             {
                 option: function(item, escape) {
+
+                    // Use main title as a label.
+                    var label = escape(item.mainTitle);
+
+                    // Append translation to label.
+                    if (item.translation && item.translation.practical) {
+                        if (item.translation.practical.eng) {
+                            label += ' (' + escape(item.translation.practical.eng) + ')';
+                        }
+                    }
+
                     return  '<div>' +
-                                '<span class="label">' +
-                                    escape(item.mainTitle) +
-                                    ' (' + escape(item.translation.practical.eng) + ')' +
-                                '</span>' +
+                                '<span class="label">' + label + '</span>' +
                             '</div>';
                 }
             }

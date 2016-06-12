@@ -286,6 +286,7 @@
     );
 
     $('#tags').tagSearch();
+    
     $('#relatedDefinitions').definitionLookup({
         lang: '{{ $model->mainLanguageCode }}',
         options: {!! json_encode($relatedDefinitionOptions) !!}
