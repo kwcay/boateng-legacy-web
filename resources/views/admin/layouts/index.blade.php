@@ -12,29 +12,6 @@
         </li>
         <li class="active">
             @yield('page-title', 'Resource listing')
-
-            <span style="margin: 0 10px">
-                &rarr;
-            </span>
-            <a href="{{ route('admin.definition.index') }}">
-                Definitions
-            </a>
-            &bull;
-            <a href="{{ route('admin.tag.index') }}">
-                Tags
-            </a>
-            &bull;
-            <a href="{{ route('admin.language.index') }}">
-                Languages
-            </a>
-            &bull;
-            <a href="{{ route('admin.alphabet.index') }}">
-                Alphabets
-            </a>
-            &bull;
-            <a href="{{ route('admin.country.index') }}">
-                Countries
-            </a>
         </li>
     </ol>
 

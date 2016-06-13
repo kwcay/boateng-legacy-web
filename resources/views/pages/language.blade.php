@@ -69,8 +69,8 @@
                     {{-- Definition count --}}
                     <li>
                         <i class="fa-li fa fa-asterisk"></i>
-                        We have {{ $lang->definitions->count() }} {{ $lang->name }} words in our
-                        database.
+                        We have {{ number_format($lang->definitions->count()) }} {{ $lang->name }}
+                        words in our database.
                     </li>
 
                     {{-- First and latest words. --}}
