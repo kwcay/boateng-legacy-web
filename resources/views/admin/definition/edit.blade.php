@@ -202,7 +202,8 @@
                 value="{{ $model->languages->implode('code', ',') }}">
             <label for="languages">
                 Languages that use this word. Start typing and select a language from the list.
-                You can drag these around (the first will be considred the "main" language).
+                You can drag these around (the first will be considered the &quot;main&quot;
+                language).
             </label>
         </div>
 
@@ -286,7 +287,7 @@
     );
 
     $('#tags').tagSearch();
-    
+
     $('#relatedDefinitions').definitionLookup({
         lang: '{{ $model->mainLanguageCode }}',
         options: {!! json_encode($relatedDefinitionOptions) !!}

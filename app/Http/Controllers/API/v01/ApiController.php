@@ -289,6 +289,7 @@ class ApiController extends Controller
             switch (strtolower($resourceName))
             {
                 case 'alphabet':
+                case 'country':
                 case 'definition':
                 case 'language':
                 case 'tag':

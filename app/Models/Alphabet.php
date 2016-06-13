@@ -16,6 +16,42 @@ class Alphabet extends Model
 {
     use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable;
 
+
+    //
+    //
+    // Attributes used by App\Traits\ExportableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * The attributes that should be hidden from the model's array form when exporting data to file.
+     */
+    protected $hiddenFromExport = [
+        'id',
+    ];
+
+
+    //
+    //
+    // Attributes used by App\Traits\ObfuscatableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * @var int
+     */
+    public $obfuscatorId = 92;
+
+
+    //
+    //
+    // Attributes used by App\Traits\SearchableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
     CONST SEARCH_LIMIT = 10;        // Maximum number of results to return on a search.
     CONST SEARCH_QUERY_LENGTH = 3;  // Minimum length of search query.
 
@@ -25,18 +61,6 @@ class Alphabet extends Model
      * @var bool
      */
     public static $searchIsTaggable = false;
-
-    /**
-     * @var int
-     */
-    public $obfuscatorId = 92;
-
-    /**
-     * The attributes that should be hidden from the model's array form when exporting data to file.
-     */
-    protected $hiddenFromExport = [
-        'id',
-    ];
 
 
     //

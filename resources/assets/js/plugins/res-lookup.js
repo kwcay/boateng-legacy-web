@@ -18,7 +18,7 @@
         setup.options = setup.options || setup.selectizeItems;
         setup.selectizePlugins = setup.selectizePlugins || null;
         setup.create = setup.create || false;
-        setup.maxItems = setup.maxItems || 20;
+        setup.maxItems = setup.maxItems || 100;
         setup.loadThrottle = setup.loadThrottle || 600;
         setup.render = setup.render || {};
 

@@ -228,7 +228,16 @@ class Language extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function alphabets() {
-        return $this->belongsToMany('App\Models\Alphabet');
+        return $this->belongsToMany('App\Models\Alphabet', 'alphabet_language', 'language_id', 'alphabet_id');
+    }
+
+    /**
+     * Defines relation to Country model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function countries() {
+        return $this->belongsToMany('App\Models\Country', 'country_language', 'language_id', 'country_id');
     }
 
 

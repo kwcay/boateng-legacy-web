@@ -6,9 +6,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Lang;
-use Request;
 use Session;
 use Exception;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -40,14 +40,16 @@ class BaseController extends Controller
     protected $defaultOrderDirection = 'desc';
 
     /**
-     *
+     * @param Illuminate\Http\Request $request
      */
-    public function __construct()
+    public function __construct(Request $request)
     {
         // Performance check.
         if (!$this->name) {
             throw new Exception('Invalid controller name.');
         }
+
+        $this->request = $request;
     }
 
     /**
@@ -110,13 +112,26 @@ class BaseController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-     * @param string $id    Definition ID
+     * @param mixed $id    ID or Eloquent model.
 	 * @return Response
 	 */
 	public function edit($id)
 	{
-        // Retrieve the model
-        if (!$model = $this->getModel()->find($id)) {
+        // If we already have an instance of the model, great.
+        if (is_a($id, 'Illuminate\Database\Eloquent\Model'))
+        {
+            $model = $id;
+        }
+
+        // Performance check.
+        elseif (!is_numeric($id) || !strlen($id))
+        {
+            abort(404);
+        }
+
+        // Retrieve the model by ID.
+        elseif (!$model = $this->getModel()->find($id))
+        {
             abort(404);
         }
 
@@ -154,7 +169,7 @@ class BaseController extends Controller
      */
     protected function getParam($key, $default = null)
     {
-        return Request::get($key, Session::get('admin-'. $this->name .'-'. $key, $default));
+        return $this->request->get($key, Session::get('admin-'. $this->name .'-'. $key, $default));
     }
 
     /**

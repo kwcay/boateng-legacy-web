@@ -10,12 +10,13 @@ use Session;
 use Redirect;
 use Request;
 use Validator;
-
 use App\Http\Requests;
+use App\Models\Alphabet;
 use App\Models\Country;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Definitions\Word;
+use Illuminate\Support\Collection;
 use App\Http\Controllers\Admin\BaseController as Controller;
 
 class LanguageController extends Controller
@@ -50,74 +51,6 @@ class LanguageController extends Controller
      */
     protected $defaultOrderDirection = 'asc';
 
-    /**
-     * Display the language page.
-     *
-     * @param string $id    Either the ISO 639-3 language code or language ID.
-     * @return Response
-     */
-    public function show($id)
-    {
-        // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
-            abort(404, 'Can\'t find that languge :(');
-        }
-
-        // TODO: count number of words, not all definitions.
-        $total = $lang->definitions()->count();
-        $first = $latest = $random = null;
-
-        // Retrieve first definition.
-        if ($total > 0) {
-            $first = $lang->definitions()->with('titles')->orderBy('created_at', 'asc')->first();
-        }
-
-        // Retrieve latest definition.
-        if ($total > 1) {
-            $latest = $lang->definitions()->with('titles')->orderBy('created_at', 'desc')->first();
-        }
-
-        // Retrieve random definition.
-        if ($total > 2) {
-            $random = Word::random($lang);
-        }
-
-        return view('pages.language', [
-            'lang' => $lang,
-            'random' => $random,
-            'first' => $first,
-            'latest' => $latest
-        ]);
-    }
-
-	/**
-	 * Displays the form to add a new language.
-	 *
-     * @param \App\Models\Language $lang
-	 * @return Response
-	 */
-	public function create(Language $lang)
-	{
-        // Set some defaults
-        $lang->code = preg_replace('/[^a-z\-]/', '', Request::get('code', Request::old('code', '')));
-        $lang->parent = preg_replace('/[^a-z\-]/', '', Request::get('parent', Request::old('parent', '')));
-        $lang->name = Request::get('name', Request::old('name', ''));
-        $lang->alt_names = Request::get('alt_names', Request::old('alt_names', ''));
-        $lang->countries = preg_replace('/[^a-z,]/', '', Request::get('countries', Request::old('countries', '')));
-        $lang->desc = Request::get('desc', Request::old('desc', []));
-
-        return view('forms.language.default')->withLang($lang);
-	}
-
-	/**
-	 * Displays the form to add a new language.
-	 *
-	 * @return Response
-	 */
-	public function walkthrough() {
-        return view('forms.language.walkthrough');
-	}
-
 	/**
 	 * Store a newly created resource in storage.
      *
@@ -137,40 +70,122 @@ class LanguageController extends Controller
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
+	 * Show the form for editing a language.
 	 *
-	 * @param string $id    Either the ISO 639-3 language code or language ID.
+     * @param string $code  Language code.
 	 * @return Response
 	 */
-	public function edit($id)
-	{
-        // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id, ['parent', 'alphabets'])) {
-            abort(404, Lang::get('errors.resource_not_foud'));
+	public function edit($code)
+    {
+        // Retrieve the language model.
+        if (!$lang = Language::findByCode($code, ['parent'])) {
+            abort(404);
         }
 
-        return view('forms.language.default')->withLang($lang);
-	}
+        // Alphabet data for selectize plugin.
+        $alphabetOptions = $lang->alphabets->map(function($item) {
+            return [
+                'code' => $item->code,
+                'name' => $item->name,
+                'transliteration' => $item->transliteration,
+            ];
+        });
+
+        // Parent language data for selectize plugin.
+        $parentOptions = [];
+        if ($lang->parent)
+        {
+            $parentOptions[] = [
+                'code' => $lang->parent->code,
+                'name' => $lang->parent->name,
+                'transliteration' => $lang->parent->transliteration,
+                'altNames' => $lang->parent->altNames,
+            ];
+        }
+
+        // Country data for selectize plugin.
+        $countryOptions = $lang->countries->map(function($item) {
+            return [
+                'code' => $item->code,
+                'name' => $item->name,
+                'altNames' => $item->altNames,
+            ];
+        });
+
+        return view('admin.language.edit', [
+            'model' => $lang,
+            'alphabetOptions' => $alphabetOptions,
+            'parentOptions' => $parentOptions,
+            'countryOptions' => $countryOptions,
+        ]);
+    }
 
 	/**
 	 * Update the specified resource in storage.
-	 *
-     * TODO: integrate with API.
      *
-	 * @param  int  $id
+	 * @param  Illuminate\Http\Request $request
+	 * @param  int $id
 	 * @return Response
 	 */
 	public function update($id)
 	{
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
-            abort(404, 'Can\'t find that languge :( [todo: throw exception]');
+        if (!$lang = Language::find($id)) {
+            abort(404);
         }
 
-        // Retrieve the language details.
-        $data = Request::only(['parent_code', 'name', 'alt_names']);
+        $this->validate($this->request, (new Language)->validationRules);
 
-        return $this->save($lang, $data, 'index');
+        // Update attributes.
+        $lang->fill($this->request->only([
+            'parentCode',
+            'name',
+            'transliteration',
+            'altNames'
+        ]));
+
+        if (!$lang->save()) {
+            abort(500);
+        }
+
+        // Update alphabets.
+        $alphabets = $this->getAlphabets($this->request->get('alphabets', ''));
+        $alphabetIDs = $alphabets->map(function($item) {
+            return $item->id;
+        })->toArray();
+
+        $lang->alphabets()->sync($alphabetIDs);
+
+        // Update countries.
+        $countries = $this->getCountries($this->request->get('countries', ''));
+        $countryIDs = $countries->map(function($item) {
+            return $item->id;
+        })->toArray();
+
+        $lang->countries()->sync($countryIDs);
+
+        // Send success message to client, and a thank you.
+        Session::push('messages', 'The details for <em>'. $lang->name .
+            '</em> were successfully saved, thanks :)');
+
+        // Return URI
+        switch ($this->request->get('return'))
+        {
+            case 'admin':
+                $return = route('admin.language.index');
+                break;
+
+            case 'edit':
+                $return = $lang->editUri;
+                break;
+
+            case 'finish':
+            case 'summary':
+            default:
+                $return = $lang->uri;
+        }
+
+        return redirect($return);
 	}
 
 	/**
@@ -301,5 +316,55 @@ class LanguageController extends Controller
         }
 
         return $lang;
+    }
+
+    /**
+     * Retrieves alphabet models.
+     *
+     * @param string $raw   Alphabet codes, separated by commas.
+     * @return Illuminate\Support\Collection
+     */
+    protected function getAlphabets($raw = null)
+    {
+        $alphabets = new Collection;
+
+        // Retrieve alphabet models.
+        $raw = trim($raw);
+        if (strlen($raw))
+        {
+            foreach (@explode(',', $raw) as $code)
+            {
+                if ($alphabet = Alphabet::findByCode($code)) {
+                    $alphabets->push($alphabet);
+                }
+            }
+        }
+
+        return $alphabets;
+    }
+
+    /**
+     * Retrieves country models.
+     *
+     * @param string $raw   Country codes, separated by commas.
+     * @return Illuminate\Support\Collection
+     */
+    protected function getCountries($raw = null)
+    {
+        $countries = new Collection;
+
+        // Retrieve alphabet models.
+        $raw = trim($raw);
+        if (strlen($raw))
+        {
+            foreach (@explode(',', $raw) as $code)
+            {
+                if ($country = Country::findByCode($code)) {
+                    $countries->push($country);
+                }
+            }
+        }
+
+        return $countries;
     }
 }

@@ -45,7 +45,14 @@
                     @if (strlen($lang->altNames))
                     <li>
                         <i class="fa-li fa fa-asterisk"></i>
-                        Also refered to as: {{ $lang->altNames }}
+                        Also refered to as: {{ $lang->altNames }}.
+                    </li>
+                    @endif
+
+                    @if (count($lang->countries))
+                    <li>
+                        <i class="fa-li fa fa-asterisk"></i>
+                        Spoken in {{ $lang->countries->implode('name', ', ') }}.
                     </li>
                     @endif
 

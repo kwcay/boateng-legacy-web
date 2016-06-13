@@ -272,7 +272,7 @@ class DefinitionController extends Controller
 
         // Update definition.
         if (!$definition->save()) {
-            abort(500, 'Could not save definition.');
+            abort(500);
         }
 
         // Update titles.
