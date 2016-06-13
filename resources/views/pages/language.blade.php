@@ -52,7 +52,7 @@
                     @if (count($lang->countries))
                     <li>
                         <i class="fa-li fa fa-asterisk"></i>
-                        Spoken in {{ $lang->countries->implode('name', ', ') }}.
+                        Spoken in {{ $lang->countryString }}.
                     </li>
                     @endif
 

@@ -363,11 +363,49 @@ class Language extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('admin.language.edit', ['code' => $this->code]);
+        return route('admin.language.edit', ['code' => $this->code, 'return' => 'summary']);
+    }
+
+    /**
+     * Accessors for $this->countryString
+     */
+    public function getCountryStringAttribute()
+    {
+        switch (count($this->countries))
+        {
+            case 0:
+                $countryStr = '';
+                break;
+
+            case 1:
+                $countryStr = $this->countries[0]->name;
+                break;
+
+            default:
+                $countryStr = '';
+                for ($i = 0; $i < count($this->countries) - 2; $i++) {
+                    $countryStr = $countryStr . $this->countries[$i]->name .', ';
+                }
+
+                $countryStr = $countryStr . $this->countries[$i++]->name .' and '. $this->countries[$i]->name;
+        }
+
+        return $countryStr;
+    }
+
+    /**
+     * Accessor for $this->definitionCount.
+     *
+     * @return int
+     */
+    public function getDefinitionCountAttribute() {
+        return $this->definitions()->count();
     }
 
     /**
      * Accessor for $this->count.
+     *
+     * @deprecated 2016-06-13
      *
      * @return int
      */
@@ -377,6 +415,8 @@ class Language extends Model
 
     /**
      * Accessor for $this->definitionsCount.
+     *
+     * @deprecated 2016-06-13
      *
      * @return int
      */
