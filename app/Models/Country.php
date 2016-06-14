@@ -9,12 +9,13 @@ use DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
+use App\Traits\ValidatableTrait as Validatable;
 use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Country extends Model
 {
-    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable;
+    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable, Validatable;
 
 
     //
@@ -92,6 +93,15 @@ class Country extends Model
     protected $appends = [
         'uniqueId',
         'resourceType',
+    ];
+
+    /**
+     * Validation rules.
+     */
+    public $validationRules  = [
+        'name' => 'required|string|min:2|max:400',
+        'altNames' => 'string|min:2|max:400',
+        'code' => 'required|string|size:2',
     ];
 
 
@@ -230,7 +240,7 @@ class Country extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return 'javascript:;';
+        return route('admin.country.edit', $this->uniqueId);
     }
 
     /**
@@ -239,7 +249,7 @@ class Country extends Model
      * @return string
      */
     public function getEditUriAdminAttribute() {
-        return 'javascript:;';
+        return route('admin.country.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 
     /**
