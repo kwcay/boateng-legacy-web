@@ -7,14 +7,16 @@ namespace App\Models;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
+use App\Traits\ValidatableTrait as Validatable;
 use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Alphabet extends Model
 {
-    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable;
+    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable, SoftDeletes, Validatable;
 
 
     //
@@ -65,7 +67,7 @@ class Alphabet extends Model
 
     //
     //
-    // Attirbutes used by Illuminate\Database\Eloquent\Model
+    // Main attributes
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -84,6 +86,25 @@ class Alphabet extends Model
      * Attributes that should be mutated to dates.
      */
     protected $dates = ['deleted_at'];
+
+    /**
+     * Validation rules.
+     */
+    public $validationRules  = [
+        'name' => 'required|min:2|max:100',
+        'transliteration' => 'min:2|max:100',
+        'code' => 'required|min:6|max:20',
+        'scriptCode' => 'min:2|max:4',
+        'letters' => 'string',
+    ];
+
+
+    //
+    //
+    // Relations
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * Defines relation to Language model.
@@ -250,7 +271,7 @@ class Alphabet extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return 'javascript:;';
+        return route('admin.alphabet.edit', ['id' => $this->uniqueId, 'return' => 'create']);
     }
 
     /**
@@ -259,6 +280,6 @@ class Alphabet extends Model
      * @return string
      */
     public function getEditUriAdminAttribute() {
-        return 'javascript:;';
+        return route('admin.alphabet.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 }

@@ -26,6 +26,12 @@ Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
 Route::post('language', 'LanguageController@store')->name('language.store');
 
 //
+// Alphabet pages.
+//
+Route::get('+alphabet', 'AlphabetController@walkthrough')->name('alphabet.create');
+Route::post('alphabet', 'AlphabetController@store')->name('alphabet.store');
+
+//
 // Definition pages.
 //
 Route::get('{code}/+word', 'DefinitionController@createWord')->name('definition.create.word');

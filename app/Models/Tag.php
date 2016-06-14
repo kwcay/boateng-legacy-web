@@ -8,12 +8,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
+use App\Traits\ValidatableTrait as Validatable;
 use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Tag extends Model
 {
-    use CamelCaseAttrs, ObfuscatesID, Searchable;
+    use CamelCaseAttrs, ObfuscatesID, Searchable, Validatable;
 
     //
     //
