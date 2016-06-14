@@ -8,7 +8,6 @@
 // General pages
 Route::get('/',         ['as' => 'admin.index', 'uses' => 'AdminController@index']);
 Route::get('import',    ['as' => 'admin.import', 'uses' => 'AdminController@import']);
-Route::get('export',    ['as' => 'admin.export', 'uses' => 'AdminController@export']);
 Route::get('backup',    ['as' => 'admin.backup', 'uses' => 'AdminController@backup']);
 
 // Resources

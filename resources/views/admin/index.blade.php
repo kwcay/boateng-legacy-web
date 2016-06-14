@@ -39,9 +39,6 @@
 	        <a href="{{ route('admin.import') }}">Import data.</a>
 	    </li>
 	    <li>
-	        <a href="{{ route('admin.export') }}">Export data.</a>
-	    </li>
-	    <li>
 	        <a href="{{ route('admin.backup') }}">Backups.</a>
 	    </li>
 	</ul>

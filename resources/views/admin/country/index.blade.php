@@ -4,6 +4,21 @@
 
 @section('data')
 
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <span class="fa fa-fw fa-download"></span>
+            Export dataset as
+            <a href="{{ route('export.resource', ['resource' => 'country', 'format' => 'json']) }}">
+                .json
+            </a>
+            or
+            <a href="{{ route('export.resource', ['resource' => 'country', 'format' => 'yaml']) }}">
+                .yaml
+            </a>
+        </div>
+    </div>
+    <br>
+
     <table class="table table-striped table-hover text-center">
         <thead>
             <tr>

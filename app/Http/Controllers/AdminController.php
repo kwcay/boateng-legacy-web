@@ -22,10 +22,6 @@ class AdminController extends Controller
         return view('admin.import');
     }
 
-    public function export() {
-        return view('admin.export');
-    }
-
     public function backup() {
         return view('admin.backup');
     }
