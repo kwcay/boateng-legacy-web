@@ -27,56 +27,6 @@
                             <span class="fa fa-square-o fa-fw"></span>
                         </button>
 
-                        {{-- Extra info --}}
-                        <div class="btn-group">
-                            <button
-                                type="button"
-                                class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-
-                                <span class="fa fa-info fa-fw"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <ul class="list-group">
-                                        <li class="list-group-item">
-                                            id:
-                                            <b>
-                                                {{ $definition->uniqueId }}
-                                                ({{ $definition->id }})
-                                            </b>
-                                        </li>
-                                        <li class="list-group-item">
-                                            type:
-                                            <b>
-                                                {{ $definition->subType }}
-                                            </b>
-                                        </li>
-                                        <li class="list-group-item">
-                                            rating:
-                                            <b>
-                                                {{ $definition->rating }}
-                                            </b>
-                                        </li>
-                                        <li class="list-group-item">
-                                            language:
-                                            <b>
-                                                {{ $definition->languages->implode('name', ', ') }}
-                                            </b>
-                                        </li>
-                                        <li class="list-group-item">
-                                            added on:
-                                            <b>
-                                                {{ date('M j, Y', strtotime($definition->createdAt)) }}
-                                            </b>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-
                         {{-- Admin actions --}}
                         <div class="btn-group">
                             <button
@@ -89,6 +39,78 @@
                                 <span class="fa fa-cog fa-fw"></span>
                             </button>
                             <ul class="dropdown-menu">
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $definition->uniqueId }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        id:
+                                        <b>
+                                            {{ $definition->uniqueId }}
+                                            ({{ $definition->id }})
+                                        </b>
+                                    </a>
+                                </li>
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $definition->subType }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        type:
+                                        <b>
+                                            {{ $definition->subType }}
+                                        </b>
+                                    </a>
+                                </li>
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $definition->rating }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        rating:
+                                        <b>
+                                            {{ $definition->rating }}
+                                        </b>
+                                    </a>
+                                </li>
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $definition->languages->implode('name', ', ') }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        language:
+                                        <b>
+                                            {{ $definition->languages->implode('name', ', ') }}
+                                        </b>
+                                    </a>
+                                </li>
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $definition->createdAt }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        added on:
+                                        <b>
+                                            {{ date('M j, Y', strtotime($definition->createdAt)) }}
+                                        </b>
+                                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
                                 @if ($definition->deletedAt)
                                 <li>
                                     <a href="#">
@@ -111,33 +133,53 @@
                                         Edit
                                     </a>
                                 </li>
-                                <li role="separator" class="divider"></li>
                                 <li>
-                                    <a href="#">
+                                    <a
+                                        href="javascript:;"
+                                        onclick="return window.deleteRes('definition', '{{ $definition->uniqueId }}', '{{ $definition->mainTitle }}')"
+                                        class="bg-danger">
                                         Delete
                                     </a>
                                 </li>
                                 @endif
                             </ul>
                         </div>
+
+                        {{-- View definition --}}
+                        <div class="btn-group">
+                            <a class="btn btn-default" href="{{ $definition->uri }}" target="_blank">
+                                <span class="fa fa-fw fa-external-link"></span>
+                            </a>
+                        </div>
                     </div>
                 </td>
                 <td>
                     @if ($definition->deletedAt)
-                        <del title="Deleted on {{ date('m j, Y', strtotime($definition->deletedAt)) }}">
+                        <del title="Deleted on {{ date('M j, Y', strtotime($definition->deletedAt)) }}">
                             {{ $definition->titles->implode('title', ', ') }}
                         </del>
                     @else
-                        <span title="Added on {{ date('m j, Y', strtotime($definition->createdAt)) }}">
+                        <span
+                            title="Added on {{ date('M j, Y', strtotime($definition->createdAt)) }}"
+                            class="ctrl-c"
+                            data-clipboard-text="{{ $definition->titles->implode('title', ', ') }}">
+
+                            <span class="edit-res fa fa-clipboard"></span>
+
                             {{ $definition->titles->implode('title', ', ') }}
                         </span>
                     @endif
                 </td>
                 <td>
-                    <a
-                        href="{{ route('admin.definition.edit', ['id' => $definition->uniqueId, 'return' => 'admin']) }}">
+                    @if ($definition->deletedAt)
                         {{ $definition->getPracticalTranslation('eng') }}
-                    </a>
+                    @else
+                        <span class="edit-res fa fa-pencil"></span>
+                        <a
+                            href="{{ route('admin.definition.edit', ['id' => $definition->uniqueId, 'return' => 'admin']) }}">
+                            {{ $definition->getPracticalTranslation('eng') }}
+                        </a>
+                    @endif
                 </td>
             </tr>
             @endforeach

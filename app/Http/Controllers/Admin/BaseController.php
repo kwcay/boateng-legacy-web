@@ -59,8 +59,15 @@ class BaseController extends Controller
      */
     public function index()
     {
-        // Query parameters
+        // Query builder.
         $builder = $this->getModel();
+
+        // Add trashed items.
+        if (in_array(SoftDeletes::class, class_uses_recursive(get_class($builder)))) {
+            $builder = $builder->withTrashed();
+        }
+        
+        // Query parameters
         $total = $builder->count();
 
         $limit = (int) $this->getParam('limit', $this->defaultQueryLimit);
@@ -87,11 +94,6 @@ class BaseController extends Controller
         $dir = $dirs->has($dir) ? $dir : $this->defaultOrderDirection;
         // $dir = in_array($dir, ['asc', 'desc']) ? $dir : $this->defaultOrderDirection;
         $this->setParam('dir', $dir);
-
-        // Add trashed items.
-        if (in_array(SoftDeletes::class, class_uses_recursive(get_class($builder)))) {
-            $builder = $builder->withTrashed();
-        }
 
         // Paginator
         $page = $this->setParam('page', $this->getParam('page', 1));

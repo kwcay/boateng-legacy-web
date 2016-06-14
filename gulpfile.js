@@ -76,7 +76,8 @@ var js = {
         'bower_components/bootstrap/dist/js/bootstrap.min.js',
         'bower_components/sifter/sifter.min.js',
         // 'bower_components/selectize/dist/js/selectize.min.js'
-        'bower_components/selectize/dist/js/selectize.js'
+        'bower_components/selectize/dist/js/selectize.js',
+        'bower_components/clipboard/dist/clipboard.min.js'
     ]
 };
 

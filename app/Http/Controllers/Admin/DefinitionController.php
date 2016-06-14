@@ -377,7 +377,7 @@ class DefinitionController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Removes the specified resource from storage.
      *
      * @param  int $id
      * @throws \Exception
@@ -385,7 +385,7 @@ class DefinitionController extends Controller
      */
 	public function destroy($id)
 	{
-        // Retrieve the definition object.
+        // Retrieve the definition model.
         if (!$def = Definition::find($id)) {
             throw new \Exception(Lang::get('errors.resource_not_found'), 404);
         }

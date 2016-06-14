@@ -367,6 +367,15 @@ class Language extends Model
     }
 
     /**
+     * Accessor for $this->editUriAdmin.
+     *
+     * @return string
+     */
+    public function getEditUriAdminAttribute() {
+        return route('admin.language.edit', ['code' => $this->code, 'return' => 'admin']);
+    }
+
+    /**
      * Accessors for $this->countryString
      */
     public function getCountryStringAttribute()

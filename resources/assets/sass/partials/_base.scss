@@ -37,7 +37,7 @@ a:after {
 	transform: scaleX(1);
 	transition: all .2s ease-in-out;
 }
-a.fa:after, a.tag:after {
+a.btn:after, a.fa:after, a.tag:after, .dropdown-menu a:after, a.no-underline:after {
 	visibility: hidden;
 	transform: scaleX(0);
 }

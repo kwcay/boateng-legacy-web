@@ -189,16 +189,36 @@ class LanguageController extends Controller
 	}
 
 	/**
-	 * Remove the specified resource from storage.
-     *
-     * TODO: integrate with API.
+	 * Removes the specified resource from storage.
 	 *
-	 * @param  int  $id
+	 * @param int $id
 	 * @return Response
 	 */
 	public function destroy($id)
 	{
-        abort(501, 'LanguageController::destroy Not Implemented');
+        // Retrieve the language model.
+        if (!$lang = Language::find($id)) {
+            throw new \Exception(trans('errors.resource_not_found'), 404);
+        }
+
+        // Delete record
+        Session::push('messages', '<em>'. $lang->name .'</em> has been succesfully deleted.');
+        $lang->delete();
+
+        // Return URI
+        switch ($this->request->get('return'))
+        {
+            case 'home':
+                $return = route('home');
+                break;
+
+            case 'admin':
+            default:
+                $return = route('admin.language.index');
+                break;
+        }
+
+        return redirect($return);
 	}
 
     /**

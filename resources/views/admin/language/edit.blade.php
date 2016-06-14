@@ -137,7 +137,7 @@
 
     </form>
 
-    <!-- Delete confirmation -->
+    {{-- Delete confirmation --}}
     <div class="dialog del">
         <div>
             <a href="#" class="close">&#10005;</a>
@@ -156,6 +156,7 @@
 
                     {!! csrf_field() !!}
                     <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="return" value="{{ Request::input('return', 'admin') }}">
                     <input type="submit" name="confirm" value="yes, delete {{ $model->name }}">
                     <input type="button" name="cancel" value="no, return" onclick="return Dialogs.close()">
                 </form>

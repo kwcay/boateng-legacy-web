@@ -44,3 +44,17 @@
 	visibility: hidden;
 	transform: scaleX(0);
 }
+
+/*
+ * Dropdown menus
+ */
+.dropdown-menu {
+
+
+    > .info > a,
+    > .info > a:focus,
+    > .info > a:hover {
+        color: #777;
+        background-color: transparent;
+    }
+}

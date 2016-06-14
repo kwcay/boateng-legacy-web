@@ -21,6 +21,7 @@
     "selectize": "~0.12.1",
     "font-awesome": "~4.5.0",
     "jquery-ui": "~1.11.4",
-    "sifter": "~0.4.5"
+    "sifter": "~0.4.5",
+    "clipboard": "^1.5.12"
   }
 }

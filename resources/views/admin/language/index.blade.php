@@ -29,38 +29,6 @@
                             <span class="fa fa-square-o fa-fw"></span>
                         </button>
 
-                        {{-- Extra info --}}
-                        <div class="btn-group">
-                            <button
-                                type="button"
-                                class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false">
-
-                                <span class="fa fa-info fa-fw"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <ul class="list-group">
-                                        <li class="list-group-item">
-                                            id:
-                                            <b>
-                                                {{ $language->uniqueId }}
-                                                ({{ $language->id }})
-                                            </b>
-                                        </li>
-                                        <li class="list-group-item">
-                                            added on:
-                                            <b>
-                                                {{ date('M j, Y', strtotime($language->createdAt)) }}
-                                            </b>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-
                         {{-- Admin actions --}}
                         <div class="btn-group">
                             <button
@@ -73,6 +41,36 @@
                                 <span class="fa fa-cog fa-fw"></span>
                             </button>
                             <ul class="dropdown-menu">
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $language->uniqueId }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        id:
+                                        <b>
+                                            {{ $language->uniqueId }}
+                                            ({{ $language->id }})
+                                        </b>
+                                    </a>
+                                </li>
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $language->createdAt }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        added on:
+                                        <b>
+                                            {{ date('M j, Y', strtotime($language->createdAt)) }}
+                                        </b>
+                                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
                                 @if ($language->deletedAt)
                                 <li>
                                     <a href="#">
@@ -81,7 +79,7 @@
                                 </li>
                                 <li>
                                     <a href="#">
-                                        Force delete
+                                        Delete for good
                                     </a>
                                 </li>
                                 @else
@@ -91,28 +89,53 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('admin.language.edit', ['id' => $language->uniqueId, 'return' => 'admin']) }}">
+                                    <a href="{{ $language->editUriAdmin }}">
                                         Edit
                                     </a>
                                 </li>
-                                <li role="separator" class="divider"></li>
                                 <li>
-                                    <a href="#">
+                                    <a
+                                        href="javascript:;"
+                                        onclick="return window.deleteRes('language', '{{ $language->uniqueId }}', '{{ $language->name }}')"
+                                        class="bg-danger">
                                         Delete
                                     </a>
                                 </li>
                                 @endif
                             </ul>
                         </div>
+
+                        {{-- View language --}}
+                        <div class="btn-group">
+                            <a class="btn btn-default" href="{{ $language->uri }}" target="_blank">
+                                <span class="fa fa-fw fa-external-link"></span>
+                            </a>
+                        </div>
                     </div>
                 </td>
                 <td>
-                    <a href="#">
-                        {{ $language->name }}
-                    </a>
+                    @if ($language->deletedAt)
+                        <del title="Deleted on {{ date('M j, Y', strtotime($language->deletedAt)) }}">
+                            {{ $language->name }}
+                        </del>
+                    @else
+                        <span class="edit-res">
+                            <a href="{{ $language->editUriAdmin }}" class="fa fa-pencil"></a>
+                        </span>
+
+                        <a href="{{ $language->editUriAdmin }}">
+                            {{ $language->name }}
+                        </a>
+                    @endif
                 </td>
                 <td>
-                    {{ $language->code }}
+                    <span class="ctrl-c" data-clipboard-text="{{ $language->code }}">
+                        <span class="edit-res">
+                            <span class="fa fa-fw fa-clipboard"></span>
+                        </span>
+
+                        {{ $language->code }}
+                    </span>
                 </td>
             </tr>
             @endforeach
