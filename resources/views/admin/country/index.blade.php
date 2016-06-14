@@ -7,8 +7,9 @@
     <table class="table table-striped table-hover text-center">
         <thead>
             <tr>
-                <td>ID</td>
+                <td></td>
                 <td>Name</td>
+                <td>Alternate names</td>
                 <td title="Country code based on ISO 3166-1 (alpha-2) standard">
                     Code
                 </td>
@@ -18,20 +19,101 @@
         <tbody>
             @foreach ($paginator as $country)
             <tr>
-                <td class="text-muted" title="# {{ $country->id }}">
-                    {{ $country->uniqueId }}
+                <td>
+                    <div class="btn-group">
+
+                        {{-- Checkbox --}}
+                        <button
+                            type="button"
+                            class="btn btn-default">
+
+                            <span class="fa fa-square-o fa-fw"></span>
+                        </button>
+
+                        {{-- Admin actions --}}
+                        <div class="btn-group">
+                            <button
+                                type="button"
+                                class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false">
+
+                                <span class="fa fa-cog fa-fw"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $country->uniqueId }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        id:
+                                        <b>
+                                            {{ $country->uniqueId }}
+                                            ({{ $country->id }})
+                                        </b>
+                                    </a>
+                                </li>
+                                <li class="info">
+                                    <a
+                                        href="javascript:;"
+                                        class="ctrl-c"
+                                        data-clipboard-text="{{ $country->createdAt }}">
+
+                                        <span class="fa fa-clipboard"></span>
+
+                                        added on:
+                                        <b>
+                                            {{ date('M j, Y', strtotime($country->createdAt)) }}
+                                        </b>
+                                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="{{ $country->editUriAdmin }}">
+                                        Edit
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="javascript:;"
+                                        onclick='return window.deleteRes("country", "{{ $country->uniqueId }}", "{{ $country->name }}")'
+                                        class="bg-danger">
+
+                                        Delete
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </td>
                 <td>
-                    <a href="#">
+                    <span class="edit-res">
+                        <a href="{{ $country->editUriAdmin }}" class="fa fa-pencil"></a>
+                    </span>
+
+                    <a href="{{ $country->editUriAdmin }}">
                         {{ $country->name }}
                     </a>
                 </td>
                 <td>
-                    {{ $country->code }}
+                    {{ $country->altNames }}
+                </td>
+                <td>
+                    <span class="ctrl-c" data-clipboard-text="{{ $country->code }}">
+                        <span class="edit-res">
+                            <span class="fa fa-fw fa-clipboard"></span>
+                        </span>
+
+                        {{ $country->code }}
+                    </span>
                 </td>
             </tr>
             @endforeach
         </tbody>
     </table>
-    
+
 @stop

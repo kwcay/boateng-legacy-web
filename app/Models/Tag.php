@@ -85,6 +85,46 @@ class Tag extends Model
      */
     public $timestamps = false;
 
+    /**
+     * Validation rules.
+     */
+    public $validationRules  = [
+        'title' => 'required|min:2'
+    ];
+
+
+    //
+    //
+    // Relations
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Defines relation to Tag model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function definitions() {
+        return $this->belongsToMany('App\Models\Definition', 'definition_tag', 'tag_id', 'definition_id');
+    }
+
+
+    //
+    //
+    // Main methods
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+    }
+
 
     //
     //
@@ -146,5 +186,49 @@ class Tag extends Model
     {
         // Assign a relative score out of 1.0
         $tag->score = $scores->total / $maxScore;
+    }
+
+
+    //
+    //
+    // Accessors and mutators.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return url('/') . '?q=%23' . $this->title;
+    }
+
+    /**
+     * Accessor for $this->editUri.
+     *
+     * @return string
+     */
+    public function getEditUriAttribute() {
+        return route('admin.tag.edit', ['id' => $this->uniqueId, 'return' => 'summary']);
+    }
+
+    /**
+     * Accessor for $this->editUriAdmin.
+     *
+     * @return string
+     */
+    public function getEditUriAdminAttribute() {
+        return route('admin.tag.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
+    }
+
+    /**
+     * Accessor for $this->definitionCount
+     *
+     * @return string
+     */
+    public function getDefinitionCountAttribute() {
+        return number_format($this->definitions()->count());
     }
 }

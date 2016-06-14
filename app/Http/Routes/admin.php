@@ -12,13 +12,11 @@ Route::get('export',    ['as' => 'admin.export', 'uses' => 'AdminController@expo
 Route::get('backup',    ['as' => 'admin.backup', 'uses' => 'AdminController@backup']);
 
 // Resources
-Route::resource('alphabet',     'Admin\AlphabetController');
-Route::resource('country',      'Admin\CountryController');
-Route::resource('language',     'Admin\LanguageController');
-Route::resource('definition',   'Admin\DefinitionController');
-Route::resource('tag',          'Admin\TagController');
-Route::resource('translation',  'Admin\TranslationController');
-Route::resource('audio',        'AudioController');
+Route::resource('alphabet', 'Admin\AlphabetController', ['except' => ['create', 'show', 'store']]);
+Route::resource('country', 'Admin\CountryController', ['except' => ['create', 'show', 'store']]);
+Route::resource('language', 'Admin\LanguageController', ['except' => ['create', 'show', 'store']]);
+Route::resource('definition', 'Admin\DefinitionController', ['except' => ['create', 'show', 'store']]);
+Route::resource('tag', 'Admin\TagController', ['except' => ['create', 'show', 'store']]);
 
 // Resource import.
 // Route::post('import', ['as' => 'admin.import.action', 'uses' => 'Data\v050\DataController@import']);

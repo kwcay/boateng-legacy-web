@@ -66,7 +66,7 @@ class BaseController extends Controller
         if (in_array(SoftDeletes::class, class_uses_recursive(get_class($builder)))) {
             $builder = $builder->withTrashed();
         }
-        
+
         // Query parameters
         $total = $builder->count();
 
@@ -125,8 +125,18 @@ class BaseController extends Controller
             $model = $id;
         }
 
+        // If we have an encoded ID, decode it.
+        elseif (!is_numeric($id) && is_string($id) && strlen($id) >= 8)
+        {
+            $className = $this->getModelClassName();
+
+            if (!$model = $className::find($id)) {
+                abort(404);
+            }
+        }
+
         // Performance check.
-        elseif (!is_numeric($id) || !strlen($id))
+        elseif (!is_numeric($id))
         {
             abort(404);
         }
@@ -143,13 +153,96 @@ class BaseController extends Controller
     }
 
 	/**
-	 * Stores a newly created resource in storage.
-	 *
+	 * Update the specified resource in storage.
+     *
+	 * @param int $id
 	 * @return Response
 	 */
-	public function store()
-    {
-        abort(501);
+	public function update($id)
+	{
+        // Retrieve model.
+        $className = $this->getModelClassName();
+        if (!$model = $className::find($id)) {
+            abort(404);
+        }
+
+        // Validate incoming data.
+        $rules = (new $className)->validationRules;
+        $this->validate($this->request, $rules);
+
+        // Update attributes.
+        $model->fill($this->request->only(array_flip($rules)));
+
+        if (!$model->save()) {
+            abort(500);
+        }
+
+        // Send success message to client, and a thank you.
+        Session::push('messages', 'The details for <em>'. ($model->name ?: $model->title) .
+            '</em> were successfully saved, thanks :)');
+
+        // Return URI
+        switch ($this->request->get('return'))
+        {
+            case 'edit':
+                $return = $model->editUri;
+                break;
+
+            case 'finish':
+            case 'summary':
+                $return = $model->uri;
+                break;
+
+            case 'admin':
+            default:
+                $return = route("admin.{$this->name}.index");
+        }
+
+        return redirect($return);
+    }
+
+	/**
+	 * Removes the specified resource from storage.
+	 *
+	 * @param int $id
+	 * @return Response
+	 */
+	public function destroy($id)
+	{
+        // Retrieve model.
+        $className = $this->getModelClassName();
+        if (!$model = $className::find($id)) {
+            abort(404);
+        }
+
+        // Delete record
+        $name = $model->name ?: $model->title;
+        if ($model->delete()) {
+            Session::push('messages', '<em>'. $name .'</em> has been succesfully deleted.');
+        } else {
+            Session::push('messages', 'Could not delete <em>'. $name .'</em>.');
+        }
+
+        // Return URI
+        switch ($this->request->get('return'))
+        {
+            case 'home':
+                $return = route('home');
+                break;
+
+            case 'admin':
+            default:
+                $return = route("admin.{$this->name}.index");
+        }
+
+        return redirect($return);
+	}
+
+    /**
+     *
+     */
+    protected function getModelClassName() {
+        return '\\App\\Models\\'. ucfirst($this->name);
     }
 
     /**
@@ -157,7 +250,7 @@ class BaseController extends Controller
      */
     protected function getModel()
     {
-        $className = '\\App\\Models\\'. ucfirst($this->name);
+        $className = $this->getModelClassName();
 
         return new $className;
     }

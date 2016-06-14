@@ -216,6 +216,33 @@ class Country extends Model
 
 
     /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return 'javascript:;';
+    }
+
+    /**
+     * Accessor for $this->editUri.
+     *
+     * @return string
+     */
+    public function getEditUriAttribute() {
+        return 'javascript:;';
+    }
+
+    /**
+     * Accessor for $this->editUriAdmin.
+     *
+     * @return string
+     */
+    public function getEditUriAdminAttribute() {
+        return 'javascript:;';
+    }
+
+    /**
      * Accessor for $this->resourceType.
      *
      * @return string

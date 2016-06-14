@@ -36,7 +36,7 @@
 		    <em>~ or ~</em>
 		    <br><br>
 
-		    <a href="{{ route('admin.language.create') }}">
+		    <a href="{{ route('language.create') }}">
 		        click here to suggest a new language.
 		    </a>
 		</div>

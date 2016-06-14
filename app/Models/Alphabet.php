@@ -226,4 +226,39 @@ class Alphabet extends Model
             $alphabet->score = $scores->total * 0.9 / $maxScore;
         }
     }
+
+
+    //
+    //
+    // Accessors and mutators.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return 'javascript:;';
+    }
+
+    /**
+     * Accessor for $this->editUri.
+     *
+     * @return string
+     */
+    public function getEditUriAttribute() {
+        return 'javascript:;';
+    }
+
+    /**
+     * Accessor for $this->editUriAdmin.
+     *
+     * @return string
+     */
+    public function getEditUriAdminAttribute() {
+        return 'javascript:;';
+    }
 }

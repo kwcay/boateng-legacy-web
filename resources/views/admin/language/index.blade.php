@@ -73,12 +73,20 @@
                                 <li role="separator" class="divider"></li>
                                 @if ($language->deletedAt)
                                 <li>
-                                    <a href="#">
+                                    <a
+                                        href="javascript:;"
+                                        onclick="return false"
+                                        class="bg-warning">
+
                                         Restore
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
+                                    <a
+                                        href="javascript:;"
+                                        onclick="return false"
+                                        class="bg-danger">
+
                                         Delete for good
                                     </a>
                                 </li>
@@ -96,8 +104,9 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick="return window.deleteRes('language', '{{ $language->uniqueId }}', '{{ $language->name }}')"
+                                        onclick='return window.deleteRes("language", "{{ $language->uniqueId }}", "{{ $language->name }}")'
                                         class="bg-danger">
+
                                         Delete
                                     </a>
                                 </li>
@@ -115,7 +124,10 @@
                 </td>
                 <td>
                     @if ($language->deletedAt)
-                        <del title="Deleted on {{ date('M j, Y', strtotime($language->deletedAt)) }}">
+                        <del
+                            class="text-danger"
+                            title="Deleted on {{ date('M j, Y', strtotime($language->deletedAt)) }}">
+
                             {{ $language->name }}
                         </del>
                     @else

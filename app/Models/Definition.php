@@ -446,7 +446,7 @@ class Definition extends Model
 
     //
     //
-    // Search-related methods.
+    // Methods for App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 

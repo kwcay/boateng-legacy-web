@@ -86,20 +86,6 @@
                                     <a
                                         href="javascript:;"
                                         class="ctrl-c"
-                                        data-clipboard-text="{{ $definition->languages->implode('name', ', ') }}">
-
-                                        <span class="fa fa-clipboard"></span>
-
-                                        language:
-                                        <b>
-                                            {{ $definition->languages->implode('name', ', ') }}
-                                        </b>
-                                    </a>
-                                </li>
-                                <li class="info">
-                                    <a
-                                        href="javascript:;"
-                                        class="ctrl-c"
                                         data-clipboard-text="{{ $definition->createdAt }}">
 
                                         <span class="fa fa-clipboard"></span>
@@ -111,15 +97,32 @@
                                     </a>
                                 </li>
                                 <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="{{ $definition->mainLanguage->uri }}" target="_blank">
+                                        language:
+                                        <b>
+                                            {{ $definition->languages->implode('name', ', ') }}
+                                        </b>
+                                    </a>
+                                </li>
+                                <li role="separator" class="divider"></li>
                                 @if ($definition->deletedAt)
                                 <li>
-                                    <a href="#">
+                                    <a
+                                        href="javascript:;"
+                                        onclick="return false"
+                                        class="bg-warning">
+
                                         Restore
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#">
-                                        Force delete
+                                    <a
+                                        href="javascript:;"
+                                        onclick="return false"
+                                        class="bg-danger">
+
+                                        Delete for good
                                     </a>
                                 </li>
                                 @else
@@ -136,7 +139,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick="return window.deleteRes('definition', '{{ $definition->uniqueId }}', '{{ $definition->mainTitle }}')"
+                                        onclick='return window.deleteRes("definition", "{{ $definition->uniqueId }}", "{{ $definition->mainTitle }}")'
                                         class="bg-danger">
                                         Delete
                                     </a>
@@ -155,7 +158,10 @@
                 </td>
                 <td>
                     @if ($definition->deletedAt)
-                        <del title="Deleted on {{ date('M j, Y', strtotime($definition->deletedAt)) }}">
+                        <del
+                            class="text-danger"
+                            title="Deleted on {{ date('M j, Y', strtotime($definition->deletedAt)) }}">
+
                             {{ $definition->titles->implode('title', ', ') }}
                         </del>
                     @else
@@ -172,7 +178,9 @@
                 </td>
                 <td>
                     @if ($definition->deletedAt)
-                        {{ $definition->getPracticalTranslation('eng') }}
+                        <span class="text-danger">
+                            {{ $definition->getPracticalTranslation('eng') }}
+                        </span>
                     @else
                         <span class="edit-res fa fa-pencil"></span>
                         <a
