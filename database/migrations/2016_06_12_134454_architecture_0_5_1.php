@@ -12,6 +12,10 @@ class Architecture051 extends Migration
      */
     public function up()
     {
+        // Remove "unique" FK restraint on transliteration column of alphabets table.
+        Schema::hasTable('alphabets') ?
+            DB::statement('ALTER TABLE alphabets DROP INDEX idx_transliteration') : null;
+
         // Remove reference column from definition_titles table
         Schema::table('definition_titles', function(Blueprint $table)
 		{
@@ -78,5 +82,10 @@ class Architecture051 extends Migration
 		{
             $table->string('reference');
         });
+
+        // Create "unique" FK restraint on transliteration column of alphabets table.
+        Schema::hasTable('alphabets') ?
+            DB::statement('CREATE FULLTEXT INDEX idx_transliteration ON alphabets (transliteration)') :
+            null;
     }
 }
