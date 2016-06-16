@@ -158,6 +158,7 @@ return [
         Barryvdh\Debugbar\ServiceProvider::class,
         'Collective\Html\HtmlServiceProvider',
         Laravel\Socialite\SocialiteServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
     ],
 
     /*
