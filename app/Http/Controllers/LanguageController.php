@@ -91,7 +91,7 @@ class LanguageController extends Controller
         $lang = Language::create($data);
 
         $rdir = Request::input('return') == 'continue' ?
-            route('admin.language.edit', $lang->uniqueId) :
+            route('admin.language.edit', $lang->code) :
             $lang->uri;
 
         Session::push('messages', 'The details for <em>'. $lang->name .'</em> were successfully saved, thanks :)');
