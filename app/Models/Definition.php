@@ -106,6 +106,7 @@ class Definition extends Model
 
 
     CONST TYPE_WORD = 0;        // Regular definitions.
+    CONST TYPE_NAME = 5;        // Proper names.
     CONST TYPE_EXPRESSION = 10;     // Proverbs, sayings, etc.
     CONST TYPE_STORY = 30;      // Short stories, poems, songs, etc.
 
@@ -122,6 +123,7 @@ class Definition extends Model
      */
     public $types = [
         0 => 'word',
+        5 => 'name',
         10 => 'expression',
         30 => 'story',
     ];
@@ -150,6 +152,13 @@ class Definition extends Model
             'suffix'     => 'suffix',
         ],
 
+        // Types of proper names.
+        5 => [
+            'person'    => 'person',
+            'place'     => 'place',
+            'name'      => 'other proper name',
+        ],
+
         // Types of phrases.
         10 => [
             'expression'=> 'common expression',
@@ -170,6 +179,7 @@ class Definition extends Model
      */
     public $defaultSubTypes = [
         0 => 'n',
+        5 => 'name',
         10 => 'expression',
         30 => 'story',
     ];

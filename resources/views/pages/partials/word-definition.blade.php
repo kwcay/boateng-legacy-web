@@ -36,7 +36,7 @@
 
 {{-- Add language information --}}
 @if (count($def->languages) > 1)
-    <span class="meta-label">&rarr; Also a word in:</span>
+    <span class="meta-label">&rarr; Also an expression in:</span>
 
     <span class="meta-data">
         @foreach ($def->languages as $otherLang)
