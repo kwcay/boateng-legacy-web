@@ -12,7 +12,6 @@ Route::get('/', 'PageController@home')->name('home');
 Route::get('about', 'PageController@about')->name('about');
 Route::get('about/agorɔ', 'PageController@agoro')->name('about.agoro');
 Route::get('about/api', 'PageController@api')->name('about.api');
-Route::get('about/author', 'PageController@author')->name('author');
 Route::get('about/in-numbers', 'PageController@stats')->name('stats');
 Route::get('about/story', 'PageController@story')->name('story');
 Route::get('about/supporters', 'PageController@sponsors')->name('sponsors');
