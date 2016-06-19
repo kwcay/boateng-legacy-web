@@ -49,9 +49,11 @@ class PageController extends Controller
 
         switch ($topic)
         {
-            // About the author
+            case 'agoro':
+            case 'api':
             case 'author':
-                $view = 'pages.about.author';
+            case 'sponsors':
+                $view = 'pages.about.'. $topic;
                 break;
 
             // Statistics and other facts.
@@ -91,10 +93,6 @@ class PageController extends Controller
                 ];
                 break;
 
-            case 'sponsors':
-                $view = 'pages.about.sponsors';
-                break;
-
             case 'team':
                 $view = 'pages.about.team.index';
                 break;
@@ -110,6 +108,12 @@ class PageController extends Controller
 		return view($view, $data);
 	}
 
+    public function agoro() {
+        return $this->about('agoro');
+    }
+    public function api() {
+        return $this->about('api');
+    }
     public function author() {
         return $this->about('author');
     }
@@ -142,7 +146,7 @@ class PageController extends Controller
                 break;
 
             default:
-                $view = 'pages.sitemap.main';
+                $view = 'pages.sitemap.index';
                 $data = [
                     'languages' => Language::sortedBy('name', 'asc')
                 ];
@@ -150,11 +154,4 @@ class PageController extends Controller
 
         return view($view, $data);
     }
-
-	/**
-	 * Displays the API description page.
-	 */
-	public function api() {
-		return view('pages.api');
-	}
 }

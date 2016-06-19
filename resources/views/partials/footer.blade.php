@@ -25,9 +25,9 @@
                         title="About this app"
                         data-toggle="tooltip"></a>
                     <a
-                        href="{{ route('sitemap') }}"
-                        class="fa fa-sitemap fa-fw"
-                        title="Sitemap"
+                        href="{{ route('about.agoro') }}"
+                        class="fa fa-graduation-cap fa-fw"
+                        title="@lang('branding.learning_app_title')"
                         data-toggle="tooltip"></a>
 
                     @if (Auth::check())
@@ -36,25 +36,44 @@
                             class="fa fa-cubes fa-fw"
                             title="Admin"
                             data-toggle="tooltip"></a>
-                        <a
-                            href="{{ route('auth.logout') }}"
-                            class="fa fa-hand-peace-o fa-fw"
-                            title="Sign out"
-                            data-toggle="tooltip"></a>
-                    @else
-                        <a
-                            href="{{ route('auth.login') }}"
-                            class="fa fa-user fa-fw"
-                            title="Sign in"
-                            data-toggle="tooltip"></a>
                     @endif
                 </div>
 
-                <a href="{{ route('about') }}" class="credits">
-                    &copy; 2014 - {{ date('Y') }}
-                    <span class="ghana no-underline"></span>
-                	A <b>Ghanaian</b> app
-                </a>
+                <div class="footer-row">
+                    <a href="{{ route('about') }}" class="credits">
+                        &copy; 2014 - {{ date('Y') }}
+                        <span class="ghana no-underline"></span>
+                    	A <b>Ghanaian</b> app
+                    </a>
+                </div>
+
+                <div class="footer-row">
+                    <a href="{{ route('about') }}">
+                        about
+                    </a>
+                    |
+                    <a href="{{ route('sitemap') }}">
+                        sitemap
+                    </a>
+                    |
+                    <a href="{{ route('about.api') }}">
+                        api
+                    </a>
+                    |
+                    <a href="https://github.com/frnkly/dinkomo" target="_blank">
+                        github
+                    </a>
+                    |
+                    @if (Auth::check())
+                        <a href="{{ route('auth.logout') }}">
+                            sign out
+                        </a>
+                    @else
+                        <a href="{{ route('auth.login') }}">
+                            sign in
+                        </a>
+                    @endif
+                </div>
             </footer>
         </div>
     </div>

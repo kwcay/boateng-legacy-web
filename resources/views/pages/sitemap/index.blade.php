@@ -1,6 +1,6 @@
 @extends('layouts.narrow')
 
-@section('title', 'Sitemap - Di Nkomo')
+@section('title', 'Sitemap - Di Nkɔmɔ')
 
 @section('body')
 
@@ -13,7 +13,7 @@
             <li>
                 <i class="fa fa-li fa-search"></i>
                 <a href="{{ route('home') }}">
-                    Lookup something
+                    Di Nkɔmɔ reference
                 </a>
             </li>
             <li>

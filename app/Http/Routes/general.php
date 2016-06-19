@@ -10,6 +10,8 @@
 //
 Route::get('/', 'PageController@home')->name('home');
 Route::get('about', 'PageController@about')->name('about');
+Route::get('about/agorɔ', 'PageController@agoro')->name('about.agoro');
+Route::get('about/api', 'PageController@api')->name('about.api');
 Route::get('about/author', 'PageController@author')->name('author');
 Route::get('about/in-numbers', 'PageController@stats')->name('stats');
 Route::get('about/story', 'PageController@story')->name('story');
@@ -49,8 +51,9 @@ Route::post('logout', 'Auth\AuthController@postLogin')->name('auth.login.post');
 Route::get('logout', 'Auth\AuthController@getLogout')->name('auth.logout');
 
 // Redirects.
+Route::get('add', function() { return redirect(route('contribute')); });
+Route::get('agoro', function() { return redirect(route('about.agoro')); });
 Route::get('home', function() { return redirect(route('home')); });
 Route::get('stats', function() { return redirect(route('stats')); });
 Route::get('in-numbers', function() { return redirect(route('stats')); });
-Route::get('add', function() { return redirect(route('contribute')); });
 Route::get('contribute', function() { return redirect(route('contribute')); });
