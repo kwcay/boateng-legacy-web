@@ -49,16 +49,15 @@ class PageController extends Controller
 
         switch ($topic)
         {
-            case 'agoro':
             case 'api':
             case 'author':
             case 'sponsors':
                 $view = 'pages.about.'. $topic;
                 break;
 
-            // Statistics and other facts.
+            case 'agoro':
             case 'stats':
-                $view = 'pages.about.stats';
+                $view = 'pages.about.'. $topic;
 
                 // Retrieve top languages.
                 $topLangs = [];
@@ -70,7 +69,7 @@ class PageController extends Controller
                                 ->orderBy('total', 'desc')
                                 ->get();
 
-                for ($i = 0; $i < min(3, count($topLangQuery)); $i++)
+                for ($i = 0; $i < min(5, count($topLangQuery)); $i++)
                 {
                     $lang = Language::findByCode($topLangQuery[$i]->code);
                     $topLangs[] = [

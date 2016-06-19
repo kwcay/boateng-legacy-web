@@ -12,7 +12,7 @@ return [
 	'learning_app_title'       => 'Agorɔ Learning App',
 	'learning_app_tag_line'    => 'Discover the cultural gems hidden in the languages of the world.',
     'learning_app_tag_line_span'
-        => 'Discover the cultural gems hidden in the <span id="learningAppLang">languages of the world.</span>',
+        => 'Discover the cultural gems hidden in the <span class="learning-app-lang"></span> language.',
 
     // API.
 	'api_title'            => 'Di Nkɔmɔ API',

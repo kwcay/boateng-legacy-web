@@ -32,7 +32,18 @@
 	</section>
 
     <script type="text/javascript">
-        // TODO: Typed.js
+
+    $(function(){
+        $('.learning-app-lang').typed({
+            strings: {!! json_encode(collect($topLanguages)->map(function($lang) {
+                return $lang['name'];
+            })) !!},
+            typeSpeed: 40,
+            backSpeed: 20,
+            backDelay: 4000,
+            loop: true,
+        });
+    });
     </script>
 
 @stop
