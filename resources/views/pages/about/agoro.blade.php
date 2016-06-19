@@ -1,6 +1,8 @@
 @extends('layouts.narrow')
 
-@section('title', 'Agorɔ Learning App: Discover the hidden cultural gems in the languages of the world.')
+@section('title', trans('branding.learning_app_title') .': '. trans('branding.learning_app_tag_line'))
+@section('description', trans('branding.learning_app_tag_line'))
+@section('keywords', 'learning, app, language, game')
 
 @section('body')
 
@@ -10,7 +12,7 @@
             <br>
 
             <small>
-                @lang('branding.learning_app_tag_line')
+                @lang('branding.learning_app_tag_line_span')
             </small>
         </h1>
 
@@ -28,5 +30,9 @@
             </div>
         </div>
 	</section>
+
+    <script type="text/javascript">
+        // TODO: Typed.js
+    </script>
 
 @stop

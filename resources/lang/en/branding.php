@@ -9,9 +9,10 @@ return [
 	'language_tag_line'    => 'A free linguistic reference.',
 
     // Learning app.
-	'learning_app_title'   => 'Agorɔ Learning App',
-	'learning_app_tag_line'
-        => 'Discover the hidden cultural gems in the <span id="learningAppLang">languages of the world.</span>',
+	'learning_app_title'       => 'Agorɔ Learning App',
+	'learning_app_tag_line'    => 'Discover the cultural gems hidden in the languages of the world.',
+    'learning_app_tag_line_span'
+        => 'Discover the cultural gems hidden in the <span id="learningAppLang">languages of the world.</span>',
 
     // API.
 	'api_title'            => 'Di Nkɔmɔ API',

@@ -12,8 +12,8 @@
 		<meta name="keywords" content="@yield('keywords', 'dictionary, bilingual, multilingual, translation')">
 		<meta name="robots" content="index, follow">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-		<meta property="og:title" content="@yield('title', 'Di Nkɔmɔ: A reference of cultures past and present.')">
-		<meta property="og:desc" content="@yield('description', 'A reference of cultures past and present.')">
+		<meta property="og:title" content="@yield('title', 'Di Nkɔmɔ: '. trans('branding.tag_line'))">
+		<meta property="og:desc" content="@yield('description', trans('branding.tag_line'))">
 		<meta property="og:type" content="website">
         <link
             rel="search"
