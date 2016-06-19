@@ -212,7 +212,7 @@ class Tag extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('admin.tag.edit', ['id' => $this->uniqueId, 'return' => 'summary']);
+        return route('r.tag.edit', ['id' => $this->uniqueId, 'return' => 'summary']);
     }
 
     /**
@@ -221,7 +221,7 @@ class Tag extends Model
      * @return string
      */
     public function getEditUriAdminAttribute() {
-        return route('admin.tag.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
+        return route('r.tag.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 
     /**

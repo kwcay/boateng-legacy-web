@@ -1058,7 +1058,16 @@ class Definition extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('admin.definition.edit', ['id' => $this->getUniqueId(), 'return' => 'summary']);
+        return route('r.definition.edit', ['id' => $this->uniqueId, 'return' => 'summary']);
+    }
+
+    /**
+     * Accessor for $this->editUriAdmin.
+     *
+     * @return string
+     */
+    public function getEditUriAdminAttribute() {
+        return route('r.definition.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 
     /**

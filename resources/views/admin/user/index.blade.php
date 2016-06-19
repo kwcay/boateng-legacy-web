@@ -1,6 +1,6 @@
 @extends('layouts.admin-index')
 
-@section('page-title', 'Languages')
+@section('page-title', 'Users')
 
 @section('data')
 
@@ -8,11 +8,11 @@
         <div class="col-md-12 text-center">
             <span class="fa fa-fw fa-download"></span>
             Export dataset as
-            <a href="{{ route('export.resource', ['resource' => 'language', 'format' => 'json']) }}">
+            <a href="{{ route('export.resource', ['resource' => 'user', 'format' => 'json']) }}">
                 .json
             </a>
             or
-            <a href="{{ route('export.resource', ['resource' => 'language', 'format' => 'yaml']) }}">
+            <a href="{{ route('export.resource', ['resource' => 'user', 'format' => 'yaml']) }}">
                 .yaml
             </a>
         </div>
@@ -23,15 +23,13 @@
         <thead>
             <tr>
                 <td></td>
+                <td>Email</td>
                 <td>Name</td>
-                <td title="Language code based on ISO-639-3 standard">
-                    Code
-                </td>
             </tr>
         </thead>
 
         <tbody>
-            @foreach ($paginator as $language)
+            @foreach ($paginator as $user)
             <tr>
                 <td>
                     <div class="btn-group">
@@ -60,14 +58,14 @@
                                     <a
                                         href="javascript:;"
                                         class="ctrl-c"
-                                        data-clipboard-text="{{ $language->uniqueId }}">
+                                        data-clipboard-text="{{ $user->uniqueId }}">
 
                                         <span class="fa fa-clipboard"></span>
 
                                         id:
                                         <b>
-                                            {{ $language->uniqueId }}
-                                            ({{ $language->id }})
+                                            {{ $user->uniqueId }}
+                                            ({{ $user->id }})
                                         </b>
                                     </a>
                                 </li>
@@ -75,94 +73,73 @@
                                     <a
                                         href="javascript:;"
                                         class="ctrl-c"
-                                        data-clipboard-text="{{ $language->createdAt }}">
+                                        data-clipboard-text="{{ $user->createdAt }}">
 
                                         <span class="fa fa-clipboard"></span>
 
-                                        added on:
+                                        signed up on:
                                         <b>
-                                            {{ date('M j, Y', strtotime($language->createdAt)) }}
+                                            {{ date('M j, Y', strtotime($user->createdAt)) }}
                                         </b>
                                     </a>
                                 </li>
                                 <li role="separator" class="divider"></li>
-                                @if ($language->deletedAt)
                                 <li>
-                                    <a
-                                        href="javascript:;"
-                                        onclick="return false"
-                                        class="bg-warning">
-
-                                        Restore
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        href="javascript:;"
-                                        onclick="return false"
-                                        class="bg-danger">
-
-                                        Delete for good
-                                    </a>
-                                </li>
-                                @else
-                                <li>
-                                    <a href="{{ $language->uri }}" target="_blank">
+                                    <a href="{{ $user->uri }}" target="_blank">
                                         View
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ $language->editUriAdmin }}">
+                                    <a href="{{ $user->editUriAdmin }}">
                                         Edit
                                     </a>
                                 </li>
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.deleteRes("language", "{{ $language->uniqueId }}", "{{ $language->name }}")'
+                                        onclick='return window.deleteRes("user", "{{ $user->uniqueId }}", "{{ $user->name }}")'
                                         class="bg-danger">
 
                                         Delete
                                     </a>
                                 </li>
-                                @endif
                             </ul>
                         </div>
 
-                        {{-- View language --}}
+                        {{-- View user profile --}}
                         <div class="btn-group">
-                            <a class="btn btn-default" href="{{ $language->uri }}" target="_blank">
+                            <a class="btn btn-default" href="{{ $user->uri }}" target="_blank">
                                 <span class="fa fa-fw fa-external-link"></span>
                             </a>
                         </div>
                     </div>
                 </td>
                 <td>
-                    @if ($language->deletedAt)
-                        <del
-                            class="text-danger"
-                            title="Deleted on {{ date('M j, Y', strtotime($language->deletedAt)) }}">
-
-                            {{ $language->name }}
-                        </del>
-                    @else
-                        <span class="edit-res">
-                            <a href="{{ $language->editUriAdmin }}" class="fa fa-pencil"></a>
-                        </span>
-
-                        <a href="{{ $language->editUriAdmin }}">
-                            {{ $language->name }}
-                        </a>
-                    @endif
-                </td>
-                <td>
-                    <span class="ctrl-c" data-clipboard-text="{{ $language->code }}">
+                    <span class="ctrl-c" data-clipboard-text="{{ $user->email }}">
                         <span class="edit-res">
                             <span class="fa fa-fw fa-clipboard"></span>
                         </span>
-
-                        {{ $language->code }}
                     </span>
+                    <span class="edit-res">
+                        <a href="{{ $user->editUriAdmin }}" class="fa fa-pencil"></a>
+                    </span>
+
+                    <a href="{{ $user->editUriAdmin }}">
+                        {{ $user->email }}
+                    </a>
+                </td>
+                <td>
+                    @if (strlen($user->name))
+                        <span class="ctrl-c" data-clipboard-text="{{ $user->name }}">
+                            <span class="edit-res">
+                                <span class="fa fa-fw fa-clipboard"></span>
+                            </span>
+
+                            {{ $user->name }}
+                        </span>
+                    @else
+                        ---
+                    @endif
                 </td>
             </tr>
             @endforeach

@@ -29,7 +29,7 @@
         class="form edit"
         method="post"
         name="language"
-        action="{{ route('admin.language.update', $model->uniqueId) }}">
+        action="{{ route('r.language.update', $model->uniqueId) }}">
 
         <input type="hidden" name="_method" value="PUT">
         <input type="hidden" name="return" value="{{ Request::input('return', 'summary') }}">
@@ -152,7 +152,7 @@
                     class="form"
                     method="post"
                     name="delete"
-                    action="{{ route('admin.language.destroy', $model->uniqueId) }}">
+                    action="{{ route('r.language.destroy', $model->uniqueId) }}">
 
                     {!! csrf_field() !!}
                     <input type="hidden" name="_method" value="DELETE">

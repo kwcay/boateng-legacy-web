@@ -1,4 +1,4 @@
-@extends('admin.layouts.index')
+@extends('layouts.admin-index')
 
 @section('page-title', 'Definitions')
 
@@ -147,7 +147,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('admin.definition.edit', ['id' => $definition->uniqueId, 'return' => 'admin']) }}">
+                                    <a href="{{ $definition->editUriAdmin }}">
                                         Edit
                                     </a>
                                 </li>
@@ -177,7 +177,7 @@
                             class="text-danger"
                             title="Deleted on {{ date('M j, Y', strtotime($definition->deletedAt)) }}">
 
-                            {{ $definition->titles->implode('title', ', ') }}
+                            {{ str_limit($definition->titles->implode('title', ', '), 25) }}
                         </del>
                     @else
                         <span
@@ -187,20 +187,20 @@
 
                             <span class="edit-res fa fa-clipboard"></span>
 
-                            {{ $definition->titles->implode('title', ', ') }}
+                            {{ str_limit($definition->titles->implode('title', ', '), 25) }}
                         </span>
                     @endif
                 </td>
                 <td>
                     @if ($definition->deletedAt)
                         <span class="text-danger">
-                            {{ $definition->getPracticalTranslation('eng') }}
+                            {{ str_limit($definition->getPracticalTranslation('eng'), 25) }}
                         </span>
                     @else
                         <span class="edit-res fa fa-pencil"></span>
                         <a
-                            href="{{ route('admin.definition.edit', ['id' => $definition->uniqueId, 'return' => 'admin']) }}">
-                            {{ $definition->getPracticalTranslation('eng') }}
+                            href="{{ $definition->editUriAdmin }}">
+                            {{ str_limit($definition->getPracticalTranslation('eng'), 25) }}
                         </a>
                     @endif
                 </td>

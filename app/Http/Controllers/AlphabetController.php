@@ -9,10 +9,40 @@ use Auth;
 use Request;
 use Session;
 use App\Models\Alphabet;
-use App\Http\Controllers\Controller;
 
 class AlphabetController extends Controller
 {
+    /**
+     *
+     */
+    protected $name = 'alphabet';
+
+    /**
+     *
+     */
+    protected $defaultQueryLimit = 20;
+
+    /**
+     *
+     */
+    protected $supportedOrderColumns = [
+        'id' => 'ID',
+        'name' => 'Name',
+        'code' => 'Code',
+        'scriptCode' => 'Script code',
+        'createdAt' => 'Created date',
+    ];
+
+    /**
+     *
+     */
+    protected $defaultOrderColumn = 'name';
+
+    /**
+     *
+     */
+    protected $defaultOrderDirection = 'asc';
+
 	/**
 	 * Displays the form to add a new alphabet.
 	 *

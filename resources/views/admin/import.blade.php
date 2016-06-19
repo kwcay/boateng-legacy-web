@@ -4,11 +4,6 @@
 
 	<h1>
 	    Import Data
-	    <br>
-
-	    <small>
-	        <a href="{{ route('admin.export') }}">&rarr; or click here to export</a>
-	    </small>
     </h1>
 
 

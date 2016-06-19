@@ -5,16 +5,14 @@
  */
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Http\Requests;
-use Illuminate\Http\Request;
+use App\Models\Country;
 
-class UserController extends Controller
+class CountryController extends Controller
 {
     /**
      *
      */
-    protected $name = 'user';
+    protected $name = 'country';
 
     /**
      *
@@ -27,13 +25,14 @@ class UserController extends Controller
     protected $supportedOrderColumns = [
         'id' => 'ID',
         'name' => 'Name',
-        'email' => 'Email',
+        'code' => 'ISO 3166-1 code',
+        'createdAt' => 'Created date',
     ];
 
     /**
      *
      */
-    protected $defaultOrderColumn = 'name';
+    protected $defaultOrderColumn = 'code';
 
     /**
      *

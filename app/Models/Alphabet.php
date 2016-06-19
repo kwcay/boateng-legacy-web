@@ -271,7 +271,7 @@ class Alphabet extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('admin.alphabet.edit', ['id' => $this->uniqueId, 'return' => 'create']);
+        return route('r.alphabet.edit', ['id' => $this->uniqueId, 'return' => 'create']);
     }
 
     /**
@@ -280,6 +280,6 @@ class Alphabet extends Model
      * @return string
      */
     public function getEditUriAdminAttribute() {
-        return route('admin.alphabet.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
+        return route('r.alphabet.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 }

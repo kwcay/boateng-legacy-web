@@ -5,16 +5,14 @@
  */
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Http\Requests;
-use Illuminate\Http\Request;
+use App\Models\Tag;
 
-class UserController extends Controller
+class TagController extends Controller
 {
     /**
      *
      */
-    protected $name = 'user';
+    protected $name = 'tag';
 
     /**
      *
@@ -26,14 +24,13 @@ class UserController extends Controller
      */
     protected $supportedOrderColumns = [
         'id' => 'ID',
-        'name' => 'Name',
-        'email' => 'Email',
+        'title' => 'Title',
     ];
 
     /**
      *
      */
-    protected $defaultOrderColumn = 'name';
+    protected $defaultOrderColumn = 'title';
 
     /**
      *

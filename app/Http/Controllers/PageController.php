@@ -12,32 +12,12 @@ use App\Models\Definition;
 
 class PageController extends Controller
 {
-	/**
-	 * Main landing page.
-	 */
-	public function home() {
-		return view('pages.reference');
-	}
-
-	/**
-	 * Contribute page.
-	 */
-	public function contribute() {
-		return view('pages.contribute');
-	}
+    /**
+     *
+     */
+    protected $name = 'admin';
 
     /**
-     * Random definition.
-     */
-    public function random()
-    {
-        // Find a random definition.
-        $definition = Definition::random();
-
-        return redirect($definition->uri);
-    }
-
-	/**
 	 * About the app.
      *
      * @param string $topic
@@ -127,6 +107,46 @@ class PageController extends Controller
     }
     public function sponsors() {
         return $this->about('sponsors');
+    }
+
+    /**
+     * Admin landing page.
+     */
+    public function admin() {
+        return view('admin.index');
+    }
+
+    public function import() {
+        return view('admin.import');
+    }
+
+    public function backup() {
+        return view('admin.backup');
+    }
+
+	/**
+	 * Main landing page.
+	 */
+	public function home() {
+		return view('pages.reference');
+	}
+
+	/**
+	 * Contribute page.
+	 */
+	public function contribute() {
+		return view('pages.contribute');
+	}
+
+    /**
+     * Random definition.
+     */
+    public function random()
+    {
+        // Find a random definition.
+        $definition = Definition::random();
+
+        return redirect($definition->uri);
     }
 
     /**

@@ -3,7 +3,7 @@
 @section('body')
 
     <h1>
-        Update a Tag
+        Update a User
         <br>
 
         <small>
@@ -18,35 +18,48 @@
             <a href="{{ route('admin.index') }}">Administration</a>
         </li>
         <li>
-            <a href="{{ route('admin.tag.index') }}">Tags</a>
+            <a href="{{ route('admin.user.index') }}">Users</a>
         </li>
         <li class="active">
-            Update &quot;{{ $model->title }}&quot;
+            Update &quot;{{ $model->name }}&quot;
         </li>
     </ol>
 
     <form
         class="form edit"
         method="post"
-        name="tag"
-        action="{{ route('r.tag.update', $model->uniqueId) }}">
+        name="user"
+        action="{{ route('r.user.update', $model->uniqueId) }}">
 
         <input type="hidden" name="_method" value="PUT">
         <input type="hidden" name="return" value="{{ Request::input('return', 'summary') }}">
         {!! csrf_field() !!}
 
-        {{-- Title --}}
+        {{-- Name --}}
         <div class="row">
             <input
                 type="text"
-                name="title"
-                id="title"
-                class="en-text-input"
-                placeholder="e.g. animal"
-                value="{{ $model->title }}"
+                name="name"
+                id="name"
+                class="text-input"
+                placeholder="e.g. Kwasi"
+                value="{{ $model->name }}"
                 autocomplete="off"
                 required="required">
-            <label for="title">Tag title</label>
+            <label for="name">Name</label>
+        </div>
+
+        {{-- Email --}}
+        <div class="row">
+            <input
+                type="text"
+                name="email"
+                id="email"
+                class="en-text-input"
+                placeholder="e.g. Twi"
+                value="{{ $model->email }}"
+                autocomplete="off">
+            <label for="transliteration">Email</label>
         </div>
 
         <div class="row center">
@@ -59,10 +72,10 @@
     <div class="dialog del">
         <div>
             <a href="#" class="close">&#10005;</a>
-            <h1>Are you sure?</h1>
+            <h1>Really?</h1>
             <div class="center">
-                Are you sure you want to delete the tag
-                <h2>&ldquo; {{ $model->title }} &rdquo;</h2>
+                Are you sure you want to delete the user
+                <h2>&ldquo; {{ strlen($model->name) ? $model->name : $model->email }} &rdquo;</h2>
                 for ever and ever?
                 <br><br>
 
@@ -70,15 +83,16 @@
                     class="form"
                     method="post"
                     name="delete"
-                    action="{{ route('r.tag.destroy', $model->uniqueId) }}">
+                    action="{{ route('r.user.destroy', $model->uniqueId) }}">
 
                     {!! csrf_field() !!}
                     <input type="hidden" name="_method" value="DELETE">
                     <input type="hidden" name="return" value="{{ Request::input('return', 'admin') }}">
-                    <input type="submit" name="confirm" value="yes, delete {{ $model->title }}">
+                    <input type="submit" name="confirm" value="yes, delete {{ strlen($model->name) ? $model->name : $model->email }}">
                     <input type="button" name="cancel" value="no, return" onclick="return Dialogs.close()">
                 </form>
             </div>
         </div>
     </div>
+
 @stop

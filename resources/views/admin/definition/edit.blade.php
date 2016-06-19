@@ -29,7 +29,7 @@
         class="form edit"
         method="post"
         name="definition"
-        action="{{ route('admin.definition.update', ['id' => $model->uniqueId]) }}">
+        action="{{ route('r.definition.update', ['id' => $model->uniqueId]) }}">
 
         <input type="hidden" name="_method" value="PUT">
         <input type="hidden" name="return" value="{{ Request::input('return', 'summary') }}">
@@ -254,7 +254,7 @@
                     class="form"
                     method="post"
                     name="delete"
-                    action="{{ route('admin.definition.destroy', ['id' => $model->uniqueId]) }}">
+                    action="{{ route('r.definition.destroy', ['id' => $model->uniqueId]) }}">
 
                     <input
                         type="hidden"

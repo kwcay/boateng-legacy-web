@@ -363,7 +363,7 @@ class Language extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('admin.language.edit', ['code' => $this->code, 'return' => 'summary']);
+        return route('r.language.edit', ['code' => $this->code, 'return' => 'summary']);
     }
 
     /**
@@ -372,7 +372,7 @@ class Language extends Model
      * @return string
      */
     public function getEditUriAdminAttribute() {
-        return route('admin.language.edit', ['code' => $this->code, 'return' => 'admin']);
+        return route('r.language.edit', ['code' => $this->code, 'return' => 'admin']);
     }
 
     /**

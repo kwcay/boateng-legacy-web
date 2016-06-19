@@ -240,7 +240,7 @@ class Country extends Model
      * @return string
      */
     public function getEditUriAttribute() {
-        return route('admin.country.edit', $this->uniqueId);
+        return route('r.country.edit', $this->uniqueId);
     }
 
     /**
@@ -249,7 +249,7 @@ class Country extends Model
      * @return string
      */
     public function getEditUriAdminAttribute() {
-        return route('admin.country.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
+        return route('r.country.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 
     /**

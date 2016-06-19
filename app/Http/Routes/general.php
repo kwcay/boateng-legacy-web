@@ -16,15 +16,8 @@ Route::get('about/in-numbers', 'PageController@stats')->name('stats');
 Route::get('about/story', 'PageController@story')->name('story');
 Route::get('about/supporters', 'PageController@sponsors')->name('sponsors');
 Route::get('about/team', 'PageController@team')->name('team');
-Route::get('+', 'PageController@contribute')->name('contribute');
 Route::get('sitemap/{topic?}', 'PageController@sitemap')->name('sitemap');
-
-//
-// Language pages.
-//
-Route::get('{code}', 'LanguageController@show')->name('language.show');
-Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
-Route::post('language', 'LanguageController@store')->name('language.store');
+Route::get('+', 'PageController@contribute')->name('contribute');
 
 //
 // Alphabet pages.
@@ -41,13 +34,38 @@ Route::get('{code}/{definition}', 'DefinitionController@show')->name('definition
 Route::get('random', 'PageController@random')->name('definition.random');
 Route::post('definition', 'DefinitionController@store')->name('definition.store');
 
+//
+// Language pages.
+//
+Route::get('{code}', 'LanguageController@show')->name('language.show');
+Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
+Route::post('language', 'LanguageController@store')->name('language.store');
+
+// User pages.
+Route::get('u/{id}')->name('user.show');
+
+// Generic resource routes.
+Route::group(['prefix' => 'r'], function()
+{
+    $resActions = ['only' => ['store', 'edit', 'update', 'destroy']];
+
+    Route::resource('alphabet', 'AlphabetController', $resActions);
+    Route::resource('country', 'CountryController', $resActions);
+    Route::resource('definition', 'DefinitionController', $resActions);
+    Route::resource('language', 'LanguageController', $resActions);
+    Route::resource('tag', 'TagController', $resActions);
+    Route::resource('user', 'UserController', $resActions);
+});
 
 //
 // Authentication routes.
 //
-Route::get('login', 'Auth\AuthController@getLogin')->name('auth.login');
-Route::post('logout', 'Auth\AuthController@postLogin')->name('auth.login.post');
-Route::get('logout', 'Auth\AuthController@getLogout')->name('auth.logout');
+Route::group(['namespace' => 'Auth'], function()
+{
+    Route::get('login', 'AuthController@getLogin')->name('auth.login');
+    Route::post('logout', 'AuthController@postLogin')->name('auth.login.post');
+    Route::get('logout', 'AuthController@getLogout')->name('auth.logout');
+});
 
 // Redirects.
 Route::get('add', function() { return redirect(route('contribute')); });

@@ -108,7 +108,7 @@ class DefinitionController extends Controller
 
         // Create definition.
         if (!$definition->save()) {
-            abort(500, 'Could not save definition.');
+            abort(500);
         }
 
         // Save relations.
