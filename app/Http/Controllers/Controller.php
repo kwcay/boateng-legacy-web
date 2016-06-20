@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 use Session;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
@@ -229,7 +230,7 @@ abstract class Controller extends BaseController
     }
 
 	/**
-	 * Removes the specified resource from storage.
+	 * Removes or trashes the specified resource from storage.
      *
      * @todo Restrict access based on roles.
 	 *
@@ -251,6 +252,90 @@ abstract class Controller extends BaseController
         } else {
             Session::push('messages', 'Could not delete <em>'. $name .'</em>.');
         }
+
+        // Return URI
+        switch ($this->request->get('return'))
+        {
+            case 'home':
+                $return = route('home');
+                break;
+
+            case 'admin':
+            default:
+                $return = route("admin.{$this->name}.index");
+        }
+
+        return redirect($return);
+	}
+
+    /**
+     * Restores a soft-deleted model.
+     *
+     * @todo Restrict access based on roles.
+     *
+     * @param int|string $id
+     */
+    public function restore($id)
+    {
+        // Retrieve model.
+        $className = $this->getModelClassName();
+        if (!$model = $className::findTrashed($id)) {
+            abort(404);
+        }
+
+        // Make sure the model can soft-delete.
+        if (!in_array(SoftDeletes::class, class_uses_recursive(get_class($model)))) {
+            abort(400);
+        }
+
+        // Restore model.
+        if ($model->restore()) {
+            Session::push('messages', '<em>'. ($model->name ?: $model->title) .
+                '</em> was successfully restored.');
+        } else {
+            Session::push('messages', 'Could not restore '. ($model->name ?: $model->title) .'.');
+        }
+
+        // Return URI
+        switch ($this->request->get('return'))
+        {
+            case 'edit':
+                $return = $model->editUri;
+                break;
+
+            case 'finish':
+            case 'summary':
+                $return = $model->uri;
+                break;
+
+            case 'admin':
+            default:
+                $return = route("admin.{$this->name}.index");
+        }
+
+        return redirect($return);
+    }
+
+	/**
+	 * Permanently deletes the specified resource from storage.
+     *
+     * @todo Restrict access based on roles.
+	 *
+	 * @param int $id
+	 * @return Response
+	 */
+	public function forceDestroy($id)
+	{
+        // Retrieve model.
+        $className = $this->getModelClassName();
+        if (!$model = $className::findTrashed($id)) {
+            abort(404);
+        }
+
+        // Delete record
+        $name = $model->name ?: $model->title;
+        $model->forceDelete();
+        Session::push('messages', '<em>'. $name .'</em> has been permanently deleted.');
 
         // Return URI
         switch ($this->request->get('return'))

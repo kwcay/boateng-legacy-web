@@ -1,6 +1,8 @@
 <?php namespace App\Traits;
 
 use App;
+use Exception;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 trait ObfuscatableTrait
 {
@@ -88,6 +90,26 @@ trait ObfuscatableTrait
     {
         if ($id = static::decodeId($id)) {
             return static::query()->find($id, $columns);
+        }
+
+        return null;
+    }
+
+    /**
+     * Find a soft-deleted model by its primary key.
+     *
+     * @param int|string $id
+     * @param array $columns
+     * @return \Illuminate\Support\Collection|static|null
+     */
+    public static function findTrashed($id, $columns = ['*'])
+    {
+        if (!in_array(SoftDeletes::class, class_uses_recursive(get_called_class()))) {
+            throw new Exception(get_called_class() .' does not soft-delete.');
+        }
+
+        if ($id = static::decodeId($id)) {
+            return static::onlyTrashed()->find($id, $columns);
         }
 
         return null;

@@ -125,7 +125,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick="return false"
+                                        onclick='return window.restore("definition", "{{ $definition->uniqueId }}", "{{ $definition->mainTitle }}")'
                                         class="bg-warning">
 
                                         Restore
@@ -134,7 +134,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick="return false"
+                                        onclick='return window.forceDelete("definition", "{{ $definition->uniqueId }}", "{{ $definition->mainTitle }}")'
                                         class="bg-danger">
 
                                         Delete for good
@@ -154,8 +154,9 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.deleteRes("definition", "{{ $definition->uniqueId }}", "{{ $definition->mainTitle }}")'
+                                        onclick='return window.trash("definition", "{{ $definition->uniqueId }}", "{{ $definition->mainTitle }}")'
                                         class="bg-danger">
+                                        
                                         Delete
                                     </a>
                                 </li>

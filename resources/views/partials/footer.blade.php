@@ -60,7 +60,7 @@
                         api
                     </a>
                     |
-                    <a href="https://github.com/frnkly/dinkomo" target="_blank">
+                    <a href="https://github.com/frnkly/dinkomo-web" target="_blank">
                         github
                     </a>
                     |

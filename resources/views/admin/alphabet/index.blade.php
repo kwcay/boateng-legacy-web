@@ -129,7 +129,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.deleteRes("alphabet", "{{ $alphabet->uniqueId }}", "{{ $alphabet->name }}")'
+                                        onclick='return window.trash("alphabet", "{{ $alphabet->uniqueId }}", "{{ $alphabet->name }}")'
                                         class="bg-danger">
 
                                         Delete

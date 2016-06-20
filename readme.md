@@ -1,5 +1,4 @@
 # Di Nkɔmɔ
-*"A reference of cultures past and present."*
 
 Di Nkɔmɔ is a free, online reference for the cultures of the world. See the live app at [dinkomo.frnk.ca](http://dinkomo.frnk.ca).
 

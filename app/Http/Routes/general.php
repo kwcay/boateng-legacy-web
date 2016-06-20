@@ -44,17 +44,36 @@ Route::post('language', 'LanguageController@store')->name('language.store');
 // User pages.
 Route::get('u/{id}')->name('user.show');
 
-// Generic resource routes.
+//
+// Resource routes.
+//
 Route::group(['prefix' => 'r'], function()
 {
     $resActions = ['only' => ['store', 'edit', 'update', 'destroy']];
 
     Route::resource('alphabet', 'AlphabetController', $resActions);
+    Route::patch('alphabet/{id}/restore', 'AlphabetController@restore');
+    Route::delete('alphabet/{id}/commit', 'AlphabetController@forceDestroy');
+
     Route::resource('country', 'CountryController', $resActions);
+    Route::patch('country/{id}/restore', 'CountryController@restore');
+    Route::delete('country/{id}/commit', 'CountryController@forceDestroy');
+
     Route::resource('definition', 'DefinitionController', $resActions);
+    Route::patch('definition/{id}/restore', 'DefinitionController@restore');
+    Route::delete('definition/{id}/commit', 'DefinitionController@forceDestroy');
+
     Route::resource('language', 'LanguageController', $resActions);
+    Route::patch('language/{id}/restore', 'LanguageController@restore');
+    Route::delete('language/{id}/commit', 'LanguageController@forceDestroy');
+
     Route::resource('tag', 'TagController', $resActions);
+    Route::patch('tag/{id}/restore', 'TagController@restore');
+    Route::delete('tag/{id}/commit', 'TagController@forceDestroy');
+
     Route::resource('user', 'UserController', $resActions);
+    Route::patch('user/{id}/restore', 'UserController@restore');
+    Route::delete('user/{id}/commit', 'UserController@forceDestroy');
 });
 
 //

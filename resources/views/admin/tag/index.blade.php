@@ -63,7 +63,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.deleteRes("tag", "{{ $tag->uniqueId }}", "{{ $tag->title }}")'
+                                        onclick='return window.trash("tag", "{{ $tag->uniqueId }}", "{{ $tag->title }}")'
                                         class="bg-danger">
 
                                         Delete

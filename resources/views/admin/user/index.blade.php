@@ -97,7 +97,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.deleteRes("user", "{{ $user->uniqueId }}", "{{ $user->name }}")'
+                                        onclick='return window.trash("user", "{{ $user->uniqueId }}", "{{ $user->name }}")'
                                         class="bg-danger">
 
                                         Delete

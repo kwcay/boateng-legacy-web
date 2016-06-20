@@ -857,6 +857,13 @@ class Definition extends Model
     }
 
     /**
+     * Accessor for $this->title (alias of $this->mainTitle)
+     */
+    public function getTitleAttribute($title = '') {
+        return $this->mainTitle;
+    }
+
+    /**
      * Accessor for $this->titleString
      *
      * @return string

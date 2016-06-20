@@ -90,7 +90,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick="return false"
+                                        onclick='return window.restore("language", "{{ $language->uniqueId }}", "{{ $language->name }}")'
                                         class="bg-warning">
 
                                         Restore
@@ -99,7 +99,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick="return false"
+                                        onclick='return window.forceDelete("language", "{{ $language->uniqueId }}", "{{ $language->name }}")'
                                         class="bg-danger">
 
                                         Delete for good
@@ -119,7 +119,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.deleteRes("language", "{{ $language->uniqueId }}", "{{ $language->name }}")'
+                                        onclick='return window.trash("language", "{{ $language->uniqueId }}", "{{ $language->name }}")'
                                         class="bg-danger">
 
                                         Delete

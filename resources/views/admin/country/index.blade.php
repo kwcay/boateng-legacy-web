@@ -95,7 +95,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.deleteRes("country", "{{ $country->uniqueId }}", "{{ $country->name }}")'
+                                        onclick='return window.trash("country", "{{ $country->uniqueId }}", "{{ $country->name }}")'
                                         class="bg-danger">
 
                                         Delete
