@@ -55,6 +55,31 @@
                                     </a>
                                 </li>
                                 <li role="separator" class="divider"></li>
+                                @if ($tag->deletedAt)
+                                <li>
+                                    <a
+                                        href="javascript:;"
+                                        onclick='return window.restore("tag", "{{ $tag->uniqueId }}", "{{ $tag->name }}")'
+                                        class="bg-warning">
+
+                                        Restore
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="javascript:;"
+                                        onclick='return window.forceDelete("tag", "{{ $tag->uniqueId }}", "{{ $tag->name }}")'
+                                        class="bg-danger">
+
+                                        Delete for good
+                                    </a>
+                                </li>
+                                @else
+                                <li>
+                                    <a href="{{ $tag->uri }}" target="_blank">
+                                        View
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="{{ $tag->editUriAdmin }}">
                                         Edit
@@ -69,6 +94,7 @@
                                         Delete
                                     </a>
                                 </li>
+                                @endif
                             </ul>
                         </div>
 

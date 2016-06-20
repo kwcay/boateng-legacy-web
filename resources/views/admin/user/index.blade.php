@@ -84,6 +84,26 @@
                                     </a>
                                 </li>
                                 <li role="separator" class="divider"></li>
+                                @if ($user->deletedAt)
+                                <li>
+                                    <a
+                                        href="javascript:;"
+                                        onclick='return window.restore("language", "{{ $user->uniqueId }}", "{{ $user->name }}")'
+                                        class="bg-warning">
+
+                                        Restore
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="javascript:;"
+                                        onclick='return window.forceDelete("user", "{{ $user->uniqueId }}", "{{ $user->name }}")'
+                                        class="bg-danger">
+
+                                        Delete for good
+                                    </a>
+                                </li>
+                                @else
                                 <li>
                                     <a href="{{ $user->uri }}" target="_blank">
                                         View
@@ -103,6 +123,7 @@
                                         Delete
                                     </a>
                                 </li>
+                                @endif
                             </ul>
                         </div>
 

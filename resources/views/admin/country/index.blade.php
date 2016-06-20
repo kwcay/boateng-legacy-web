@@ -87,6 +87,26 @@
                                     </a>
                                 </li>
                                 <li role="separator" class="divider"></li>
+                                @if ($country->deletedAt)
+                                <li>
+                                    <a
+                                        href="javascript:;"
+                                        onclick='return window.restore("country", "{{ $country->uniqueId }}", "{{ $country->name }}")'
+                                        class="bg-warning">
+
+                                        Restore
+                                    </a>
+                                </li>
+                                <li>
+                                    <a
+                                        href="javascript:;"
+                                        onclick='return window.forceDelete("country", "{{ $country->uniqueId }}", "{{ $country->name }}")'
+                                        class="bg-danger">
+
+                                        Delete for good
+                                    </a>
+                                </li>
+                                @else
                                 <li>
                                     <a href="{{ $country->editUriAdmin }}">
                                         Edit
@@ -101,6 +121,7 @@
                                         Delete
                                     </a>
                                 </li>
+                                @endif
                             </ul>
                         </div>
                     </div>

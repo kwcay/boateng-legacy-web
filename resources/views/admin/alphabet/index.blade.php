@@ -105,7 +105,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick="return false"
+                                        onclick='return window.restore("alphabet", "{{ $alphabet->uniqueId }}", "{{ $alphabet->name }}")'
                                         class="bg-warning">
 
                                         Restore
@@ -114,7 +114,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick="return false"
+                                        onclick='return window.forceDelete("alphabet", "{{ $alphabet->uniqueId }}", "{{ $alphabet->name }}")'
                                         class="bg-danger">
 
                                         Delete for good

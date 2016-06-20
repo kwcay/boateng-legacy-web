@@ -1,8 +1,14 @@
-<?php namespace App\Models;
+<?php
+/**
+ * Copyright Di Nkomo(TM) 2016, all rights reserved
+ *
+ */
+namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
@@ -11,7 +17,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-	use Authenticatable, CamelCaseAttrs, CanResetPassword, HasRoles, ObfuscatesID;
+	use Authenticatable, CamelCaseAttrs, CanResetPassword, HasRoles, ObfuscatesID, SoftDeletes;
 
     //
     //

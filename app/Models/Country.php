@@ -7,6 +7,7 @@ namespace App\Models;
 
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
 use App\Traits\ValidatableTrait as Validatable;
@@ -15,7 +16,7 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Country extends Model
 {
-    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable, Validatable;
+    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable, SoftDeletes, Validatable;
 
 
     //
