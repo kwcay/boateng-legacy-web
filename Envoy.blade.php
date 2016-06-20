@@ -4,24 +4,12 @@
     require __DIR__.'/vendor/autoload.php';
     (new \Dotenv\Dotenv(__DIR__, '.env'))->load();
 
-    # Servers
-    $local = env('ENVOY_LOCAL_SERVER', '127.0.0.1');
-    $staging = env('ENVOY_STAGING_SERVER', '127.0.0.1');
-    $production = env('ENVOY_PRODUCTION_SERVER', '127.0.0.1');
-
-    # Other variables
-    $localPath = env('ENVOY_LOCAL_PATH', '/var/www/');
-    $stagingPath = env('ENVOY_STAGING_PATH', '/var/www/');
-    $productionPath = env('ENVOY_PRODUCTION_PATH', '/var/www/');
-
-    // $server = "";
-    // $repository = "spatie/{$server}";
-    // $baseDir = "/home/forge/{$server}";
-    // $releasesDir = "{$baseDir}/releases";
-    // $currentDir = "{$baseDir}/current";
-    // $newReleaseName = date('Ymd-His');
-    // $newReleaseDir = "{$releasesDir}/{$newReleaseName}";
-    // $user = get_current_user();
+    # Setup variables.
+    $repository = "git@bitbucket.org:dinkomo/web.git";
+    $baseDir = "~/apps/dinkomo-web";
+    $releasesDir = "{$baseDir}/releases";
+    $liveDir = "/var/www/html/apps/dinkomo-web";
+    $newReleaseName = date('Ymd-His');
 
     /**
      * Logs a message to the console.
@@ -38,28 +26,187 @@
 
 
 {{-- Servers --}}
-@servers(['local' => $local, 'staging' => $staging, 'production' => $production])
+
+@servers(['local' => '127.0.0.1', 'production' => 'root@45.55.60.14'])
 
 
 
 {{-- Zero downtime deployment --}}
 
-@task('link', ['on' => 'web'])
-    rm /var/www/jobable.com.au
-    ln -s ~/jobable.com.au /var/www
+{{-- Credits: https://serversforhackers.com/video/deploying-with-envoy-cast --}}
+{{-- Credits: https://dyrynda.com.au/blog/an-envoyer-like-deployment-script-using-envoy --}}
+{{-- Credits: https://murze.be/2015/11/zero-downtime-deployments-with-envoy --}}
+
+
+@macro('deploy', ['on' => 'production'])
+
+    git-clone
+    setup-app
+    composer-install
+    update-permissions
+    update-symlinks
+    optimize
+    purge-releases
+
+@endmacro
+
+@macro('deploy-migrate', ['on' => 'production'])
+
+    git-clone
+    setup-app
+    composer-install
+    update-permissions
+    update-symlinks
+    down
+    migrate
+    up
+    optimize
+    purge-releases
+
+@endmacro
+
+@task('deploy-code', ['on' => 'production'])
+
+    cd {{ $liveDir }}
+    git pull origin master
+
 @endtask
 
+@task('git-clone')
 
+    {{ msg('Cloning git repo...') }}
 
-{{-- Regular deployment --}}
+    # Check if the release directory exists. If it doesn't, create one.
+    [ -d {{ $releasesDir }} ] || mkdir {{ $releasesDir }};
 
-@macro('deploy')
+    # cd into the releases directory.
+    cd {{ $releasesDir }};
 
-@endmacro
+    # Clone the repository into a new folder.
+    git clone --depth 1 {{ $repository }} {{ $newReleaseName }};
 
-@macro('deploy-staging')
+    # Configure sparse checkout.
+    cd {{ $newReleaseName }}
+    git config core.sparsecheckout true
+    echo "*" > .git/info/sparse-checkout
+    echo "!storage" >> .git/info/sparse-checkout
+    #echo "!public/build" >> .git/info/sparse-checkout
+    git read-tree -mu HEAD
 
-@endmacro
+@endtask
+
+@task('setup-app')
+
+    {{ msg('Setting up app...') }}
+
+    # Copy .env file
+    cp -f ./.env.production ./.env
+
+    # ...
+    # mkdir -p ./storage
+    # chmod -Rf 1777 ./storage
+
+@endtask
+
+@task('composer-install')
+
+    {{ msg('Installing composer dependencies...') }}
+
+    # cd into new folder.
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
+
+    # Install composer dependencies.
+    composer self-update &> /dev/null
+    composer install --prefer-dist --no-scripts -q -o &> /dev/null
+
+    # Optimize insallation.
+    php artisan clear-compiled;
+    php artisan optimize;
+
+@endtask
+
+@task('update-permissions')
+
+    {{ msg('Updating directory owner and permissions...') }}
+
+    # cd into releases folder
+    cd {{ $releasesDir }};
+
+    # Update group owner and permissions
+    chgrp -R www-data {{ $newReleaseName }};
+    chmod -R ug+rwx {{ $newReleaseName }};
+
+@endtask
+
+@task('update-symlinks')
+
+    {{ msg('Creating symlink to latest release...') }}
+
+    # Remove the storage directory and replace with persistent data
+    rm -rf {{ $releasesDir }}/{{ $newReleaseName }}/storage;
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    ln -nfs {{ $baseDir }}/storage storage;
+
+    ln -nfs {{ $releasesDir }}/{{ $newReleaseName }} {{ $liveDir }};
+    chgrp -h www-data {{ $liveDir }};
+
+@endtask
+
+@task('down')
+
+    {{ msg('Putting app in maintenance mode...') }}
+
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    php artisan down;
+
+@endtask
+
+@task('migrate')
+
+    {{ msg('Running migrations...') }}
+
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    php artisan migrate --force;
+
+@endtask
+
+@task('up')
+
+    cd {{ $liveDir }};
+    php artisan up;
+
+@endtask
+
+@task('optimize')
+
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
+
+    # Optimize insallation.
+    php artisan cache:clear;
+    php artisan clear-compiled;
+    php artisan optimize;
+    php artisan route:cache;
+
+    # Clear the OPCache
+    sudo service php5-fpm restart
+
+@endtask
+
+@task('purge-releases')
+
+    {{ msg('Purging old releases...') }}
+
+    # This will list our releases by modification time and delete all but the 5 most recent.
+    purging=$(ls -dt {{ $releasesDir }}/* | tail -n +5);
+
+    if [ "$purging" != "" ]; then
+        echo Purging old releases: $purging;
+        rm -rf $purging;
+    else
+        echo "No releases found for purging at this time";
+    fi
+
+@endtask
 
 
 
@@ -67,7 +214,7 @@
 
 @task('update', ['on' => 'local'])
 
-    cd {{ $localPath }}
+    cd ~/dev/dinkomo/web/
 
     {{ msg('Updating bower dependencies...') }}
     {{ msg('To do: update bower.') }}
@@ -85,7 +232,7 @@
 
 @task('install', ['on' => 'local'])
 
-    cd {{ $localPath }}
+    cd ~/dev/dinkomo/web/
 
     {{ msg('Installing bower dependencies...') }}
     {{ msg('To do: update bower.') }}
@@ -97,31 +244,12 @@
 
 @endtask
 
-@task('composer-install-staging', ['on' => 'stage'])
-
-    cd {{ $stagingPath }}
-
-    {{ msg('Installing composer dependencies...') }}
-    composer self-update &> /dev/null
-    composer install &> /dev/null
-
-@endtask
-
-@task('composer-install-production', ['on' => 'production'])
-
-    cd {{ $stagingPath }}
-
-    {{ msg('Installing composer dependencies...') }}
-    composer self-update &> /dev/null
-    composer install &> /dev/null
-
-@endtask
-
 @task('build-assets', ['on' => 'local'])
 
-    cd {{ $stagingPath }}
-
     {{ msg('Building assets...') }}
+
+    cd ~/dev/dinkomo/web/
+
     gulp --production &> /dev/null
     gulp --production --back &> /dev/null
 
@@ -129,20 +257,7 @@
 
 
 
-{{-- Git --}}
 
-@task('git-pull-staging', ['on' => 'staging'])
-
-    cd {{ $stagingPath }}
-
-    git config core.ignorecase false
-    git reset --hard origin/master
-    git pull
-    # mkdir -p ./storage
-    # chmod -Rf 1777 ./storage
-    git status
-
-@endtask
 
 @task('git-pull-production', ['on' => 'production'])
 
@@ -159,66 +274,21 @@
 
 
 
-{{-- Database --}}
+{{-- Testing Envoy --}}
 
-@task('migrate-staging', ['on' => 'staging'])
-
-    cd {{ $stagingPath }}
-
-    echo "yes" | php artisan migrate --force
-
-@endtask
-
-@task('migrate-production', ['on' => 'production'])
-
-    cd {{ $productionPath }}
-
-    echo "yes" | php artisan migrate --force
-
-@endtask
-
-@task('resetdb-staging', ['on' => 'staging'])
-
-    cd {{ $stagingPath }}
-
-    composer dump-autoload
-    echo "yes" | php artisan migrate:reset --force
-
-@endtask
-
-@task('resetdb-production', ['on' => 'production'])
-
-    cd {{ $productionPath }}
-
-    composer dump-autoload
-    echo "yes" | php artisan migrate:reset --force
-
-@endtask
-
-
-
-{{-- Test commands --}}
-
-@task('local', ['on' => 'local'])
+@task('test-local', ['on' => 'local'])
 
     {{ msg('Testing Envoy on localhost...') }}
-    cd {{ $localPath }}
-    ls
+
+    ls -a
 
 @endtask
 
-@task('staging', ['on' => 'staging'])
-
-    {{ msg('Testing Envoy on staging server...') }}
-    cd {{ $stagingPath }}
-    ls
-
-@endtask
-
-@task('production', ['on' => 'production'])
+@task('test-production', ['on' => 'production'])
 
     {{ msg('Testing Envoy on production server...') }}
-    cd {{ $productionPath }}
-    ls
+
+    cd {{ $releasesDir }}
+    ls -a
 
 @endtask
