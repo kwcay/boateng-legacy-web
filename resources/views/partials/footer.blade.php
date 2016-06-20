@@ -25,7 +25,7 @@
                         title="About this app"
                         data-toggle="tooltip"></a>
                     <a
-                        href="{{ route('about.agoro') }}"
+                        href="{{ route('about.learning-app') }}"
                         class="fa fa-graduation-cap fa-fw"
                         title="@lang('branding.learning_app_title')"
                         data-toggle="tooltip"></a>
@@ -48,20 +48,26 @@
                 </div>
 
                 <div class="footer-row">
+                    <a href="{{ route('about.api') }}">
+                        @lang('branding.api_title')
+                    </a>
+                    |
+                    <a href="{{ route('about.learning-app') }}">
+                        @lang('branding.learning_app_title')
+                    </a>
+                    |
+                    <a href="{{ route('about.translation-engine') }}">
+                        @lang('branding.mt_title')
+                    </a>
+                </div>
+
+                <div class="footer-row">
                     <a href="{{ route('about') }}">
                         about
                     </a>
                     |
                     <a href="{{ route('sitemap') }}">
                         sitemap
-                    </a>
-                    |
-                    <a href="{{ route('about.api') }}">
-                        api
-                    </a>
-                    |
-                    <a href="https://github.com/frnkly/dinkomo-web" target="_blank">
-                        github
                     </a>
                     |
                     @if (Auth::check())

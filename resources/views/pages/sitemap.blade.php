@@ -44,6 +44,25 @@
                 </ul>
             </li>
             <li>
+                <i class="fa fa-li fa-caret-down"></i>
+                Other projects
+
+                <ul class="fa-ul">
+                    <li>
+                        <i class="fa fa-li fa-angle-right"></i>
+                        <a href="{{ route('about.learning-app') }}">
+                            @lang('branding.learning_app_title')
+                        </a>
+                    </li>
+                    <li>
+                        <i class="fa fa-li fa-angle-right"></i>
+                        <a href="{{ route('about.translation-engine') }}">
+                            @lang('branding.mt_title')
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
                 <i class="fa fa-li fa-exclamation"></i>
                 <a href="{{ route('definition.random') }}">
                     Surprise me

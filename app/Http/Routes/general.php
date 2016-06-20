@@ -10,12 +10,13 @@
 //
 Route::get('/', 'PageController@home')->name('home');
 Route::get('about', 'PageController@about')->name('about');
-Route::get('about/agorɔ', 'PageController@agoro')->name('about.agoro');
 Route::get('about/api', 'PageController@api')->name('about.api');
 Route::get('about/in-numbers', 'PageController@stats')->name('about.stats');
 Route::get('about/story', 'PageController@story')->name('about.story');
 Route::get('about/supporters', 'PageController@sponsors')->name('about.sponsors');
 Route::get('about/team', 'PageController@team')->name('about.team');
+Route::get('about/agorɔ', 'PageController@learningApp')->name('about.learning-app');
+Route::get('about/safoa', 'PageController@translationEngine')->name('about.translation-engine');
 Route::get('sitemap/{topic?}', 'PageController@sitemap')->name('sitemap');
 Route::get('+', 'PageController@contribute')->name('contribute');
 

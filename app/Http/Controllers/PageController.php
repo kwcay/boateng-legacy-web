@@ -32,10 +32,11 @@ class PageController extends Controller
             case 'api':
             case 'author':
             case 'sponsors':
+            case 'translation-engine':
                 $view = 'pages.about.'. $topic;
                 break;
 
-            case 'agoro':
+            case 'learning-app':
             case 'stats':
                 $view = 'pages.about.'. $topic;
 
@@ -87,14 +88,14 @@ class PageController extends Controller
 		return view($view, $data);
 	}
 
-    public function agoro() {
-        return $this->about('agoro');
-    }
     public function api() {
         return $this->about('api');
     }
     public function author() {
         return $this->about('author');
+    }
+    public function learningApp() {
+        return $this->about('learning-app');
     }
     public function stats() {
         return $this->about('stats');
@@ -104,6 +105,9 @@ class PageController extends Controller
     }
     public function team() {
         return $this->about('team');
+    }
+    public function translationEngine() {
+        return $this->about('translation-engine');
     }
     public function sponsors() {
         return $this->about('sponsors');
