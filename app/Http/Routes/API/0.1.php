@@ -6,9 +6,7 @@
  */
 
 
-Route::get('/', function() {
-    return 'Di Nkɔmɔ API 0.1';
-});
+Route::get('/', 'ApiController@version');
 
 // General resource endpoints.
 Route::get('{resourceName}/count', 'ApiController@count');

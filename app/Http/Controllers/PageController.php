@@ -152,25 +152,42 @@ class PageController extends Controller
     /**
      * Sitemap pages.
      *
-     * @param string $sub
      * @return View
      */
     public function sitemap($sub = '')
     {
-        switch ($sub)
-        {
-            case 'language':
-                $view = 'pages.sitemap.language';
-                $data = [];
-                break;
+        return view('pages.sitemap');
+    }
 
-            default:
-                $view = 'pages.sitemap.index';
-                $data = [
-                    'languages' => Language::sortedBy('name', 'asc')
-                ];
-        }
 
-        return view($view, $data);
+    //
+    //
+    // Redirects
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    public function redirectAdd() {
+        return redirect(route('contribute'));
+    }
+
+    public function redirectAgoro() {
+        return redirect(route('about.agoro'));
+    }
+
+    public function redirectContribute() {
+        return redirect(route('contribute'));
+    }
+
+    public function redirectHome() {
+        return redirect(route('home'));
+    }
+
+    public function redirectInNumbers() {
+        return redirect(route('about.stats'));
+    }
+
+    public function redirectStats() {
+        return redirect(route('about.stats'));
     }
 }

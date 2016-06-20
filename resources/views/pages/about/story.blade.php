@@ -1,6 +1,6 @@
 @extends('layouts.narrow')
 
-@section('title', 'How Di Nkomo Started')
+@section('title', 'Di Nkɔmɔ: The story')
 
 @section('body')
 
@@ -9,7 +9,7 @@
             Di Nkɔmɔ
             <br>
 
-            <small>The Story</small>
+            <small>The story</small>
         </h1>
 
         <div class="row">
@@ -20,7 +20,7 @@
                 directly translatable into English. As do many other languages, they require
                 context&mdash;a cultural context. And so, in the hopes of capturing and documenting
                 these cultural gems, Di Nkɔmɔ has grown from just under 100 Twi words to
-                <a href="{{ route('stats') }}">
+                <a href="{{ route('about.stats') }}">
                     {{ number_format($defs) }} definitions in {{ number_format($langs) }} languages
                 </a>.
             </div>

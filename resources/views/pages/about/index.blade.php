@@ -20,9 +20,9 @@
                 <br>
                 <br>
 
-                It started as an online dictionary for those languages outside the mainstream
-                (95% of all languages
-                <a href="{{ route('stats') }}">fall within that category</a>).
+                It <a href="{{ route('about.story') }}">started as an online dictionary</a> for those
+                languages outside the mainstream (95% of all languages
+                <a href="{{ route('about.stats') }}">fall within that category</a>).
                 Yet, language by itself doesn't always convey a full thought or meaning. For
                 instance, the literal translation of <a href="/twi/Twereduampɔn">Twereduampɔn</a>
                 (a <a href="{{ route('language.show', ['code' => 'twi']) }}">Twi</a> word for God)
@@ -36,10 +36,10 @@
                 <h2>General goals</h2>
                 <ol class="text-left">
                     <li>
-                        Discover the history that's hidden in our languages and cultures.
+                        Discover the history that's hidden in our languages and traditions.
                     </li>
                     <li>
-                        Find relations between our cultures.
+                        Find commonalities between our cultures.
                     </li>
                     <li>
                         Create a free resource that could be useful to those ends.
@@ -48,7 +48,7 @@
                 <br>
 
                 Language is, truly, a bearer and medium through which culture is experienced and
-                transmitted. <a href="{{ route('story') }}">My hope</a> is that Di Nkɔmɔ can be
+                transmitted. <a href="{{ route('about.story') }}">My hope</a> is that Di Nkɔmɔ can be
                 useful in preserving and making sense of these treasures.
             </div>
         </div>

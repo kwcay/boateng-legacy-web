@@ -12,10 +12,10 @@ Route::get('/', 'PageController@home')->name('home');
 Route::get('about', 'PageController@about')->name('about');
 Route::get('about/agorɔ', 'PageController@agoro')->name('about.agoro');
 Route::get('about/api', 'PageController@api')->name('about.api');
-Route::get('about/in-numbers', 'PageController@stats')->name('stats');
-Route::get('about/story', 'PageController@story')->name('story');
-Route::get('about/supporters', 'PageController@sponsors')->name('sponsors');
-Route::get('about/team', 'PageController@team')->name('team');
+Route::get('about/in-numbers', 'PageController@stats')->name('about.stats');
+Route::get('about/story', 'PageController@story')->name('about.story');
+Route::get('about/supporters', 'PageController@sponsors')->name('about.sponsors');
+Route::get('about/team', 'PageController@team')->name('about.team');
 Route::get('sitemap/{topic?}', 'PageController@sitemap')->name('sitemap');
 Route::get('+', 'PageController@contribute')->name('contribute');
 
@@ -42,7 +42,7 @@ Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
 Route::post('language', 'LanguageController@store')->name('language.store');
 
 // User pages.
-Route::get('u/{id}')->name('user.show');
+Route::get('u/{id}', 'UserController@show')->name('user.show');
 
 //
 // Resource routes.
@@ -87,9 +87,9 @@ Route::group(['namespace' => 'Auth'], function()
 });
 
 // Redirects.
-Route::get('add', function() { return redirect(route('contribute')); });
-Route::get('agoro', function() { return redirect(route('about.agoro')); });
-Route::get('home', function() { return redirect(route('home')); });
-Route::get('stats', function() { return redirect(route('stats')); });
-Route::get('in-numbers', function() { return redirect(route('stats')); });
-Route::get('contribute', function() { return redirect(route('contribute')); });
+Route::get('add',           'PageController@redirectAdd');
+Route::get('agoro',         'PageController@redirectAgoro');
+Route::get('contribute',    'PageController@redirectContribute');
+Route::get('home',          'PageController@redirectHome');
+Route::get('in-numbers',    'PageController@redirectInNumbers');
+Route::get('stats',         'PageController@redirectStats');

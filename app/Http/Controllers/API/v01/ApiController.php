@@ -24,10 +24,20 @@ use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
+    /**
+     *
+     */
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
         $this->response = $response;
+    }
+
+    /**
+     * Returns the version number of the API
+     */
+    public function version() {
+        return 'Di Nkɔmɔ API 0.1';
     }
 
     /**

@@ -31,30 +31,16 @@
                 <ul class="fa-ul">
                     <li>
                         <i class="fa fa-li fa-angle-right"></i>
-                        <a href="{{ route('story') }}">
+                        <a href="{{ route('about.story') }}">
                             Story of Di Nkɔmɔ
                         </a>
                     </li>
                     <li>
                         <i class="fa fa-li fa-angle-right"></i>
-                        <a href="{{ route('stats') }}">
+                        <a href="{{ route('about.stats') }}">
                             Di Nkɔmɔ in numbers
                         </a>
                     </li>
-                </ul>
-            </li>
-            <li>
-                <i class="fa fa-li fa-caret-down"></i> Languages
-
-                <ul class="fa-ul">
-                    @foreach ($languages as $lang)
-                        <li>
-                            <i class="fa fa-li fa-angle-right"></i>
-                            <a href="{{ $lang->uri }}">
-                                {{ $lang->name }}
-                            </a>
-                        </li>
-                    @endforeach
                 </ul>
             </li>
             <li>
