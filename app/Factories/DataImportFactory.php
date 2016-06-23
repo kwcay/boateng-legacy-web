@@ -7,10 +7,9 @@ namespace App\Factories;
 
 use Exception;
 use Symfony\Component\Yaml\Yaml;
-use App\Factories\Contract as BaseFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
-class DataImportFactory extends BaseFactory
+class DataImportFactory
 {
     /**
      * Supported file formats
@@ -435,5 +434,17 @@ class DataImportFactory extends BaseFactory
      */
     public function getMessages() {
         return $this->messages;
+    }
+
+    /**
+     * Creates a new instance of a DataImportFactory.
+     *
+     * @param string $factory
+     */
+    public function make($factory)
+    {
+        $className = 'App\\Factories\\DataImport\\'. $factory;
+
+        return new $className;
     }
 }

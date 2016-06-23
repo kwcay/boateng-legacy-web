@@ -16,6 +16,7 @@ use App\Models\Translation;
 use App\Models\Definitions\Word;
 use Illuminate\Support\Collection;
 use App\Models\DefinitionTitle as Title;
+use App\Factories\TransliterationFactory as Transliterator;
 
 class DefinitionController extends Controller
 {
@@ -159,7 +160,7 @@ class DefinitionController extends Controller
         }
 
         // Check definition titles.
-        if (!$titles = $this->getTitles(Request::input('titleStr'), Request::input('titles'))) {
+        if (!$titles = $this->getTitles(Request::input('titleStr'))) {
             return back();
         }
 
@@ -279,7 +280,7 @@ class DefinitionController extends Controller
         }
 
         // Check definition titles.
-        if (!$titles = $this->getTitles(Request::input('titleStr'), Request::input('titles'))) {
+        if (!$titles = $this->getTitles(Request::input('titleStr'))) {
             return back();
         }
 
@@ -442,10 +443,10 @@ class DefinitionController extends Controller
      * Retrieves definition titles from request.
      *
      * @param string $titleStr
-     * @param array $titleArray
+     * @param string $script
      * @return array|false
      */
-    protected function getTitles($titleStr = null, $titleArray = null)
+    protected function getTitles($titleStr = null, $script = 'Latn')
     {
         $titles = [];
 
@@ -459,14 +460,12 @@ class DefinitionController extends Controller
 
                 if (strlen($title)) {
                     $titles[] = new Title([
-                        'title' => $title
+                        'title' => $title,
+                        'transliteration' => Transliterator::make($script)->transliterate($title)
                     ]);
                 }
             }
         }
-
-        // Retrieve other, individually specified titles.
-        // ...
 
         if (!count($titles))
         {

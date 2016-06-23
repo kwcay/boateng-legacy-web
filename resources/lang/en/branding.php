@@ -2,7 +2,6 @@
 
 return [
 
-    'name'          => 'Di Nkɔmɔ',  // @deprecated
     'title'         => 'Di Nkɔmɔ',
 	'tag_line'      => 'A reference of cultures past and present.',
 

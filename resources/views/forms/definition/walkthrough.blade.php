@@ -7,7 +7,7 @@
         <br>
 
         <small>
-            And help improve @lang('branding.name') for everyone.
+            And help improve @lang('branding.title') for everyone.
         </small>
     </h1>
 

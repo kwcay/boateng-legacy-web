@@ -97,7 +97,7 @@ class BaseController extends Controller
 
         // Paginator
         $page = $this->setParam('page', $this->getParam('page', 1));
-        $paginator = $builder->orderBy($order, $dir)->paginate($limit, ['*'], 'page', $page);
+        $paginator = $builder->orderBy(snake_case($order), $dir)->paginate($limit, ['*'], 'page', $page);
 
         return view("admin.{$this->name}.index", compact([
             'total',

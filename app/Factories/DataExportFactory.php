@@ -7,10 +7,9 @@ namespace App\Factories;
 
 use Exception;
 use Symfony\Component\Yaml\Yaml;
-use App\Factories\Contract as BaseFactory;
 use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
-class DataExportFactory extends BaseFactory
+class DataExportFactory
 {
     /**
      * Exportable resources.
