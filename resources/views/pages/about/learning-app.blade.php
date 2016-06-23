@@ -44,6 +44,7 @@
             loop: true,
         });
     });
+    
     </script>
 
 @stop

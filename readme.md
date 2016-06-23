@@ -33,9 +33,3 @@ Create the database
     mysql -h localhost -u root -p...
     show databases;
     create database dinkomo;
-
-# Todos for v0.1
-
-- CRUD for Tag models from Admin section.
-- CRUD for Alphabet models from Admin section.
-- CRUD for Country models from Admin section.

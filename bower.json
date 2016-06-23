@@ -23,5 +23,8 @@
     "jquery-ui": "~1.11.4",
     "sifter": "~0.4.5",
     "clipboard": "^1.5.12"
+  },
+  "devDependencies": {
+    "typed.js": "^1.1.1"
   }
 }

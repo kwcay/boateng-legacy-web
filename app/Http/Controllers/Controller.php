@@ -8,6 +8,7 @@ namespace App\Http\Controllers;
 use Session;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -43,8 +44,9 @@ abstract class Controller extends BaseController
 
     /**
      * @param Illuminate\Http\Request $request
+     * @param Illuminate\Http\Response $response
      */
-    public function __construct(Request $request)
+    public function __construct(Request $request, Response $response)
     {
         // Performance check.
         if (!$this->name) {
@@ -52,6 +54,7 @@ abstract class Controller extends BaseController
         }
 
         $this->request = $request;
+        $this->response = $response;
     }
 
     /**

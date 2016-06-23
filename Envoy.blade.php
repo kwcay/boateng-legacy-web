@@ -74,24 +74,24 @@
 
 @task('git-clone')
 
-    {{ msg('Cloning git repo...') }}
+    {{ msg('Cloning git repository...') }}
 
     # Check if the release directory exists. If it doesn't, create one.
-    [ -d {{ $releasesDir }} ] || mkdir {{ $releasesDir }};
+    [ -d {{ $releasesDir }} ] || mkdir -p {{ $releasesDir }};
 
     # cd into the releases directory.
     cd {{ $releasesDir }};
 
     # Clone the repository into a new folder.
-    git clone --depth 1 {{ $repository }} {{ $newReleaseName }};
+    git clone --depth 1 {{ $repository }} {{ $newReleaseName }}  &> /dev/null;
 
     # Configure sparse checkout.
-    cd {{ $newReleaseName }}
-    git config core.sparsecheckout true
-    echo "*" > .git/info/sparse-checkout
-    echo "!storage" >> .git/info/sparse-checkout
-    #echo "!public/build" >> .git/info/sparse-checkout
-    git read-tree -mu HEAD
+    cd {{ $newReleaseName }};
+    git config core.sparsecheckout true;
+    echo "*" > .git/info/sparse-checkout;
+    echo "!storage" >> .git/info/sparse-checkout;
+    #echo "!public/build" >> .git/info/sparse-checkout;
+    git read-tree -mu HEAD;
 
 @endtask
 
@@ -99,12 +99,11 @@
 
     {{ msg('Setting up app...') }}
 
-    # Copy .env file
-    cp -f ./.env.production ./.env
+    # cd into new folder.
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
 
-    # ...
-    # mkdir -p ./storage
-    # chmod -Rf 1777 ./storage
+    # Copy .env file
+    cp -f ./.env.production ./.env;
 
 @endtask
 
@@ -116,12 +115,8 @@
     cd {{ $releasesDir }}/{{ $newReleaseName }};
 
     # Install composer dependencies.
-    composer self-update &> /dev/null
-    composer install --prefer-dist --no-scripts -q -o &> /dev/null
-
-    # Optimize insallation.
-    php artisan clear-compiled;
-    php artisan optimize;
+    composer self-update &> /dev/null;
+    composer install --prefer-dist --no-scripts -q -o &> /dev/null;
 
 @endtask
 
@@ -135,12 +130,20 @@
     # Update group owner and permissions
     chgrp -R www-data {{ $newReleaseName }};
     chmod -R ug+rwx {{ $newReleaseName }};
+    chmod -Rf 1777 {{ $newReleaseName }}/storage;
 
 @endtask
 
 @task('update-symlinks')
 
     {{ msg('Creating symlink to latest release...') }}
+
+    # Make sure the persistent storage directory exists.
+    #[ -d {{ $baseDir }}/storage ] || mkdir -p {{ $baseDir }}/storage;
+    mkdir -p {{ $baseDir }}/storage/app;
+    mkdir -p {{ $baseDir }}/storage/framework/sessions;
+    mkdir -p {{ $baseDir }}/storage/framework/views;
+    mkdir -p {{ $baseDir }}/storage/logs;
 
     # Remove the storage directory and replace with persistent data
     rm -rf {{ $releasesDir }}/{{ $newReleaseName }}/storage;
@@ -179,9 +182,11 @@
 
 @task('optimize')
 
+    {{ msg('Finishing deploy...') }}
+
     cd {{ $releasesDir }}/{{ $newReleaseName }};
 
-    # Optimize insallation.
+    # Optimize installation.
     php artisan cache:clear;
     php artisan clear-compiled;
     php artisan optimize;
@@ -252,23 +257,6 @@
 
     gulp --production &> /dev/null
     gulp --production --back &> /dev/null
-
-@endtask
-
-
-
-
-
-@task('git-pull-production', ['on' => 'production'])
-
-    cd {{ $productionPath }}
-
-    git config core.ignorecase false
-    git reset --hard origin/master
-    git pull
-    # mkdir -p ./storage
-    # chmod -Rf 1777 ./storage
-    git status
 
 @endtask
 

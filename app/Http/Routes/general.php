@@ -17,6 +17,7 @@ Route::get('about/supporters', 'PageController@sponsors')->name('about.sponsors'
 Route::get('about/team', 'PageController@team')->name('about.team');
 Route::get('about/agorɔ', 'PageController@learningApp')->name('about.learning-app');
 Route::get('about/safoa', 'PageController@translationEngine')->name('about.translation-engine');
+Route::get('humans.txt', 'PageController@humans');
 Route::get('sitemap/{topic?}', 'PageController@sitemap')->name('sitemap');
 Route::get('+', 'PageController@contribute')->name('contribute');
 

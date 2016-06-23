@@ -15,7 +15,7 @@ class PageController extends Controller
     /**
      *
      */
-    protected $name = 'admin';
+    protected $name = 'page';
 
     /**
 	 * About the app.
@@ -111,6 +111,40 @@ class PageController extends Controller
     }
     public function sponsors() {
         return $this->about('sponsors');
+    }
+
+    /**
+     * humans.txt
+     */
+    public function humans()
+    {
+        $txt = '';
+
+        // Team.
+        $txt .= "/* TEAM */\n";
+        $txt .=
+            "\tAuthor: Francis Amankrah\n".
+            "\tTwitter: @francisamankrah\n".
+            "\tGithub: @frnkly\n".
+            "\tFrom: Accra, Ghana & Montreal, Canada\n";
+
+        // Special thanks.
+        $txt .= "\n/* THANKS */\n";
+
+        // Site info
+        $txt .= "\n/* SITE */\n";
+        $txt .=
+            "\tLanguage: English\n".
+            "\tDoctype: HTML5\n".
+            "\tIDE: Atom, cmder, Vagrant, Homestead\n";
+
+        // Set some cache-busting headers, set the response content, and send everything to client.
+        return $this->response
+            ->header('Pragma', 'public')
+            ->header('Expires', '-1')
+            ->header('Cache-Control', 'public, must-revalidate, post-check=0, pre-check=0')
+            ->header('Content-Type', 'text/plain')
+            ->setContent($txt);
     }
 
     /**
