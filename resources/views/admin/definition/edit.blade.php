@@ -49,6 +49,18 @@
             <label for="titleStr">Spellings (separated by &ldquo;,&rdquo;)</label>
         </div>
 
+        {{-- Transliterations --}}
+        <div class="row">
+            <input
+                type="text"
+                name="transliterations"
+                id="transliterations"
+                class="text-input"
+                placeholder="e.g. odo, do"
+                value="{{ $model->titles->implode('transliteration', ', ') }}"
+                disabled="disabled">
+            <label for="transliterations">Transliterations (generated automatically)</label>
+        </div>
 
         {{-- Type --}}
         <div class="row">

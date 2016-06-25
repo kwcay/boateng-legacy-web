@@ -2,6 +2,7 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
+ * @todo    Deprecate for App\Http\Controllers\LanguageController ?
  */
 namespace App\Http\Controllers\Admin;
 
