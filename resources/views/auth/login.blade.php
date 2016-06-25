@@ -11,27 +11,42 @@
         <div class="col-sm-12 text-center">
 
             {{-- Personas --}}
-            <a href="javascript:;" class="button" title="Firefox Personas" data-toggle="tooltip">
+            <a href="javascript:;"
+                class="button"
+                title="Firefox Personas"
+                data-toggle="tooltip">
                 <span class="fa fa-fw fa-firefox"></span>
             </a>
 
             {{-- Github --}}
-            <a href="javascript:;" class="button" title="Github" data-toggle="tooltip">
+            <a href="{{ route('auth.oauth', 'github') }}"
+                class="button"
+                title="Github"
+                data-toggle="tooltip">
                 <span class="fa fa-fw fa-github"></span>
             </a>
 
             {{-- Google+ --}}
-            <a href="javascript:;" class="button" title="Google Plus" data-toggle="tooltip">
+            <a href="{{ route('auth.oauth', 'google') }}"
+                class="button"
+                title="Google Plus"
+                data-toggle="tooltip">
                 <span class="fa fa-fw fa-google-plus"></span>
             </a>
 
             {{-- Twitter --}}
-            <a href="javascript:;" class="button" title="Twitter" data-toggle="tooltip">
+            <a href="{{ route('auth.oauth', 'twitter') }}"
+                class="button"
+                title="Twitter"
+                data-toggle="tooltip">
                 <span class="fa fa-fw fa-twitter"></span>
             </a>
 
             {{-- Facebook --}}
-            <a href="javascript:;" class="button" title="Facebook" data-toggle="tooltip">
+            <a href="{{ route('auth.oauth', 'facebook') }}"
+                class="button"
+                title="Facebook"
+                data-toggle="tooltip">
                 <span class="fa fa-fw fa-facebook"></span>
             </a>
 

@@ -83,6 +83,8 @@ Route::group(['prefix' => 'r'], function()
 //
 Route::group(['namespace' => 'Auth'], function()
 {
+    Route::get('oauth/{service}', 'AuthController@redirectToProvider')->name('auth.oauth');
+    Route::get('oauth/{service}/callback', 'AuthController@handleProviderCallback');
     Route::get('login', 'AuthController@getLogin')->name('auth.login');
     Route::post('logout', 'AuthController@postLogin')->name('auth.login.post');
     Route::get('logout', 'AuthController@getLogout')->name('auth.logout');

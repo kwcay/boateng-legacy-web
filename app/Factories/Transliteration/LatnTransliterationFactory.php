@@ -19,7 +19,7 @@ class LatnTransliterationFactory extends TransliterationFactory
     public function transliterate($text)
     {
         return str_replace(
-            ['ɛ', 'Ɛ', 'ŋ', 'N', 'ɔ', 'Ɔ'],
+            ['ɛ', 'Ɛ', 'ŋ', 'Ŋ', 'ɔ', 'Ɔ'],
             ['e', 'E', 'n', 'N', 'o', 'O'],
             $text
         );

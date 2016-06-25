@@ -1,13 +1,14 @@
 <?php
 /**
+ * Copyright Di Nkomo(TM) 2016, all rights reserved
  *
  */
 namespace App\Http\Controllers\Auth;
 
 use Request;
 use Session;
+use Socialite;
 use Validator;
-
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -18,6 +19,12 @@ class AuthController extends Controller
 	use AuthenticatesAndRegistersUsers, ThrottlesLogins {
         // AuthenticatesAndRegistersUsers::postLogin as loginUser;
     }
+
+    protected $oAuthProviders = [
+        'github',
+        'google',
+        'twitter',
+    ];
 
 	/**
 	 * Create a new authentication controller instance.
@@ -79,5 +86,53 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    /**
+     * Redirects user to OAuth provider.
+     *
+     * @param string $provider
+     * @return Response
+     */
+    public function redirectToProvider($provider)
+    {
+        // Performance check.
+        if (!in_array($provider, $this->oAuthProviders)) {
+            abort(400);
+        }
+
+        return Socialite::driver($provider)->redirect();
+    }
+
+    /**
+     * Obtain the user information from the OAuth provider.
+     *
+     * @param string $provider
+     * @return Response
+     */
+    public function handleProviderCallback($provider)
+    {
+        // Performance check.
+        if (!in_array($provider, $this->oAuthProviders)) {
+            abort(400);
+        }
+
+        $user = Socialite::driver($provider)->user();
+
+        // OAuth Two Providers
+        $token = $user->token;
+        $refreshToken = $user->refreshToken; // not always provided
+        $expiresIn = $user->expiresIn;
+
+        // OAuth One Providers
+        $token = $user->token;
+        $tokenSecret = $user->tokenSecret;
+
+        // All Providers
+        $user->getId();
+        $user->getNickname();
+        $user->getName();
+        $user->getEmail();
+        $user->getAvatar();
     }
 }
