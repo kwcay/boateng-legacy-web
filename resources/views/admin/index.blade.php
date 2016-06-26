@@ -19,6 +19,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('admin.reference.index') }}">
+                        {{ number_format(App\Models\Reference::count()) }} references
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('admin.language.index') }}">
                         {{ number_format(App\Models\Language::count()) }} languages
                     </a>

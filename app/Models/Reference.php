@@ -76,7 +76,13 @@ class Reference extends Model
     /**
      * Attributes that CAN be appended to the model's array form.
      */
-    public static $appendable = [];
+    public static $appendable = [
+        'name',
+        'shortCitation',
+        'longCitation',
+        'fullCitation',
+        'editUri',
+    ];
 
     /**
      * Supported reference types.
@@ -228,6 +234,46 @@ class Reference extends Model
 
 
     /**
+     * Returns an abridged version of a name, in the format J. Doe.
+     *
+     * @param string $dataKey   Key of data parameter for the name.
+     * @return string|array
+     */
+    public function getAbridgedName($dataKey)
+    {
+        $name = $this->getDataParam($dataKey);
+
+        // Convert many names.
+        if (strpos($name, ';') !== false)
+        {
+            $abridged = '';
+            $names = @explode(';', $name);
+
+            for ($i = 0; $i < count($names); $i++) {
+                $names[$i] = $this->getAbridgedName($names[$i]);
+            }
+
+            return implode(';', $names);
+        }
+
+        // Performance check.
+        if (strpos($name, ' ') === false) {
+            return $name;
+        }
+
+        // Replace all names by their initial, except for the last name.
+        $abridged = '';
+        $names = @explode(' ', $name);
+
+        for ($i = 0; $i < count($names) - 1; $i++)
+        {
+            $abridged .= $names[$i][0] .'. ';
+        }
+
+        return $abridged . $names[$i];
+    }
+
+    /**
      * Returns the data array.
      */
     public function getDataArray()
@@ -283,6 +329,8 @@ class Reference extends Model
 
     /**
      * Accessor for $this->name.
+     *
+     * @return string
      */
     public function getNameAttribute($name = '')
     {
@@ -311,18 +359,26 @@ class Reference extends Model
     }
 
     /**
-     * Accessor for $this->shortName.
+     * Accessor for $this->shortCitation.
+     *
+     * @return string
      */
-    public function getShortNameAttribute($str = '')
+    public function getShortCitationAttribute($citation = '')
     {
+        $strLimit = 30;
+
         switch ($this->type)
         {
             case 'film':
-                $short = '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getDataParam('director');
+                $short =
+                    '&quot;'. str_limit($this->getDataParam('title'), $strLimit) .'&quot; '.
+                    'by '. $this->getAbridgedName('director');
                 break;
 
             case 'interview':
-                $short = '&quot;'. $this->getDataParam('title') .'&quot; with '. $this->getDataParam('interviewee');
+                $short =
+                    '&quot;'. str_limit($this->getDataParam('title'), $strLimit) .'&quot; '.
+                    'with '. $this->getAbridgedName('interviewee');
                 break;
 
             case 'person':
@@ -339,15 +395,21 @@ class Reference extends Model
                 break;
 
             case 'song':
-                $short =  '&quot;'. $this->getDataParam('title') .'&quot; featuring '.  $this->getDataParam('mainArtist');
+                $short =
+                    '&quot;'. str_limit($this->getDataParam('title'), $strLimit) .'&quot; '.
+                    'featuring '.  $this->getAbridgedName('mainArtist');
                 break;
 
             case 'video':
-                $short = '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getDataParam('creator');
+                $short =
+                    '&quot;'. str_limit($this->getDataParam('title'), $strLimit) .'&quot; '.
+                    'by '. $this->getAbridgedName('creator');
                 break;
 
             case 'website':
-                $short = '&quot;'. $this->getDataParam('title') .'&quot; from '. $this->getDataParam('name');
+                $short =
+                    '&quot;'. str_limit($this->getDataParam('title'), $strLimit) .'&quot; '.
+                    'from '. $this->getDataParam('name');
                 break;
 
             case 'article':
@@ -356,7 +418,145 @@ class Reference extends Model
             case 'paper':
             case 'report':
             default:
-                $short = '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getDataParam('author');
+                $short =
+                    '&quot;'. str_limit($this->getDataParam('title'), $strLimit) .'&quot; '.
+                    'by '. $this->getAbridgedName('author');
+                break;
+        }
+
+        // Append year to short name.
+        if (strlen($this->getDataParam('date'))) {
+            $short .= ' ('. date('Y', strtotime($this->getDataParam('date'))) .')';
+        }
+
+        return $short;
+    }
+
+    /**
+     * Accessor for $this->longCitation.
+     *
+     * @return string
+     */
+    public function getLongCitationAttribute($citation = '')
+    {
+        switch ($this->type)
+        {
+            case 'film':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; '.
+                    'by '. $this->getAbridgedName('director');
+                break;
+
+            case 'interview':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; '.
+                    'with '. $this->getAbridgedName('interviewee');
+                break;
+
+            case 'person':
+                $short =  $this->getDataParam('givenName') .' '. $this->getDataParam('otherNames');
+
+                // Append birthplace to short name.
+                if (strlen($this->getDataParam('cityOfBirth'))) {
+                    $short .= ' from '. $this->getDataParam('cityOfBirth');
+                }
+
+                elseif (strlen($this->getDataParam('countryOfBirth'))) {
+                    $short .= ' from '. $this->getDataParam('countryOfBirth');
+                }
+                break;
+
+            case 'song':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; featuring '.  $this->getAbridgedName('mainArtist');
+                break;
+
+            case 'video':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getAbridgedName('creator');
+                break;
+
+            case 'website':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; from '. $this->getDataParam('name');
+                break;
+
+            case 'article':
+            case 'audio':
+            case 'book':
+            case 'paper':
+            case 'report':
+            default:
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getAbridgedName('author');
+                break;
+        }
+
+        // Append year to short name.
+        if (strlen($this->getDataParam('date'))) {
+            $short .= ' ('. date('Y', strtotime($this->getDataParam('date'))) .')';
+        }
+
+        return $short;
+    }
+
+    /**
+     * Accessor for $this->fullCitation.
+     *
+     * @return string
+     */
+    public function getFullCitationAttribute($citation = '')
+    {
+        switch ($this->type)
+        {
+            case 'film':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; '.
+                    'by '. $this->getAbridgedName('director');
+                break;
+
+            case 'interview':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; '.
+                    'with '. $this->getAbridgedName('interviewee');
+                break;
+
+            case 'person':
+                $short =  $this->getDataParam('givenName') .' '. $this->getDataParam('otherNames');
+
+                // Append birthplace to short name.
+                if (strlen($this->getDataParam('cityOfBirth'))) {
+                    $short .= ' from '. $this->getDataParam('cityOfBirth');
+                }
+
+                elseif (strlen($this->getDataParam('countryOfBirth'))) {
+                    $short .= ' from '. $this->getDataParam('countryOfBirth');
+                }
+                break;
+
+            case 'song':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; featuring '.  $this->getAbridgedName('mainArtist');
+                break;
+
+            case 'video':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getAbridgedName('creator');
+                break;
+
+            case 'website':
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; from '. $this->getDataParam('name');
+                break;
+
+            case 'article':
+            case 'audio':
+            case 'book':
+            case 'paper':
+            case 'report':
+            default:
+                $short =
+                    '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getAbridgedName('author');
                 break;
         }
 

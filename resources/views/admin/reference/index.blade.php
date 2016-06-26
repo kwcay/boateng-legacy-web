@@ -115,15 +115,15 @@
                             class="text-danger"
                             title="Deleted on {{ date('M j, Y', strtotime($reference->deletedAt)) }}">
 
-                            {{ $reference->shortName }}
+                            {{ $reference->shortCitation }}
                         </del>
                     @else
                         <span class="edit-res">
                             <a href="{{ $reference->editUriAdmin }}" class="fa fa-pencil"></a>
                         </span>
 
-                        <a href="{{ $reference->editUriAdmin }}">
-                            {{ $reference->shortName }}
+                        <a href="{{ $reference->editUriAdmin }}" title="{{ $reference->name }}">
+                            {{ $reference->shortCitation }}
                         </a>
                     @endif
                 </td>

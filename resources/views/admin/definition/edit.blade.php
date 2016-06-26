@@ -219,16 +219,16 @@
             </label>
         </div>
 
-        {{-- Related definitions --}}
+        {{-- References --}}
         <div class="row">
             <input
-                id="relatedDefinitions"
+                id="references"
                 type="text"
-                name="relatedDefinitions"
-                class="text-input remote"
-                value="{{ $model->relatedDefinitionList->implode('uniqueId', ',') }}">
-            <label for="relatedDefinitions">
-                Related definitions
+                name="references"
+                class="en-text-input remote"
+                value="{{ $model->references->implode('name', ',') }}">
+            <label for="references">
+                References
             </label>
         </div>
 
@@ -242,6 +242,19 @@
                 value="{{ $model->tags->implode('title', ',') }}">
             <label for="tags">
                 Tags
+            </label>
+        </div>
+
+        {{-- Related definitions --}}
+        <div class="row">
+            <input
+                id="relatedDefinitions"
+                type="text"
+                name="relatedDefinitions"
+                class="text-input remote"
+                value="{{ $model->relatedDefinitionList->implode('uniqueId', ',') }}">
+            <label for="relatedDefinitions">
+                Related definitions
             </label>
         </div>
 

@@ -53,6 +53,32 @@
     <label for="data[publisher]">Publisher</label>
 </div>
 
+{{-- ISBN --}}
+<div class="row">
+    <input
+        type="text"
+        name="data[isbn]"
+        id="data[isbn]"
+        class="en-text-input"
+        placeholder="10-digit ISBN number"
+        value="{{ $model->getDataParam('isbn') }}"
+        autocomplete="on">
+    <label for="data[isbn]">ISBN</label>
+</div>
+
+{{-- ISBN-13 --}}
+<div class="row">
+    <input
+        type="text"
+        name="data[isbn-13]"
+        id="data[isbn-13]"
+        class="en-text-input"
+        placeholder="13-digit ISBN number"
+        value="{{ $model->getDataParam('isbn-13') }}"
+        autocomplete="on">
+    <label for="data[isbn-13]">ISBN-13</label>
+</div>
+
 {{-- City --}}
 <div class="row">
     <input
