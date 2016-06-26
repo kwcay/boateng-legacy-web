@@ -6,9 +6,9 @@
 
     # Setup variables.
     $repository = "git@bitbucket.org:dinkomo/web.git";
-    $baseDir = "~/apps/dinkomo-web";
+    $baseDir = "/var/www/html/apps/dinkomo-web";
     $releasesDir = "{$baseDir}/releases";
-    $liveDir = "/var/www/html/apps/dinkomo-web";
+    $liveDir = "/var/www/html/live/dinkomo-web";
     $newReleaseName = date('Ymd-His');
 
     /**
