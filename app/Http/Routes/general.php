@@ -40,8 +40,14 @@ Route::post('definition', 'DefinitionController@store')->name('definition.store'
 // Language pages.
 //
 Route::get('{code}', 'LanguageController@show')->name('language.show');
-Route::get('+lang', 'LanguageController@walkthrough')->name('language.create');
+Route::get('+language', 'LanguageController@walkthrough')->name('language.create');
 Route::post('language', 'LanguageController@store')->name('language.store');
+
+//
+// Reference pages.
+//
+Route::get('+reference', 'ReferenceController@walkthrough')->name('reference.create');
+Route::post('reference', 'ReferenceController@store')->name('reference.store');
 
 // User pages.
 Route::get('u/{id}', 'UserController@show')->name('user.show');
@@ -68,6 +74,10 @@ Route::group(['prefix' => 'r'], function()
     Route::resource('language', 'LanguageController', $resActions);
     Route::patch('language/{id}/restore', 'LanguageController@restore');
     Route::delete('language/{id}/commit', 'LanguageController@forceDestroy');
+
+    Route::resource('reference', 'ReferenceController', $resActions);
+    Route::patch('reference/{id}/restore', 'ReferenceController@restore');
+    Route::delete('reference/{id}/commit', 'ReferenceController@forceDestroy');
 
     Route::resource('tag', 'TagController', $resActions);
     Route::patch('tag/{id}/restore', 'TagController@restore');

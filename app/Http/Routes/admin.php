@@ -15,6 +15,7 @@ Route::resource('alphabet', 'Admin\AlphabetController', ['except' => ['create', 
 Route::resource('country', 'Admin\CountryController', ['except' => ['create', 'show', 'store']]);
 Route::resource('definition', 'Admin\DefinitionController', ['except' => ['create', 'show', 'store']]);
 Route::resource('language', 'Admin\LanguageController', ['except' => ['create', 'show', 'store']]);
+Route::resource('reference', 'ReferenceController', ['except' => ['create', 'show', 'store']]);
 Route::resource('tag', 'Admin\TagController', ['except' => ['create', 'show', 'store']]);
 // Route::resource('user', 'Admin\UserController', ['except' => ['create', 'show', 'store']]);
 Route::get('user', 'UserController@index')->name('admin.user.index');

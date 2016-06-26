@@ -50,41 +50,6 @@ class ReferenceController extends Controller
         return view('forms.reference.walkthrough');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-        // Retrieve the language details.
-        $data = Request::only(['name', 'code']);
-
-        // Validate input data
-        $test = Alphabet::validate($data);
-        if ($test->fails())
-        {
-            // Flash input data to session
-            Request::flashExcept('_token');
-
-            // Return to form
-            return redirect(route('alphabet.create'))->withErrors($test);
-        }
-
-        // Create alphabet.
-        $alphabet = Alphabet::create($data);
-
-        // Send success message to client.
-        $return = Auth::check() ?
-            route('admin.alphabet.edit', $alphabet->uniqueId) :
-            route('alphabet.create');
-
-        Session::push('messages',
-            'The details for <em>'. $alphabet->name .'</em> were successfully saved, thanks :)');
-
-        return redirect($return);
-	}
-
     /**
      * @param string $query
      * @return mixed

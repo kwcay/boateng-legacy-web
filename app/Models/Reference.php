@@ -6,14 +6,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\ExportableTrait as Exportable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\SearchableTrait as Searchable;
 use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Reference extends Model
 {
-    use CamelCaseAttrs, ObfuscatesID, Searchable;
+    use CamelCaseAttrs, ObfuscatesID, Searchable, SoftDeletes;
 
     //
     //
@@ -79,11 +79,46 @@ class Reference extends Model
     public static $appendable = [];
 
     /**
+     * Supported reference types.
+     */
+    public static $types = [
+        'article' => 'Article',
+        'audio' => 'Audio clip',
+        'book' => 'Book',
+        'film' => 'Film',
+        'interview' => 'Interview',
+        'paper' => 'Research Paper',
+        'person' => 'Person',
+        'report' => 'Report',
+        'social' => 'Social media',
+        'song' => 'Song',
+        'video' => 'Video clip',
+        'website' => 'Website',
+        'other' => 'Miscellaneous',
+    ];
+
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * Validation rules.
+     */
+    public $validationRules  = [
+        'type' => 'required|min:1|max:20',
+        'data' => 'required|array',
+    ];
+
+    /**
+     * Attributes that should be cast when assigned.
+     */
+    protected $casts = [
+        'type' => 'string',
+        'data' => 'json',
+    ];
 
 
     //
@@ -173,13 +208,199 @@ class Reference extends Model
     /**
      * Normalizes the search score and formats a model for search results.
      *
-     * @param object $tag
+     * @param object $reference
      * @param object $scores
      * @param float $maxScore
+     * @return void
      */
-    protected static function normalizeSearchResult($tag, $scores, $maxScore)
+    protected static function normalizeSearchResult($reference, $scores, $maxScore)
     {
         // Assign a relative score out of 1.0
-        $tag->score = $scores->total / $maxScore;
+        $reference->score = $scores->total / $maxScore;
+    }
+
+
+    //
+    //
+    // Helper methods
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Returns the data array.
+     */
+    public function getDataArray()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Checks whether a data parameter exists or not.
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function hasDataParam($key) {
+        return array_has($this->data, $key);
+    }
+
+    /**
+     * Retrieves a data parameter.
+     *
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getDataParam($key, $default = null) {
+        return array_get($this->data, $key, $default);
+    }
+
+    /**
+     * Stores a data parameter.
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return mixed
+     */
+    public function setDataParam($key, $value = null)
+    {
+        $oldValue = $this->getDataParam($key);
+        $data = $this->data;
+        array_set($data, $key, $value);
+        $this->data = $data;
+
+        return $oldValue;
+    }
+
+
+    //
+    //
+    // Accessors and mutators.
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Accessor for $this->name.
+     */
+    public function getNameAttribute($name = '')
+    {
+        switch ($this->type)
+        {
+            case 'person':
+                $name =  $this->getDataParam('givenName') .' '. $this->getDataParam('otherNames');
+                break;
+
+            case 'article':
+            case 'audio':
+            case 'book':
+            case 'film':
+            case 'interview':
+            case 'paper':
+            case 'report':
+            case 'song':
+            case 'video':
+            case 'website':
+            default:
+                $name = $this->getDataParam('title');
+                break;
+        }
+
+        return $name;
+    }
+
+    /**
+     * Accessor for $this->shortName.
+     */
+    public function getShortNameAttribute($str = '')
+    {
+        switch ($this->type)
+        {
+            case 'film':
+                $short = '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getDataParam('director');
+                break;
+
+            case 'interview':
+                $short = '&quot;'. $this->getDataParam('title') .'&quot; with '. $this->getDataParam('interviewee');
+                break;
+
+            case 'person':
+                $short =  $this->getDataParam('givenName') .' '. $this->getDataParam('otherNames');
+
+                // Append birthplace to short name.
+                if (strlen($this->getDataParam('cityOfBirth'))) {
+                    $short .= ' from '. $this->getDataParam('cityOfBirth');
+                }
+
+                elseif (strlen($this->getDataParam('countryOfBirth'))) {
+                    $short .= ' from '. $this->getDataParam('countryOfBirth');
+                }
+                break;
+
+            case 'song':
+                $short =  '&quot;'. $this->getDataParam('title') .'&quot; featuring '.  $this->getDataParam('mainArtist');
+                break;
+
+            case 'video':
+                $short = '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getDataParam('creator');
+                break;
+
+            case 'website':
+                $short = '&quot;'. $this->getDataParam('title') .'&quot; from '. $this->getDataParam('name');
+                break;
+
+            case 'article':
+            case 'audio':
+            case 'book':
+            case 'paper':
+            case 'report':
+            default:
+                $short = '&quot;'. $this->getDataParam('title') .'&quot; by '. $this->getDataParam('author');
+                break;
+        }
+
+        // Append year to short name.
+        if (strlen($this->getDataParam('date'))) {
+            $short .= ' ('. date('Y', strtotime($this->getDataParam('date'))) .')';
+        }
+
+        return $short;
+    }
+
+    /**
+     * Accessor for $this->typeName.
+     *
+     * @return string
+     */
+    public function getTypeNameAttribute() {
+        return static::$types[$this->type];
+    }
+
+    /**
+     * Accessor for $this->uri.
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return 'javascript:;';
+    }
+
+    /**
+     * Accessor for $this->editUri.
+     *
+     * @return string
+     */
+    public function getEditUriAttribute() {
+        return route('r.reference.edit', ['id' => $this->uniqueId, 'return' => 'create']);
+    }
+
+    /**
+     * Accessor for $this->editUriAdmin.
+     *
+     * @return string
+     */
+    public function getEditUriAdminAttribute() {
+        return route('r.reference.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 }

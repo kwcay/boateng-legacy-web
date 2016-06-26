@@ -5,6 +5,7 @@
  */
 namespace App\Http\Controllers;
 
+use Auth;
 use Session;
 use Exception;
 use Illuminate\Http\Request;
@@ -56,6 +57,19 @@ abstract class Controller extends BaseController
         $this->request = $request;
         $this->response = $response;
     }
+
+	/**
+	 * Setup the layout used by the controller.
+	 *
+	 * @return void
+	 */
+	protected function setupLayout()
+	{
+		if ( ! is_null($this->layout))
+		{
+			$this->layout = View::make($this->layout);
+		}
+	}
 
     /**
      * Displays a listing of the resource
@@ -135,6 +149,39 @@ abstract class Controller extends BaseController
             $this->name => $model
         ]);
     }
+
+	/**
+	 * Store a newly created resource in storage.
+     *
+     * @todo Restrict access based on roles.
+	 *
+	 * @return Response
+	 */
+	public function store()
+	{
+        // Retrieve model classname.
+        $className = $this->getModelClassName();
+        if (!class_exists($className)) {
+            abort(500);
+        }
+
+        // Validate incoming data.
+        $rules = (new $className)->validationRules;
+        $this->validate($this->request, $rules);
+
+        // Create resource.
+        $model = $className::create($this->request->only(array_flip($rules)));
+
+        // Send success message to client, and a thank you.
+        $return = Auth::check() ?
+            route("admin.{$this->name}.edit", $model->uniqueId) :
+            route("{$this->name}.create");
+
+        Session::push('messages',
+            'The details for <em>'. ($model->name ?: $model->title) .'</em> were successfully saved, thanks :)');
+
+        return redirect($return);
+	}
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -353,19 +400,6 @@ abstract class Controller extends BaseController
         }
 
         return redirect($return);
-	}
-
-	/**
-	 * Setup the layout used by the controller.
-	 *
-	 * @return void
-	 */
-	protected function setupLayout()
-	{
-		if ( ! is_null($this->layout))
-		{
-			$this->layout = View::make($this->layout);
-		}
 	}
 
     /**

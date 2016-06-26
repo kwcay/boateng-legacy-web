@@ -44,9 +44,11 @@ input[type="submit"].form-like {
     color: #666;
     font-weight: normal;
 }
-.form .row input[type="text"],
+.form .row input[type="date"],
 .form .row input[type="email"],
 .form .row input[type="password"],
+.form .row input[type="text"],
+.form .row input[type="url"],
 .form .row textarea,
 .form .row select,
 .form-like {
@@ -55,9 +57,11 @@ input[type="submit"].form-like {
     border-bottom: $form-input-border;
     @include vendor-prefix(appearance, none);
 }
-.form .row input[type="text"],
+.form .row input[type="date"],
 .form .row input[type="email"],
 .form .row input[type="password"],
+.form .row input[type="text"],
+.form .row input[type="url"],
 .form .row textarea,
 .form .row select {
     width: 100%;
@@ -67,26 +71,34 @@ input[type="submit"].form-like {
         margin: auto 4px;
     }
 }
-.form .row input[type="text"],
+.form .row input[type="date"],
 .form .row input[type="email"],
 .form .row input[type="password"],
-input[type="text"].form-like,
+.form .row input[type="text"],
+.form .row input[type="url"],
+input[type="date"].form-like,
 input[type="email"].form-like,
-input[type="password"].form-like {
+input[type="password"].form-like,
+input[type="text"].form-like,
+input[type="url"].form-like {
     padding: 10px 5px;
 }
 .form .row textarea,
 textarea.form-like {
     height: 200px;
 }
-.form input[type="text"]:focus,
-.form input[type="email"]:focus,
-.form input[type="password"]:focus,
+.form .row input[type="date"]:focus,
+.form .row input[type="email"]:focus,
+.form .row input[type="password"]:focus,
+.form .row input[type="text"]:focus,
+.form .row input[type="url"]:focus,
 .form .row textarea:focus,
 .form .row select:focus,
-input[type="text"].form-like:focus,
+input[type="date"].form-like:focus,
 input[type="email"].form-like:focus,
 input[type="password"].form-like:focus,
+input[type="text"].form-like:focus,
+input[type="url"].form-like:focus,
 textarea.form-like:focus,
 select.form-like:focus {
     outline: none;
