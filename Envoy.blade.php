@@ -149,6 +149,7 @@
     rm -rf {{ $releasesDir }}/{{ $newReleaseName }}/storage;
     cd {{ $releasesDir }}/{{ $newReleaseName }};
     ln -nfs {{ $baseDir }}/storage storage;
+    chmod -Rf 1777 {{ $baseDir }}/storage;
 
     ln -nfs {{ $releasesDir }}/{{ $newReleaseName }} {{ $liveDir }};
     chgrp -h www-data {{ $liveDir }};
@@ -170,6 +171,15 @@
 
     cd {{ $releasesDir }}/{{ $newReleaseName }};
     php artisan migrate --force;
+
+@endtask
+
+@task('rollback')
+
+    {{ msg('Rolling back last migration...') }}
+
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    php artisan migrate:rollback --force;
 
 @endtask
 
