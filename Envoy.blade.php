@@ -183,6 +183,15 @@
 
 @endtask
 
+@task('refresh')
+
+    {{ msg('Refreshing database migrations...') }}
+
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    php artisan migrate:refresh --force;
+
+@endtask
+
 @task('up')
 
     cd {{ $liveDir }};
