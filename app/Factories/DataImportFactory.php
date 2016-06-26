@@ -105,6 +105,14 @@ class DataImportFactory
     protected $messages = [];
 
     /**
+     * 
+     */
+    public function __constructor()
+    {
+        $this->boot();
+    }
+
+    /**
      * Called once class has been instantiated.
      */
     public function boot()

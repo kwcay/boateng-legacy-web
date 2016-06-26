@@ -30,7 +30,7 @@ class Architecture052 extends Migration
     public function down()
     {
         // Remove deleted_at column from tags, users and countries tables
-        foreach (['countries', 'tags', 'users'] as $tableName)
+        foreach (['countries', 'references', 'tags', 'users'] as $tableName)
         {
             Schema::table($tableName, function(Blueprint $table)
     		{
