@@ -129,6 +129,9 @@ class DefinitionImportFactory extends DataImportFactory
                 'deleted_at' => array_get($data, 'deletedAt', null),
             ];
 
+            if (!strlen($attributes['meta']))
+                $attributes['meta'] = '{}';
+
             // Create a definition object and save it right away, so that we can add the
             // relations afterwards.
             $definition = Definition::firstOrCreate($attributes);

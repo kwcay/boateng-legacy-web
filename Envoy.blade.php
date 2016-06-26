@@ -140,7 +140,7 @@
 
     # Make sure the persistent storage directory exists.
     #[ -d {{ $baseDir }}/storage ] || mkdir -p {{ $baseDir }}/storage;
-    mkdir -p {{ $baseDir }}/storage/app/import;
+    mkdir -p {{ $baseDir }}/storage/app;
     mkdir -p {{ $baseDir }}/storage/framework/sessions;
     mkdir -p {{ $baseDir }}/storage/framework/views;
     mkdir -p {{ $baseDir }}/storage/logs;
@@ -169,7 +169,7 @@
 
     {{ msg('Running migrations...') }}
 
-    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    cd {{ $liveDir }};
     php artisan migrate --force;
 
 @endtask
@@ -178,7 +178,7 @@
 
     {{ msg('Rolling back last migration...') }}
 
-    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    cd {{ $liveDir }};
     php artisan migrate:rollback --force;
 
 @endtask
@@ -187,7 +187,7 @@
 
     {{ msg('Refreshing database migrations...') }}
 
-    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    cd {{ $liveDir }};
     php artisan migrate:refresh --force;
 
 @endtask

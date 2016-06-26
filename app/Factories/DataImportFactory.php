@@ -105,19 +105,11 @@ class DataImportFactory
     protected $messages = [];
 
     /**
-     * 
-     */
-    public function __constructor()
-    {
-        $this->boot();
-    }
-
-    /**
      * Called once class has been instantiated.
      */
     public function boot()
     {
-        $this->setDataPath(storage_path() .'/app/import');
+        $this->setDataPath(storage_path('app/import'));
     }
 
     /**
@@ -136,6 +128,8 @@ class DataImportFactory
      */
     public function importFromFile(File $rawDataFile)
     {
+        $this->boot();
+
         $this->setDataFile($rawDataFile);
 
         // Move data file so we can manipulate it.
