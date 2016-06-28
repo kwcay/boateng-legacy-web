@@ -9,6 +9,7 @@ use Illuminate\Auth\Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\ExportableTrait as Exportable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
@@ -17,7 +18,22 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-	use Authenticatable, CamelCaseAttrs, CanResetPassword, HasRoles, ObfuscatesID, SoftDeletes;
+	use Authenticatable, CamelCaseAttrs, CanResetPassword, Exportable, HasRoles, ObfuscatesID, SoftDeletes;
+
+
+    //
+    //
+    // Attributes used by App\Traits\ExportableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * The attributes that should be hidden from the model's array form when exporting data to file.
+     */
+    protected $hiddenFromExport = [
+        'id',
+    ];
 
     //
     //

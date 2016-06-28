@@ -6,8 +6,6 @@
 namespace App\Factories;
 
 use Exception;
-use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
 class DataExportFactory
 {

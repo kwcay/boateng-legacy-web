@@ -15,7 +15,22 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Tag extends Model
 {
-    use CamelCaseAttrs, ObfuscatesID, Searchable, SoftDeletes, Validatable;
+    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable, SoftDeletes, Validatable;
+
+
+    //
+    //
+    // Attributes used by App\Traits\ExportableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * The attributes that should be hidden from the model's array form when exporting data to file.
+     */
+    protected $hiddenFromExport = [
+        'id',
+    ];
 
     //
     //

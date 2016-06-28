@@ -48,6 +48,16 @@ return [
 			'root'   => storage_path().'/app',
 		],
 
+		'backups-build' => [
+			'driver' => 'local',
+			'root'   => storage_path().'/app/backups-build',
+		],
+
+		'backups' => [
+			'driver' => 'local',
+			'root'   => storage_path().'/app/backups',
+		],
+
 		's3' => [
 			'driver' => 's3',
 			'key'    => 'your-key',

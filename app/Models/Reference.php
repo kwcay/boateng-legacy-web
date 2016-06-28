@@ -7,13 +7,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
 use App\Traits\ObfuscatableTrait as ObfuscatesID;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Reference extends Model
 {
-    use CamelCaseAttrs, ObfuscatesID, Searchable, SoftDeletes;
+    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable, SoftDeletes;
+
+
+    //
+    //
+    // Attributes used by App\Traits\ExportableTrait
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * The attributes that should be hidden from the model's array form when exporting data to file.
+     */
+    protected $hiddenFromExport = [
+        'id',
+    ];
 
     //
     //
