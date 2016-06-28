@@ -407,6 +407,29 @@ class Definition extends Model
     }
 
     /**
+     * Determines whether a definition type is valid or not.
+     *
+     * @param int|string $type
+     * @return int|null
+     */
+    public static function isValidType($type)
+    {
+        $types = static::types();
+        
+        // If the type constant is valid, return it.
+        if (array_key_exists($type, $types)) {
+            return (int) $type;
+        }
+
+        // If the type string is valid, return the corresponding type constant.
+        elseif (in_array($type, $types)) {
+            return static::getTypeConstant($type);
+        }
+
+        return null;
+    }
+
+    /**
      * Gets the list of sub types for this definition.
      *
      * @return array

@@ -15,12 +15,12 @@ use Request;
 use Session;
 use Redirect;
 use Validator;
-
 use App\Http\Requests;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Translation;
 use App\Models\Definitions\Word;
+use App\Models\Definitions\Expression;
 use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 
@@ -109,6 +109,53 @@ class DefinitionController extends Controller
         }
 
         return $definitions ?: response('Definition Not Found.', 404);
+    }
+
+    /**
+     * Returns the definition of the day.
+     *
+     * @param string $definitionType
+     * @param string $title
+     * @return Response
+     */
+    public function getDaily($type)
+    {
+        // Performance check.
+        $type = Definition::isValidType($type);
+        if (is_null($type)) {
+            abort(400);
+        }
+
+        // List of relations and attributes to append to results.
+        $embed = $this->getEmbedArray(
+            Request::get('embed'),
+            Definition::$appendable
+        );
+
+        switch ($type)
+        {
+            case Definition::TYPE_WORD:
+                $daily = Word::daily(Request::get('lang'));
+                break;
+
+            case Definition::TYPE_EXPRESSION:
+                $daily = Expression::daily(Request::get('lang'));
+                break;
+
+            default:
+                $daily = Definition::random(Request::get('lang'), $embed['relations']);
+        }
+
+        // Append extra attributes.
+        if (count($embed['attributes']))
+        {
+            foreach ($embed['attributes'] as $accessor)
+            {
+                $daily->setAttribute($accessor, $daily->$accessor);
+            }
+        }
+
+        return $daily;
     }
 
 	/**

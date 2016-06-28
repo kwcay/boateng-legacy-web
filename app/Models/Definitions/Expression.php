@@ -2,7 +2,8 @@
 
 use DB;
 use Log;
-
+use Cache;
+use Carbon\Carbon;
 use App\Models\Language;
 use App\Models\Translation;
 use App\Models\Definition;
@@ -31,14 +32,44 @@ class Expression extends Definition
     /**
      * Retrieves a random phrase.
      *
-     * @param string $lang
+     * @param string|App\Models\Language $lang
+     * @param array $relations
      * @return mixed
      *
      * TODO: filter by phrase type.
      */
-    public static function random($lang = null)
+    public static function random($lang = null, array $relations = ['languages', 'translations'])
     {
-        abort(501, 'App\Models\Definitions\Expression::random not implemented.');
+        if (is_string($lang)) {
+            $lang = Language::findByCode($lang);
+        }
+
+        // Get query builder.
+        $query = $lang instanceof Language ? $lang->definitions() : static::query();
+
+        // Return a random expression.
+        return $query
+            ->where('type', static::TYPE_EXPRESSION)
+            ->with($relations)
+            ->orderByRaw('RAND()')
+            ->first();
+    }
+
+    /**
+     * Retrieves expression of the day.
+     *
+     * @param string $lang
+     * @return App\Models\Definition
+     */
+    public static function daily($lang = 'all')
+    {
+        $cacheKey = 'definitions.expression.daily.'. $lang;
+
+        $expires = Carbon::now()->addDay();
+
+        return Cache::remember($cacheKey, $expires, function() use ($lang) {
+            return Expression::random($lang);
+        });
     }
 
     /**

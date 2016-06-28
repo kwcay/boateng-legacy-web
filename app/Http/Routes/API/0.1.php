@@ -14,6 +14,7 @@ Route::get('{resourceName}/search/{query}', 'ApiController@search');
 
 // Definition endpoints.
 Route::get('{definitionType}/title/{title}', 'DefinitionController@findBytitle');
+Route::get('{definitionType}/daily', 'DefinitionController@getDaily');
 Route::options('definition/{id?}', 'ApiController@options');
 Route::resource('definition', 'DefinitionController', ['except' => ['index', 'create', 'edit']]);
 

@@ -6,7 +6,8 @@ namespace App\Models\Definitions;
 
 use DB;
 use Log;
-
+use Cache;
+use Carbon\Carbon;
 use App\Models\Language;
 use App\Models\Translation;
 use App\Models\Definition;
@@ -14,7 +15,6 @@ use Illuminate\Support\Arr;
 use cebe\markdown\MarkdownExtra;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use App\Traits\HasParamsTrait as HasParams;
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\ValidatableTrait as Validatable;
@@ -36,18 +36,42 @@ class Word extends Definition
     /**
      * Retrieves a random word.
      *
-     * @param string $lang
+     * @param App\Models\Language $lang
+     * @param array $relations
      * @return mixed
-     *
-     * TODO: filter by word type.
      */
-    public static function random($lang = null)
+    public static function random($lang = null, array $relations = ['languages', 'translations'])
     {
+        if (is_string($lang)) {
+            $lang = Language::findByCode($lang);
+        }
+
         // Get query builder.
         $query = $lang instanceof Language ? $lang->definitions() : static::query();
 
         // Return a random definition.
-        return $query->with('languages', 'translations')->orderByRaw('RAND()')->first();
+        return $query
+            ->where('type', static::TYPE_WORD)
+            ->with($relations)
+            ->orderByRaw('RAND()')
+            ->first();
+    }
+
+    /**
+     * Retrieves word of the day.
+     *
+     * @param string $lang
+     * @return App\Models\Definition
+     */
+    public static function daily($lang = 'all')
+    {
+        $cacheKey = 'definitions.word.daily.'. $lang;
+
+        $expires = Carbon::now()->addDay();
+
+        return Cache::remember($cacheKey, $expires, function() use ($lang) {
+            return Word::random($lang);
+        });
     }
 
     /**
