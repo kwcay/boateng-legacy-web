@@ -16,7 +16,11 @@ trait ExportableTrait
     ];
 
     /**
-     * Returns an array of attributes that includes some hidden properties.
+     * Returns an array of attributes that might include some hidden properties.
+     *
+     * TODO There's room for efficiency improvement.
+     *
+     * @return array
      */
     public function getExportArray()
     {
@@ -34,6 +38,14 @@ trait ExportableTrait
 
         // Retrieve attributes and relations.
         $attributes = $this->attributesToArray();
+
+        // Remove hidden fields.
+        foreach ($attributes as $attribute => $value)
+        {
+            if (in_array($attribute, $this->hidden) || in_array(snake_case($attribute), $this->hidden)) {
+                unset($attributes[$attribute]);
+            }
+        }
 
         // Reset hidden fields.
         $this->hidden = $originallyHidden;

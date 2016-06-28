@@ -50,6 +50,8 @@ class Definition extends Model
      * @var array
      */
     protected $hiddenOnExport = [
+        'id',
+        'relatedDefinitions',
         'uniqueId',
         'resourceType',
     ];
@@ -64,6 +66,7 @@ class Definition extends Model
         'tagList',
         'translation',
         'languageList',
+        'relatedDefinitionList',
     ];
 
 
@@ -216,6 +219,7 @@ class Definition extends Model
     protected $hidden = [
         'id',
         'titles',
+        'relatedDefinitions',
         'related_definitions',
         'tags',
         'languages',
@@ -415,7 +419,7 @@ class Definition extends Model
     public static function isValidType($type)
     {
         $types = static::types();
-        
+
         // If the type constant is valid, return it.
         if (array_key_exists($type, $types)) {
             return (int) $type;
