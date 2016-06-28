@@ -38,6 +38,7 @@
 {{-- Credits: https://murze.be/2015/11/zero-downtime-deployments-with-envoy --}}
 
 
+
 @macro('deploy', ['on' => 'production'])
 
     git-clone
@@ -90,7 +91,6 @@
     git config core.sparsecheckout true;
     echo "*" > .git/info/sparse-checkout;
     echo "!storage" >> .git/info/sparse-checkout;
-    #echo "!public/build" >> .git/info/sparse-checkout;
     git read-tree -mu HEAD;
 
 @endtask
@@ -117,6 +117,19 @@
     # Install composer dependencies.
     composer self-update &> /dev/null;
     composer install --prefer-dist --no-scripts -q -o &> /dev/null;
+
+@endtask
+
+@task('composer-update')
+
+    {{ msg('Updating composer dependencies...') }}
+
+    # cd into live folder.
+    cd {{ $liveDir }};
+
+    # Update composer dependencies.
+    composer self-update &> /dev/null;
+    composer update &> /dev/null;
 
 @endtask
 
@@ -160,7 +173,8 @@
 
     {{ msg('Putting app in maintenance mode...') }}
 
-    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    #cd {{ $releasesDir }}/{{ $newReleaseName }};
+    cd {{ $liveDir }};
     php artisan down;
 
 @endtask
@@ -201,9 +215,10 @@
 
 @task('optimize')
 
-    {{ msg('Finishing deploy...') }}
+    {{ msg('Optimizing...') }}
 
-    cd {{ $releasesDir }}/{{ $newReleaseName }};
+    #cd {{ $releasesDir }}/{{ $newReleaseName }};
+    cd {{ $liveDir }};
 
     # Optimize installation.
     php artisan cache:clear;
@@ -229,53 +244,6 @@
     else
         echo "No releases found for purging at this time";
     fi
-
-@endtask
-
-
-
-{{-- Asset management --}}
-
-@task('update', ['on' => 'local'])
-
-    cd ~/dev/dinkomo/web/
-
-    {{ msg('Updating bower dependencies...') }}
-    {{ msg('To do: update bower.') }}
-    bower update &> /dev/null
-
-    {{ msg('Updating node dependencies...') }}
-    {{ msg('To do: update node.') }}
-    npm update &> /dev/null
-
-    {{ msg('Updating composer dependencies...') }}
-    composer self-update &> /dev/null
-    composer update &> /dev/null
-
-@endtask
-
-@task('install', ['on' => 'local'])
-
-    cd ~/dev/dinkomo/web/
-
-    {{ msg('Installing bower dependencies...') }}
-    {{ msg('To do: update bower.') }}
-    bower install &> /dev/null
-
-    {{ msg('Installing node dependencies...') }}
-    {{ msg('To do: update node.') }}
-    npm install &> /dev/null
-
-@endtask
-
-@task('build-assets', ['on' => 'local'])
-
-    {{ msg('Building assets...') }}
-
-    cd ~/dev/dinkomo/web/
-
-    gulp --production &> /dev/null
-    gulp --production --back &> /dev/null
 
 @endtask
 
