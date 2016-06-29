@@ -2,6 +2,7 @@
 /**
  * Copyright Di Nkomo(TM) 2015, all rights reserved
  *
+ * @brief   This controller serves as an abstract for all the models of the applications.
  */
 namespace App\Http\Controllers;
 
@@ -10,7 +11,6 @@ use Session;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
@@ -19,6 +19,8 @@ abstract class Controller extends BaseController
 	use ValidatesRequests;
 
     /**
+     * Internal name used to map controller to its model, views, etc.
+     *
      * @var string
      */
     protected $name;
@@ -49,9 +51,11 @@ abstract class Controller extends BaseController
      */
     public function __construct(Request $request, Response $response)
     {
-        // Performance check.
-        if (!$this->name) {
-            throw new Exception('Invalid controller name.');
+        // Determine internal name from class name.
+        if (!$this->name)
+        {
+            $namespace = explode('\\', get_class($this));
+            $this->name = strtolower(substr(array_pop($namespace), 0, -10));
         }
 
         $this->request = $request;

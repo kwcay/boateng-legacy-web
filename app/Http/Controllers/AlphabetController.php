@@ -2,6 +2,7 @@
 /**
  * Copyright Di Nkomo(TM) 2016, all rights reserved
  *
+ * @brief   This is the main controller for Alphabet models & views.
  */
 namespace App\Http\Controllers;
 
