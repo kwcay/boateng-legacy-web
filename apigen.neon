@@ -1,0 +1,19 @@
+
+# Dirs or files documentation is generated for. (multiple values allowed)
+source:
+    - ./app
+
+# Target dir for documentation.
+destination: ./docs
+
+# Generate documentation for elements marked as @deprecated
+deprecated: true
+
+# ApiGen template theme name. (default: "default")
+templateTheme: bootstrap
+
+# Title of generated documentation.
+title: Di Nkomo developer docs
+
+# Generate documentation for elements marked as @todo.
+todo: true
