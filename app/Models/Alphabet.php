@@ -93,7 +93,8 @@ class Alphabet extends Model
     public $validationRules  = [
         'name' => 'required|min:2|max:100',
         'transliteration' => 'min:2|max:100',
-        'code' => 'required|min:6|max:20',
+        // 'code' => 'sometimes|required|min:6|max:20|unique:alphabets',
+        'code' => 'sometimes|required|min:6|max:20',
         'scriptCode' => 'min:2|max:4',
         'letters' => 'string',
     ];

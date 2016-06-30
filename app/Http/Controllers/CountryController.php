@@ -7,13 +7,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Country;
 
+/**
+ * @abstract Main controller for the Country resource.
+ */
 class CountryController extends Controller
 {
-    /**
-     *
-     */
-    protected $name = 'country';
-
     /**
      *
      */

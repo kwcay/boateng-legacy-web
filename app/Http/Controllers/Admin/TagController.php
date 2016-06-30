@@ -6,35 +6,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Tag;
-use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Controllers\TagController as Controller;
 
+/**
+ * @abstract Admin controller for the Tag resource.
+ */
 class TagController extends Controller
 {
-    /**
-     *
-     */
-    protected $name = 'tag';
 
-    /**
-     *
-     */
-    protected $defaultQueryLimit = 20;
-
-    /**
-     *
-     */
-    protected $supportedOrderColumns = [
-        'id' => 'ID',
-        'title' => 'Title',
-    ];
-
-    /**
-     *
-     */
-    protected $defaultOrderColumn = 'title';
-
-    /**
-     *
-     */
-    protected $defaultOrderDirection = 'asc';
 }

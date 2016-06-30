@@ -16,12 +16,12 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "~2.1.4",
+    "jquery": "~3.0.0",
     "bootstrap": "~3.3.6",
     "selectize": "~0.12.1",
-    "font-awesome": "~4.5.0",
+    "font-awesome": "~4.6.3",
     "jquery-ui": "~1.11.4",
-    "sifter": "~0.4.5",
+    "sifter": "~0.5.1",
     "clipboard": "^1.5.12"
   },
   "devDependencies": {

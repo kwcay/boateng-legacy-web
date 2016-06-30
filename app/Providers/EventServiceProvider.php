@@ -19,6 +19,9 @@ class EventServiceProvider extends ServiceProvider {
         // 'Illuminate\Routing\Events\RouteMatched' => [
         //     'App\Listeners\ApiAuthentication',
         // ],
+        'App\Events\SaveAlphabetDetails' => [
+            'App\Listeners\CheckAlphabetDetails'
+        ],
 	];
 
 	/**

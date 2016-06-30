@@ -249,6 +249,31 @@
 
 
 
+{{-- Local tasks --}}
+
+@task('build', ['on' => 'local'])
+
+    cd ~/dev/dinkomo/web/
+
+    # Update bower dependencies.
+    # TODO: update bower: https://www.npmjs.com/package/bower-update
+    {{ msg('Updating bower dependencies...') }}
+    bower update &> /dev/null
+
+    # Update npm dependencies.
+    # TODO: update npm: https://www.npmjs.com/package/npm-check-updates
+    {{ msg('Updating node dependencies...') }}
+    npm update &> /dev/null
+
+    # Build front-end assets.
+    {{ msg('Building assets...') }}
+    gulp --production &> /dev/null
+    gulp --production --back &> /dev/null
+
+@endtask
+
+
+
 {{-- Testing Envoy --}}
 
 @task('test-local', ['on' => 'local'])

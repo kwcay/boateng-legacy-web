@@ -9,13 +9,12 @@ use App\Models\User;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
+/**
+ * @abstract Main controller for the User resource.
+ */
+
 class UserController extends Controller
 {
-    /**
-     *
-     */
-    protected $name = 'user';
-
     /**
      *
      */

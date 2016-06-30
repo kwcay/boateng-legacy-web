@@ -4,6 +4,10 @@
 
     <h1>
         @yield('page-title', 'Resource listing')
+
+        <span class="edit-res">
+            <a href="{{ route($controllerName .'.create') }}" class="fa fa-plus"></a>
+        </span>
     </h1>
 
     <ol class="breadcrumb">

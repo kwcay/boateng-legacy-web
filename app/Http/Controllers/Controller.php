@@ -28,7 +28,7 @@ abstract class Controller extends BaseController
     /**
      *
      */
-    protected $queryLimit = 20;
+    protected $defaultQueryLimit = 20;
 
     /**
      *
@@ -120,9 +120,12 @@ abstract class Controller extends BaseController
         // $dir = in_array($dir, ['asc', 'desc']) ? $dir : $this->defaultOrderDirection;
         $this->setParam('dir', $dir);
 
-        // Paginator
+        // Paginator.
         $page = $this->setParam('page', $this->getParam('page', 1));
         $paginator = $builder->orderBy($order, $dir)->paginate($limit, ['*'], 'page', $page);
+
+        // Other data.
+        $controllerName = $this->name;
 
         return view("admin.{$this->name}.index", compact([
             'total',
@@ -132,7 +135,8 @@ abstract class Controller extends BaseController
             'orders',
             'dir',
             'dirs',
-            'paginator'
+            'paginator',
+            'controllerName',
         ]));
     }
 
@@ -155,6 +159,15 @@ abstract class Controller extends BaseController
     }
 
 	/**
+	 * Displays the form to add a new resource.
+	 *
+	 * @return Response
+	 */
+	public function walkthrough() {
+        return view("forms.{$this->name}.walkthrough");
+	}
+
+	/**
 	 * Store a newly created resource in storage.
      *
      * @todo Restrict access based on roles.
@@ -170,11 +183,10 @@ abstract class Controller extends BaseController
         }
 
         // Validate incoming data.
-        $rules = (new $className)->validationRules;
-        $this->validate($this->request, $rules);
+        $this->validate($this->request, (new $className)->validationRules);
 
         // Create resource.
-        $model = $className::create($this->request->only(array_flip($rules)));
+        $model = $className::create($this->getAttributesFromRequest());
 
         // Send success message to client, and a thank you.
         $return = Auth::check() ?
@@ -249,11 +261,10 @@ abstract class Controller extends BaseController
         }
 
         // Validate incoming data.
-        $rules = (new $className)->validationRules;
-        $this->validate($this->request, $rules);
+        $this->validate($this->request, (new $className)->validationRules);
 
         // Update attributes.
-        $model->fill($this->request->only(array_flip($rules)));
+        $model->fill($this->getAttributesFromRequest());
 
         if (!$model->save()) {
             abort(500);
@@ -407,7 +418,21 @@ abstract class Controller extends BaseController
 	}
 
     /**
+     * Retrieves the attributes to be updated for a resource.
+     *
+     * @return Illuminate\Support\Collection
+     */
+    protected function getAttributesFromRequest()
+    {
+        $className = $this->getModelClassName();
+
+        return $this->request->only(array_flip((new $className)->validationRules));
+    }
+
+    /**
      * Gets the embedable relations and attributes that may be appended to a model.
+     *
+     * @todo Replace with trait from frnkly/laravel-embeds
      *
      * @param array|string $embed   The properties to be appended to a model.
      * @param array $appendable     Those properties which aren't database relations.
@@ -468,6 +493,8 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Determines the class name of the model associated with this controller.
+     *
      * @return string
      */
     protected function getModelClassName() {
@@ -475,6 +502,8 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Retrieves an instance of a model by ID.
+     *
      * @param mixed $id
      * @return Illuminate\Database\Eloquent\Model
      */
@@ -505,7 +534,9 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Creates a new instance of the model associated with this controller.
      *
+     * @return Illuminate\Database\Eloquent\Model
      */
     protected function getModel()
     {

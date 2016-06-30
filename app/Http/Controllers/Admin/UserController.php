@@ -6,36 +6,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
-use App\Http\Controllers\Admin\BaseController as Controller;
+use App\Http\Controllers\UserController as Controller;
 
+/**
+ * @abstract Admin controller for the Country resource.
+ */
 class UserController extends Controller
 {
-    /**
-     *
-     */
-    protected $name = 'user';
-
-    /**
-     *
-     */
-    protected $defaultQueryLimit = 20;
-
-    /**
-     *
-     */
-    protected $supportedOrderColumns = [
-        'id' => 'ID',
-        'name' => 'Name',
-        'email' => 'Email',
-    ];
-
-    /**
-     *
-     */
-    protected $defaultOrderColumn = 'name';
-
-    /**
-     *
-     */
-    protected $defaultOrderDirection = 'asc';
+    
 }

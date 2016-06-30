@@ -7,13 +7,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 
+/**
+ * @abstract Main controller for the Tag resource.
+ */
 class TagController extends Controller
 {
-    /**
-     *
-     */
-    protected $name = 'tag';
-
     /**
      *
      */

@@ -147,21 +147,6 @@ class PageController extends Controller
             ->setContent($txt);
     }
 
-    /**
-     * Admin landing page.
-     */
-    public function admin() {
-        return view('admin.index');
-    }
-
-    public function import() {
-        return view('admin.import');
-    }
-
-    public function backup() {
-        return view('admin.backup');
-    }
-
 	/**
 	 * Main landing page.
 	 */

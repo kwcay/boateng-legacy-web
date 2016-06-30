@@ -6,9 +6,9 @@
 
 
 // General pages
-Route::get('/',         ['as' => 'admin.index', 'uses' => 'PageController@admin']);
-Route::get('import',    ['as' => 'admin.import', 'uses' => 'PageController@import']);
-Route::get('backup',    ['as' => 'admin.backup', 'uses' => 'PageController@backup']);
+Route::get('/', 'Admin\AdminController@index')->name('admin.index');
+Route::get('import', 'Admin\AdminController@import')->name('admin.import');
+Route::get('backup', 'Admin\AdminController@backup')->name('admin.backup');
 
 // Resources
 Route::resource('alphabet', 'Admin\AlphabetController', ['except' => ['create', 'show', 'store']]);
