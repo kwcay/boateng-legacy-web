@@ -191,7 +191,7 @@ abstract class Controller extends BaseController
         // Send success message to client, and a thank you.
         $return = Auth::check() ?
             route("admin.{$this->name}.edit", $model->uniqueId) :
-            route("{$this->name}.create");
+            ($model->uri ?: route("{$this->name}.create"));
 
         Session::push('messages',
             'The details for <em>'. ($model->name ?: $model->title) .'</em> were successfully saved, thanks :)');
