@@ -8,11 +8,11 @@
         <div class="col-md-12 text-center">
             <span class="fa fa-fw fa-download"></span>
             Export dataset as
-            <a href="{{ route('export.resource', ['resource' => 'user', 'format' => 'json']) }}">
+            <a href="{{ route('admin.export', ['resource' => 'user', 'format' => 'json']) }}">
                 .json
             </a>
             or
-            <a href="{{ route('export.resource', ['resource' => 'user', 'format' => 'yaml']) }}">
+            <a href="{{ route('admin.export', ['resource' => 'user', 'format' => 'yaml']) }}">
                 .yaml
             </a>
         </div>

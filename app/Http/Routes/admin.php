@@ -25,5 +25,4 @@ Route::get('user', 'UserController@index')->name('admin.user.index');
 Route::post('import', ['as' => 'admin.import.action', 'uses' => 'ImportController@import']);
 
 // Resource export
-// Route::get('export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'Data\v041\DataController@export']);
-Route::get('export/{resource}.{format}', ['as' => 'export.resource', 'uses' => 'Admin\ExportController@export']);
+Route::get('export/{resource}.{format}', 'Admin\AdminController@export')->name('admin.export');
