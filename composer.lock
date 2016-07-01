@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3a5dac31cbf29da44fc3ce8154e59add",
-    "content-hash": "94596db89be56540f917f68e3fcfc507",
+    "hash": "be500d203cea9dee6755536b123357a2",
+    "content-hash": "ea59adf7a4ac1e7584f871c8b1424fd2",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -274,6 +274,52 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "frnkly/laravel-embeds",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/frnkly/laravel-embeds.git",
+                "reference": "4e4beb01058322d2846c0bb1340d34dfb10c2fb6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/frnkly/laravel-embeds/zipball/4e4beb01058322d2846c0bb1340d34dfb10c2fb6",
+                "reference": "4e4beb01058322d2846c0bb1340d34dfb10c2fb6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "crysalead/kahlan": "^2.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Frnkly\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "frnkly",
+                    "email": "frank@frnk.ca",
+                    "homepage": "http://frnk.ca"
+                }
+            ],
+            "description": "API embeds for Laravel",
+            "homepage": "http://github.com/frnkly/laravel-embeds",
+            "keywords": [
+                "api",
+                "embed",
+                "laravel"
+            ],
+            "time": "2016-07-01 21:28:17"
         },
         {
             "name": "guzzle/guzzle",
