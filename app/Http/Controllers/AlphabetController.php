@@ -35,7 +35,7 @@ class AlphabetController extends Controller
     protected $defaultOrderColumn = 'name';
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getAttributesFromRequest()
     {

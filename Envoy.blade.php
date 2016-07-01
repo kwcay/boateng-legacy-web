@@ -224,6 +224,7 @@
     php artisan cache:clear;
     php artisan clear-compiled;
     php artisan optimize;
+    php artisan config:cache
     php artisan route:cache;
 
     # Clear the OPCache

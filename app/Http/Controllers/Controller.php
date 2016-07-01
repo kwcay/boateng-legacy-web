@@ -48,6 +48,7 @@ abstract class Controller extends BaseController
     /**
      * @param Illuminate\Http\Request $request
      * @param Illuminate\Http\Response $response
+     * @return void
      */
     public function __construct(Request $request, Response $response)
     {
@@ -80,7 +81,7 @@ abstract class Controller extends BaseController
      *
      * @todo Restrict access based on roles.
      *
-     * @return View
+	 * @return Illuminate\View\View
      */
     public function index()
     {
@@ -146,6 +147,7 @@ abstract class Controller extends BaseController
      * @todo Restrict access based on roles.
      *
      * @param int|string $id
+	 * @return Illuminate\View\View
      */
     public function show($id)
     {
@@ -161,7 +163,7 @@ abstract class Controller extends BaseController
 	/**
 	 * Displays the form to add a new resource.
 	 *
-	 * @return Response
+	 * @return Illuminate\View\View
 	 */
 	public function walkthrough() {
         return view("forms.{$this->name}.walkthrough");
@@ -172,7 +174,7 @@ abstract class Controller extends BaseController
      *
      * @todo Restrict access based on roles.
 	 *
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function store()
 	{
@@ -204,8 +206,8 @@ abstract class Controller extends BaseController
      *
      * @todo Restrict access based on roles.
 	 *
-     * @param mixed $id    ID or Eloquent model.
-	 * @return Response
+     * @param mixed $id ID or Eloquent model.
+	 * @return Illuminate\View\View
 	 */
 	public function edit($id)
 	{
@@ -250,7 +252,7 @@ abstract class Controller extends BaseController
      * @todo Restrict access based on roles.
      *
 	 * @param int|string $id
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function update($id)
 	{
@@ -300,7 +302,7 @@ abstract class Controller extends BaseController
      * @todo Restrict access based on roles.
 	 *
 	 * @param int $id
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function destroy($id)
 	{
@@ -339,6 +341,7 @@ abstract class Controller extends BaseController
      * @todo Restrict access based on roles.
      *
      * @param int|string $id
+     * @return Illuminate\Http\RedirectResponse
      */
     public function restore($id)
     {
@@ -387,7 +390,7 @@ abstract class Controller extends BaseController
      * @todo Restrict access based on roles.
 	 *
 	 * @param int $id
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function forceDestroy($id)
 	{
@@ -418,7 +421,7 @@ abstract class Controller extends BaseController
 	}
 
     /**
-     * Retrieves the attributes to be updated for a resource.
+     * Retrieves the attributes to be updated.
      *
      * @return Illuminate\Support\Collection
      */

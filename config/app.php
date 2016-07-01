@@ -156,9 +156,10 @@ return [
         App\Providers\ObfuscatorServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        'Collective\Html\HtmlServiceProvider',
+        Collective\Html\HtmlServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
+        Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
     ],
 
     /*
@@ -205,8 +206,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View'      => Illuminate\Support\Facades\View::class,
 
-        'Form'      => 'Collective\Html\FormFacade',
-        'Html'      => 'Collective\Html\HtmlFacade',
+        'Form'      => Collective\Html\FormFacade::class,
+        'Html'      => Collective\Html\HtmlFacade::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Localization'   => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,
     ],
 ];

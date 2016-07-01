@@ -13,7 +13,7 @@ deprecated: true
 templateTheme: bootstrap
 
 # Title of generated documentation.
-title: Di Nkomo developer docs
+title: Di Nkɔmɔ Codebase
 
 # Generate documentation for elements marked as @todo.
 todo: true

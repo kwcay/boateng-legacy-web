@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>Class App\Http\Controllers\Admin\DefinitionController | Di Nkomo developer docs</title>
+	<title>Class App\Http\Controllers\Admin\DefinitionController | Di Nkɔmɔ Codebase</title>
 
 	<link rel="stylesheet" href="resources/bootstrap.min.css?973e37a8502921d56bc02bb55321f45b072b6f71">
 	<link rel="stylesheet" href="resources/style.css?49f43d3208c5d7e33fa16d36107a345bf11cc00d">
@@ -14,7 +14,7 @@
 	<nav id="navigation" class="navbar navbar-default navbar-fixed-top">
 		<div class="container-fluid">
 			<div class="navbar-header">
-				<a href="index.html" class="navbar-brand">Di Nkomo developer docs</a>
+				<a href="index.html" class="navbar-brand">Di Nkɔmɔ Codebase</a>
 			</div>
 			<div class="collapse navbar-collapse">
 
@@ -181,12 +181,12 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
+				<li><a href="class-App.Http.Controllers.Admin.AdminController.html">AdminController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AlphabetController.html">AlphabetController</a></li>
-				<li><a href="class-App.Http.Controllers.Admin.BaseController.html">BaseController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.CountryController.html">CountryController</a></li>
 				<li class="active"><a href="class-App.Http.Controllers.Admin.DefinitionController.html">DefinitionController</a></li>
-				<li><a href="class-App.Http.Controllers.Admin.ExportController.html">ExportController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.LanguageController.html">LanguageController</a></li>
+				<li><a href="class-App.Http.Controllers.Admin.ReferenceController.html">ReferenceController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.TagController.html">TagController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.UserController.html">UserController</a></li>
 			</ul>
@@ -226,7 +226,7 @@ Illuminate\Routing\Controller
 		</dd>
 		<dd style="padding-left:60px">
 			<img src="resources/inherit.png" alt="Extended by">
-			<a href="class-App.Http.Controllers.Admin.BaseController.html"><span>App\Http\Controllers\Admin\BaseController</span></a>
+			<a href="class-App.Http.Controllers.DefinitionController.html"><span>App\Http\Controllers\DefinitionController</span></a>
 			
 			
 			
@@ -252,7 +252,7 @@ Illuminate\Routing\Controller
 		<b>Namespace:</b> <a href="namespace-App.html">App</a>\<a href="namespace-App.Http.html">Http</a>\<a href="namespace-App.Http.Controllers.html">Controllers</a>\<a href="namespace-App.Http.Controllers.Admin.html">Admin</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#23-641" title="Go to source code">Http/Controllers/Admin/DefinitionController.php</a>
+			<b>Located at</b> <a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#14-20" title="Go to source code">Http/Controllers/Admin/DefinitionController.php</a>
 		<br>
 	</div>
 
@@ -260,383 +260,42 @@ Illuminate\Routing\Controller
 
 		<div class="panel panel-default">
 			<div class="panel-heading"><h2>Methods summary</h2></div>
-			<table class="summary table table-bordered table-striped methods" id="methods">
-		<tr data-order="store" id="_store">
-
-			<td class="attributes"><code>
-				 public 
-				Response
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_store">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#53-137" title="Go to source code">store</a>( )</code>
-
-			<div class="description short">
-				<p>Stores a newly created resource in storage.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Stores a newly created resource in storage.</p>
-
-
-
-					<h4>Returns</h4>
-					<div class="list">
-						Response
-					</div>
-
-
-
-					<h4>Overrides</h4>
-					<div class="list"><code><a href="class-App.Http.Controllers.Controller.html#_store">App\Http\Controllers\Controller::store</a></code></div>
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="edit" id="_edit">
-
-			<td class="attributes"><code>
-				 public 
-				Response
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_edit">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#139-179" title="Go to source code">edit</a>( <span>string <var>$id</var></span> )</code>
-
-			<div class="description short">
-				<p>Show the form for editing the specified resource.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Show the form for editing the specified resource.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$id</var></dt>
-						<dd>Definition ID</dd>
-					</dl></div>
-
-					<h4>Returns</h4>
-					<div class="list">
-						Response
-					</div>
-
-
-
-					<h4>Overrides</h4>
-					<div class="list"><code><a href="class-App.Http.Controllers.Admin.BaseController.html#_edit">App\Http\Controllers\Admin\BaseController::edit</a></code></div>
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="update" id="_update">
-
-			<td class="attributes"><code>
-				 public 
-				Response
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_update">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#181-319" title="Go to source code">update</a>( <span>integer <var>$id</var></span> )</code>
-
-			<div class="description short">
-				<p>Update the specified resource in storage.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Update the specified resource in storage.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$id</var></dt>
-						<dd></dd>
-					</dl></div>
-
-					<h4>Returns</h4>
-					<div class="list">
-						Response
-					</div>
-
-					<h4>Throws</h4>
-					<div class="list">
-						Exception
-					</div>
-
-
-					<h4>Overrides</h4>
-					<div class="list"><code><a href="class-App.Http.Controllers.Admin.BaseController.html#_update">App\Http\Controllers\Admin\BaseController::update</a></code></div>
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="destroy" id="_destroy">
-
-			<td class="attributes"><code>
-				 public 
-				Response
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_destroy">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#379-417" title="Go to source code">destroy</a>( <span>integer <var>$id</var></span> )</code>
-
-			<div class="description short">
-				<p>Removes the specified resource from storage.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Removes the specified resource from storage.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$id</var></dt>
-						<dd></dd>
-					</dl></div>
-
-					<h4>Returns</h4>
-					<div class="list">
-						Response
-					</div>
-
-					<h4>Throws</h4>
-					<div class="list">
-						Exception
-					</div>
-
-
-					<h4>Overrides</h4>
-					<div class="list"><code><a href="class-App.Http.Controllers.Admin.BaseController.html#_destroy">App\Http\Controllers\Admin\BaseController::destroy</a></code></div>
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="getTitles" id="_getTitles">
-
-			<td class="attributes"><code>
-				 protected 
-				array|false
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_getTitles">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#419-461" title="Go to source code">getTitles</a>( <span>string <var>$titleStr</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$titleArray</var> = <span class="php-keyword1">null</span></span> )</code>
-
-			<div class="description short">
-				<p>Retrieves definition titles from request.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Retrieves definition titles from request.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$titleStr</var></dt>
-						<dd></dd>
-						<dt><var>$titleArray</var></dt>
-						<dd></dd>
-					</dl></div>
-
-					<h4>Returns</h4>
-					<div class="list">
-						array|false
-					</div>
-
-
-
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="getTags" id="_getTags">
-
-			<td class="attributes"><code>
-				 protected 
-				array
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_getTags">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#463-503" title="Go to source code">getTags</a>( <span>string <var>$tagStr</var></span> )</code>
-
-			<div class="description short">
-				<p>Retrieves tags from request.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Retrieves tags from request.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$tagStr</var></dt>
-						<dd></dd>
-					</dl></div>
-
-					<h4>Returns</h4>
-					<div class="list">
-						array
-					</div>
-
-
-
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="getLanguages" id="_getLanguages">
-
-			<td class="attributes"><code>
-				 protected 
-				
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_getLanguages">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#505-561" title="Go to source code">getLanguages</a>( <span>array|string <var>$raw</var></span>, <span>string <var>$title</var></span> )</code>
-
-			<div class="description short">
-				<p>Retrieves language data from request.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Retrieves language data from request.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$raw</var></dt>
-						<dd></dd>
-						<dt><var>$title</var></dt>
-						<dd></dd>
-					</dl></div>
-
-
-
-
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="getTranslations" id="_getTranslations">
-
-			<td class="attributes"><code>
-				 protected 
-				array|false
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_getTranslations">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#563-609" title="Go to source code">getTranslations</a>( <span>array <var>$raw</var> = <span class="php-keyword1">null</span></span> )</code>
-
-			<div class="description short">
-				<p>Retrieves translation data from the request.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Retrieves translation data from the request.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$raw</var></dt>
-						<dd></dd>
-					</dl></div>
-
-					<h4>Returns</h4>
-					<div class="list">
-						array|false
-					</div>
-
-
-
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="getRelatedDefinitions" id="_getRelatedDefinitions">
-
-			<td class="attributes"><code>
-				 public 
-				Illuminate\Support\Collection
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_getRelatedDefinitions">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#611-640" title="Go to source code">getRelatedDefinitions</a>( <span>array <var>$raw</var> = <span class="php-quote">''</span></span> )</code>
-
-			<div class="description short">
-				<p>Retrieves related definitions from request.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Retrieves related definitions from request.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$raw</var></dt>
-						<dd></dd>
-					</dl></div>
-
-					<h4>Returns</h4>
-					<div class="list">
-						Illuminate\Support\Collection
-					</div>
-
-
-
-
-			</div>
-			</div></td>
-		</tr>
-			</table>
 		</div>
 
 		<div class="panel panel-default">
-	        <div class="panel-heading"><h3>Methods inherited from <a href="class-App.Http.Controllers.Admin.BaseController.html#methods">App\Http\Controllers\Admin\BaseController</a></h3></div>
+	        <div class="panel-heading"><h3>Methods inherited from <a href="class-App.Http.Controllers.DefinitionController.html#methods">App\Http\Controllers\DefinitionController</a></h3></div>
 			<p class="elementList">
-				<code><a href="class-App.Http.Controllers.Admin.BaseController.html#___construct">__construct()</a></code>, 
-				<code><a href="class-App.Http.Controllers.Admin.BaseController.html#_getModel">getModel()</a></code>, 
-				<code><a href="class-App.Http.Controllers.Admin.BaseController.html#_getModelClassName">getModelClassName()</a></code>, 
-				<code><a href="class-App.Http.Controllers.Admin.BaseController.html#_getParam">getParam()</a></code>, 
-				<code><a href="class-App.Http.Controllers.Admin.BaseController.html#_index">index()</a></code>, 
-				<code><a href="class-App.Http.Controllers.Admin.BaseController.html#_setParam">setParam()</a></code>
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_createExpression">createExpression()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_createStory">createStory()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_createType">createType()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_createWord">createWord()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_destroy">destroy()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_edit">edit()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_getLanguages">getLanguages()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_getRelatedDefinitions">getRelatedDefinitions()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_getTags">getTags()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_getTitles">getTitles()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_getTranslations">getTranslations()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_show">show()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_store">store()</a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#_update">update()</a></code>
 			</p>
 		</div>
 		<div class="panel panel-default">
 	        <div class="panel-heading"><h3>Methods inherited from <a href="class-App.Http.Controllers.Controller.html#methods">App\Http\Controllers\Controller</a></h3></div>
 			<p class="elementList">
+				<code><a href="class-App.Http.Controllers.Controller.html#___construct">__construct()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_forceDestroy">forceDestroy()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getAttributesFromRequest">getAttributesFromRequest()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_getEmbedArray">getEmbedArray()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getModel">getModel()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getModelClassName">getModelClassName()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_getModelInstance">getModelInstance()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getParam">getParam()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_index">index()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_restore">restore()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_setParam">setParam()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_setupLayout">setupLayout()</a></code>, 
-				<code><a href="class-App.Http.Controllers.Controller.html#_show">show()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_walkthrough">walkthrough()</a></code>
 			</p>
 		</div>
@@ -652,142 +311,21 @@ Illuminate\Routing\Controller
 
 		<div class="panel panel-default">
             <div class="panel-heading"><h2>Properties summary</h2></div>
-			<table class="summary table table-bordered table-striped properties" id="properties">
-		<tr data-order="name" id="$name">
-			<td class="attributes"><code>
-				protected  
-				string
-			</code></td>
-
-			<td class="name">
-					<a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#25-28" title="Go to source code"><var>$name</var></a>
-
-				<div class="description short">
-					
-				</div>
-
-				<div class="description detailed hidden">
-					
-
-				</div>
-			</td>
-			<td class="value">
-				<div>
-					<a href="#$name" class="anchor">#</a>
-					<code><span class="php-quote">'definition'</span></code>
-				</div>
-			</td>
-		</tr>
-		<tr data-order="defaultQueryLimit" id="$defaultQueryLimit">
-			<td class="attributes"><code>
-				protected  
-				integer
-			</code></td>
-
-			<td class="name">
-					<a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#30-33" title="Go to source code"><var>$defaultQueryLimit</var></a>
-
-				<div class="description short">
-					
-				</div>
-
-				<div class="description detailed hidden">
-					
-
-				</div>
-			</td>
-			<td class="value">
-				<div>
-					<a href="#$defaultQueryLimit" class="anchor">#</a>
-					<code><span class="php-num">50</span></code>
-				</div>
-			</td>
-		</tr>
-		<tr data-order="supportedOrderColumns" id="$supportedOrderColumns">
-			<td class="attributes"><code>
-				protected  
-				array
-			</code></td>
-
-			<td class="name">
-					<a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#35-41" title="Go to source code"><var>$supportedOrderColumns</var></a>
-
-				<div class="description short">
-					
-				</div>
-
-				<div class="description detailed hidden">
-					
-
-				</div>
-			</td>
-			<td class="value">
-				<div>
-					<a href="#$supportedOrderColumns" class="anchor">#</a>
-					<code>[
-    <span class="php-quote">'id'</span> =&gt; <span class="php-quote">'ID'</span>,
-    <span class="php-quote">'createdAt'</span> =&gt; <span class="php-quote">'Created date'</span>,
-]</code>
-				</div>
-			</td>
-		</tr>
-		<tr data-order="defaultOrderColumn" id="$defaultOrderColumn">
-			<td class="attributes"><code>
-				protected  
-				string
-			</code></td>
-
-			<td class="name">
-					<a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#43-46" title="Go to source code"><var>$defaultOrderColumn</var></a>
-
-				<div class="description short">
-					
-				</div>
-
-				<div class="description detailed hidden">
-					
-
-				</div>
-			</td>
-			<td class="value">
-				<div>
-					<a href="#$defaultOrderColumn" class="anchor">#</a>
-					<code><span class="php-quote">'id'</span></code>
-				</div>
-			</td>
-		</tr>
-		<tr data-order="defaultOrderDirection" id="$defaultOrderDirection">
-			<td class="attributes"><code>
-				protected  
-				string
-			</code></td>
-
-			<td class="name">
-					<a href="source-class-App.Http.Controllers.Admin.DefinitionController.html#48-51" title="Go to source code"><var>$defaultOrderDirection</var></a>
-
-				<div class="description short">
-					
-				</div>
-
-				<div class="description detailed hidden">
-					
-
-				</div>
-			</td>
-			<td class="value">
-				<div>
-					<a href="#$defaultOrderDirection" class="anchor">#</a>
-					<code><span class="php-quote">'desc'</span></code>
-				</div>
-			</td>
-		</tr>
-			</table>
 		</div>
 
 		<div class="panel panel-default">
-            <div class="panel-heading"><h3>Properties inherited from <a href="class-App.Http.Controllers.Admin.BaseController.html#properties">App\Http\Controllers\Admin\BaseController</a></h3></div>
+            <div class="panel-heading"><h3>Properties inherited from <a href="class-App.Http.Controllers.DefinitionController.html#properties">App\Http\Controllers\DefinitionController</a></h3></div>
 			<p class="elementList">
-				<code><a href="class-App.Http.Controllers.Admin.BaseController.html#$queryLimit"><var>$queryLimit</var></a></code>
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#$defaultOrderColumn"><var>$defaultOrderColumn</var></a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#$defaultOrderDirection"><var>$defaultOrderDirection</var></a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#$defaultQueryLimit"><var>$defaultQueryLimit</var></a></code>, 
+				<code><a href="class-App.Http.Controllers.DefinitionController.html#$supportedOrderColumns"><var>$supportedOrderColumns</var></a></code>
+			</p>
+		</div>
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Properties inherited from <a href="class-App.Http.Controllers.Controller.html#properties">App\Http\Controllers\Controller</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-App.Http.Controllers.Controller.html#$name"><var>$name</var></a></code>
 			</p>
 		</div>
 
@@ -799,7 +337,7 @@ Illuminate\Routing\Controller
 	</div>
 
 	<div id="footer">
-		Di Nkomo developer docs API documentation generated by <a href="http://apigen.org">ApiGen</a>
+		Di Nkɔmɔ Codebase API documentation generated by <a href="http://apigen.org">ApiGen</a>
 	</div>
 </div>
 <script src="resources/combined.js"></script>

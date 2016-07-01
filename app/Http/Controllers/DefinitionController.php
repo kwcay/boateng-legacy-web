@@ -18,13 +18,11 @@ use Illuminate\Support\Collection;
 use App\Models\DefinitionTitle as Title;
 use App\Factories\TransliterationFactory as Transliterator;
 
+/**
+ * @abstract Main controller for the Definition resource.
+ */
 class DefinitionController extends Controller
 {
-    /**
-     * @var string
-     */
-    protected $name = 'definition';
-
     /**
      *
      */
@@ -53,7 +51,7 @@ class DefinitionController extends Controller
      *
      * @param string $code  ISO 639-3 language code.
      * @param string $raw   Word or phrase to be defined.
-     * @return mixed
+     * @return Illuminate\View\View|Illuminate\Http\RedirectResponse
      */
     public function show($code, $raw = null)
     {
@@ -105,15 +103,10 @@ class DefinitionController extends Controller
 	 *
      * @param string $type
      * @param string $langCode
-	 * @return Response
+	 * @return Illuminate\View\View
 	 */
-    private function createType($type, $langCode)
+    protected function createType($type, $langCode)
     {
-        // Make sure we have a logged in user.
-        // if (Auth::guest()) {
-        //     return redirect()->guest(route('auth.login'));
-        // }
-
         // Create a specific definition instance.
         if (!$definition = Definition::getInstance($type)) {
             abort(500);
@@ -134,14 +127,32 @@ class DefinitionController extends Controller
         ]);
     }
 
+    /**
+     * Displays the form to add a new word-type definition.
+     *
+     * @param string $langCode
+	 * @return Illuminate\View\View
+     */
     public function createWord($langCode) {
         return $this->createType(Definition::TYPE_WORD, $langCode);
     }
 
+    /**
+     * Displays the form to add a new expression-type definition.
+     *
+     * @param string $langCode
+	 * @return Illuminate\View\View
+     */
     public function createExpression($langCode) {
         return $this->createType(Definition::TYPE_EXPRESSION, $langCode);
     }
 
+    /**
+     * Displays the form to add a new story-type definition.
+     *
+     * @param string $langCode
+	 * @return Illuminate\View\View
+     */
     public function createStory($langCode) {
         return $this->createType(Definition::TYPE_STORY, $langCode);
     }
@@ -149,7 +160,7 @@ class DefinitionController extends Controller
 	/**
 	 * Stores a newly created resource in storage.
 	 *
-	 * @return Response
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function store()
     {
@@ -160,7 +171,8 @@ class DefinitionController extends Controller
         }
 
         // Check definition titles.
-        if (!$titles = $this->getTitles(Request::input('titleStr'))) {
+        // TODO: use proper script.
+        if (!$titles = $this->getTitles(Request::input('titleStr'), 'Latn')) {
             return back();
         }
 
@@ -280,7 +292,8 @@ class DefinitionController extends Controller
         }
 
         // Check definition titles.
-        if (!$titles = $this->getTitles(Request::input('titleStr'))) {
+        // TODO: user proper script.
+        if (!$titles = $this->getTitles(Request::input('titleStr'), 'Latn')) {
             return back();
         }
 
@@ -410,7 +423,7 @@ class DefinitionController extends Controller
 	{
         // Retrieve the definition model.
         if (!$def = Definition::find($id)) {
-            throw new \Exception(trans('errors.resource_not_found'), 404);
+            abort(404);
         }
 
         // Retrieve main language
@@ -528,6 +541,7 @@ class DefinitionController extends Controller
      *
      * @param array|string $raw
      * @param string $title
+     * @return array|false
      */
     protected function getLanguages($raw, $title)
     {
