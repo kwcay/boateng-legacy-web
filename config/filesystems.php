@@ -45,17 +45,17 @@ return [
 
 		'local' => [
 			'driver' => 'local',
-			'root'   => storage_path().'/app',
+			'root'   => storage_path('/app'),
 		],
 
 		'backups-build' => [
 			'driver' => 'local',
-			'root'   => storage_path().'/app/backups-build',
+			'root'   => storage_path('/app/backups-build'),
 		],
 
 		'backups' => [
 			'driver' => 'local',
-			'root'   => storage_path().'/app/backups',
+			'root'   => storage_path('/app/backups'),
 		],
 
 		's3' => [

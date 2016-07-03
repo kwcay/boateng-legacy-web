@@ -3,20 +3,12 @@
 @section('body')
 
 	<h1>
-	    Sign in with your social media account
+	    Sign in with your account
 	</h1>
 
     <div class="row">
 
         <div class="col-sm-12 text-center">
-
-            {{-- Personas --}}
-            <a href="javascript:;"
-                class="button"
-                title="Firefox Personas"
-                data-toggle="tooltip">
-                <span class="fa fa-fw fa-firefox"></span>
-            </a>
 
             {{-- Github --}}
             <a href="{{ route('auth.oauth', 'github') }}"

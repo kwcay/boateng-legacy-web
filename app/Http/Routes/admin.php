@@ -9,6 +9,7 @@
 Route::get('/', 'Admin\AdminController@index')->name('admin.index');
 Route::get('import', 'Admin\AdminController@import')->name('admin.import');
 Route::get('backup', 'Admin\AdminController@backup')->name('admin.backup');
+Route::post('backup/upload', 'Admin\AdminController@uploadBackup')->name('admin.backup.upload');
 
 // Resources
 Route::resource('alphabet', 'Admin\AlphabetController', ['except' => ['create', 'show', 'store']]);

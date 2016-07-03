@@ -107,7 +107,7 @@ class Backup extends Command
     public function handle()
     {
         // Generate a unique backup name.
-        $this->meta['id'] = date('Ymd') .'-'. substr(md5(microtime()), 20);
+        $this->meta['id'] = 'DiNkomoBackup_'. date('Ymd') .'-'. substr(md5(microtime()), 20);
 
         // Store the default internal data format.
         $this->meta['format'] = $this->option('yaml') ? 'yaml' : 'json';
@@ -163,7 +163,7 @@ class Backup extends Command
                 $this->createFile("{$resource}.{$i}", $dump);
 
                 // Save the md5 checksum of the json-encoded data.
-                $this->meta["{$resource}-json-md5"] = md5(json_encode($dump));
+                $this->meta["{$resource}-json-md5-{$i}"] = md5(json_encode($dump));
 
                 $this->progressBar->advance();
             }

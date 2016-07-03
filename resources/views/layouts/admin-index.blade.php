@@ -20,11 +20,11 @@
     </ol>
 
     {{-- Pagination links --}}
-    @include('admin.partials.pagination')
+    @include('partials.pagination')
 
     {{-- Query parameters --}}
     <div class="emphasis">
-        @include('admin.partials.query-params')
+        @include('partials.query-params')
     </div>
     <br>
 
@@ -33,12 +33,12 @@
     {{-- Query parameters --}}
     @if ($total >= 10)
         <div class="emphasis">
-            @include('admin.partials.query-params')
+            @include('partials.query-params')
         </div>
     @endif
 
     {{-- Pagination links --}}
-    @include('admin.partials.pagination')
+    @include('partials.pagination')
 
     {{-- Delete dialog --}}
     <div class="dialog trash">

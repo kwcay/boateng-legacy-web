@@ -20,6 +20,11 @@ class AuthController extends Controller
         // AuthenticatesAndRegistersUsers::postLogin as loginUser;
     }
 
+    /**
+     * Supported oAuth providers.
+     *
+     * @var array
+     */
     protected $oAuthProviders = [
         'github',
         'google',

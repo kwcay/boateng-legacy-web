@@ -116,7 +116,7 @@
 
     # Install composer dependencies.
     composer self-update &> /dev/null;
-    composer install --prefer-dist --no-scripts -q -o &> /dev/null;
+    composer install --prefer-dist --no-scripts --no-dev -q -o &> /dev/null;
 
 @endtask
 
@@ -129,7 +129,7 @@
 
     # Update composer dependencies.
     composer self-update &> /dev/null;
-    composer update &> /dev/null;
+    composer update --prefer-dist --no-scripts --no-dev -q -o &> /dev/null;
 
 @endtask
 
