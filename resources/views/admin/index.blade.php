@@ -43,6 +43,11 @@
                         {{ number_format(App\Models\User::count()) }} users
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('admin.backup.index') }}">
+                        Manage backups
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -51,9 +56,6 @@
         	<ul>
         	    <li>
         	        <a href="{{ route('admin.import') }}">Import data.</a>
-        	    </li>
-        	    <li>
-        	        <a href="{{ route('admin.backup') }}">Backups.</a>
         	    </li>
         	</ul>
         </div>

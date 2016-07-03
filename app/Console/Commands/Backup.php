@@ -107,7 +107,7 @@ class Backup extends Command
     public function handle()
     {
         // Generate a unique backup name.
-        $this->meta['id'] = 'DiNkomoBackup_'. date('Ymd') .'-'. substr(md5(microtime()), 20);
+        $this->meta['id'] = 'Di_Nkomo_'. date('Ymd') .'-'. substr(md5(microtime()), 20);
 
         // Store the default internal data format.
         $this->meta['format'] = $this->option('yaml') ? 'yaml' : 'json';

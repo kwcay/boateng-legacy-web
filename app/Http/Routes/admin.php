@@ -8,8 +8,6 @@
 // General pages
 Route::get('/', 'Admin\AdminController@index')->name('admin.index');
 Route::get('import', 'Admin\AdminController@import')->name('admin.import');
-Route::get('backup', 'Admin\AdminController@backup')->name('admin.backup');
-Route::post('backup/upload', 'Admin\AdminController@uploadBackup')->name('admin.backup.upload');
 
 // Resources
 Route::resource('alphabet', 'Admin\AlphabetController', ['except' => ['create', 'show', 'store']]);
@@ -27,3 +25,7 @@ Route::post('import', ['as' => 'admin.import.action', 'uses' => 'ImportControlle
 
 // Resource export
 Route::get('export/{resource}.{format}', 'Admin\AdminController@export')->name('admin.export');
+
+// Backups
+Route::post('backup/upload', 'Admin\BackupController@upload')->name('admin.backup.upload');
+Route::resource('backup', 'Admin\BackupController', ['only' => ['index', 'create', 'destroy']]);

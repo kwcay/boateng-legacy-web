@@ -4,6 +4,10 @@
 
 	<h1>
 	    Backups
+
+        <span class="edit-res">
+            <a href="{{ route('admin.backup.create') }}" class="fa fa-plus"></a>
+        </span>
     </h1>
 
     <ol class="breadcrumb">
