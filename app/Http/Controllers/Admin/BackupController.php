@@ -141,12 +141,24 @@ class BackupController extends BaseController
     /**
      * Deletes a backup file.
      *
-     * @param
+     * @param string $filename
      *
      * @todo Restrict access based on roles
      */
     public function destroy($filename)
     {
-        abort(501);
+        dd($filename);
+    }
+
+    /**
+     * Restores a backup file.
+     *
+     * @param string $filename
+     *
+     * @todo Restrict access based on roles
+     */
+    public function restore($filename)
+    {
+        dd($filename);
     }
 }
