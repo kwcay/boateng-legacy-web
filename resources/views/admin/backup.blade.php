@@ -149,7 +149,8 @@
                 Are you sure you want to restore
                 <h2 class="res-name"></h2>
 
-                and all of its contents?
+                This will momentarily put the app in &quot;maintenance&quot; mode. No one
+                will be able to use the site.
                 <br>
                 <br>
 
@@ -178,7 +179,8 @@
             <div class="center">
                 Are you sure you want to delete
                 <h2 class="res-name"></h2>
-                for ever and ever?
+
+                This action is permanent!
                 <br><br>
 
                 <form

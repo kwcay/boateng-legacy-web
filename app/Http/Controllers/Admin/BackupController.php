@@ -8,8 +8,9 @@ namespace App\Http\Controllers\Admin;
 use Artisan;
 use Storage;
 use Exception;
-use App\Factories\BackupFactory;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use App\Factories\BackupFactory;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -21,6 +22,16 @@ use App\Http\Controllers\Controller as BaseController;
  */
 class BackupController extends BaseController
 {
+    /**
+     * @param App\Factories\BackupFactory $factory
+     */
+    public function __construct(Request $request, Response $response, BackupFactory $factory)
+    {
+        parent::__construct($request, $response);
+
+        $this->factory = $factory;
+    }
+
     /**
      * Lists available backups.
      *
@@ -112,11 +123,9 @@ class BackupController extends BaseController
     /**
      * Uploads a backup file.
      *
-     * @param App\Factories\BackupFactory $helper
-     *
      * @todo Restrict access based on roles
      */
-    public function upload(BackupFactory $helper)
+    public function upload()
     {
         // Performance check.
         if (!$this->request->hasFile('file')) {
@@ -128,7 +137,7 @@ class BackupController extends BaseController
 
         try
         {
-            $results = $helper->upload($file);
+            $results = $this->factory->upload($file);
         }
         catch (Exception $e)
         {
@@ -147,7 +156,17 @@ class BackupController extends BaseController
      */
     public function destroy($filename)
     {
-        dd($filename);
+        // Try to delete backup file.
+        try
+        {
+            $results = $this->factory->delete($filename, $this->request->get('timestamp', 0));
+        }
+        catch (Exception $e)
+        {
+            return redirect(route('admin.backup.index'))->withMessages([$e->getMessage()]);
+        }
+
+        return redirect(route('admin.backup.index'))->withMessages($results->getMessages());
     }
 
     /**
@@ -156,9 +175,20 @@ class BackupController extends BaseController
      * @param string $filename
      *
      * @todo Restrict access based on roles
+     * @todo Queue task using Artisan::queue and put app in maintenance mode.
      */
     public function restore($filename)
     {
-        dd($filename);
+        // Try to restore backup file.
+        try
+        {
+            $results = $this->factory->import($filename, $this->request->get('timestamp', 0));
+        }
+        catch (Exception $e)
+        {
+            return redirect(route('admin.backup.index'))->withMessages([$e->getMessage()]);
+        }
+
+        return redirect(route('admin.backup.index'))->withMessages($results->getMessages());
     }
 }

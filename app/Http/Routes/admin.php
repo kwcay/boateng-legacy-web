@@ -29,4 +29,5 @@ Route::get('export/{resource}.{format}', 'Admin\AdminController@export')->name('
 // Backups
 Route::post('backup/upload', 'Admin\BackupController@upload')->name('admin.backup.upload');
 Route::patch('backup/restore/{file}', 'Admin\BackupController@restore')->name('admin.backup.restore');
-Route::resource('backup', 'Admin\BackupController', ['only' => ['index', 'create', 'destroy']]);
+Route::delete('backup/destroy/{file}', 'Admin\BackupController@destroy')->name('admin.backup.destroy');
+Route::resource('backup', 'Admin\BackupController', ['only' => ['index', 'create']]);
