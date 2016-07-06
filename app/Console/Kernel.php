@@ -12,6 +12,8 @@ class Kernel extends ConsoleKernel {
 	 */
 	protected $commands = [
 		Commands\Backup::class,
+		Commands\ListBackup::class,
+		Commands\RestoreBackup::class,
 		Commands\Inspire::class,
 	];
 

@@ -78,6 +78,12 @@ class BackupFactory extends FactoryContract
      */
     public function import($filename, $timestamp = null)
     {
+        // Performance check.
+        if (!$this->storage->exists($this->getPath($filename, $timestamp)))
+        {
+            throw new Exception('Can\'t find backup file "'. $this->getPath($filename, $timestamp) .'"');
+        }
+        
         // Delete backup file.
         $this->setMessage('TODO: restore "'. $this->getPath($filename, $timestamp) .'"');
 
@@ -89,11 +95,18 @@ class BackupFactory extends FactoryContract
      *
      * @param   string  $filename
      * @param   int     $timestamp
+     *
+     * @todo    Restrict access based on roles.
      */
     public function delete($filename, $timestamp = null)
     {
         // Delete backup file.
-        $this->setMessage('TODO: delete "'. $this->getPath($filename, $timestamp) .'"');
+        if (!$this->storage->delete($this->getPath($filename, $timestamp)))
+        {
+            throw new Exception('Couldn\'t delete backup file "'. $this->getPath($filename, $timestamp) .'".');
+        }
+
+        $this->setMessage('Backup file successfully deleted.');
 
         return $this;
     }

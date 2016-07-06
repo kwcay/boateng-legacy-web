@@ -6,7 +6,7 @@
 namespace App\Factories\DataImport;
 
 use Exception;
-
+use App\Models\Tag;
 use App\Models\Alphabet;
 use App\Models\Language;
 use App\Models\Definition;
@@ -157,9 +157,14 @@ class DefinitionImportFactory extends DataImportFactory
             // Add tag relations.
             if (array_key_exists('tags', $data))
             {
-                $tags = @explode(',', $data['tags']);
+                $tags = [];
+                $tagTitles = @explode(',', $data['tags']);
 
-                // TODO ...
+                foreach ($tagTitles as $tag) {
+                    $tags[] = Tag::firstOrCreate(['title' => $tag]);
+                }
+                
+                $definition->tags()->sync($tags);
             }
 
             // Add languages.

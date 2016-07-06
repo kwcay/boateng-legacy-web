@@ -127,9 +127,11 @@ class Backup extends Command
         {
             $className = 'App\\Models\\'. ucfirst($resource);
 
-            $this->meta[$resource .'-files'] = (int) ceil($className::count() / $limit);
-            $steps += $this->meta[$resource .'-files'];
+            $this->meta[$resource] = (int) ceil($className::count() / $limit);
+            $steps += $this->meta[$resource];
         }
+
+        print_r($this->meta);
 
         $this->progressBar = $this->output->createProgressBar($steps);
         $this->progressBar->advance();
@@ -142,14 +144,14 @@ class Backup extends Command
         foreach ($this->limits as $resource => $limit)
         {
             // Performance check.
-            if ($this->meta[$resource .'-files'] < 1) {
+            if ($this->meta[$resource] < 1) {
                 continue;
             }
 
             // We will split the resource data into separate files, depending on the specified
             // limits. Using "$className::withTrashed()->chunk()" somehow isn't helpful here,
             // so we will chunk the data manually.
-            for ($i = 0; $i < $this->meta[$resource .'-files']; $i++)
+            for ($i = 0; $i < $this->meta[$resource]; $i++)
             {
                 $dump = [];
                 $skip = $i * $limit;
@@ -176,6 +178,7 @@ class Backup extends Command
         // tar & gzip folder
         $phar = new PharData($this->getDirName() .'/'. $this->meta['id'] .'.tar');
         $phar->buildFromDirectory($this->getDirName());
+        $phar->setMetadata($this->meta);
         $phar->compress(Phar::GZ);
         $this->progressBar->advance();
 
