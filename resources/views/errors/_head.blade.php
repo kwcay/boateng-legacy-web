@@ -1,6 +1,7 @@
 
 <meta charset="utf-8">
-<title>Di Nkomo: the book of native tongues.</title>
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>@yield('title', trans('branding.title') .': '. trans('branding.tag_line'))</title>
 <meta http-equiv="expires" content="-1">
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache" />

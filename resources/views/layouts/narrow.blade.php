@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>@yield('title', 'Di Nkɔmɔ: '. trans('branding.tag_line'))</title>
+    <title>@yield('title', trans('branding.title') .': '. trans('branding.tag_line'))</title>
 
 	@section('head')
         <base href="{{ Request::root() }}/">
@@ -23,7 +23,7 @@
             type="application/opensearchdescription+xml"
             href="{{ route('api.os') }}" title="Di Nkɔmɔ Cultural Reference">
 	@show
-    
+
     @include('partials.analytics')
 </head>
 <body>

@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-    <title>@yield('title', 'Di Nkomo Administration.')</title>
+    <title>@yield('title', trans('branding.title') .' Administration.')</title>
 
 	@section('head')
         <base href="{{ Request::root() }}/">

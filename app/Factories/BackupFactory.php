@@ -5,6 +5,7 @@
  */
 namespace App\Factories;
 
+use Artisan;
 use Storage;
 use Exception;
 use Illuminate\Http\Request;
@@ -57,7 +58,6 @@ class BackupFactory extends FactoryContract
 
         // Upload file to backups disk.
         $handle = fopen($file->getRealPath(), 'r');
-        // if (!$this->storage->put($filename, file_get_contents($file->getRealPath())))
         if (!$this->storage->put($filename, $handle))
         {
             fclose($handle);
@@ -83,7 +83,10 @@ class BackupFactory extends FactoryContract
         {
             throw new Exception('Can\'t find backup file "'. $this->getPath($filename, $timestamp) .'"');
         }
-        
+
+        // Run some checks.
+        Artisan::call('down');
+
         // Delete backup file.
         $this->setMessage('TODO: restore "'. $this->getPath($filename, $timestamp) .'"');
 
