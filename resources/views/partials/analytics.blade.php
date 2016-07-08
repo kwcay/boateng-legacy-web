@@ -11,7 +11,7 @@
   window.keen = new Keen({
     projectId: "{{ env('KEEN_PROJECT_ID') }}",
     writeKey: "{{ env('KEEN_WRITE_KEY') }}",
-    readKey: "{{ {{ env('KEEN_READ_KEY') }} }}",
+    readKey: "{{ env('KEEN_READ_KEY') }}",
     protocol: "auto",
     host: "api.keen.io/3.0",
     requestType: "jsonp"
