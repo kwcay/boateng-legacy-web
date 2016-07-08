@@ -91,14 +91,14 @@ class LanguageController extends Controller
 	/**
 	 * Show the form for editing a language.
 	 *
-     * @param string $code  Language code.
-	 * @return Response
+     * @param   string  $id     Either the ISO 639-3 language code or language ID.
+	 * @return  Response
 	 */
-	public function edit($code)
+	public function edit($id)
     {
-        // Retrieve the language model.
-        if (!$lang = Language::findByCode($code, ['parent'])) {
-            abort(404);
+        // Retrieve the language object.
+        if (!$lang = $this->getLanguage($id)) {
+            abort(404, 'Can\'t find that languge :(');
         }
 
         // Alphabet data for selectize plugin.
@@ -225,8 +225,12 @@ class LanguageController extends Controller
         }
 
         // Find language by ID.
-        else {
+        elseif ($id = Language::decodeId($id)) {
             $lang = Language::with($embed)->find($id);
+        }
+
+        else {
+            $lang = null;
         }
 
         return $lang;

@@ -22,9 +22,14 @@
     "font-awesome": "~4.6.3",
     "jquery-ui": "~1.11.4",
     "sifter": "~0.5.1",
-    "clipboard": "^1.5.12"
+    "clipboard": "^1.5.12",
+    "keen-js": "^3.4.1"
   },
   "devDependencies": {
     "typed.js": "^1.1.1"
+  },
+  "resolutions": {
+    "sifter": "0.4.x",
+    "jquery": ">=1.6"
   }
 }

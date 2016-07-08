@@ -42,7 +42,7 @@
                 name="name"
                 id="name"
                 class="text-input"
-                placeholder="e.g. Twi"
+                placeholder="e.g. አማርኛ"
                 value="{{ $model->name }}"
                 autocomplete="off"
                 required="required">
@@ -56,7 +56,7 @@
                 name="transliteration"
                 id="transliteration"
                 class="en-text-input"
-                placeholder="e.g. Twi"
+                placeholder="e.g. Amarəñña"
                 value="{{ $model->transliteration }}"
                 autocomplete="off">
             <label for="transliteration">Transliteration of language name</label>
@@ -69,7 +69,7 @@
                 name="altNames"
                 id="altNames"
                 class="text-input"
-                placeholder="e.g. Twi"
+                placeholder="e.g. Amharic"
                 value="{{ $model->altNames }}"
                 autocomplete="off">
             <label for="altNames">Alternate names or spellings (separated by &ldquo;,&rdquo;)</label>
