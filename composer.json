@@ -15,7 +15,8 @@
 		"barryvdh/laravel-debugbar": "^2.2",
 		"spatie/laravel-permission": "^1.4",
 		"mcamara/laravel-localization": "^1.1",
-		"frnkly/laravel-embeds": "~1.0"
+		"frnkly/laravel-embeds": "~1.0",
+		"predis/predis": "^1.1"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

@@ -9,16 +9,31 @@
 - MySQL 5.6 or higher
 
 ## Setting up on Ubuntu 14.04
-Upgrade MySQL to version 5.6 and install php5-curl
+Install the MySQL 5.6, cURL & TCL packages.
 
     sudo apt-get update
     sudo apt-get upgrade
-    sudo apt-get install mysql-server-5.6 php5-curl
+    sudo apt-get install mysql-server-5.6 php5-curl tcl
+
+Install Redis
+
+    wget http://download.redis.io/redis-stable.tar.gz
+    tar xvzf redis-stable.tar.gz
+    cd redis-stable
+    make
+    sudo make install
+
+And make sure it was installed properly
+
+    make test
+    cd ../
+    rm -fR redis-stable
+    rm -f redis-stable.tar.gz
 
 Pull the repository
 
     cd path/where/app/will/reside
-    git clone https://github.com/frnkly/dinkomo.git
+    git clone https://bitbucket.org/dinkomo/web.git
     cd dinkomo
 
 Install dependencies and setup app
