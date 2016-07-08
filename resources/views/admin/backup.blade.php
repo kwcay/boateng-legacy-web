@@ -88,7 +88,10 @@
 
                         {{-- Download backup --}}
                         <div class="btn-group">
-                            <a class="btn btn-default" href="javascript:;">
+                            <a
+                                class="btn btn-default"
+                                href="{{ route('admin.backup.download', [$file['timestamp'], $file['name'] .'.'. $file['ext']]) }}">
+
                                 <span class="fa fa-fw fa-download"></span>
                             </a>
                         </div>

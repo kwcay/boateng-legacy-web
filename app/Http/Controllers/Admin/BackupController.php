@@ -148,6 +148,40 @@ class BackupController extends BaseController
     }
 
     /**
+     * Downloads a backup file.
+     *
+     * @param   int     $timestamp
+     * @param   string  $file
+     *
+     * @todo Restrict access based on roles
+     */
+    public function download($timestamp, $file)
+    {
+        // Retrieve local path.
+        try
+        {
+            $filename = $this->factory->getPath($file, $timestamp);
+        }
+        catch (Exception $e)
+        {
+            abort(404);
+        }
+
+        // Disable compression.
+        @\ini_set('zlib.output_compression', 'Off');
+
+        // Set some cache-busting headers, set the response content, and send everything to client.
+        return $this->response
+            ->header('Pragma', 'public')
+            ->header('Expires', '-1')
+            ->header('Cache-Control', 'public, must-revalidate, post-check=0, pre-check=0')
+            ->header('Content-Type', 'application/x-dinkomo-backup')
+            ->header('Content-Disposition',
+                $this->response->headers->makeDisposition('attachment', $file))
+            ->setContent(Storage::disk('backups')->get($filename));
+    }
+
+    /**
      * Deletes a backup file.
      *
      * @param string $filename

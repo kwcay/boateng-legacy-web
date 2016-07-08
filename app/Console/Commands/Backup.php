@@ -131,8 +131,6 @@ class Backup extends Command
             $steps += $this->meta[$resource];
         }
 
-        print_r($this->meta);
-
         $this->progressBar = $this->output->createProgressBar($steps);
         $this->progressBar->advance();
 
