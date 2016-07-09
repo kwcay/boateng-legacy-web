@@ -164,9 +164,10 @@ class BackupFactory extends FactoryContract
         Phar::unlinkArchive($this->getDirName($restoreId) .'/data.tar.gz');
 
         // Refresh database.
-        if (isset($options['refreshdb']))
+        if (isset($options['refresh-db']))
         {
-
+            print "Refreshing migrations...\n";
+            Artisan::call('migrate:refresh');
         }
 
 
@@ -220,7 +221,7 @@ class BackupFactory extends FactoryContract
 
                     foreach ($results->getMessages() as $msg)
                     {
-                        print "{$msg}\n";
+                        print "[$i] {$msg}\n";
                     }
                 }
                 catch (Exception $e)

@@ -17,7 +17,9 @@ class RestoreBackup extends Command
      *
      * @var string
      */
-    protected $signature = 'backup:restore {file? : The relative path to the backup file}';
+    protected $signature = 'backup:restore
+                            {file? : The relative path to the backup file}
+                            {--R|refresh-db : Refresh migrations before restoring the backup}';
 
     /**
      * The console command description.
@@ -78,7 +80,9 @@ class RestoreBackup extends Command
         $this->info('Reading backup file...');
         try
         {
-            $this->factory->restore($filename);
+            $this->factory->restore($filename, [
+                'refresh-db' => ($this->option('refresh-db'))
+            ]);
         }
         catch (Exception $e)
         {
