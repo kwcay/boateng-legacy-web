@@ -67,7 +67,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['name', 'email', 'password'];
+	protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'createdAt',
+        'deletedAt',
+    ];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -79,6 +85,31 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'password',
         'remember_token'
     ];
+
+
+    //
+    //
+    // Helper methods
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Looks up a user by their email address.
+     *
+     * @param   string|\App\Models\User $email
+     * @return  \App\Models\User|null
+     */
+    public static function findByEmail($email)
+    {
+        // Performance check.
+        if ($email instanceof static) {
+            return $email;
+        }
+
+        // Retrieve user by email.
+        return static::where('email', '=', $email)->first();
+    }
 
 
     //

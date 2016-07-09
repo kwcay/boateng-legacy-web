@@ -107,10 +107,13 @@ class Backup extends Command
     public function handle()
     {
         // Generate a unique backup name.
-        $this->meta['id'] = 'Di_Nkomo_'. date('Ymd') .'-'. substr(md5(microtime()), 20);
+        $this->meta['id'] = 'Di_Nkomo_'. date('ymd') .'-'. substr(time(), -5) .'-'. substr(md5(microtime()), -3);
 
         // Store the default internal data format.
         $this->meta['format'] = $this->option('yaml') ? 'yaml' : 'json';
+
+        // Store the checksum method used on individual files.
+        $this->meta['checksum-method'] = 'json-md5';
 
         $this->info("Backing up to {$this->meta['id']}.{$this->format}");
 
@@ -127,8 +130,11 @@ class Backup extends Command
         {
             $className = 'App\\Models\\'. ucfirst($resource);
 
-            $this->meta[$resource] = (int) ceil($className::count() / $limit);
-            $steps += $this->meta[$resource];
+            $this->meta[$resource] = [
+                'files' => (int) ceil($className::count() / $limit)
+            ];
+
+            $steps += $this->meta[$resource]['files'];
         }
 
         $this->progressBar = $this->output->createProgressBar($steps);
@@ -142,14 +148,17 @@ class Backup extends Command
         foreach ($this->limits as $resource => $limit)
         {
             // Performance check.
-            if ($this->meta[$resource] < 1) {
+            if ($this->meta[$resource]['files'] < 1) {
                 continue;
             }
+
+            // Setup meta data.
+            $this->meta[$resource]['checksums'] = [];
 
             // We will split the resource data into separate files, depending on the specified
             // limits. Using "$className::withTrashed()->chunk()" somehow isn't helpful here,
             // so we will chunk the data manually.
-            for ($i = 0; $i < $this->meta[$resource]; $i++)
+            for ($i = 0; $i < $this->meta[$resource]['files']; $i++)
             {
                 $dump = [];
                 $skip = $i * $limit;
@@ -160,17 +169,17 @@ class Backup extends Command
                     $dump[] = $model->getExportArray();
                 }
 
-                $this->createFile("{$resource}.{$i}", $dump);
+                $this->createFile("{$resource}-{$i}", $dump);
 
                 // Save the md5 checksum of the json-encoded data.
-                $this->meta["{$resource}-json-md5-{$i}"] = md5(json_encode($dump));
+                $this->meta[$resource]['checksums'][$i] = md5(json_encode($dump));
 
                 $this->progressBar->advance();
             }
         }
 
         // Create meta file.
-        $this->createFile('meta.yaml', Yaml::dump($this->meta));
+        $this->createFile('meta.yaml', Yaml::dump($this->meta, 4), 'yaml');
         $this->progressBar->advance();
 
         // tar & gzip folder
@@ -182,12 +191,15 @@ class Backup extends Command
 
         // Copy backup file to backups disk.
         $this->storage->put(
-            date('Y-m') .'/'. $this->meta['id'] .'.nko',
+            $this->meta['id'] .'.nko',
             $this->tempStorage->get($this->meta['id'] .'/'. $this->meta['id'] .'.tar.gz')
         );
         $this->progressBar->advance();
 
         // Remove temporary files.
+        unset($phar);
+        Phar::unlinkArchive($this->getDirName() .'/'. $this->meta['id'] .'.tar');
+        Phar::unlinkArchive($this->getDirName() .'/'. $this->meta['id'] .'.tar.gz');
         $this->tempStorage->deleteDirectory($this->meta['id']);
         $this->progressBar->advance();
     }
@@ -199,15 +211,19 @@ class Backup extends Command
      * @param mixed $contents
      * @return ?
      */
-    protected function createFile($filename, $contents)
+    protected function createFile($filename, $contents, $format = null)
     {
         // Serialize file data.
         if (!is_string($contents))
         {
-            $contents = $this->option('yaml') ? Yaml::dump($contents) : json_encode($contents);
+            $contents = $this->option('yaml') ? Yaml::dump($contents, 4) : json_encode($contents);
         }
 
-        return $this->tempStorage->put($this->meta['id'] .'/'. $filename, $contents);
+        if (!$format) {
+            $format = $this->option('yaml') ? 'yaml' : 'json';
+        }
+
+        return $this->tempStorage->put("{$this->meta['id']}/{$filename}.{$format}", $contents);
     }
 
     /**

@@ -50,10 +50,11 @@ class ListBackup extends Command
         {
             $files[$index] = [
                 $filename,
-                number_format($this->storage->size($filename) / 1000) .' kb'
+                number_format($this->storage->size($filename) / 1000) .' kb',
+                date('M j, Y', $this->storage->lastModified($filename))
             ];
         }
 
-        $this->table(['Filename', 'Size'], $files);
+        $this->table(['Filename', 'Size', 'Date'], $files);
     }
 }

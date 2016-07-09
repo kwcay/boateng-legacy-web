@@ -14,6 +14,9 @@ use App\Models\Translation;
 use App\Models\DefinitionTitle;
 use App\Factories\DataImportFactory;
 
+/**
+ *
+ */
 class DefinitionImportFactory extends DataImportFactory
 {
     /**
@@ -30,6 +33,9 @@ class DefinitionImportFactory extends DataImportFactory
         $saved = $skipped = 0;
         foreach ($this->dataArray as $data)
         {
+            // TODO: check database for duplicates somehow...
+            // ...
+
             // Definition titles
             $titles = $titleData = [];
 
@@ -163,7 +169,7 @@ class DefinitionImportFactory extends DataImportFactory
                 foreach ($tagTitles as $tag) {
                     $tags[] = Tag::firstOrCreate(['title' => $tag]);
                 }
-                
+
                 $definition->tags()->sync($tags);
             }
 

@@ -35,7 +35,6 @@
                 <td>Date</td>
                 <td>Name</td>
                 <td>Size</td>
-                <td>Type</td>
             </tr>
         </thead>
 
@@ -68,7 +67,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.restore("{{ $file['name'] .'.'. $file['ext'] }}", {{ $file['timestamp'] }})'
+                                        onclick='return window.restore("{{ $file['name'] }}")'
                                         class="bg-warning">
 
                                         Restore
@@ -77,7 +76,7 @@
                                 <li>
                                     <a
                                         href="javascript:;"
-                                        onclick='return window.trash("{{ $file['name'] .'.'. $file['ext'] }}", {{ $file['timestamp'] }})'
+                                        onclick='return window.trash("{{ $file['name'] }}")'
                                         class="bg-danger">
 
                                         Delete
@@ -90,7 +89,7 @@
                         <div class="btn-group">
                             <a
                                 class="btn btn-default"
-                                href="{{ route('admin.backup.download', [$file['timestamp'], $file['name'] .'.'. $file['ext']]) }}">
+                                href="{{ route('admin.backup.download', $file['name']) }}">
 
                                 <span class="fa fa-fw fa-download"></span>
                             </a>
@@ -105,9 +104,6 @@
                 </td>
                 <td>
                     {{ $file['size'] }}
-                </td>
-                <td>
-                    {{ $file['ext'] }}
                 </td>
             </tr>
             @endforeach
@@ -165,7 +161,6 @@
 
                     {!! csrf_field() !!}
                     <input type="hidden" name="_method" value="PATCH">
-                    <input type="hidden" name="timestamp" value="0">
                     <input type="hidden" name="return" value="{{ Request::input('return', 'admin') }}">
                     <input type="submit" name="confirm" value="yes">
                     <input type="button" name="cancel" value="no, return" onclick="return Dialogs.close()">
@@ -183,8 +178,9 @@
                 Are you sure you want to delete
                 <h2 class="res-name"></h2>
 
-                This action is permanent!
-                <br><br>
+                This action is permanent.
+                <br>
+                <br>
 
                 <form
                     class="form"
@@ -194,7 +190,6 @@
 
                     {!! csrf_field() !!}
                     <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" name="timestamp" value="0">
                     <input type="hidden" name="return" value="{{ Request::input('return', 'admin') }}">
                     <input type="submit" name="confirm" value="yes">
                     <input type="button" name="cancel" value="no, return" onclick="return Dialogs.close()">
@@ -206,11 +201,10 @@
     <script type="text/javascript">
 
         // Restores a backup file.
-        window.restore = function(name, timestamp) {
+        window.restore = function(name) {
 
             // Update restore confirmation form.
             $('.dialog.restore .res-name').html(name);
-            $('.dialog.restore input[name="timestamp"]').val(timestamp);
             document.restoreForm.action = App.root + 'admin/backup/restore/' + encodeURIComponent(name);
 
             Dialogs.open('restore');
@@ -219,11 +213,10 @@
         };
 
         // Deletes a backup file.
-        window.trash = function(name, timestamp) {
+        window.trash = function(name) {
 
             // Update delete confirmation form.
             $('.dialog.trash .res-name').html(name);
-            $('.dialog.trash input[name="timestamp"]').val(timestamp);
             document.trashForm.action = App.root + 'admin/backup/destroy/' + encodeURIComponent(name);
 
             Dialogs.open('trash');

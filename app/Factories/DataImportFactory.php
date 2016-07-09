@@ -9,6 +9,9 @@ use Exception;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 
+/**
+ * @todo This class can be improved for efficiency, especially keeping in mind the BackupFactory.
+ */
 class DataImportFactory
 {
     /**
@@ -291,10 +294,6 @@ class DataImportFactory
 
         // Set data model.
         $this->setDataModel();
-
-        // Remove duplicates.
-        $this->dataArray = array_map('unserialize',
-                                array_unique(array_map('serialize', $this->dataArray)));
     }
 
     /**
@@ -306,11 +305,13 @@ class DataImportFactory
     }
 
     /**
+     * Saves data array and tries to remove duplicates.
+     *
      * @param array $data
      */
     public function setDataArray(array $data)
     {
-        $this->dataArray = $data;
+        $this->dataArray = array_map('unserialize', array_unique(array_map('serialize', $data)));
     }
 
     /**
@@ -399,8 +400,16 @@ class DataImportFactory
         // is specific to this data set.
         switch ($this->dataModel)
         {
-            case 'App\\Models\\Language':
-                $factory = $this->make('LanguageImportFactory');
+            case 'App\\Models\\Alphabet':
+                $factory = $this->make('AlphabetImportFactory');
+                break;
+
+            case 'App\\Models\\Country':
+                $factory = $this->make('CountryImportFactory');
+                break;
+
+            case 'App\\Models\\Culture':
+                $factory = $this->make('CultureImportFactory');
                 break;
 
             case 'App\\Models\\Definition':
@@ -408,6 +417,18 @@ class DataImportFactory
             case 'App\\Models\\Definition\\Expression':
             case 'App\\Models\\Definition\\Story':
                 $factory = $this->make('DefinitionImportFactory');
+                break;
+
+            case 'App\\Models\\Language':
+                $factory = $this->make('LanguageImportFactory');
+                break;
+
+            case 'App\\Models\\Reference':
+                $factory = $this->make('ReferenceImportFactory');
+                break;
+
+            case 'App\\Models\\User':
+                $factory = $this->make('UserImportFactory');
                 break;
 
             default:

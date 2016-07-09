@@ -5,12 +5,10 @@
  */
 namespace App\Console\Commands;
 
-use Phar;
 use Storage;
-use PharData;
 use Exception;
 use Illuminate\Console\Command;
-use Symfony\Component\Yaml\Yaml;
+use App\Factories\BackupFactory;
 
 class RestoreBackup extends Command
 {
@@ -40,12 +38,12 @@ class RestoreBackup extends Command
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(BackupFactory $factory)
     {
         parent::__construct();
 
+        $this->factory = $factory;
         $this->storage = Storage::disk('backups');
-        $this->tempStorage = Storage::disk('backups-build');
     }
 
     /**
@@ -76,28 +74,11 @@ class RestoreBackup extends Command
             return 0;
         }
 
-        // Create temporary directory to unpack files into.
-        $this->restoreId = 'restore-'. date('Ymd') .'-'. substr(md5(microtime()), 20);
-        if (!$this->tempStorage->makeDirectory($this->restoreId))
-        {
-            $this->error('Could not create temp directory to unpack backup file.');
-            return 0;
-        }
-
-        // Copy backup file to temporary directory.
-        if (!$this->tempStorage->put($this->restoreId .'/data.tar.gz', $this->storage->get($filename)))
-        {
-            $this->error('Could not copy backup file to temp directory.');
-            return 0;
-        }
-
-        // Extract backup file.
+        // Restore backup file.
         $this->info('Reading backup file...');
-        $phar = new PharData($this->getDirName() .'/data.tar.gz');
         try
         {
-            $phar->decompress();
-            $phar->extractTo($this->getDirName());
+            $this->factory->restore($filename);
         }
         catch (Exception $e)
         {
@@ -105,33 +86,6 @@ class RestoreBackup extends Command
             return 0;
         }
 
-        // Retrieve meta data.
-        $meta = $phar->getMetaData();
-        if (empty($meta))
-        {
-            if (!$this->tempStorage->exists($this->restoreId .'/meta.yaml'))
-            {
-                $this->error('Could not find metadata for backup file.');
-                $this->tempStorage->deleteDirectory($this->restoreId);
-                return 0;
-            }
-
-            $meta = Yaml::parse($this->tempStorage->get($this->restoreId .'/meta.yaml'));
-        }
-
-        print_r($meta);
-
-        // Remove phar files.
-        $this->tempStorage->delete($this->restoreId .'/data.tar');
-        $this->tempStorage->delete($this->restoreId .'/data.tar.gz');
-    }
-
-    /**
-     * Retrieves the full path to the current temporary backup folder.
-     *
-     * @return string
-     */
-    protected function getDirName() {
-        return config('filesystems.disks.backups-build.root') .'/'. $this->restoreId;
+        $this->info('The backup file "'. $filename .'" has been restored.');
     }
 }

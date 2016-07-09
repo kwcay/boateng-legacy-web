@@ -42,18 +42,15 @@ class BackupController extends BaseController
         // List all backup files.
         $files = [];
         $disk = Storage::disk('backups');
-        $filenames = $disk->allFiles('/');
+        $filenames = $disk->files('/');
 
         foreach ($filenames as $filename)
         {
-            $nameIndex = strrpos($filename, '/') + 1;
-            $extIndex = strrpos($filename, '.') + 1;
-
             $files[] = [
-                'name' => substr($filename, $nameIndex, $extIndex - $nameIndex - 1),
-                'ext' => substr($filename, $extIndex),
+                'name' => $filename,
+                'ext' => substr($filename, strrpos($filename, '.') + 1),
                 'size' => number_format($disk->size($filename) / 1000) .' kb',
-                'date' => date('F Y', $disk->lastModified($filename)),
+                'date' => date('M j, Y', $disk->lastModified($filename)),
                 'timestamp' => $disk->lastModified($filename)
             ];
         }
@@ -206,17 +203,14 @@ class BackupController extends BaseController
     /**
      * Restores a backup file.
      *
-     * @param string $filename
-     *
-     * @todo Restrict access based on roles
-     * @todo Queue task using Artisan::queue and put app in maintenance mode.
+     * @param   string  $filename
      */
     public function restore($filename)
     {
         // Try to restore backup file.
         try
         {
-            $results = $this->factory->import($filename, $this->request->get('timestamp', 0));
+            $results = $this->factory->restore($filename);
         }
         catch (Exception $e)
         {
