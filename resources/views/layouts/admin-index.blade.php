@@ -5,9 +5,11 @@
     <h1>
         @yield('page-title', 'Resource listing')
 
-        <span class="edit-res">
-            <a href="{{ route($controllerName .'.create') }}" class="fa fa-plus"></a>
-        </span>
+        @if (in_array($controllerName, ['alphabet', 'language', 'reference']))
+            <span class="edit-res">
+                <a href="{{ route($controllerName .'.create') }}" class="fa fa-plus"></a>
+            </span>
+        @endif
     </h1>
 
     <ol class="breadcrumb">

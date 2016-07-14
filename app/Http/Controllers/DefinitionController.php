@@ -97,6 +97,13 @@ class DefinitionController extends Controller
     }
 
 	/**
+	 * {@inheritdoc}
+	 */
+	public function walkthrough() {
+        return view("forms.{$this->name}.walkthrough");
+	}
+
+	/**
 	 * Displays the form to add a new definition.
      *
      * @todo Restrict access based on roles

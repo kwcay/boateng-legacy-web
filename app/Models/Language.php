@@ -7,12 +7,11 @@ namespace App\Models;
 
 use DB;
 use Log;
-
+use Frnkly\Traits\Embedable;
 use cebe\markdown\MarkdownExtra;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
 use App\Traits\ValidatableTrait as Validatable;
@@ -22,7 +21,30 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Language extends Model
 {
-    use CamelCaseAttrs, Exportable, Obfuscatable, Searchable, SoftDeletes, Validatable;
+    use CamelCaseAttrs, Embedable, Exportable, Obfuscatable, Searchable, SoftDeletes, Validatable;
+
+
+    //
+    //
+    // Attributes for Frnkly\Traits\Embedable
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attributes that CAN be appended to the model's array form and which aren't already
+     * database relations.
+     */
+    public $embedable = [
+        'parentName'        => ['parent'],
+        'definitionsCount'  => ['definitions'],
+        'uri'               => [],
+        'editUri'           => [],
+        'parentUri'         => ['parent'],
+        'firstDefinition'   => ['definitions'],
+        'latestDefinition'  => ['definitions'],
+        'randomDefinition'  => ['definitions'],
+    ];
 
 
     //

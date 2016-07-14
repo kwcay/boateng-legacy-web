@@ -5,6 +5,7 @@
  */
 namespace App\Models;
 
+use Frnkly\Traits\Embedable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\ExportableTrait as Exportable;
@@ -14,7 +15,27 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Reference extends Model
 {
-    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable, SoftDeletes;
+    use CamelCaseAttrs, Embedable, Exportable, ObfuscatesID, Searchable, SoftDeletes;
+
+
+    //
+    //
+    // Attributes for Frnkly\Traits\Embedable
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attributes that CAN be appended to the model's array form and which aren't already
+     * database relations.
+     */
+    public $embedable = [
+        'name'          => [],
+        'shortCitation' => [],
+        'longCitation'  => [],
+        'fullCitation'  => [],
+        'editUri'       => [],
+    ];
 
 
     //

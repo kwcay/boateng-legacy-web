@@ -5,6 +5,7 @@
  */
 namespace App\Models;
 
+use Frnkly\Traits\Embedable;
 use Illuminate\Auth\Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,24 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-	use Authenticatable, CamelCaseAttrs, CanResetPassword, Exportable, HasRoles, ObfuscatesID, SoftDeletes;
+	use Authenticatable, CamelCaseAttrs, CanResetPassword, Embedable, Exportable, HasRoles, ObfuscatesID, SoftDeletes;
+
+
+    //
+    //
+    // Attributes for Frnkly\Traits\Embedable
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attributes that CAN be appended to the model's array form and which aren't already
+     * database relations.
+     */
+    public $embedable = [
+        'uri'           => [],
+        'editUri'       => [],
+    ];
 
 
     //

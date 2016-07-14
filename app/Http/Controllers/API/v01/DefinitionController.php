@@ -21,6 +21,7 @@ use App\Models\Definition;
 use App\Models\Translation;
 use App\Models\Definitions\Word;
 use App\Models\Definitions\Expression;
+// use Frnkly\ControllerTraits\Embedable;
 use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 
@@ -46,25 +47,12 @@ class DefinitionController extends Controller
             return response('Invalid Definition ID.', 400);
         }
 
-        // List of relations and attributes to append to results.
-        $embed = $this->getEmbedArray(
-            Request::get('embed'),
-            Definition::$appendable
-        );
-
         // Retrieve definition object
-        if (!$definition = Definition::with($embed['relations'])->find($id)) {
+        if (!$definition = Definition::embed(Request::get('embed'))->find($id)) {
             return response('Definition Not Found.', 404);
         }
 
-        // Append extra attributes.
-        if (count($embed['attributes']))
-        {
-            foreach ($embed['attributes'] as $accessor)
-            {
-                $definition->setAttribute($accessor, $definition->$accessor);
-            }
-        }
+        $definition->applyEmbedableAttributes(Request::get('embed'));
 
         return $definition;
     }

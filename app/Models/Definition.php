@@ -7,11 +7,11 @@ namespace App\Models;
 
 use DB;
 use Log;
-
 use App\Models\Tag;
 use App\Models\Language;
 use App\Models\Translation;
 use Illuminate\Support\Arr;
+use Frnkly\Traits\Embedable;
 use cebe\markdown\MarkdownExtra;
 use App\Models\Definitions\Poem;
 use App\Models\Definitions\Word;
@@ -20,7 +20,6 @@ use App\Models\Definitions\Story;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use App\Traits\HasParamsTrait as HasParams;
 use App\Traits\ExportableTrait as Exportable;
 use App\Traits\SearchableTrait as Searchable;
@@ -29,7 +28,32 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Definition extends Model
 {
-    use CamelCaseAttrs, Exportable, Obfuscatable, Searchable, SoftDeletes, HasParams;
+    use CamelCaseAttrs, Embedable, Exportable, Obfuscatable, Searchable, SoftDeletes, HasParams;
+
+
+    //
+    //
+    // Attributes for Frnkly\Traits\Embedable
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attributes that CAN be appended to the model's array form and which aren't already
+     * database relations.
+     */
+    public $embedable = [
+        'uri'           => [],
+        'editUri'       => [],
+        'mainTitle'     => ['titles'],
+        'titleString'   => ['titles'],
+        'titleList'     => ['titles'],
+        'relatedDefinitionList' => [],
+        'tagList'       => [],
+        'translation'   => [],
+        'mainLanguage'  => [],
+        'languageList'  => [],
+    ];
 
 
     //

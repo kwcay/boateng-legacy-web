@@ -6,6 +6,7 @@
 namespace App\Models;
 
 use DB;
+use Frnkly\Traits\Embedable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\ExportableTrait as Exportable;
@@ -16,7 +17,23 @@ use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class Alphabet extends Model
 {
-    use CamelCaseAttrs, Exportable, ObfuscatesID, Searchable, SoftDeletes, Validatable;
+    use CamelCaseAttrs, Embedable, Exportable, ObfuscatesID, Searchable, SoftDeletes, Validatable;
+
+
+    //
+    //
+    // Attributes for Frnkly\Traits\Embedable
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    /**
+     * Attributes that CAN be appended to the model's array form and which aren't already
+     * database relations.
+     */
+    public $embedable = [
+        'editUri'       => [],
+    ];
 
 
     //
