@@ -184,17 +184,27 @@
 				<li><a href="class-App.Commands.Command.html">App\Commands\Command</a></li>
 				<li><a href="class-App.Console.Commands.Backup.html">App\Console\Commands\Backup</a></li>
 				<li><a href="class-App.Console.Commands.Inspire.html">App\Console\Commands\Inspire</a></li>
+				<li><a href="class-App.Console.Commands.ListBackup.html">App\Console\Commands\ListBackup</a></li>
+				<li><a href="class-App.Console.Commands.RestoreBackup.html">App\Console\Commands\RestoreBackup</a></li>
 				<li><a href="class-App.Console.Kernel.html">App\Console\Kernel</a></li>
 				<li><a href="class-App.Events.Event.html">App\Events\Event</a></li>
 				<li><a href="class-App.Exceptions.Handler.html">App\Exceptions\Handler</a></li>
+				<li><a href="class-App.Factories.BackupFactory.html">App\Factories\BackupFactory</a></li>
 				<li><a href="class-App.Factories.DataExportFactory.html">App\Factories\DataExportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.AlphabetImportFactory.html">App\Factories\DataImport\AlphabetImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.CountryImportFactory.html">App\Factories\DataImport\CountryImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.CultureImportFactory.html">App\Factories\DataImport\CultureImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImport.DefinitionImportFactory.html">App\Factories\DataImport\DefinitionImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImport.LanguageImportFactory.html">App\Factories\DataImport\LanguageImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.ReferenceImportFactory.html">App\Factories\DataImport\ReferenceImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.UserImportFactory.html">App\Factories\DataImport\UserImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImportFactory.html">App\Factories\DataImportFactory</a></li>
+				<li><a href="class-App.Factories.Factory.html">App\Factories\Factory</a></li>
 				<li><a href="class-App.Factories.Transliteration.LatnTransliterationFactory.html">App\Factories\Transliteration\LatnTransliterationFactory</a></li>
 				<li><a href="class-App.Factories.TransliterationFactory.html">App\Factories\TransliterationFactory</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AdminController.html">App\Http\Controllers\Admin\AdminController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AlphabetController.html">App\Http\Controllers\Admin\AlphabetController</a></li>
+				<li><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.CountryController.html">App\Http\Controllers\Admin\CountryController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.DefinitionController.html">App\Http\Controllers\Admin\DefinitionController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.LanguageController.html">App\Http\Controllers\Admin\LanguageController</a></li>
@@ -368,14 +378,14 @@
 </span><span id="91" class="l"><a href="#91"> 91 </a>    <span class="php-comment">/**
 </span></span><span id="92" class="l"><a href="#92"> 92 </a><span class="php-comment">     * Show the form for editing a language.
 </span></span><span id="93" class="l"><a href="#93"> 93 </a><span class="php-comment">     *
-</span></span><span id="94" class="l"><a href="#94"> 94 </a><span class="php-comment">     * @param string $code  Language code.
-</span></span><span id="95" class="l"><a href="#95"> 95 </a><span class="php-comment">     * @return Response
+</span></span><span id="94" class="l"><a href="#94"> 94 </a><span class="php-comment">     * @param   string  $id     Either the ISO 639-3 language code or language ID.
+</span></span><span id="95" class="l"><a href="#95"> 95 </a><span class="php-comment">     * @return  Response
 </span></span><span id="96" class="l"><a href="#96"> 96 </a><span class="php-comment">     */</span>
-</span><span id="97" class="l"><a href="#97"> 97 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> edit(<span class="php-var">$code</span>)
+</span><span id="97" class="l"><a href="#97"> 97 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> edit(<span class="php-var">$id</span>)
 </span><span id="98" class="l"><a href="#98"> 98 </a>    {
-</span><span id="99" class="l"><a href="#99"> 99 </a>        <span class="php-comment">// Retrieve the language model.</span>
-</span><span id="100" class="l"><a href="#100">100 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$lang</span> = Language::findByCode(<span class="php-var">$code</span>, [<span class="php-quote">'parent'</span>])) {
-</span><span id="101" class="l"><a href="#101">101 </a>            abort(<span class="php-num">404</span>);
+</span><span id="99" class="l"><a href="#99"> 99 </a>        <span class="php-comment">// Retrieve the language object.</span>
+</span><span id="100" class="l"><a href="#100">100 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$lang</span> = <span class="php-var">$this</span>-&gt;getLanguage(<span class="php-var">$id</span>)) {
+</span><span id="101" class="l"><a href="#101">101 </a>            abort(<span class="php-num">404</span>, <span class="php-quote">'Can\'t find that languge :('</span>);
 </span><span id="102" class="l"><a href="#102">102 </a>        }
 </span><span id="103" class="l"><a href="#103">103 </a>
 </span><span id="104" class="l"><a href="#104">104 </a>        <span class="php-comment">// Alphabet data for selectize plugin.</span>
@@ -502,64 +512,68 @@
 </span><span id="225" class="l"><a href="#225">225 </a>        }
 </span><span id="226" class="l"><a href="#226">226 </a>
 </span><span id="227" class="l"><a href="#227">227 </a>        <span class="php-comment">// Find language by ID.</span>
-</span><span id="228" class="l"><a href="#228">228 </a>        <span class="php-keyword1">else</span> {
+</span><span id="228" class="l"><a href="#228">228 </a>        <span class="php-keyword1">elseif</span> (<span class="php-var">$id</span> = Language::decodeId(<span class="php-var">$id</span>)) {
 </span><span id="229" class="l"><a href="#229">229 </a>            <span class="php-var">$lang</span> = Language::with(<span class="php-var">$embed</span>)-&gt;find(<span class="php-var">$id</span>);
 </span><span id="230" class="l"><a href="#230">230 </a>        }
 </span><span id="231" class="l"><a href="#231">231 </a>
-</span><span id="232" class="l"><a href="#232">232 </a>        <span class="php-keyword1">return</span> <span class="php-var">$lang</span>;
-</span><span id="233" class="l"><a href="#233">233 </a>    }
-</span><span id="234" class="l"><a href="#234">234 </a>
-</span><span id="235" class="l"><a href="#235">235 </a>    <span class="php-comment">/**
-</span></span><span id="236" class="l"><a href="#236">236 </a><span class="php-comment">     * Retrieves alphabet models.
-</span></span><span id="237" class="l"><a href="#237">237 </a><span class="php-comment">     *
-</span></span><span id="238" class="l"><a href="#238">238 </a><span class="php-comment">     * @param string $raw   Alphabet codes, separated by commas.
-</span></span><span id="239" class="l"><a href="#239">239 </a><span class="php-comment">     * @return Illuminate\Support\Collection
-</span></span><span id="240" class="l"><a href="#240">240 </a><span class="php-comment">     */</span>
-</span><span id="241" class="l"><a href="#241">241 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getAlphabets(<span class="php-var">$raw</span> = <span class="php-keyword1">null</span>)
-</span><span id="242" class="l"><a href="#242">242 </a>    {
-</span><span id="243" class="l"><a href="#243">243 </a>        <span class="php-var">$alphabets</span> = <span class="php-keyword1">new</span> Collection;
-</span><span id="244" class="l"><a href="#244">244 </a>
-</span><span id="245" class="l"><a href="#245">245 </a>        <span class="php-comment">// Retrieve alphabet models.</span>
-</span><span id="246" class="l"><a href="#246">246 </a>        <span class="php-var">$raw</span> = <span class="php-keyword2">trim</span>(<span class="php-var">$raw</span>);
-</span><span id="247" class="l"><a href="#247">247 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strlen</span>(<span class="php-var">$raw</span>))
-</span><span id="248" class="l"><a href="#248">248 </a>        {
-</span><span id="249" class="l"><a href="#249">249 </a>            <span class="php-keyword1">foreach</span> (@<span class="php-keyword2">explode</span>(<span class="php-quote">','</span>, <span class="php-var">$raw</span>) <span class="php-keyword1">as</span> <span class="php-var">$code</span>)
-</span><span id="250" class="l"><a href="#250">250 </a>            {
-</span><span id="251" class="l"><a href="#251">251 </a>                <span class="php-keyword1">if</span> (<span class="php-var">$alphabet</span> = Alphabet::findByCode(<span class="php-var">$code</span>)) {
-</span><span id="252" class="l"><a href="#252">252 </a>                    <span class="php-var">$alphabets</span>-&gt;push(<span class="php-var">$alphabet</span>);
-</span><span id="253" class="l"><a href="#253">253 </a>                }
-</span><span id="254" class="l"><a href="#254">254 </a>            }
-</span><span id="255" class="l"><a href="#255">255 </a>        }
-</span><span id="256" class="l"><a href="#256">256 </a>
-</span><span id="257" class="l"><a href="#257">257 </a>        <span class="php-keyword1">return</span> <span class="php-var">$alphabets</span>;
-</span><span id="258" class="l"><a href="#258">258 </a>    }
-</span><span id="259" class="l"><a href="#259">259 </a>
-</span><span id="260" class="l"><a href="#260">260 </a>    <span class="php-comment">/**
-</span></span><span id="261" class="l"><a href="#261">261 </a><span class="php-comment">     * Retrieves country models.
-</span></span><span id="262" class="l"><a href="#262">262 </a><span class="php-comment">     *
-</span></span><span id="263" class="l"><a href="#263">263 </a><span class="php-comment">     * @param string $raw   Country codes, separated by commas.
-</span></span><span id="264" class="l"><a href="#264">264 </a><span class="php-comment">     * @return Illuminate\Support\Collection
-</span></span><span id="265" class="l"><a href="#265">265 </a><span class="php-comment">     */</span>
-</span><span id="266" class="l"><a href="#266">266 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getCountries(<span class="php-var">$raw</span> = <span class="php-keyword1">null</span>)
-</span><span id="267" class="l"><a href="#267">267 </a>    {
-</span><span id="268" class="l"><a href="#268">268 </a>        <span class="php-var">$countries</span> = <span class="php-keyword1">new</span> Collection;
-</span><span id="269" class="l"><a href="#269">269 </a>
-</span><span id="270" class="l"><a href="#270">270 </a>        <span class="php-comment">// Retrieve alphabet models.</span>
-</span><span id="271" class="l"><a href="#271">271 </a>        <span class="php-var">$raw</span> = <span class="php-keyword2">trim</span>(<span class="php-var">$raw</span>);
-</span><span id="272" class="l"><a href="#272">272 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strlen</span>(<span class="php-var">$raw</span>))
-</span><span id="273" class="l"><a href="#273">273 </a>        {
-</span><span id="274" class="l"><a href="#274">274 </a>            <span class="php-keyword1">foreach</span> (@<span class="php-keyword2">explode</span>(<span class="php-quote">','</span>, <span class="php-var">$raw</span>) <span class="php-keyword1">as</span> <span class="php-var">$code</span>)
-</span><span id="275" class="l"><a href="#275">275 </a>            {
-</span><span id="276" class="l"><a href="#276">276 </a>                <span class="php-keyword1">if</span> (<span class="php-var">$country</span> = Country::findByCode(<span class="php-var">$code</span>)) {
-</span><span id="277" class="l"><a href="#277">277 </a>                    <span class="php-var">$countries</span>-&gt;push(<span class="php-var">$country</span>);
-</span><span id="278" class="l"><a href="#278">278 </a>                }
-</span><span id="279" class="l"><a href="#279">279 </a>            }
-</span><span id="280" class="l"><a href="#280">280 </a>        }
-</span><span id="281" class="l"><a href="#281">281 </a>
-</span><span id="282" class="l"><a href="#282">282 </a>        <span class="php-keyword1">return</span> <span class="php-var">$countries</span>;
-</span><span id="283" class="l"><a href="#283">283 </a>    }
-</span><span id="284" class="l"><a href="#284">284 </a>}
-</span><span id="285" class="l"><a href="#285">285 </a></span></code></pre>
+</span><span id="232" class="l"><a href="#232">232 </a>        <span class="php-keyword1">else</span> {
+</span><span id="233" class="l"><a href="#233">233 </a>            <span class="php-var">$lang</span> = <span class="php-keyword1">null</span>;
+</span><span id="234" class="l"><a href="#234">234 </a>        }
+</span><span id="235" class="l"><a href="#235">235 </a>
+</span><span id="236" class="l"><a href="#236">236 </a>        <span class="php-keyword1">return</span> <span class="php-var">$lang</span>;
+</span><span id="237" class="l"><a href="#237">237 </a>    }
+</span><span id="238" class="l"><a href="#238">238 </a>
+</span><span id="239" class="l"><a href="#239">239 </a>    <span class="php-comment">/**
+</span></span><span id="240" class="l"><a href="#240">240 </a><span class="php-comment">     * Retrieves alphabet models.
+</span></span><span id="241" class="l"><a href="#241">241 </a><span class="php-comment">     *
+</span></span><span id="242" class="l"><a href="#242">242 </a><span class="php-comment">     * @param string $raw   Alphabet codes, separated by commas.
+</span></span><span id="243" class="l"><a href="#243">243 </a><span class="php-comment">     * @return Illuminate\Support\Collection
+</span></span><span id="244" class="l"><a href="#244">244 </a><span class="php-comment">     */</span>
+</span><span id="245" class="l"><a href="#245">245 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getAlphabets(<span class="php-var">$raw</span> = <span class="php-keyword1">null</span>)
+</span><span id="246" class="l"><a href="#246">246 </a>    {
+</span><span id="247" class="l"><a href="#247">247 </a>        <span class="php-var">$alphabets</span> = <span class="php-keyword1">new</span> Collection;
+</span><span id="248" class="l"><a href="#248">248 </a>
+</span><span id="249" class="l"><a href="#249">249 </a>        <span class="php-comment">// Retrieve alphabet models.</span>
+</span><span id="250" class="l"><a href="#250">250 </a>        <span class="php-var">$raw</span> = <span class="php-keyword2">trim</span>(<span class="php-var">$raw</span>);
+</span><span id="251" class="l"><a href="#251">251 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strlen</span>(<span class="php-var">$raw</span>))
+</span><span id="252" class="l"><a href="#252">252 </a>        {
+</span><span id="253" class="l"><a href="#253">253 </a>            <span class="php-keyword1">foreach</span> (@<span class="php-keyword2">explode</span>(<span class="php-quote">','</span>, <span class="php-var">$raw</span>) <span class="php-keyword1">as</span> <span class="php-var">$code</span>)
+</span><span id="254" class="l"><a href="#254">254 </a>            {
+</span><span id="255" class="l"><a href="#255">255 </a>                <span class="php-keyword1">if</span> (<span class="php-var">$alphabet</span> = Alphabet::findByCode(<span class="php-var">$code</span>)) {
+</span><span id="256" class="l"><a href="#256">256 </a>                    <span class="php-var">$alphabets</span>-&gt;push(<span class="php-var">$alphabet</span>);
+</span><span id="257" class="l"><a href="#257">257 </a>                }
+</span><span id="258" class="l"><a href="#258">258 </a>            }
+</span><span id="259" class="l"><a href="#259">259 </a>        }
+</span><span id="260" class="l"><a href="#260">260 </a>
+</span><span id="261" class="l"><a href="#261">261 </a>        <span class="php-keyword1">return</span> <span class="php-var">$alphabets</span>;
+</span><span id="262" class="l"><a href="#262">262 </a>    }
+</span><span id="263" class="l"><a href="#263">263 </a>
+</span><span id="264" class="l"><a href="#264">264 </a>    <span class="php-comment">/**
+</span></span><span id="265" class="l"><a href="#265">265 </a><span class="php-comment">     * Retrieves country models.
+</span></span><span id="266" class="l"><a href="#266">266 </a><span class="php-comment">     *
+</span></span><span id="267" class="l"><a href="#267">267 </a><span class="php-comment">     * @param string $raw   Country codes, separated by commas.
+</span></span><span id="268" class="l"><a href="#268">268 </a><span class="php-comment">     * @return Illuminate\Support\Collection
+</span></span><span id="269" class="l"><a href="#269">269 </a><span class="php-comment">     */</span>
+</span><span id="270" class="l"><a href="#270">270 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getCountries(<span class="php-var">$raw</span> = <span class="php-keyword1">null</span>)
+</span><span id="271" class="l"><a href="#271">271 </a>    {
+</span><span id="272" class="l"><a href="#272">272 </a>        <span class="php-var">$countries</span> = <span class="php-keyword1">new</span> Collection;
+</span><span id="273" class="l"><a href="#273">273 </a>
+</span><span id="274" class="l"><a href="#274">274 </a>        <span class="php-comment">// Retrieve alphabet models.</span>
+</span><span id="275" class="l"><a href="#275">275 </a>        <span class="php-var">$raw</span> = <span class="php-keyword2">trim</span>(<span class="php-var">$raw</span>);
+</span><span id="276" class="l"><a href="#276">276 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">strlen</span>(<span class="php-var">$raw</span>))
+</span><span id="277" class="l"><a href="#277">277 </a>        {
+</span><span id="278" class="l"><a href="#278">278 </a>            <span class="php-keyword1">foreach</span> (@<span class="php-keyword2">explode</span>(<span class="php-quote">','</span>, <span class="php-var">$raw</span>) <span class="php-keyword1">as</span> <span class="php-var">$code</span>)
+</span><span id="279" class="l"><a href="#279">279 </a>            {
+</span><span id="280" class="l"><a href="#280">280 </a>                <span class="php-keyword1">if</span> (<span class="php-var">$country</span> = Country::findByCode(<span class="php-var">$code</span>)) {
+</span><span id="281" class="l"><a href="#281">281 </a>                    <span class="php-var">$countries</span>-&gt;push(<span class="php-var">$country</span>);
+</span><span id="282" class="l"><a href="#282">282 </a>                }
+</span><span id="283" class="l"><a href="#283">283 </a>            }
+</span><span id="284" class="l"><a href="#284">284 </a>        }
+</span><span id="285" class="l"><a href="#285">285 </a>
+</span><span id="286" class="l"><a href="#286">286 </a>        <span class="php-keyword1">return</span> <span class="php-var">$countries</span>;
+</span><span id="287" class="l"><a href="#287">287 </a>    }
+</span><span id="288" class="l"><a href="#288">288 </a>}
+</span><span id="289" class="l"><a href="#289">289 </a></span></code></pre>
 	</div>
 
 	<div id="footer">
@@ -567,6 +581,6 @@
 	</div>
 </div>
 <script src="resources/combined.js?7f316eeabf2751a4eb1050572e1bd4eee4ea59e6"></script>
-<script src="elementlist.js?0cd7085cf5fe77baa95dc28d3ca7f63ad018433c"></script>
+<script src="elementlist.js?c339a94ba8154a9ce438ab5ec26fca8f88d2d0ac"></script>
 </body>
 </html>

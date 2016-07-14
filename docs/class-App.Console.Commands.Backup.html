@@ -183,6 +183,8 @@
 			<ul>
 				<li class="active"><a href="class-App.Console.Commands.Backup.html">Backup</a></li>
 				<li><a href="class-App.Console.Commands.Inspire.html">Inspire</a></li>
+				<li><a href="class-App.Console.Commands.ListBackup.html">ListBackup</a></li>
+				<li><a href="class-App.Console.Commands.RestoreBackup.html">RestoreBackup</a></li>
 			</ul>
 
 
@@ -229,7 +231,7 @@ Illuminate\Console\Command
 		<b>Namespace:</b> <a href="namespace-App.html">App</a>\<a href="namespace-App.Console.html">Console</a>\<a href="namespace-App.Console.Commands.html">Commands</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-App.Console.Commands.Backup.html#21-220" title="Go to source code">Console/Commands/Backup.php</a>
+			<b>Located at</b> <a href="source-class-App.Console.Commands.Backup.html#21-237" title="Go to source code">Console/Commands/Backup.php</a>
 		<br>
 	</div>
 
@@ -278,7 +280,7 @@ Illuminate\Console\Command
 
 			<td class="name"><div>
 			<a class="anchor" href="#_handle">#</a>
-			<code><a href="source-class-App.Console.Commands.Backup.html#102-192" title="Go to source code">handle</a>( )</code>
+			<code><a href="source-class-App.Console.Commands.Backup.html#102-205" title="Go to source code">handle</a>( )</code>
 
 			<div class="description short">
 				<p>Execute the console command.</p>
@@ -311,7 +313,7 @@ Illuminate\Console\Command
 
 			<td class="name"><div>
 			<a class="anchor" href="#_createFile">#</a>
-			<code><a href="source-class-App.Console.Commands.Backup.html#194-210" title="Go to source code">createFile</a>( <span>string <var>$filename</var></span>, <span>mixed <var>$contents</var></span> )</code>
+			<code><a href="source-class-App.Console.Commands.Backup.html#207-227" title="Go to source code">createFile</a>( <span>string <var>$filename</var></span>, <span>mixed <var>$contents</var></span>, <span> <var>$format</var> = <span class="php-keyword1">null</span></span> )</code>
 
 			<div class="description short">
 				<p>Creates a file in the current temporary backup folder.</p>
@@ -326,6 +328,8 @@ Illuminate\Console\Command
 						<dt><var>$filename</var></dt>
 						<dd></dd>
 						<dt><var>$contents</var></dt>
+						<dd></dd>
+						<dt><var>$format</var></dt>
 						<dd></dd>
 					</dl></div>
 
@@ -351,7 +355,7 @@ Illuminate\Console\Command
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getDirName">#</a>
-			<code><a href="source-class-App.Console.Commands.Backup.html#212-219" title="Go to source code">getDirName</a>( )</code>
+			<code><a href="source-class-App.Console.Commands.Backup.html#229-236" title="Go to source code">getDirName</a>( )</code>
 
 			<div class="description short">
 				<p>Retrieves the full path to the current temporary backup folder.</p>

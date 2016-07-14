@@ -48,3 +48,7 @@ Create the database
     mysql -h localhost -u root -p...
     show databases;
     create database dinkomo;
+
+# Generating the docs
+
+    apigen generate -s app -d docs

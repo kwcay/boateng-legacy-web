@@ -184,17 +184,27 @@
 				<li><a href="class-App.Commands.Command.html">App\Commands\Command</a></li>
 				<li><a href="class-App.Console.Commands.Backup.html">App\Console\Commands\Backup</a></li>
 				<li><a href="class-App.Console.Commands.Inspire.html">App\Console\Commands\Inspire</a></li>
+				<li><a href="class-App.Console.Commands.ListBackup.html">App\Console\Commands\ListBackup</a></li>
+				<li><a href="class-App.Console.Commands.RestoreBackup.html">App\Console\Commands\RestoreBackup</a></li>
 				<li><a href="class-App.Console.Kernel.html">App\Console\Kernel</a></li>
 				<li><a href="class-App.Events.Event.html">App\Events\Event</a></li>
 				<li><a href="class-App.Exceptions.Handler.html">App\Exceptions\Handler</a></li>
+				<li><a href="class-App.Factories.BackupFactory.html">App\Factories\BackupFactory</a></li>
 				<li><a href="class-App.Factories.DataExportFactory.html">App\Factories\DataExportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.AlphabetImportFactory.html">App\Factories\DataImport\AlphabetImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.CountryImportFactory.html">App\Factories\DataImport\CountryImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.CultureImportFactory.html">App\Factories\DataImport\CultureImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImport.DefinitionImportFactory.html">App\Factories\DataImport\DefinitionImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImport.LanguageImportFactory.html">App\Factories\DataImport\LanguageImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.ReferenceImportFactory.html">App\Factories\DataImport\ReferenceImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.UserImportFactory.html">App\Factories\DataImport\UserImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImportFactory.html">App\Factories\DataImportFactory</a></li>
+				<li><a href="class-App.Factories.Factory.html">App\Factories\Factory</a></li>
 				<li><a href="class-App.Factories.Transliteration.LatnTransliterationFactory.html">App\Factories\Transliteration\LatnTransliterationFactory</a></li>
 				<li><a href="class-App.Factories.TransliterationFactory.html">App\Factories\TransliterationFactory</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AdminController.html">App\Http\Controllers\Admin\AdminController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AlphabetController.html">App\Http\Controllers\Admin\AlphabetController</a></li>
+				<li><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.CountryController.html">App\Http\Controllers\Admin\CountryController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.DefinitionController.html">App\Http\Controllers\Admin\DefinitionController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.LanguageController.html">App\Http\Controllers\Admin\LanguageController</a></li>
@@ -698,134 +708,180 @@
 </span><span id="421" class="l"><a href="#421">421 </a>    }
 </span><span id="422" class="l"><a href="#422">422 </a>
 </span><span id="423" class="l"><a href="#423">423 </a>    <span class="php-comment">/**
-</span></span><span id="424" class="l"><a href="#424">424 </a><span class="php-comment">     * Retrieves the attributes to be updated.
+</span></span><span id="424" class="l"><a href="#424">424 </a><span class="php-comment">     * Retrieves the relations and attributes that may be appended to a model.
 </span></span><span id="425" class="l"><a href="#425">425 </a><span class="php-comment">     *
-</span></span><span id="426" class="l"><a href="#426">426 </a><span class="php-comment">     * @return Illuminate\Support\Collection
-</span></span><span id="427" class="l"><a href="#427">427 </a><span class="php-comment">     */</span>
-</span><span id="428" class="l"><a href="#428">428 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getAttributesFromRequest()
-</span><span id="429" class="l"><a href="#429">429 </a>    {
-</span><span id="430" class="l"><a href="#430">430 </a>        <span class="php-var">$className</span> = <span class="php-var">$this</span>-&gt;getModelClassName();
-</span><span id="431" class="l"><a href="#431">431 </a>
-</span><span id="432" class="l"><a href="#432">432 </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;request-&gt;only(<span class="php-keyword2">array_flip</span>((<span class="php-keyword1">new</span> <span class="php-var">$className</span>)-&gt;validationRules));
-</span><span id="433" class="l"><a href="#433">433 </a>    }
-</span><span id="434" class="l"><a href="#434">434 </a>
-</span><span id="435" class="l"><a href="#435">435 </a>    <span class="php-comment">/**
-</span></span><span id="436" class="l"><a href="#436">436 </a><span class="php-comment">     * Gets the embedable relations and attributes that may be appended to a model.
-</span></span><span id="437" class="l"><a href="#437">437 </a><span class="php-comment">     *
-</span></span><span id="438" class="l"><a href="#438">438 </a><span class="php-comment">     * @todo Replace with trait from frnkly/laravel-embeds
-</span></span><span id="439" class="l"><a href="#439">439 </a><span class="php-comment">     *
-</span></span><span id="440" class="l"><a href="#440">440 </a><span class="php-comment">     * @param array|string $embed   The properties to be appended to a model.
-</span></span><span id="441" class="l"><a href="#441">441 </a><span class="php-comment">     * @param array $appendable     Those properties which aren't database relations.
-</span></span><span id="442" class="l"><a href="#442">442 </a><span class="php-comment">     * @return array
-</span></span><span id="443" class="l"><a href="#443">443 </a><span class="php-comment">     */</span>
-</span><span id="444" class="l"><a href="#444">444 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getEmbedArray(<span class="php-var">$embed</span> = <span class="php-keyword1">null</span>, <span class="php-keyword1">array</span> <span class="php-var">$appendable</span> = [])
-</span><span id="445" class="l"><a href="#445">445 </a>    {
-</span><span id="446" class="l"><a href="#446">446 </a>        <span class="php-comment">// Relations and attributes to append</span>
-</span><span id="447" class="l"><a href="#447">447 </a>        <span class="php-var">$embed</span> = <span class="php-keyword2">is_string</span>(<span class="php-var">$embed</span>) ? @<span class="php-keyword2">explode</span>(<span class="php-quote">','</span>, <span class="php-var">$embed</span>) : (<span class="php-keyword1">array</span>) <span class="php-var">$embed</span>;
-</span><span id="448" class="l"><a href="#448">448 </a>
-</span><span id="449" class="l"><a href="#449">449 </a>        <span class="php-comment">// Extract the attributes from the list of embeds.</span>
-</span><span id="450" class="l"><a href="#450">450 </a>        <span class="php-var">$attributes</span> = <span class="php-keyword2">array_intersect</span>(<span class="php-var">$appendable</span>, <span class="php-var">$embed</span>);
-</span><span id="451" class="l"><a href="#451">451 </a>
-</span><span id="452" class="l"><a href="#452">452 </a>        <span class="php-comment">// Separate the database relations from the appendable attributes.</span>
-</span><span id="453" class="l"><a href="#453">453 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$embed</span> <span class="php-keyword1">as</span> <span class="php-var">$key</span> =&gt; <span class="php-var">$embedable</span>)
-</span><span id="454" class="l"><a href="#454">454 </a>        {
-</span><span id="455" class="l"><a href="#455">455 </a>            <span class="php-comment">// Remove invalid relations.</span>
-</span><span id="456" class="l"><a href="#456">456 </a>            <span class="php-var">$embedable</span> = <span class="php-keyword2">preg_replace</span>(<span class="php-quote">'/[^0-9a-z]/i'</span>, <span class="php-quote">''</span>, <span class="php-var">$embedable</span>);
-</span><span id="457" class="l"><a href="#457">457 </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">empty</span>(<span class="php-var">$embedable</span>)) {
-</span><span id="458" class="l"><a href="#458">458 </a>                <span class="php-keyword1">unset</span>(<span class="php-var">$embed</span>[<span class="php-var">$key</span>]);
-</span><span id="459" class="l"><a href="#459">459 </a>            }
-</span><span id="460" class="l"><a href="#460">460 </a>
-</span><span id="461" class="l"><a href="#461">461 </a>            <span class="php-keyword1">if</span> (<span class="php-keyword2">in_array</span>(<span class="php-var">$embedable</span>, <span class="php-var">$attributes</span>)) {
-</span><span id="462" class="l"><a href="#462">462 </a>                <span class="php-keyword1">unset</span>(<span class="php-var">$embed</span>[<span class="php-var">$key</span>]);
-</span><span id="463" class="l"><a href="#463">463 </a>            }
-</span><span id="464" class="l"><a href="#464">464 </a>        }
-</span><span id="465" class="l"><a href="#465">465 </a>
-</span><span id="466" class="l"><a href="#466">466 </a>        <span class="php-keyword1">return</span> [
-</span><span id="467" class="l"><a href="#467">467 </a>            <span class="php-quote">'relations'</span> =&gt; <span class="php-var">$embed</span>,
-</span><span id="468" class="l"><a href="#468">468 </a>            <span class="php-quote">'attributes'</span> =&gt; <span class="php-var">$attributes</span>
-</span><span id="469" class="l"><a href="#469">469 </a>        ];
-</span><span id="470" class="l"><a href="#470">470 </a>    }
-</span><span id="471" class="l"><a href="#471">471 </a>
-</span><span id="472" class="l"><a href="#472">472 </a>    <span class="php-comment">/**
-</span></span><span id="473" class="l"><a href="#473">473 </a><span class="php-comment">     * Retrieves a parameter from the request, or the session
-</span></span><span id="474" class="l"><a href="#474">474 </a><span class="php-comment">     *
-</span></span><span id="475" class="l"><a href="#475">475 </a><span class="php-comment">     * @param string $key
-</span></span><span id="476" class="l"><a href="#476">476 </a><span class="php-comment">     * @param mixed $default
-</span></span><span id="477" class="l"><a href="#477">477 </a><span class="php-comment">     * @return mixed
-</span></span><span id="478" class="l"><a href="#478">478 </a><span class="php-comment">     */</span>
-</span><span id="479" class="l"><a href="#479">479 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getParam(<span class="php-var">$key</span>, <span class="php-var">$default</span> = <span class="php-keyword1">null</span>)
-</span><span id="480" class="l"><a href="#480">480 </a>    {
-</span><span id="481" class="l"><a href="#481">481 </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;request-&gt;get(<span class="php-var">$key</span>, Session::get(<span class="php-quote">'res-'</span>. <span class="php-var">$this</span>-&gt;name .<span class="php-quote">'-'</span>. <span class="php-var">$key</span>, <span class="php-var">$default</span>));
-</span><span id="482" class="l"><a href="#482">482 </a>    }
+</span></span><span id="426" class="l"><a href="#426">426 </a><span class="php-comment">     * @param array|string $embed   The properties to be appended to a model.
+</span></span><span id="427" class="l"><a href="#427">427 </a><span class="php-comment">     * @param array $appendable     Those properties which aren't database relations.
+</span></span><span id="428" class="l"><a href="#428">428 </a><span class="php-comment">     * @return array
+</span></span><span id="429" class="l"><a href="#429">429 </a><span class="php-comment">     */</span>
+</span><span id="430" class="l"><a href="#430">430 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getEmbedArray(<span class="php-var">$embed</span> = <span class="php-keyword1">null</span>, <span class="php-keyword1">array</span> <span class="php-var">$appendable</span> = [])
+</span><span id="431" class="l"><a href="#431">431 </a>    {
+</span><span id="432" class="l"><a href="#432">432 </a>        <span class="php-comment">// Relations and attributes to append.</span>
+</span><span id="433" class="l"><a href="#433">433 </a>        <span class="php-var">$separator</span> = <span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;embedSeparator) ? <span class="php-var">$this</span>-&gt;embedSeparator : <span class="php-quote">','</span>;
+</span><span id="434" class="l"><a href="#434">434 </a>        <span class="php-var">$embed</span> = <span class="php-keyword2">is_string</span>(<span class="php-var">$embed</span>) ? @<span class="php-keyword2">explode</span>(<span class="php-var">$separator</span>, <span class="php-var">$embed</span>) : (<span class="php-keyword1">array</span>) <span class="php-var">$embed</span>;
+</span><span id="435" class="l"><a href="#435">435 </a>
+</span><span id="436" class="l"><a href="#436">436 </a>        <span class="php-comment">// Extract the attributes from the list of embeds.</span>
+</span><span id="437" class="l"><a href="#437">437 </a>        <span class="php-var">$attributes</span> = <span class="php-keyword2">array_intersect</span>(<span class="php-var">$appendable</span>, <span class="php-var">$embed</span>);
+</span><span id="438" class="l"><a href="#438">438 </a>
+</span><span id="439" class="l"><a href="#439">439 </a>        <span class="php-comment">// Separate the database relations from the appendable attributes.</span>
+</span><span id="440" class="l"><a href="#440">440 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$embed</span> <span class="php-keyword1">as</span> <span class="php-var">$key</span> =&gt; <span class="php-var">$embedable</span>)
+</span><span id="441" class="l"><a href="#441">441 </a>        {
+</span><span id="442" class="l"><a href="#442">442 </a>            <span class="php-comment">// Remove invalid relations.</span>
+</span><span id="443" class="l"><a href="#443">443 </a>            <span class="php-var">$embedable</span> = <span class="php-keyword2">preg_replace</span>(<span class="php-quote">'/[^0-9a-z_]/i'</span>, <span class="php-quote">''</span>, <span class="php-var">$embedable</span>);
+</span><span id="444" class="l"><a href="#444">444 </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">empty</span>(<span class="php-var">$embedable</span>)) {
+</span><span id="445" class="l"><a href="#445">445 </a>                <span class="php-keyword1">unset</span>(<span class="php-var">$embed</span>[<span class="php-var">$key</span>]);
+</span><span id="446" class="l"><a href="#446">446 </a>            }
+</span><span id="447" class="l"><a href="#447">447 </a>
+</span><span id="448" class="l"><a href="#448">448 </a>            <span class="php-keyword1">if</span> (<span class="php-keyword2">in_array</span>(<span class="php-var">$embedable</span>, <span class="php-var">$attributes</span>)) {
+</span><span id="449" class="l"><a href="#449">449 </a>                <span class="php-keyword1">unset</span>(<span class="php-var">$embed</span>[<span class="php-var">$key</span>]);
+</span><span id="450" class="l"><a href="#450">450 </a>            }
+</span><span id="451" class="l"><a href="#451">451 </a>        }
+</span><span id="452" class="l"><a href="#452">452 </a>
+</span><span id="453" class="l"><a href="#453">453 </a>        <span class="php-keyword1">return</span> [
+</span><span id="454" class="l"><a href="#454">454 </a>            <span class="php-quote">'relations'</span> =&gt; collect(<span class="php-var">$embed</span>),
+</span><span id="455" class="l"><a href="#455">455 </a>            <span class="php-quote">'attributes'</span> =&gt; collect(<span class="php-var">$attributes</span>)
+</span><span id="456" class="l"><a href="#456">456 </a>        ];
+</span><span id="457" class="l"><a href="#457">457 </a>    }
+</span><span id="458" class="l"><a href="#458">458 </a>
+</span><span id="459" class="l"><a href="#459">459 </a>    <span class="php-comment">/**
+</span></span><span id="460" class="l"><a href="#460">460 </a><span class="php-comment">     * Applies the appendable attributes to the model.
+</span></span><span id="461" class="l"><a href="#461">461 </a><span class="php-comment">     *
+</span></span><span id="462" class="l"><a href="#462">462 </a><span class="php-comment">     * @abstract    Was meant to be exported to frnkly/laravel-embeds.
+</span></span><span id="463" class="l"><a href="#463">463 </a><span class="php-comment">     *
+</span></span><span id="464" class="l"><a href="#464">464 </a><span class="php-comment">     * @param mixed $model      Model to append attributes to.
+</span></span><span id="465" class="l"><a href="#465">465 </a><span class="php-comment">     * @param array $attributes Attributes to append to the model.
+</span></span><span id="466" class="l"><a href="#466">466 </a><span class="php-comment">     * @return void
+</span></span><span id="467" class="l"><a href="#467">467 </a><span class="php-comment">     */</span>
+</span><span id="468" class="l"><a href="#468">468 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> applyEmbedableAttributes(<span class="php-var">$model</span>, <span class="php-keyword1">array</span> <span class="php-var">$attributes</span> = <span class="php-keyword1">null</span>)
+</span><span id="469" class="l"><a href="#469">469 </a>    {
+</span><span id="470" class="l"><a href="#470">470 </a>        <span class="php-comment">// TODO: support passing a colletion of models.</span>
+</span><span id="471" class="l"><a href="#471">471 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">is_a</span>(<span class="php-var">$model</span>, <span class="php-quote">'Illuminate\Support\Collection'</span>))
+</span><span id="472" class="l"><a href="#472">472 </a>        {
+</span><span id="473" class="l"><a href="#473">473 </a>
+</span><span id="474" class="l"><a href="#474">474 </a>        }
+</span><span id="475" class="l"><a href="#475">475 </a>
+</span><span id="476" class="l"><a href="#476">476 </a>        <span class="php-comment">// Retrieve list of appendable attributes.</span>
+</span><span id="477" class="l"><a href="#477">477 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">is_null</span>(<span class="php-var">$attributes</span>))
+</span><span id="478" class="l"><a href="#478">478 </a>        {
+</span><span id="479" class="l"><a href="#479">479 </a>            <span class="php-var">$className</span> = <span class="php-keyword2">get_class</span>(<span class="php-var">$model</span>);
+</span><span id="480" class="l"><a href="#480">480 </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$className</span>::<span class="php-var">$embedableAttributes</span>) &amp;&amp; <span class="php-keyword2">is_array</span>(<span class="php-var">$className</span>::<span class="php-var">$embedableAttributes</span>)) {
+</span><span id="481" class="l"><a href="#481">481 </a>                <span class="php-var">$attributes</span> = <span class="php-var">$className</span>::<span class="php-var">$embedableAttributes</span>;
+</span><span id="482" class="l"><a href="#482">482 </a>            }
 </span><span id="483" class="l"><a href="#483">483 </a>
-</span><span id="484" class="l"><a href="#484">484 </a>    <span class="php-comment">/**
-</span></span><span id="485" class="l"><a href="#485">485 </a><span class="php-comment">     * Saves a parameter value to the session.
-</span></span><span id="486" class="l"><a href="#486">486 </a><span class="php-comment">     *
-</span></span><span id="487" class="l"><a href="#487">487 </a><span class="php-comment">     * @param string $key
-</span></span><span id="488" class="l"><a href="#488">488 </a><span class="php-comment">     * @param mixed $value
-</span></span><span id="489" class="l"><a href="#489">489 </a><span class="php-comment">     * @return ??
-</span></span><span id="490" class="l"><a href="#490">490 </a><span class="php-comment">     */</span>
-</span><span id="491" class="l"><a href="#491">491 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> setParam(<span class="php-var">$key</span>, <span class="php-var">$value</span> = <span class="php-keyword1">null</span>)
-</span><span id="492" class="l"><a href="#492">492 </a>    {
-</span><span id="493" class="l"><a href="#493">493 </a>        Session::put(<span class="php-quote">'res-'</span>. <span class="php-var">$this</span>-&gt;name .<span class="php-quote">'-'</span>. <span class="php-var">$key</span>, <span class="php-var">$value</span>);
+</span><span id="484" class="l"><a href="#484">484 </a>            <span class="php-comment">// ...</span>
+</span><span id="485" class="l"><a href="#485">485 </a>            <span class="php-keyword1">elseif</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$model</span>-&gt;embedableAttributes) &amp;&amp; <span class="php-keyword2">is_array</span>(<span class="php-var">$model</span>-&gt;embedableAttributes)) {
+</span><span id="486" class="l"><a href="#486">486 </a>                <span class="php-var">$attributes</span> = <span class="php-var">$model</span>-&gt;embedableAttributes;
+</span><span id="487" class="l"><a href="#487">487 </a>            }
+</span><span id="488" class="l"><a href="#488">488 </a>
+</span><span id="489" class="l"><a href="#489">489 </a>            <span class="php-comment">// ...</span>
+</span><span id="490" class="l"><a href="#490">490 </a>            <span class="php-keyword1">else</span> {
+</span><span id="491" class="l"><a href="#491">491 </a>                <span class="php-var">$attributes</span> = [];
+</span><span id="492" class="l"><a href="#492">492 </a>            }
+</span><span id="493" class="l"><a href="#493">493 </a>        }
 </span><span id="494" class="l"><a href="#494">494 </a>
-</span><span id="495" class="l"><a href="#495">495 </a>        <span class="php-keyword1">return</span> <span class="php-var">$value</span>;
-</span><span id="496" class="l"><a href="#496">496 </a>    }
-</span><span id="497" class="l"><a href="#497">497 </a>
-</span><span id="498" class="l"><a href="#498">498 </a>    <span class="php-comment">/**
-</span></span><span id="499" class="l"><a href="#499">499 </a><span class="php-comment">     * Determines the class name of the model associated with this controller.
-</span></span><span id="500" class="l"><a href="#500">500 </a><span class="php-comment">     *
-</span></span><span id="501" class="l"><a href="#501">501 </a><span class="php-comment">     * @return string
-</span></span><span id="502" class="l"><a href="#502">502 </a><span class="php-comment">     */</span>
-</span><span id="503" class="l"><a href="#503">503 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getModelClassName() {
-</span><span id="504" class="l"><a href="#504">504 </a>        <span class="php-keyword1">return</span> <span class="php-quote">'\\App\\Models\\'</span>. <span class="php-keyword2">ucfirst</span>(<span class="php-var">$this</span>-&gt;name);
-</span><span id="505" class="l"><a href="#505">505 </a>    }
-</span><span id="506" class="l"><a href="#506">506 </a>
-</span><span id="507" class="l"><a href="#507">507 </a>    <span class="php-comment">/**
-</span></span><span id="508" class="l"><a href="#508">508 </a><span class="php-comment">     * Retrieves an instance of a model by ID.
-</span></span><span id="509" class="l"><a href="#509">509 </a><span class="php-comment">     *
-</span></span><span id="510" class="l"><a href="#510">510 </a><span class="php-comment">     * @param mixed $id
-</span></span><span id="511" class="l"><a href="#511">511 </a><span class="php-comment">     * @return Illuminate\Database\Eloquent\Model
-</span></span><span id="512" class="l"><a href="#512">512 </a><span class="php-comment">     */</span>
-</span><span id="513" class="l"><a href="#513">513 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getModelInstance(<span class="php-var">$id</span>)
-</span><span id="514" class="l"><a href="#514">514 </a>    {
-</span><span id="515" class="l"><a href="#515">515 </a>        <span class="php-comment">// If we already have an instance of the model, great.</span>
-</span><span id="516" class="l"><a href="#516">516 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">is_a</span>(<span class="php-var">$id</span>, <span class="php-quote">'Illuminate\Database\Eloquent\Model'</span>))
-</span><span id="517" class="l"><a href="#517">517 </a>        {
-</span><span id="518" class="l"><a href="#518">518 </a>            <span class="php-keyword1">return</span> <span class="php-var">$id</span>;
-</span><span id="519" class="l"><a href="#519">519 </a>        }
-</span><span id="520" class="l"><a href="#520">520 </a>
-</span><span id="521" class="l"><a href="#521">521 </a>        <span class="php-comment">// If we have an encoded ID, decode it.</span>
-</span><span id="522" class="l"><a href="#522">522 </a>        <span class="php-keyword1">elseif</span> (!<span class="php-keyword2">is_numeric</span>(<span class="php-var">$id</span>) &amp;&amp; <span class="php-keyword2">is_string</span>(<span class="php-var">$id</span>) &amp;&amp; <span class="php-keyword2">strlen</span>(<span class="php-var">$id</span>) &gt;= <span class="php-num">8</span>)
-</span><span id="523" class="l"><a href="#523">523 </a>        {
-</span><span id="524" class="l"><a href="#524">524 </a>            <span class="php-var">$className</span> = <span class="php-var">$this</span>-&gt;getModelClassName();
-</span><span id="525" class="l"><a href="#525">525 </a>
-</span><span id="526" class="l"><a href="#526">526 </a>            <span class="php-keyword1">return</span> <span class="php-var">$className</span>::find(<span class="php-var">$id</span>);
-</span><span id="527" class="l"><a href="#527">527 </a>        }
-</span><span id="528" class="l"><a href="#528">528 </a>
-</span><span id="529" class="l"><a href="#529">529 </a>        <span class="php-comment">// If the ID was already decoded, this defeats the purpose of obfuscation...</span>
-</span><span id="530" class="l"><a href="#530">530 </a>        <span class="php-comment">// We won't allow it !!</span>
-</span><span id="531" class="l"><a href="#531">531 </a>        <span class="php-keyword1">elseif</span> (<span class="php-keyword2">is_numeric</span>(<span class="php-var">$id</span>))
-</span><span id="532" class="l"><a href="#532">532 </a>        {
-</span><span id="533" class="l"><a href="#533">533 </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">null</span>;
-</span><span id="534" class="l"><a href="#534">534 </a>        }
-</span><span id="535" class="l"><a href="#535">535 </a>
-</span><span id="536" class="l"><a href="#536">536 </a>        <span class="php-keyword1">return</span> <span class="php-keyword1">null</span>;
-</span><span id="537" class="l"><a href="#537">537 </a>    }
-</span><span id="538" class="l"><a href="#538">538 </a>
-</span><span id="539" class="l"><a href="#539">539 </a>    <span class="php-comment">/**
-</span></span><span id="540" class="l"><a href="#540">540 </a><span class="php-comment">     * Creates a new instance of the model associated with this controller.
-</span></span><span id="541" class="l"><a href="#541">541 </a><span class="php-comment">     *
-</span></span><span id="542" class="l"><a href="#542">542 </a><span class="php-comment">     * @return Illuminate\Database\Eloquent\Model
-</span></span><span id="543" class="l"><a href="#543">543 </a><span class="php-comment">     */</span>
-</span><span id="544" class="l"><a href="#544">544 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getModel()
-</span><span id="545" class="l"><a href="#545">545 </a>    {
-</span><span id="546" class="l"><a href="#546">546 </a>        <span class="php-var">$className</span> = <span class="php-var">$this</span>-&gt;getModelClassName();
-</span><span id="547" class="l"><a href="#547">547 </a>
-</span><span id="548" class="l"><a href="#548">548 </a>        <span class="php-keyword1">return</span> <span class="php-keyword1">new</span> <span class="php-var">$className</span>;
-</span><span id="549" class="l"><a href="#549">549 </a>    }
-</span><span id="550" class="l"><a href="#550">550 </a>}
-</span><span id="551" class="l"><a href="#551">551 </a></span></code></pre>
+</span><span id="495" class="l"><a href="#495">495 </a>        <span class="php-comment">// Append extra attributes.</span>
+</span><span id="496" class="l"><a href="#496">496 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">count</span>(<span class="php-var">$attributes</span>))
+</span><span id="497" class="l"><a href="#497">497 </a>        {
+</span><span id="498" class="l"><a href="#498">498 </a>            <span class="php-keyword1">foreach</span> (<span class="php-var">$attributes</span> <span class="php-keyword1">as</span> <span class="php-var">$accessor</span>)
+</span><span id="499" class="l"><a href="#499">499 </a>            {
+</span><span id="500" class="l"><a href="#500">500 </a>                <span class="php-comment">// TODO: support model types other than Illuminate\Database\Eloquent\Model</span>
+</span><span id="501" class="l"><a href="#501">501 </a>                <span class="php-var">$model</span>-&gt;setAttribute(<span class="php-var">$accessor</span>, <span class="php-var">$model</span>-&gt;<span class="php-var">$accessor</span>);
+</span><span id="502" class="l"><a href="#502">502 </a>            }
+</span><span id="503" class="l"><a href="#503">503 </a>        }
+</span><span id="504" class="l"><a href="#504">504 </a>    }
+</span><span id="505" class="l"><a href="#505">505 </a>
+</span><span id="506" class="l"><a href="#506">506 </a>    <span class="php-comment">/**
+</span></span><span id="507" class="l"><a href="#507">507 </a><span class="php-comment">     * Retrieves the attributes to be updated.
+</span></span><span id="508" class="l"><a href="#508">508 </a><span class="php-comment">     *
+</span></span><span id="509" class="l"><a href="#509">509 </a><span class="php-comment">     * @return Illuminate\Support\Collection
+</span></span><span id="510" class="l"><a href="#510">510 </a><span class="php-comment">     */</span>
+</span><span id="511" class="l"><a href="#511">511 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getAttributesFromRequest()
+</span><span id="512" class="l"><a href="#512">512 </a>    {
+</span><span id="513" class="l"><a href="#513">513 </a>        <span class="php-var">$className</span> = <span class="php-var">$this</span>-&gt;getModelClassName();
+</span><span id="514" class="l"><a href="#514">514 </a>
+</span><span id="515" class="l"><a href="#515">515 </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;request-&gt;only(<span class="php-keyword2">array_flip</span>((<span class="php-keyword1">new</span> <span class="php-var">$className</span>)-&gt;validationRules));
+</span><span id="516" class="l"><a href="#516">516 </a>    }
+</span><span id="517" class="l"><a href="#517">517 </a>
+</span><span id="518" class="l"><a href="#518">518 </a>    <span class="php-comment">/**
+</span></span><span id="519" class="l"><a href="#519">519 </a><span class="php-comment">     * Retrieves a parameter from the request, or the session
+</span></span><span id="520" class="l"><a href="#520">520 </a><span class="php-comment">     *
+</span></span><span id="521" class="l"><a href="#521">521 </a><span class="php-comment">     * @param string $key
+</span></span><span id="522" class="l"><a href="#522">522 </a><span class="php-comment">     * @param mixed $default
+</span></span><span id="523" class="l"><a href="#523">523 </a><span class="php-comment">     * @return mixed
+</span></span><span id="524" class="l"><a href="#524">524 </a><span class="php-comment">     */</span>
+</span><span id="525" class="l"><a href="#525">525 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getParam(<span class="php-var">$key</span>, <span class="php-var">$default</span> = <span class="php-keyword1">null</span>)
+</span><span id="526" class="l"><a href="#526">526 </a>    {
+</span><span id="527" class="l"><a href="#527">527 </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;request-&gt;get(<span class="php-var">$key</span>, Session::get(<span class="php-quote">'res-'</span>. <span class="php-var">$this</span>-&gt;name .<span class="php-quote">'-'</span>. <span class="php-var">$key</span>, <span class="php-var">$default</span>));
+</span><span id="528" class="l"><a href="#528">528 </a>    }
+</span><span id="529" class="l"><a href="#529">529 </a>
+</span><span id="530" class="l"><a href="#530">530 </a>    <span class="php-comment">/**
+</span></span><span id="531" class="l"><a href="#531">531 </a><span class="php-comment">     * Saves a parameter value to the session.
+</span></span><span id="532" class="l"><a href="#532">532 </a><span class="php-comment">     *
+</span></span><span id="533" class="l"><a href="#533">533 </a><span class="php-comment">     * @param string $key
+</span></span><span id="534" class="l"><a href="#534">534 </a><span class="php-comment">     * @param mixed $value
+</span></span><span id="535" class="l"><a href="#535">535 </a><span class="php-comment">     * @return ??
+</span></span><span id="536" class="l"><a href="#536">536 </a><span class="php-comment">     */</span>
+</span><span id="537" class="l"><a href="#537">537 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> setParam(<span class="php-var">$key</span>, <span class="php-var">$value</span> = <span class="php-keyword1">null</span>)
+</span><span id="538" class="l"><a href="#538">538 </a>    {
+</span><span id="539" class="l"><a href="#539">539 </a>        Session::put(<span class="php-quote">'res-'</span>. <span class="php-var">$this</span>-&gt;name .<span class="php-quote">'-'</span>. <span class="php-var">$key</span>, <span class="php-var">$value</span>);
+</span><span id="540" class="l"><a href="#540">540 </a>
+</span><span id="541" class="l"><a href="#541">541 </a>        <span class="php-keyword1">return</span> <span class="php-var">$value</span>;
+</span><span id="542" class="l"><a href="#542">542 </a>    }
+</span><span id="543" class="l"><a href="#543">543 </a>
+</span><span id="544" class="l"><a href="#544">544 </a>    <span class="php-comment">/**
+</span></span><span id="545" class="l"><a href="#545">545 </a><span class="php-comment">     * Determines the class name of the model associated with this controller.
+</span></span><span id="546" class="l"><a href="#546">546 </a><span class="php-comment">     *
+</span></span><span id="547" class="l"><a href="#547">547 </a><span class="php-comment">     * @return string
+</span></span><span id="548" class="l"><a href="#548">548 </a><span class="php-comment">     */</span>
+</span><span id="549" class="l"><a href="#549">549 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getModelClassName() {
+</span><span id="550" class="l"><a href="#550">550 </a>        <span class="php-keyword1">return</span> <span class="php-quote">'\\App\\Models\\'</span>. <span class="php-keyword2">ucfirst</span>(<span class="php-var">$this</span>-&gt;name);
+</span><span id="551" class="l"><a href="#551">551 </a>    }
+</span><span id="552" class="l"><a href="#552">552 </a>
+</span><span id="553" class="l"><a href="#553">553 </a>    <span class="php-comment">/**
+</span></span><span id="554" class="l"><a href="#554">554 </a><span class="php-comment">     * Retrieves an instance of a model by ID.
+</span></span><span id="555" class="l"><a href="#555">555 </a><span class="php-comment">     *
+</span></span><span id="556" class="l"><a href="#556">556 </a><span class="php-comment">     * @param mixed $id
+</span></span><span id="557" class="l"><a href="#557">557 </a><span class="php-comment">     * @return Illuminate\Database\Eloquent\Model
+</span></span><span id="558" class="l"><a href="#558">558 </a><span class="php-comment">     */</span>
+</span><span id="559" class="l"><a href="#559">559 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getModelInstance(<span class="php-var">$id</span>)
+</span><span id="560" class="l"><a href="#560">560 </a>    {
+</span><span id="561" class="l"><a href="#561">561 </a>        <span class="php-comment">// If we already have an instance of the model, great.</span>
+</span><span id="562" class="l"><a href="#562">562 </a>        <span class="php-keyword1">if</span> (<span class="php-keyword2">is_a</span>(<span class="php-var">$id</span>, <span class="php-quote">'Illuminate\Database\Eloquent\Model'</span>))
+</span><span id="563" class="l"><a href="#563">563 </a>        {
+</span><span id="564" class="l"><a href="#564">564 </a>            <span class="php-keyword1">return</span> <span class="php-var">$id</span>;
+</span><span id="565" class="l"><a href="#565">565 </a>        }
+</span><span id="566" class="l"><a href="#566">566 </a>
+</span><span id="567" class="l"><a href="#567">567 </a>        <span class="php-comment">// If we have an encoded ID, decode it.</span>
+</span><span id="568" class="l"><a href="#568">568 </a>        <span class="php-keyword1">elseif</span> (!<span class="php-keyword2">is_numeric</span>(<span class="php-var">$id</span>) &amp;&amp; <span class="php-keyword2">is_string</span>(<span class="php-var">$id</span>) &amp;&amp; <span class="php-keyword2">strlen</span>(<span class="php-var">$id</span>) &gt;= <span class="php-num">8</span>)
+</span><span id="569" class="l"><a href="#569">569 </a>        {
+</span><span id="570" class="l"><a href="#570">570 </a>            <span class="php-var">$className</span> = <span class="php-var">$this</span>-&gt;getModelClassName();
+</span><span id="571" class="l"><a href="#571">571 </a>
+</span><span id="572" class="l"><a href="#572">572 </a>            <span class="php-keyword1">return</span> <span class="php-var">$className</span>::find(<span class="php-var">$id</span>);
+</span><span id="573" class="l"><a href="#573">573 </a>        }
+</span><span id="574" class="l"><a href="#574">574 </a>
+</span><span id="575" class="l"><a href="#575">575 </a>        <span class="php-comment">// If the ID was already decoded, this defeats the purpose of obfuscation...</span>
+</span><span id="576" class="l"><a href="#576">576 </a>        <span class="php-comment">// We won't allow it !!</span>
+</span><span id="577" class="l"><a href="#577">577 </a>        <span class="php-keyword1">elseif</span> (<span class="php-keyword2">is_numeric</span>(<span class="php-var">$id</span>))
+</span><span id="578" class="l"><a href="#578">578 </a>        {
+</span><span id="579" class="l"><a href="#579">579 </a>            <span class="php-keyword1">return</span> <span class="php-keyword1">null</span>;
+</span><span id="580" class="l"><a href="#580">580 </a>        }
+</span><span id="581" class="l"><a href="#581">581 </a>
+</span><span id="582" class="l"><a href="#582">582 </a>        <span class="php-keyword1">return</span> <span class="php-keyword1">null</span>;
+</span><span id="583" class="l"><a href="#583">583 </a>    }
+</span><span id="584" class="l"><a href="#584">584 </a>
+</span><span id="585" class="l"><a href="#585">585 </a>    <span class="php-comment">/**
+</span></span><span id="586" class="l"><a href="#586">586 </a><span class="php-comment">     * Creates a new instance of the model associated with this controller.
+</span></span><span id="587" class="l"><a href="#587">587 </a><span class="php-comment">     *
+</span></span><span id="588" class="l"><a href="#588">588 </a><span class="php-comment">     * @return Illuminate\Database\Eloquent\Model
+</span></span><span id="589" class="l"><a href="#589">589 </a><span class="php-comment">     */</span>
+</span><span id="590" class="l"><a href="#590">590 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getModel()
+</span><span id="591" class="l"><a href="#591">591 </a>    {
+</span><span id="592" class="l"><a href="#592">592 </a>        <span class="php-var">$className</span> = <span class="php-var">$this</span>-&gt;getModelClassName();
+</span><span id="593" class="l"><a href="#593">593 </a>
+</span><span id="594" class="l"><a href="#594">594 </a>        <span class="php-keyword1">return</span> <span class="php-keyword1">new</span> <span class="php-var">$className</span>;
+</span><span id="595" class="l"><a href="#595">595 </a>    }
+</span><span id="596" class="l"><a href="#596">596 </a>}
+</span><span id="597" class="l"><a href="#597">597 </a></span></code></pre>
 	</div>
 
 	<div id="footer">
@@ -833,6 +889,6 @@
 	</div>
 </div>
 <script src="resources/combined.js?7f316eeabf2751a4eb1050572e1bd4eee4ea59e6"></script>
-<script src="elementlist.js?0cd7085cf5fe77baa95dc28d3ca7f63ad018433c"></script>
+<script src="elementlist.js?c339a94ba8154a9ce438ab5ec26fca8f88d2d0ac"></script>
 </body>
 </html>

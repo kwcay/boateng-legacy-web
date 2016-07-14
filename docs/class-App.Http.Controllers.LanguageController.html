@@ -256,7 +256,7 @@ Illuminate\Routing\Controller
 		<b>Namespace:</b> <a href="namespace-App.html">App</a>\<a href="namespace-App.Http.html">Http</a>\<a href="namespace-App.Http.Controllers.html">Controllers</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-App.Http.Controllers.LanguageController.html#21-284" title="Go to source code">Http/Controllers/LanguageController.php</a>
+			<b>Located at</b> <a href="source-class-App.Http.Controllers.LanguageController.html#21-288" title="Go to source code">Http/Controllers/LanguageController.php</a>
 		<br>
 	</div>
 
@@ -316,7 +316,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_edit">#</a>
-			<code><a href="source-class-App.Http.Controllers.LanguageController.html#91-140" title="Go to source code">edit</a>( <span>string <var>$code</var></span> )</code>
+			<code><a href="source-class-App.Http.Controllers.LanguageController.html#91-140" title="Go to source code">edit</a>( <span>string <var>$id</var></span> )</code>
 
 			<div class="description short">
 				<p>Show the form for editing a language.</p>
@@ -328,8 +328,8 @@ Illuminate\Routing\Controller
 
 					<h4>Parameters</h4>
 					<div class="list"><dl>
-						<dt><var>$code</var></dt>
-						<dd>Language code.</dd>
+						<dt><var>$id</var></dt>
+						<dd>Either the ISO 639-3 language code or language ID.</dd>
 					</dl></div>
 
 					<h4>Returns</h4>
@@ -396,7 +396,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getLanguage">#</a>
-			<code><a href="source-class-App.Http.Controllers.LanguageController.html#209-233" title="Go to source code">getLanguage</a>( <span>string <var>$id</var></span>, <span>array <var>$embed</var> = [<span class="php-quote">'parent'</span>]</span> )</code>
+			<code><a href="source-class-App.Http.Controllers.LanguageController.html#209-237" title="Go to source code">getLanguage</a>( <span>string <var>$id</var></span>, <span>array <var>$embed</var> = [<span class="php-quote">'parent'</span>]</span> )</code>
 
 			<div class="description short">
 				<p>Shortcut to retrieve a language object.</p>
@@ -436,7 +436,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getAlphabets">#</a>
-			<code><a href="source-class-App.Http.Controllers.LanguageController.html#235-258" title="Go to source code">getAlphabets</a>( <span>string <var>$raw</var> = <span class="php-keyword1">null</span></span> )</code>
+			<code><a href="source-class-App.Http.Controllers.LanguageController.html#239-262" title="Go to source code">getAlphabets</a>( <span>string <var>$raw</var> = <span class="php-keyword1">null</span></span> )</code>
 
 			<div class="description short">
 				<p>Retrieves alphabet models.</p>
@@ -474,7 +474,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getCountries">#</a>
-			<code><a href="source-class-App.Http.Controllers.LanguageController.html#260-283" title="Go to source code">getCountries</a>( <span>string <var>$raw</var> = <span class="php-keyword1">null</span></span> )</code>
+			<code><a href="source-class-App.Http.Controllers.LanguageController.html#264-287" title="Go to source code">getCountries</a>( <span>string <var>$raw</var> = <span class="php-keyword1">null</span></span> )</code>
 
 			<div class="description short">
 				<p>Retrieves country models.</p>
@@ -508,6 +508,7 @@ Illuminate\Routing\Controller
 	        <div class="panel-heading"><h3>Methods inherited from <a href="class-App.Http.Controllers.Controller.html#methods">App\Http\Controllers\Controller</a></h3></div>
 			<p class="elementList">
 				<code><a href="class-App.Http.Controllers.Controller.html#___construct">__construct()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_applyEmbedableAttributes">applyEmbedableAttributes()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_destroy">destroy()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_forceDestroy">forceDestroy()</a></code>, 
 				<code><a href="class-App.Http.Controllers.Controller.html#_getAttributesFromRequest">getAttributesFromRequest()</a></code>, 

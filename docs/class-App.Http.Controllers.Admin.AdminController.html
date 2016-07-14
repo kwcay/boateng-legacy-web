@@ -183,6 +183,7 @@
 			<ul>
 				<li class="active"><a href="class-App.Http.Controllers.Admin.AdminController.html">AdminController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AlphabetController.html">AlphabetController</a></li>
+				<li><a href="class-App.Http.Controllers.Admin.BackupController.html">BackupController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.CountryController.html">CountryController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.DefinitionController.html">DefinitionController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.LanguageController.html">LanguageController</a></li>
@@ -216,6 +217,16 @@ Illuminate\Routing\Controller
 		</dd>
 		<dd style="padding-left:30px">
 			<img src="resources/inherit.png" alt="Extended by">
+			<a href="class-App.Http.Controllers.Controller.html"><span>App\Http\Controllers\Controller</span></a>
+			
+			
+			 uses 
+					Illuminate\Foundation\Validation\ValidatesRequests (not available)
+
+			
+		</dd>
+		<dd style="padding-left:60px">
+			<img src="resources/inherit.png" alt="Extended by">
 <b><span>App\Http\Controllers\Admin\AdminController</span></b>			
 			
 			
@@ -235,7 +246,7 @@ Illuminate\Routing\Controller
 		<b>Namespace:</b> <a href="namespace-App.html">App</a>\<a href="namespace-App.Http.html">Http</a>\<a href="namespace-App.Http.Controllers.html">Controllers</a>\<a href="namespace-App.Http.Controllers.Admin.html">Admin</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-App.Http.Controllers.Admin.AdminController.html#17-72" title="Go to source code">Http/Controllers/Admin/AdminController.php</a>
+			<b>Located at</b> <a href="source-class-App.Http.Controllers.Admin.AdminController.html#19-67" title="Go to source code">Http/Controllers/Admin/AdminController.php</a>
 		<br>
 	</div>
 
@@ -248,14 +259,14 @@ Illuminate\Routing\Controller
 
 			<td class="attributes"><code>
 				 public 
-				
+				Illuminate\View\View
 				
 				</code>
 			</td>
 
 			<td class="name"><div>
 			<a class="anchor" href="#_index">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.AdminController.html#19-24" title="Go to source code">index</a>( )</code>
+			<code><a href="source-class-App.Http.Controllers.Admin.AdminController.html#21-26" title="Go to source code">index</a>( )</code>
 
 			<div class="description short">
 				<p>Admin landing page.</p>
@@ -266,9 +277,15 @@ Illuminate\Routing\Controller
 
 
 
+					<h4>Returns</h4>
+					<div class="list">
+						Illuminate\View\View
+					</div>
 
 
 
+					<h4>Overrides</h4>
+					<div class="list"><code><a href="class-App.Http.Controllers.Controller.html#_index">App\Http\Controllers\Controller::index</a></code></div>
 
 			</div>
 			</div></td>
@@ -284,7 +301,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_import">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.AdminController.html#26-31" title="Go to source code">import</a>( )</code>
+			<code><a href="source-class-App.Http.Controllers.Admin.AdminController.html#28-33" title="Go to source code">import</a>( )</code>
 
 			<div class="description short">
 				<p>Import landing page.</p>
@@ -292,35 +309,6 @@ Illuminate\Routing\Controller
 
 			<div class="description detailed hidden">
 				<p>Import landing page.</p>
-
-
-
-
-
-
-
-			</div>
-			</div></td>
-		</tr>
-		<tr data-order="backup" id="_backup">
-
-			<td class="attributes"><code>
-				 public 
-				
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_backup">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.AdminController.html#33-38" title="Go to source code">backup</a>( )</code>
-
-			<div class="description short">
-				<p>Backups landing page.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Backups landing page.</p>
 
 
 
@@ -342,7 +330,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_export">#</a>
-			<code><a href="source-class-App.Http.Controllers.Admin.AdminController.html#40-71" title="Go to source code">export</a>( <span><code><a href="class-App.Factories.DataExportFactory.html">App\Factories\DataExportFactory</a></code> <var>$helper</var></span>, <span>string <var>$resourceName</var></span>, <span> <var>$format</var></span> )</code>
+			<code><a href="source-class-App.Http.Controllers.Admin.AdminController.html#35-66" title="Go to source code">export</a>( <span><code><a href="class-App.Factories.DataExportFactory.html">App\Factories\DataExportFactory</a></code> <var>$helper</var></span>, <span>string <var>$resourceName</var></span>, <span> <var>$format</var></span> )</code>
 
 			<div class="description short">
 				<p>Exports a resource to file.</p>
@@ -376,11 +364,53 @@ Illuminate\Routing\Controller
 			</table>
 		</div>
 
+		<div class="panel panel-default">
+	        <div class="panel-heading"><h3>Methods inherited from <a href="class-App.Http.Controllers.Controller.html#methods">App\Http\Controllers\Controller</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-App.Http.Controllers.Controller.html#___construct">__construct()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_applyEmbedableAttributes">applyEmbedableAttributes()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_destroy">destroy()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_edit">edit()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_forceDestroy">forceDestroy()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getAttributesFromRequest">getAttributesFromRequest()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getEmbedArray">getEmbedArray()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getModel">getModel()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getModelClassName">getModelClassName()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getModelInstance">getModelInstance()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_getParam">getParam()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_restore">restore()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_setParam">setParam()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_setupLayout">setupLayout()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_show">show()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_store">store()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_update">update()</a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#_walkthrough">walkthrough()</a></code>
+			</p>
+		</div>
 
 
 
 
 
+
+
+
+
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h2>Properties summary</h2></div>
+		</div>
+
+		<div class="panel panel-default">
+            <div class="panel-heading"><h3>Properties inherited from <a href="class-App.Http.Controllers.Controller.html#properties">App\Http\Controllers\Controller</a></h3></div>
+			<p class="elementList">
+				<code><a href="class-App.Http.Controllers.Controller.html#$defaultOrderColumn"><var>$defaultOrderColumn</var></a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#$defaultOrderDirection"><var>$defaultOrderDirection</var></a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#$defaultQueryLimit"><var>$defaultQueryLimit</var></a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#$name"><var>$name</var></a></code>, 
+				<code><a href="class-App.Http.Controllers.Controller.html#$supportedOrderColumns"><var>$supportedOrderColumns</var></a></code>
+			</p>
+		</div>
 
 
 

@@ -222,6 +222,9 @@ Illuminate\Database\Eloquent\Model
 			 uses 
 					<a href="class-App.Traits.CamelCaseAttributesTrait.html"><span>App\Traits\CamelCaseAttributesTrait</span></a>, 
 			
+					Frnkly\Traits\Embedable (not available)
+
+			
 					<a href="class-App.Traits.ExportableTrait.html"><span>App\Traits\ExportableTrait</span></a>, 
 			
 					<a href="class-App.Traits.ObfuscatableTrait.html"><span>App\Traits\ObfuscatableTrait</span></a>, 
@@ -249,7 +252,7 @@ Illuminate\Database\Eloquent\Model
 		<b>Namespace:</b> <a href="namespace-App.html">App</a>\<a href="namespace-App.Models.html">Models</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-App.Models.Country.html#17-264" title="Go to source code">Models/Country.php</a>
+			<b>Located at</b> <a href="source-class-App.Models.Country.html#18-281" title="Go to source code">Models/Country.php</a>
 		<br>
 	</div>
 
@@ -269,7 +272,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_findByCode">#</a>
-			<code><a href="source-class-App.Models.Country.html#116-132" title="Go to source code">findByCode</a>( <span>string|<code><a href="class-App.Models.Country.html">App\Models\Country</a></code> <var>$code</var></span> )</code>
+			<code><a href="source-class-App.Models.Country.html#133-149" title="Go to source code">findByCode</a>( <span>string|<code><a href="class-App.Models.Country.html">App\Models\Country</a></code> <var>$code</var></span> )</code>
 
 			<div class="description short">
 				<p>Looks up a country model by code.</p>
@@ -307,7 +310,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getSearchQueryBuilder">#</a>
-			<code><a href="source-class-App.Models.Country.html#142-173" title="Go to source code">getSearchQueryBuilder</a>( <span>string <var>$term</var></span>, <span>array <var>$options</var> = []</span> )</code>
+			<code><a href="source-class-App.Models.Country.html#159-190" title="Go to source code">getSearchQueryBuilder</a>( <span>string <var>$term</var></span>, <span>array <var>$options</var> = []</span> )</code>
 
 			<div class="description short">
 				
@@ -347,7 +350,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getSearchScore">#</a>
-			<code><a href="source-class-App.Models.Country.html#175-189" title="Go to source code">getSearchScore</a>( <span>object <var>$rawScore</var></span> )</code>
+			<code><a href="source-class-App.Models.Country.html#192-206" title="Go to source code">getSearchScore</a>( <span>object <var>$rawScore</var></span> )</code>
 
 			<div class="description short">
 				<p>Scores a country result between 0 and 1.</p>
@@ -385,7 +388,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getSearchResults">#</a>
-			<code><a href="source-class-App.Models.Country.html#191-199" title="Go to source code">getSearchResults</a>( <span>array <var>$IDs</var></span> )</code>
+			<code><a href="source-class-App.Models.Country.html#208-216" title="Go to source code">getSearchResults</a>( <span>array <var>$IDs</var></span> )</code>
 
 			<div class="description short">
 				<p>Retrieves countries and their relations in the context of a search.</p>
@@ -423,7 +426,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_normalizeSearchResult">#</a>
-			<code><a href="source-class-App.Models.Country.html#201-219" title="Go to source code">normalizeSearchResult</a>( <span><code><a href="class-App.Models.Country.html">App\Models\Country</a></code> <var>$country</var></span>, <span>stdClass <var>$scores</var></span>, <span>float <var>$maxScore</var></span> )</code>
+			<code><a href="source-class-App.Models.Country.html#218-236" title="Go to source code">normalizeSearchResult</a>( <span><code><a href="class-App.Models.Country.html">App\Models\Country</a></code> <var>$country</var></span>, <span>stdClass <var>$scores</var></span>, <span>float <var>$maxScore</var></span> )</code>
 
 			<div class="description short">
 				<p>Normalizes the search score and formats a model for search results.</p>
@@ -461,7 +464,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getUriAttribute">#</a>
-			<code><a href="source-class-App.Models.Country.html#229-236" title="Go to source code">getUriAttribute</a>( )</code>
+			<code><a href="source-class-App.Models.Country.html#246-253" title="Go to source code">getUriAttribute</a>( )</code>
 
 			<div class="description short">
 				<p>Accessor for $this->uri.</p>
@@ -494,7 +497,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getEditUriAttribute">#</a>
-			<code><a href="source-class-App.Models.Country.html#238-245" title="Go to source code">getEditUriAttribute</a>( )</code>
+			<code><a href="source-class-App.Models.Country.html#255-262" title="Go to source code">getEditUriAttribute</a>( )</code>
 
 			<div class="description short">
 				<p>Accessor for $this->editUri.</p>
@@ -527,7 +530,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getEditUriAdminAttribute">#</a>
-			<code><a href="source-class-App.Models.Country.html#247-254" title="Go to source code">getEditUriAdminAttribute</a>( )</code>
+			<code><a href="source-class-App.Models.Country.html#264-271" title="Go to source code">getEditUriAdminAttribute</a>( )</code>
 
 			<div class="description short">
 				<p>Accessor for $this->editUriAdmin.</p>
@@ -560,7 +563,7 @@ Illuminate\Database\Eloquent\Model
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getResourceTypeAttribute">#</a>
-			<code><a href="source-class-App.Models.Country.html#256-263" title="Go to source code">getResourceTypeAttribute</a>( )</code>
+			<code><a href="source-class-App.Models.Country.html#273-280" title="Go to source code">getResourceTypeAttribute</a>( )</code>
 
 			<div class="description short">
 				<p>Accessor for $this->resourceType.</p>
@@ -646,7 +649,7 @@ Illuminate\Database\Eloquent\Model
 				<td class="attributes"><code>integer</code></td>
 				<td class="name">
 					<code>
-						<a href="source-class-App.Models.Country.html#57" title="Go to source code"><b>SEARCH_LIMIT</b></a>
+						<a href="source-class-App.Models.Country.html#74" title="Go to source code"><b>SEARCH_LIMIT</b></a>
 					</code>
 
 					<div class="description short">
@@ -670,7 +673,7 @@ Illuminate\Database\Eloquent\Model
 				<td class="attributes"><code>integer</code></td>
 				<td class="name">
 					<code>
-						<a href="source-class-App.Models.Country.html#58" title="Go to source code"><b>SEARCH_QUERY_LENGTH</b></a>
+						<a href="source-class-App.Models.Country.html#75" title="Go to source code"><b>SEARCH_QUERY_LENGTH</b></a>
 					</code>
 
 					<div class="description short">
@@ -698,6 +701,35 @@ Illuminate\Database\Eloquent\Model
 		<div class="panel panel-default">
             <div class="panel-heading"><h2>Properties summary</h2></div>
 			<table class="summary table table-bordered table-striped properties" id="properties">
+		<tr data-order="embedable" id="$embedable">
+			<td class="attributes"><code>
+				public  
+				array
+			</code></td>
+
+			<td class="name">
+					<a href="source-class-App.Models.Country.html#30-36" title="Go to source code"><var>$embedable</var></a>
+
+				<div class="description short">
+					<p>Attributes that CAN be appended to the model's array form and which aren't already
+database relations.</p>
+				</div>
+
+				<div class="description detailed hidden">
+					<p>Attributes that CAN be appended to the model's array form and which aren't already
+database relations.</p>
+
+				</div>
+			</td>
+			<td class="value">
+				<div>
+					<a href="#$embedable" class="anchor">#</a>
+					<code>[
+    <span class="php-quote">'editUri'</span>       =&gt; [],
+]</code>
+				</div>
+			</td>
+		</tr>
 		<tr data-order="hiddenFromExport" id="$hiddenFromExport">
 			<td class="attributes"><code>
 				protected  
@@ -705,7 +737,7 @@ Illuminate\Database\Eloquent\Model
 			</code></td>
 
 			<td class="name">
-					<a href="source-class-App.Models.Country.html#29-34" title="Go to source code"><var>$hiddenFromExport</var></a>
+					<a href="source-class-App.Models.Country.html#46-51" title="Go to source code"><var>$hiddenFromExport</var></a>
 
 				<div class="description short">
 					<p>The attributes that should be hidden from the model's array form when exporting data to file.</p>
@@ -732,7 +764,7 @@ Illuminate\Database\Eloquent\Model
 			</code></td>
 
 			<td class="name">
-					<a href="source-class-App.Models.Country.html#44-47" title="Go to source code"><var>$obfuscatorId</var></a>
+					<a href="source-class-App.Models.Country.html#61-64" title="Go to source code"><var>$obfuscatorId</var></a>
 
 				<div class="description short">
 					
@@ -757,7 +789,7 @@ Illuminate\Database\Eloquent\Model
 			</code></td>
 
 			<td class="name">
-					<a href="source-class-App.Models.Country.html#60-65" title="Go to source code"><var>$searchIsTaggable</var></a>
+					<a href="source-class-App.Models.Country.html#77-82" title="Go to source code"><var>$searchIsTaggable</var></a>
 
 				<div class="description short">
 					<p>Indicates whether search results can be filtered by tags.</p>
@@ -782,7 +814,7 @@ Illuminate\Database\Eloquent\Model
 			</code></td>
 
 			<td class="name">
-					<a href="source-class-App.Models.Country.html#75-80" title="Go to source code"><var>$guarded</var></a>
+					<a href="source-class-App.Models.Country.html#92-97" title="Go to source code"><var>$guarded</var></a>
 
 				<div class="description short">
 					<p>Attributes which aren't mass-assignable.</p>
@@ -807,7 +839,7 @@ Illuminate\Database\Eloquent\Model
 			</code></td>
 
 			<td class="name">
-					<a href="source-class-App.Models.Country.html#82-87" title="Go to source code"><var>$hidden</var></a>
+					<a href="source-class-App.Models.Country.html#99-104" title="Go to source code"><var>$hidden</var></a>
 
 				<div class="description short">
 					<p>The attributes that should be hidden from the model's array form.</p>
@@ -832,7 +864,7 @@ Illuminate\Database\Eloquent\Model
 			</code></td>
 
 			<td class="name">
-					<a href="source-class-App.Models.Country.html#89-97" title="Go to source code"><var>$appends</var></a>
+					<a href="source-class-App.Models.Country.html#106-114" title="Go to source code"><var>$appends</var></a>
 
 				<div class="description short">
 					<p>Attributes that SHOULD be appended to the model's array form.</p>
@@ -860,7 +892,7 @@ Illuminate\Database\Eloquent\Model
 			</code></td>
 
 			<td class="name">
-					<a href="source-class-App.Models.Country.html#99-106" title="Go to source code"><var>$validationRules</var></a>
+					<a href="source-class-App.Models.Country.html#116-123" title="Go to source code"><var>$validationRules</var></a>
 
 				<div class="description short">
 					<p>Validation rules.</p>

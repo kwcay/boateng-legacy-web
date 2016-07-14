@@ -234,8 +234,10 @@ Illuminate\Routing\Controller
 	<div>
 		<h3>Direct known subclasses</h3>
 		<p class="elementList">
-			<code><a href="class-App.Http.Controllers.AdminController.html">App\Http\Controllers\AdminController</a></code>, 
-			<code><a href="class-App.Http.Controllers.AlphabetController.html">App\Http\Controllers\AlphabetController</a></code>, 
+			<code><a href="class-App.Http.Controllers.Admin.AdminController.html">App\Http\Controllers\Admin\AdminController</a></code>, 
+			<code><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></code>, 
+			<code><a href="class-App.Http.Controllers.AudioController.html">App\Http\Controllers\AudioController</a></code>, 
+			<code><a href="class-App.Http.Controllers.Auth.AuthController.html">App\Http\Controllers\Auth\AuthController</a></code>, 
 			<code><a href="class-App.Http.Controllers.Auth.PasswordController.html">App\Http\Controllers\Auth\PasswordController</a></code>, 
 			<code><a href="class-App.Http.Controllers.CountryController.html">App\Http\Controllers\CountryController</a></code>, 
 			<code><a href="class-App.Http.Controllers.Data.v041.DataController.html">App\Http\Controllers\Data\v041\DataController</a></code>, 
@@ -244,18 +246,18 @@ Illuminate\Routing\Controller
 			<code><a href="class-App.Http.Controllers.DefinitionController.html">App\Http\Controllers\DefinitionController</a></code>, 
 			<code><a href="class-App.Http.Controllers.ImportController.html">App\Http\Controllers\ImportController</a></code>, 
 			<code><a href="class-App.Http.Controllers.LanguageController.html">App\Http\Controllers\LanguageController</a></code>, 
+			<code><a href="class-App.Http.Controllers.AdminController.html">App\Http\Controllers\AdminController</a></code>, 
 			<code><a href="class-App.Http.Controllers.PageController.html">App\Http\Controllers\PageController</a></code>, 
 			<code><a href="class-App.Http.Controllers.ReferenceController.html">App\Http\Controllers\ReferenceController</a></code>, 
-			<code><a href="class-App.Http.Controllers.API.v01.ApiController.html">App\Http\Controllers\API\v01\ApiController</a></code>, 
 			<code><a href="class-App.Http.Controllers.TagController.html">App\Http\Controllers\TagController</a></code>, 
 			<code><a href="class-App.Http.Controllers.UserController.html">App\Http\Controllers\UserController</a></code>, 
+			<code><a href="class-App.Http.Controllers.AlphabetController.html">App\Http\Controllers\AlphabetController</a></code>, 
+			<code><a href="class-App.Http.Controllers.API.v01.ApiController.html">App\Http\Controllers\API\v01\ApiController</a></code>, 
 			<code><a href="class-App.Http.Controllers.API.v01.AuthController.html">App\Http\Controllers\API\v01\AuthController</a></code>, 
 			<code><a href="class-App.Http.Controllers.API.v01.DefinitionController.html">App\Http\Controllers\API\v01\DefinitionController</a></code>, 
 			<code><a href="class-App.Http.Controllers.API.v01.LanguageController.html">App\Http\Controllers\API\v01\LanguageController</a></code>, 
 			<code><a href="class-App.Http.Controllers.API.v01.ReferenceController.html">App\Http\Controllers\API\v01\ReferenceController</a></code>, 
-			<code><a href="class-App.Http.Controllers.API.v01.TagController.html">App\Http\Controllers\API\v01\TagController</a></code>, 
-			<code><a href="class-App.Http.Controllers.AudioController.html">App\Http\Controllers\AudioController</a></code>, 
-			<code><a href="class-App.Http.Controllers.Auth.AuthController.html">App\Http\Controllers\Auth\AuthController</a></code>
+			<code><a href="class-App.Http.Controllers.API.v01.TagController.html">App\Http\Controllers\API\v01\TagController</a></code>
 		</p>
 	</div>
 
@@ -282,7 +284,7 @@ Illuminate\Routing\Controller
 		<b>Namespace:</b> <a href="namespace-App.html">App</a>\<a href="namespace-App.Http.html">Http</a>\<a href="namespace-App.Http.Controllers.html">Controllers</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-App.Http.Controllers.Controller.html#17-550" title="Go to source code">Http/Controllers/Controller.php</a>
+			<b>Located at</b> <a href="source-class-App.Http.Controllers.Controller.html#17-596" title="Go to source code">Http/Controllers/Controller.php</a>
 		<br>
 	</div>
 
@@ -715,6 +717,82 @@ Illuminate\Routing\Controller
 			</div>
 			</div></td>
 		</tr>
+		<tr data-order="getEmbedArray" id="_getEmbedArray">
+
+			<td class="attributes"><code>
+				 protected 
+				array
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_getEmbedArray">#</a>
+			<code><a href="source-class-App.Http.Controllers.Controller.html#423-457" title="Go to source code">getEmbedArray</a>( <span>array|string <var>$embed</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$appendable</var> = []</span> )</code>
+
+			<div class="description short">
+				<p>Retrieves the relations and attributes that may be appended to a model.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Retrieves the relations and attributes that may be appended to a model.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$embed</var></dt>
+						<dd>The properties to be appended to a model.</dd>
+						<dt><var>$appendable</var></dt>
+						<dd>Those properties which aren't database relations.</dd>
+					</dl></div>
+
+					<h4>Returns</h4>
+					<div class="list">
+						array
+					</div>
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
+		<tr data-order="applyEmbedableAttributes" id="_applyEmbedableAttributes">
+
+			<td class="attributes"><code>
+				 protected 
+				
+				
+				</code>
+			</td>
+
+			<td class="name"><div>
+			<a class="anchor" href="#_applyEmbedableAttributes">#</a>
+			<code><a href="source-class-App.Http.Controllers.Controller.html#459-504" title="Go to source code">applyEmbedableAttributes</a>( <span>mixed <var>$model</var></span>, <span>array <var>$attributes</var> = <span class="php-keyword1">null</span></span> )</code>
+
+			<div class="description short">
+				<p>Applies the appendable attributes to the model.</p>
+			</div>
+
+			<div class="description detailed hidden">
+				<p>Applies the appendable attributes to the model.</p>
+
+
+					<h4>Parameters</h4>
+					<div class="list"><dl>
+						<dt><var>$model</var></dt>
+						<dd>Model to append attributes to.</dd>
+						<dt><var>$attributes</var></dt>
+						<dd>Attributes to append to the model.</dd>
+					</dl></div>
+
+
+
+
+
+			</div>
+			</div></td>
+		</tr>
 		<tr data-order="getAttributesFromRequest" id="_getAttributesFromRequest">
 
 			<td class="attributes"><code>
@@ -726,7 +804,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getAttributesFromRequest">#</a>
-			<code><a href="source-class-App.Http.Controllers.Controller.html#423-433" title="Go to source code">getAttributesFromRequest</a>( )</code>
+			<code><a href="source-class-App.Http.Controllers.Controller.html#506-516" title="Go to source code">getAttributesFromRequest</a>( )</code>
 
 			<div class="description short">
 				<p>Retrieves the attributes to be updated.</p>
@@ -748,50 +826,6 @@ Illuminate\Routing\Controller
 			</div>
 			</div></td>
 		</tr>
-		<tr data-order="getEmbedArray" id="_getEmbedArray">
-
-			<td class="attributes"><code>
-				 protected 
-				array
-				
-				</code>
-			</td>
-
-			<td class="name"><div>
-			<a class="anchor" href="#_getEmbedArray">#</a>
-			<code><a href="source-class-App.Http.Controllers.Controller.html#435-470" title="Go to source code">getEmbedArray</a>( <span>array|string <var>$embed</var> = <span class="php-keyword1">null</span></span>, <span>array <var>$appendable</var> = []</span> )</code>
-
-			<div class="description short">
-				<p>Gets the embedable relations and attributes that may be appended to a model.</p>
-			</div>
-
-			<div class="description detailed hidden">
-				<p>Gets the embedable relations and attributes that may be appended to a model.</p>
-
-
-					<h4>Parameters</h4>
-					<div class="list"><dl>
-						<dt><var>$embed</var></dt>
-						<dd>The properties to be appended to a model.</dd>
-						<dt><var>$appendable</var></dt>
-						<dd>Those properties which aren't database relations.</dd>
-					</dl></div>
-
-					<h4>Returns</h4>
-					<div class="list">
-						array
-					</div>
-
-
-					<h4>Todo</h4>
-					<div class="list">
-							Replace with trait from frnkly/laravel-embeds<br>
-					</div>
-
-
-			</div>
-			</div></td>
-		</tr>
 		<tr data-order="getParam" id="_getParam">
 
 			<td class="attributes"><code>
@@ -803,7 +837,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getParam">#</a>
-			<code><a href="source-class-App.Http.Controllers.Controller.html#472-482" title="Go to source code">getParam</a>( <span>string <var>$key</var></span>, <span>mixed <var>$default</var> = <span class="php-keyword1">null</span></span> )</code>
+			<code><a href="source-class-App.Http.Controllers.Controller.html#518-528" title="Go to source code">getParam</a>( <span>string <var>$key</var></span>, <span>mixed <var>$default</var> = <span class="php-keyword1">null</span></span> )</code>
 
 			<div class="description short">
 				<p>Retrieves a parameter from the request, or the session</p>
@@ -843,7 +877,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_setParam">#</a>
-			<code><a href="source-class-App.Http.Controllers.Controller.html#484-496" title="Go to source code">setParam</a>( <span>string <var>$key</var></span>, <span>mixed <var>$value</var> = <span class="php-keyword1">null</span></span> )</code>
+			<code><a href="source-class-App.Http.Controllers.Controller.html#530-542" title="Go to source code">setParam</a>( <span>string <var>$key</var></span>, <span>mixed <var>$value</var> = <span class="php-keyword1">null</span></span> )</code>
 
 			<div class="description short">
 				<p>Saves a parameter value to the session.</p>
@@ -883,7 +917,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getModelClassName">#</a>
-			<code><a href="source-class-App.Http.Controllers.Controller.html#498-505" title="Go to source code">getModelClassName</a>( )</code>
+			<code><a href="source-class-App.Http.Controllers.Controller.html#544-551" title="Go to source code">getModelClassName</a>( )</code>
 
 			<div class="description short">
 				<p>Determines the class name of the model associated with this controller.</p>
@@ -916,7 +950,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getModelInstance">#</a>
-			<code><a href="source-class-App.Http.Controllers.Controller.html#507-537" title="Go to source code">getModelInstance</a>( <span>mixed <var>$id</var></span> )</code>
+			<code><a href="source-class-App.Http.Controllers.Controller.html#553-583" title="Go to source code">getModelInstance</a>( <span>mixed <var>$id</var></span> )</code>
 
 			<div class="description short">
 				<p>Retrieves an instance of a model by ID.</p>
@@ -954,7 +988,7 @@ Illuminate\Routing\Controller
 
 			<td class="name"><div>
 			<a class="anchor" href="#_getModel">#</a>
-			<code><a href="source-class-App.Http.Controllers.Controller.html#539-549" title="Go to source code">getModel</a>( )</code>
+			<code><a href="source-class-App.Http.Controllers.Controller.html#585-595" title="Go to source code">getModel</a>( )</code>
 
 			<div class="description short">
 				<p>Creates a new instance of the model associated with this controller.</p>

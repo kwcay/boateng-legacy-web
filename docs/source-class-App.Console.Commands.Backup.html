@@ -184,17 +184,27 @@
 				<li><a href="class-App.Commands.Command.html">App\Commands\Command</a></li>
 				<li><a href="class-App.Console.Commands.Backup.html">App\Console\Commands\Backup</a></li>
 				<li><a href="class-App.Console.Commands.Inspire.html">App\Console\Commands\Inspire</a></li>
+				<li><a href="class-App.Console.Commands.ListBackup.html">App\Console\Commands\ListBackup</a></li>
+				<li><a href="class-App.Console.Commands.RestoreBackup.html">App\Console\Commands\RestoreBackup</a></li>
 				<li><a href="class-App.Console.Kernel.html">App\Console\Kernel</a></li>
 				<li><a href="class-App.Events.Event.html">App\Events\Event</a></li>
 				<li><a href="class-App.Exceptions.Handler.html">App\Exceptions\Handler</a></li>
+				<li><a href="class-App.Factories.BackupFactory.html">App\Factories\BackupFactory</a></li>
 				<li><a href="class-App.Factories.DataExportFactory.html">App\Factories\DataExportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.AlphabetImportFactory.html">App\Factories\DataImport\AlphabetImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.CountryImportFactory.html">App\Factories\DataImport\CountryImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.CultureImportFactory.html">App\Factories\DataImport\CultureImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImport.DefinitionImportFactory.html">App\Factories\DataImport\DefinitionImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImport.LanguageImportFactory.html">App\Factories\DataImport\LanguageImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.ReferenceImportFactory.html">App\Factories\DataImport\ReferenceImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.UserImportFactory.html">App\Factories\DataImport\UserImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImportFactory.html">App\Factories\DataImportFactory</a></li>
+				<li><a href="class-App.Factories.Factory.html">App\Factories\Factory</a></li>
 				<li><a href="class-App.Factories.Transliteration.LatnTransliterationFactory.html">App\Factories\Transliteration\LatnTransliterationFactory</a></li>
 				<li><a href="class-App.Factories.TransliterationFactory.html">App\Factories\TransliterationFactory</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AdminController.html">App\Http\Controllers\Admin\AdminController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AlphabetController.html">App\Http\Controllers\Admin\AlphabetController</a></li>
+				<li><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.CountryController.html">App\Http\Controllers\Admin\CountryController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.DefinitionController.html">App\Http\Controllers\Admin\DefinitionController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.LanguageController.html">App\Http\Controllers\Admin\LanguageController</a></li>
@@ -384,118 +394,135 @@
 </span><span id="107" class="l"><a href="#107">107 </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> handle()
 </span><span id="108" class="l"><a href="#108">108 </a>    {
 </span><span id="109" class="l"><a href="#109">109 </a>        <span class="php-comment">// Generate a unique backup name.</span>
-</span><span id="110" class="l"><a href="#110">110 </a>        <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] = <span class="php-keyword2">date</span>(<span class="php-quote">'Ymd'</span>) .<span class="php-quote">'-'</span>. <span class="php-keyword2">substr</span>(<span class="php-keyword2">md5</span>(<span class="php-keyword2">microtime</span>()), <span class="php-num">20</span>);
+</span><span id="110" class="l"><a href="#110">110 </a>        <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] = <span class="php-quote">'Di_Nkomo_'</span>. <span class="php-keyword2">date</span>(<span class="php-quote">'ymd'</span>) .<span class="php-quote">'-'</span>. <span class="php-keyword2">substr</span>(<span class="php-keyword2">time</span>(), -<span class="php-num">5</span>) .<span class="php-quote">'-'</span>. <span class="php-keyword2">substr</span>(<span class="php-keyword2">md5</span>(<span class="php-keyword2">microtime</span>()), -<span class="php-num">3</span>);
 </span><span id="111" class="l"><a href="#111">111 </a>
 </span><span id="112" class="l"><a href="#112">112 </a>        <span class="php-comment">// Store the default internal data format.</span>
 </span><span id="113" class="l"><a href="#113">113 </a>        <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'format'</span>] = <span class="php-var">$this</span>-&gt;option(<span class="php-quote">'yaml'</span>) ? <span class="php-quote">'yaml'</span> : <span class="php-quote">'json'</span>;
 </span><span id="114" class="l"><a href="#114">114 </a>
-</span><span id="115" class="l"><a href="#115">115 </a>        <span class="php-var">$this</span>-&gt;info(<span class="php-quote">&quot;Backing up to </span><span class="php-var">{$this-&gt;meta['id']}</span><span class="php-quote">.</span><span class="php-var">{$this-&gt;format}</span><span class="php-quote">&quot;</span>);
-</span><span id="116" class="l"><a href="#116">116 </a>
-</span><span id="117" class="l"><a href="#117">117 </a>        <span class="php-comment">// Calculate # of steps to complete backup.</span>
-</span><span id="118" class="l"><a href="#118">118 </a>        <span class="php-comment">// Step 1: Start.</span>
-</span><span id="119" class="l"><a href="#119">119 </a>        <span class="php-comment">// Step 2: Create temporary backup directory.</span>
-</span><span id="120" class="l"><a href="#120">120 </a>        <span class="php-comment">// Steps 3 to n: create dump files.</span>
-</span><span id="121" class="l"><a href="#121">121 </a>        <span class="php-comment">// Step n+1: Create meta file.</span>
-</span><span id="122" class="l"><a href="#122">122 </a>        <span class="php-comment">// Step n+2: Finalize backup file.</span>
-</span><span id="123" class="l"><a href="#123">123 </a>        <span class="php-comment">// Step n+3: Copy backgup file to backups disk.</span>
-</span><span id="124" class="l"><a href="#124">124 </a>        <span class="php-comment">// Step n+4: Cleanup.</span>
-</span><span id="125" class="l"><a href="#125">125 </a>        <span class="php-var">$steps</span> = <span class="php-num">6</span>;
-</span><span id="126" class="l"><a href="#126">126 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$this</span>-&gt;limits <span class="php-keyword1">as</span> <span class="php-var">$resource</span> =&gt; <span class="php-var">$limit</span>)
-</span><span id="127" class="l"><a href="#127">127 </a>        {
-</span><span id="128" class="l"><a href="#128">128 </a>            <span class="php-var">$className</span> = <span class="php-quote">'App\\Models\\'</span>. <span class="php-keyword2">ucfirst</span>(<span class="php-var">$resource</span>);
-</span><span id="129" class="l"><a href="#129">129 </a>
-</span><span id="130" class="l"><a href="#130">130 </a>            <span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span> .<span class="php-quote">'-files'</span>] = (int) <span class="php-keyword2">ceil</span>(<span class="php-var">$className</span>::<span class="php-keyword2">count</span>() / <span class="php-var">$limit</span>);
-</span><span id="131" class="l"><a href="#131">131 </a>            <span class="php-var">$steps</span> += <span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span> .<span class="php-quote">'-files'</span>];
-</span><span id="132" class="l"><a href="#132">132 </a>        }
-</span><span id="133" class="l"><a href="#133">133 </a>
-</span><span id="134" class="l"><a href="#134">134 </a>        <span class="php-var">$this</span>-&gt;progressBar = <span class="php-var">$this</span>-&gt;output-&gt;createProgressBar(<span class="php-var">$steps</span>);
-</span><span id="135" class="l"><a href="#135">135 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
+</span><span id="115" class="l"><a href="#115">115 </a>        <span class="php-comment">// Store the checksum method used on individual files.</span>
+</span><span id="116" class="l"><a href="#116">116 </a>        <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'checksum-method'</span>] = <span class="php-quote">'json-md5'</span>;
+</span><span id="117" class="l"><a href="#117">117 </a>
+</span><span id="118" class="l"><a href="#118">118 </a>        <span class="php-var">$this</span>-&gt;info(<span class="php-quote">&quot;Backing up to </span><span class="php-var">{$this-&gt;meta['id']}</span><span class="php-quote">.</span><span class="php-var">{$this-&gt;format}</span><span class="php-quote">&quot;</span>);
+</span><span id="119" class="l"><a href="#119">119 </a>
+</span><span id="120" class="l"><a href="#120">120 </a>        <span class="php-comment">// Calculate # of steps to complete backup.</span>
+</span><span id="121" class="l"><a href="#121">121 </a>        <span class="php-comment">// Step 1: Start.</span>
+</span><span id="122" class="l"><a href="#122">122 </a>        <span class="php-comment">// Step 2: Create temporary backup directory.</span>
+</span><span id="123" class="l"><a href="#123">123 </a>        <span class="php-comment">// Steps 3 to n: create dump files.</span>
+</span><span id="124" class="l"><a href="#124">124 </a>        <span class="php-comment">// Step n+1: Create meta file.</span>
+</span><span id="125" class="l"><a href="#125">125 </a>        <span class="php-comment">// Step n+2: Finalize backup file.</span>
+</span><span id="126" class="l"><a href="#126">126 </a>        <span class="php-comment">// Step n+3: Copy backgup file to backups disk.</span>
+</span><span id="127" class="l"><a href="#127">127 </a>        <span class="php-comment">// Step n+4: Cleanup.</span>
+</span><span id="128" class="l"><a href="#128">128 </a>        <span class="php-var">$steps</span> = <span class="php-num">6</span>;
+</span><span id="129" class="l"><a href="#129">129 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$this</span>-&gt;limits <span class="php-keyword1">as</span> <span class="php-var">$resource</span> =&gt; <span class="php-var">$limit</span>)
+</span><span id="130" class="l"><a href="#130">130 </a>        {
+</span><span id="131" class="l"><a href="#131">131 </a>            <span class="php-var">$className</span> = <span class="php-quote">'App\\Models\\'</span>. <span class="php-keyword2">ucfirst</span>(<span class="php-var">$resource</span>);
+</span><span id="132" class="l"><a href="#132">132 </a>
+</span><span id="133" class="l"><a href="#133">133 </a>            <span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span>] = [
+</span><span id="134" class="l"><a href="#134">134 </a>                <span class="php-quote">'files'</span> =&gt; (int) <span class="php-keyword2">ceil</span>(<span class="php-var">$className</span>::<span class="php-keyword2">count</span>() / <span class="php-var">$limit</span>)
+</span><span id="135" class="l"><a href="#135">135 </a>            ];
 </span><span id="136" class="l"><a href="#136">136 </a>
-</span><span id="137" class="l"><a href="#137">137 </a>        <span class="php-comment">// Create backup folder.</span>
-</span><span id="138" class="l"><a href="#138">138 </a>        <span class="php-var">$this</span>-&gt;tempStorage-&gt;makeDirectory(<span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>]);
-</span><span id="139" class="l"><a href="#139">139 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
-</span><span id="140" class="l"><a href="#140">140 </a>
-</span><span id="141" class="l"><a href="#141">141 </a>        <span class="php-comment">// Start dumping resources.</span>
-</span><span id="142" class="l"><a href="#142">142 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$this</span>-&gt;limits <span class="php-keyword1">as</span> <span class="php-var">$resource</span> =&gt; <span class="php-var">$limit</span>)
-</span><span id="143" class="l"><a href="#143">143 </a>        {
-</span><span id="144" class="l"><a href="#144">144 </a>            <span class="php-comment">// Performance check.</span>
-</span><span id="145" class="l"><a href="#145">145 </a>            <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span> .<span class="php-quote">'-files'</span>] &lt; <span class="php-num">1</span>) {
-</span><span id="146" class="l"><a href="#146">146 </a>                <span class="php-keyword1">continue</span>;
-</span><span id="147" class="l"><a href="#147">147 </a>            }
-</span><span id="148" class="l"><a href="#148">148 </a>
-</span><span id="149" class="l"><a href="#149">149 </a>            <span class="php-comment">// We will split the resource data into separate files, depending on the specified</span>
-</span><span id="150" class="l"><a href="#150">150 </a>            <span class="php-comment">// limits. Using &quot;$className::withTrashed()-&gt;chunk()&quot; somehow isn't helpful here,</span>
-</span><span id="151" class="l"><a href="#151">151 </a>            <span class="php-comment">// so we will chunk the data manually.</span>
-</span><span id="152" class="l"><a href="#152">152 </a>            <span class="php-keyword1">for</span> (<span class="php-var">$i</span> = <span class="php-num">0</span>; <span class="php-var">$i</span> &lt; <span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span> .<span class="php-quote">'-files'</span>]; <span class="php-var">$i</span>++)
-</span><span id="153" class="l"><a href="#153">153 </a>            {
-</span><span id="154" class="l"><a href="#154">154 </a>                <span class="php-var">$dump</span> = [];
-</span><span id="155" class="l"><a href="#155">155 </a>                <span class="php-var">$skip</span> = <span class="php-var">$i</span> * <span class="php-var">$limit</span>;
-</span><span id="156" class="l"><a href="#156">156 </a>                <span class="php-var">$className</span> = <span class="php-quote">'App\\Models\\'</span>. <span class="php-keyword2">ucfirst</span>(<span class="php-var">$resource</span>);
-</span><span id="157" class="l"><a href="#157">157 </a>                <span class="php-var">$models</span> = <span class="php-var">$className</span>::withTrashed()-&gt;skip(<span class="php-var">$skip</span>)-&gt;take(<span class="php-var">$limit</span>)-&gt;get();
-</span><span id="158" class="l"><a href="#158">158 </a>
-</span><span id="159" class="l"><a href="#159">159 </a>                <span class="php-keyword1">foreach</span> (<span class="php-var">$models</span> <span class="php-keyword1">as</span> <span class="php-var">$model</span>) {
-</span><span id="160" class="l"><a href="#160">160 </a>                    <span class="php-var">$dump</span>[] = <span class="php-var">$model</span>-&gt;getExportArray();
-</span><span id="161" class="l"><a href="#161">161 </a>                }
-</span><span id="162" class="l"><a href="#162">162 </a>
-</span><span id="163" class="l"><a href="#163">163 </a>                <span class="php-var">$this</span>-&gt;createFile(<span class="php-quote">&quot;</span><span class="php-var">{$resource}</span><span class="php-quote">.</span><span class="php-var">{$i}</span><span class="php-quote">&quot;</span>, <span class="php-var">$dump</span>);
-</span><span id="164" class="l"><a href="#164">164 </a>
-</span><span id="165" class="l"><a href="#165">165 </a>                <span class="php-comment">// Save the md5 checksum of the json-encoded data.</span>
-</span><span id="166" class="l"><a href="#166">166 </a>                <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">&quot;</span><span class="php-var">{$resource}</span><span class="php-quote">-json-md5&quot;</span>] = <span class="php-keyword2">md5</span>(<span class="php-keyword2">json_encode</span>(<span class="php-var">$dump</span>));
+</span><span id="137" class="l"><a href="#137">137 </a>            <span class="php-var">$steps</span> += <span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span>][<span class="php-quote">'files'</span>];
+</span><span id="138" class="l"><a href="#138">138 </a>        }
+</span><span id="139" class="l"><a href="#139">139 </a>
+</span><span id="140" class="l"><a href="#140">140 </a>        <span class="php-var">$this</span>-&gt;progressBar = <span class="php-var">$this</span>-&gt;output-&gt;createProgressBar(<span class="php-var">$steps</span>);
+</span><span id="141" class="l"><a href="#141">141 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
+</span><span id="142" class="l"><a href="#142">142 </a>
+</span><span id="143" class="l"><a href="#143">143 </a>        <span class="php-comment">// Create backup folder.</span>
+</span><span id="144" class="l"><a href="#144">144 </a>        <span class="php-var">$this</span>-&gt;tempStorage-&gt;makeDirectory(<span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>]);
+</span><span id="145" class="l"><a href="#145">145 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
+</span><span id="146" class="l"><a href="#146">146 </a>
+</span><span id="147" class="l"><a href="#147">147 </a>        <span class="php-comment">// Start dumping resources.</span>
+</span><span id="148" class="l"><a href="#148">148 </a>        <span class="php-keyword1">foreach</span> (<span class="php-var">$this</span>-&gt;limits <span class="php-keyword1">as</span> <span class="php-var">$resource</span> =&gt; <span class="php-var">$limit</span>)
+</span><span id="149" class="l"><a href="#149">149 </a>        {
+</span><span id="150" class="l"><a href="#150">150 </a>            <span class="php-comment">// Performance check.</span>
+</span><span id="151" class="l"><a href="#151">151 </a>            <span class="php-keyword1">if</span> (<span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span>][<span class="php-quote">'files'</span>] &lt; <span class="php-num">1</span>) {
+</span><span id="152" class="l"><a href="#152">152 </a>                <span class="php-keyword1">continue</span>;
+</span><span id="153" class="l"><a href="#153">153 </a>            }
+</span><span id="154" class="l"><a href="#154">154 </a>
+</span><span id="155" class="l"><a href="#155">155 </a>            <span class="php-comment">// Setup meta data.</span>
+</span><span id="156" class="l"><a href="#156">156 </a>            <span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span>][<span class="php-quote">'checksums'</span>] = [];
+</span><span id="157" class="l"><a href="#157">157 </a>
+</span><span id="158" class="l"><a href="#158">158 </a>            <span class="php-comment">// We will split the resource data into separate files, depending on the specified</span>
+</span><span id="159" class="l"><a href="#159">159 </a>            <span class="php-comment">// limits. Using &quot;$className::withTrashed()-&gt;chunk()&quot; somehow isn't helpful here,</span>
+</span><span id="160" class="l"><a href="#160">160 </a>            <span class="php-comment">// so we will chunk the data manually.</span>
+</span><span id="161" class="l"><a href="#161">161 </a>            <span class="php-keyword1">for</span> (<span class="php-var">$i</span> = <span class="php-num">0</span>; <span class="php-var">$i</span> &lt; <span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span>][<span class="php-quote">'files'</span>]; <span class="php-var">$i</span>++)
+</span><span id="162" class="l"><a href="#162">162 </a>            {
+</span><span id="163" class="l"><a href="#163">163 </a>                <span class="php-var">$dump</span> = [];
+</span><span id="164" class="l"><a href="#164">164 </a>                <span class="php-var">$skip</span> = <span class="php-var">$i</span> * <span class="php-var">$limit</span>;
+</span><span id="165" class="l"><a href="#165">165 </a>                <span class="php-var">$className</span> = <span class="php-quote">'App\\Models\\'</span>. <span class="php-keyword2">ucfirst</span>(<span class="php-var">$resource</span>);
+</span><span id="166" class="l"><a href="#166">166 </a>                <span class="php-var">$models</span> = <span class="php-var">$className</span>::withTrashed()-&gt;skip(<span class="php-var">$skip</span>)-&gt;take(<span class="php-var">$limit</span>)-&gt;get();
 </span><span id="167" class="l"><a href="#167">167 </a>
-</span><span id="168" class="l"><a href="#168">168 </a>                <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
-</span><span id="169" class="l"><a href="#169">169 </a>            }
-</span><span id="170" class="l"><a href="#170">170 </a>        }
+</span><span id="168" class="l"><a href="#168">168 </a>                <span class="php-keyword1">foreach</span> (<span class="php-var">$models</span> <span class="php-keyword1">as</span> <span class="php-var">$model</span>) {
+</span><span id="169" class="l"><a href="#169">169 </a>                    <span class="php-var">$dump</span>[] = <span class="php-var">$model</span>-&gt;getExportArray();
+</span><span id="170" class="l"><a href="#170">170 </a>                }
 </span><span id="171" class="l"><a href="#171">171 </a>
-</span><span id="172" class="l"><a href="#172">172 </a>        <span class="php-comment">// Create meta file.</span>
-</span><span id="173" class="l"><a href="#173">173 </a>        <span class="php-var">$this</span>-&gt;createFile(<span class="php-quote">'meta.yaml'</span>, Yaml::dump(<span class="php-var">$this</span>-&gt;meta));
-</span><span id="174" class="l"><a href="#174">174 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
-</span><span id="175" class="l"><a href="#175">175 </a>
-</span><span id="176" class="l"><a href="#176">176 </a>        <span class="php-comment">// tar &amp; gzip folder</span>
-</span><span id="177" class="l"><a href="#177">177 </a>        <span class="php-var">$phar</span> = <span class="php-keyword1">new</span> PharData(<span class="php-var">$this</span>-&gt;getDirName() .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'.tar'</span>);
-</span><span id="178" class="l"><a href="#178">178 </a>        <span class="php-var">$phar</span>-&gt;buildFromDirectory(<span class="php-var">$this</span>-&gt;getDirName());
-</span><span id="179" class="l"><a href="#179">179 </a>        <span class="php-var">$phar</span>-&gt;compress(Phar::GZ);
-</span><span id="180" class="l"><a href="#180">180 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
-</span><span id="181" class="l"><a href="#181">181 </a>
-</span><span id="182" class="l"><a href="#182">182 </a>        <span class="php-comment">// Copy backup file to backups disk.</span>
-</span><span id="183" class="l"><a href="#183">183 </a>        <span class="php-var">$this</span>-&gt;storage-&gt;put(
-</span><span id="184" class="l"><a href="#184">184 </a>            <span class="php-keyword2">date</span>(<span class="php-quote">'Y-m'</span>) .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'.nko'</span>,
-</span><span id="185" class="l"><a href="#185">185 </a>            <span class="php-var">$this</span>-&gt;tempStorage-&gt;get(<span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'.tar.gz'</span>)
-</span><span id="186" class="l"><a href="#186">186 </a>        );
-</span><span id="187" class="l"><a href="#187">187 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
-</span><span id="188" class="l"><a href="#188">188 </a>
-</span><span id="189" class="l"><a href="#189">189 </a>        <span class="php-comment">// Remove temporary files.</span>
-</span><span id="190" class="l"><a href="#190">190 </a>        <span class="php-var">$this</span>-&gt;tempStorage-&gt;deleteDirectory(<span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>]);
-</span><span id="191" class="l"><a href="#191">191 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
-</span><span id="192" class="l"><a href="#192">192 </a>    }
-</span><span id="193" class="l"><a href="#193">193 </a>
-</span><span id="194" class="l"><a href="#194">194 </a>    <span class="php-comment">/**
-</span></span><span id="195" class="l"><a href="#195">195 </a><span class="php-comment">     * Creates a file in the current temporary backup folder.
-</span></span><span id="196" class="l"><a href="#196">196 </a><span class="php-comment">     *
-</span></span><span id="197" class="l"><a href="#197">197 </a><span class="php-comment">     * @param string $filename
-</span></span><span id="198" class="l"><a href="#198">198 </a><span class="php-comment">     * @param mixed $contents
-</span></span><span id="199" class="l"><a href="#199">199 </a><span class="php-comment">     * @return ?
-</span></span><span id="200" class="l"><a href="#200">200 </a><span class="php-comment">     */</span>
-</span><span id="201" class="l"><a href="#201">201 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> createFile(<span class="php-var">$filename</span>, <span class="php-var">$contents</span>)
-</span><span id="202" class="l"><a href="#202">202 </a>    {
-</span><span id="203" class="l"><a href="#203">203 </a>        <span class="php-comment">// Serialize file data.</span>
-</span><span id="204" class="l"><a href="#204">204 </a>        <span class="php-keyword1">if</span> (!<span class="php-keyword2">is_string</span>(<span class="php-var">$contents</span>))
-</span><span id="205" class="l"><a href="#205">205 </a>        {
-</span><span id="206" class="l"><a href="#206">206 </a>            <span class="php-var">$contents</span> = <span class="php-var">$this</span>-&gt;option(<span class="php-quote">'yaml'</span>) ? Yaml::dump(<span class="php-var">$contents</span>) : <span class="php-keyword2">json_encode</span>(<span class="php-var">$contents</span>);
-</span><span id="207" class="l"><a href="#207">207 </a>        }
-</span><span id="208" class="l"><a href="#208">208 </a>
-</span><span id="209" class="l"><a href="#209">209 </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;tempStorage-&gt;put(<span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'/'</span>. <span class="php-var">$filename</span>, <span class="php-var">$contents</span>);
-</span><span id="210" class="l"><a href="#210">210 </a>    }
-</span><span id="211" class="l"><a href="#211">211 </a>
-</span><span id="212" class="l"><a href="#212">212 </a>    <span class="php-comment">/**
-</span></span><span id="213" class="l"><a href="#213">213 </a><span class="php-comment">     * Retrieves the full path to the current temporary backup folder.
-</span></span><span id="214" class="l"><a href="#214">214 </a><span class="php-comment">     *
-</span></span><span id="215" class="l"><a href="#215">215 </a><span class="php-comment">     * @return string
-</span></span><span id="216" class="l"><a href="#216">216 </a><span class="php-comment">     */</span>
-</span><span id="217" class="l"><a href="#217">217 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getDirName() {
-</span><span id="218" class="l"><a href="#218">218 </a>        <span class="php-keyword1">return</span> config(<span class="php-quote">'filesystems.disks.backups-build.root'</span>) .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>];
-</span><span id="219" class="l"><a href="#219">219 </a>    }
-</span><span id="220" class="l"><a href="#220">220 </a>}
-</span><span id="221" class="l"><a href="#221">221 </a></span></code></pre>
+</span><span id="172" class="l"><a href="#172">172 </a>                <span class="php-var">$this</span>-&gt;createFile(<span class="php-quote">&quot;</span><span class="php-var">{$resource}</span><span class="php-quote">-</span><span class="php-var">{$i}</span><span class="php-quote">&quot;</span>, <span class="php-var">$dump</span>);
+</span><span id="173" class="l"><a href="#173">173 </a>
+</span><span id="174" class="l"><a href="#174">174 </a>                <span class="php-comment">// Save the md5 checksum of the json-encoded data.</span>
+</span><span id="175" class="l"><a href="#175">175 </a>                <span class="php-var">$this</span>-&gt;meta[<span class="php-var">$resource</span>][<span class="php-quote">'checksums'</span>][<span class="php-var">$i</span>] = <span class="php-keyword2">md5</span>(<span class="php-keyword2">json_encode</span>(<span class="php-var">$dump</span>));
+</span><span id="176" class="l"><a href="#176">176 </a>
+</span><span id="177" class="l"><a href="#177">177 </a>                <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
+</span><span id="178" class="l"><a href="#178">178 </a>            }
+</span><span id="179" class="l"><a href="#179">179 </a>        }
+</span><span id="180" class="l"><a href="#180">180 </a>
+</span><span id="181" class="l"><a href="#181">181 </a>        <span class="php-comment">// Create meta file.</span>
+</span><span id="182" class="l"><a href="#182">182 </a>        <span class="php-var">$this</span>-&gt;createFile(<span class="php-quote">'meta.yaml'</span>, Yaml::dump(<span class="php-var">$this</span>-&gt;meta, <span class="php-num">4</span>), <span class="php-quote">'yaml'</span>);
+</span><span id="183" class="l"><a href="#183">183 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
+</span><span id="184" class="l"><a href="#184">184 </a>
+</span><span id="185" class="l"><a href="#185">185 </a>        <span class="php-comment">// tar &amp; gzip folder</span>
+</span><span id="186" class="l"><a href="#186">186 </a>        <span class="php-var">$phar</span> = <span class="php-keyword1">new</span> PharData(<span class="php-var">$this</span>-&gt;getDirName() .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'.tar'</span>);
+</span><span id="187" class="l"><a href="#187">187 </a>        <span class="php-var">$phar</span>-&gt;buildFromDirectory(<span class="php-var">$this</span>-&gt;getDirName());
+</span><span id="188" class="l"><a href="#188">188 </a>        <span class="php-var">$phar</span>-&gt;setMetadata(<span class="php-var">$this</span>-&gt;meta);
+</span><span id="189" class="l"><a href="#189">189 </a>        <span class="php-var">$phar</span>-&gt;compress(Phar::GZ);
+</span><span id="190" class="l"><a href="#190">190 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
+</span><span id="191" class="l"><a href="#191">191 </a>
+</span><span id="192" class="l"><a href="#192">192 </a>        <span class="php-comment">// Copy backup file to backups disk.</span>
+</span><span id="193" class="l"><a href="#193">193 </a>        <span class="php-var">$this</span>-&gt;storage-&gt;put(
+</span><span id="194" class="l"><a href="#194">194 </a>            <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'.nko'</span>,
+</span><span id="195" class="l"><a href="#195">195 </a>            <span class="php-var">$this</span>-&gt;tempStorage-&gt;get(<span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'.tar.gz'</span>)
+</span><span id="196" class="l"><a href="#196">196 </a>        );
+</span><span id="197" class="l"><a href="#197">197 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
+</span><span id="198" class="l"><a href="#198">198 </a>
+</span><span id="199" class="l"><a href="#199">199 </a>        <span class="php-comment">// Remove temporary files.</span>
+</span><span id="200" class="l"><a href="#200">200 </a>        <span class="php-keyword1">unset</span>(<span class="php-var">$phar</span>);
+</span><span id="201" class="l"><a href="#201">201 </a>        Phar::unlinkArchive(<span class="php-var">$this</span>-&gt;getDirName() .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'.tar'</span>);
+</span><span id="202" class="l"><a href="#202">202 </a>        Phar::unlinkArchive(<span class="php-var">$this</span>-&gt;getDirName() .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>] .<span class="php-quote">'.tar.gz'</span>);
+</span><span id="203" class="l"><a href="#203">203 </a>        <span class="php-var">$this</span>-&gt;tempStorage-&gt;deleteDirectory(<span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>]);
+</span><span id="204" class="l"><a href="#204">204 </a>        <span class="php-var">$this</span>-&gt;progressBar-&gt;advance();
+</span><span id="205" class="l"><a href="#205">205 </a>    }
+</span><span id="206" class="l"><a href="#206">206 </a>
+</span><span id="207" class="l"><a href="#207">207 </a>    <span class="php-comment">/**
+</span></span><span id="208" class="l"><a href="#208">208 </a><span class="php-comment">     * Creates a file in the current temporary backup folder.
+</span></span><span id="209" class="l"><a href="#209">209 </a><span class="php-comment">     *
+</span></span><span id="210" class="l"><a href="#210">210 </a><span class="php-comment">     * @param string $filename
+</span></span><span id="211" class="l"><a href="#211">211 </a><span class="php-comment">     * @param mixed $contents
+</span></span><span id="212" class="l"><a href="#212">212 </a><span class="php-comment">     * @return ?
+</span></span><span id="213" class="l"><a href="#213">213 </a><span class="php-comment">     */</span>
+</span><span id="214" class="l"><a href="#214">214 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> createFile(<span class="php-var">$filename</span>, <span class="php-var">$contents</span>, <span class="php-var">$format</span> = <span class="php-keyword1">null</span>)
+</span><span id="215" class="l"><a href="#215">215 </a>    {
+</span><span id="216" class="l"><a href="#216">216 </a>        <span class="php-comment">// Serialize file data.</span>
+</span><span id="217" class="l"><a href="#217">217 </a>        <span class="php-keyword1">if</span> (!<span class="php-keyword2">is_string</span>(<span class="php-var">$contents</span>))
+</span><span id="218" class="l"><a href="#218">218 </a>        {
+</span><span id="219" class="l"><a href="#219">219 </a>            <span class="php-var">$contents</span> = <span class="php-var">$this</span>-&gt;option(<span class="php-quote">'yaml'</span>) ? Yaml::dump(<span class="php-var">$contents</span>, <span class="php-num">4</span>) : <span class="php-keyword2">json_encode</span>(<span class="php-var">$contents</span>);
+</span><span id="220" class="l"><a href="#220">220 </a>        }
+</span><span id="221" class="l"><a href="#221">221 </a>
+</span><span id="222" class="l"><a href="#222">222 </a>        <span class="php-keyword1">if</span> (!<span class="php-var">$format</span>) {
+</span><span id="223" class="l"><a href="#223">223 </a>            <span class="php-var">$format</span> = <span class="php-var">$this</span>-&gt;option(<span class="php-quote">'yaml'</span>) ? <span class="php-quote">'yaml'</span> : <span class="php-quote">'json'</span>;
+</span><span id="224" class="l"><a href="#224">224 </a>        }
+</span><span id="225" class="l"><a href="#225">225 </a>
+</span><span id="226" class="l"><a href="#226">226 </a>        <span class="php-keyword1">return</span> <span class="php-var">$this</span>-&gt;tempStorage-&gt;put(<span class="php-quote">&quot;</span><span class="php-var">{$this-&gt;meta['id']}</span><span class="php-quote">/</span><span class="php-var">{$filename}</span><span class="php-quote">.</span><span class="php-var">{$format}</span><span class="php-quote">&quot;</span>, <span class="php-var">$contents</span>);
+</span><span id="227" class="l"><a href="#227">227 </a>    }
+</span><span id="228" class="l"><a href="#228">228 </a>
+</span><span id="229" class="l"><a href="#229">229 </a>    <span class="php-comment">/**
+</span></span><span id="230" class="l"><a href="#230">230 </a><span class="php-comment">     * Retrieves the full path to the current temporary backup folder.
+</span></span><span id="231" class="l"><a href="#231">231 </a><span class="php-comment">     *
+</span></span><span id="232" class="l"><a href="#232">232 </a><span class="php-comment">     * @return string
+</span></span><span id="233" class="l"><a href="#233">233 </a><span class="php-comment">     */</span>
+</span><span id="234" class="l"><a href="#234">234 </a>    <span class="php-keyword1">protected</span> <span class="php-keyword1">function</span> getDirName() {
+</span><span id="235" class="l"><a href="#235">235 </a>        <span class="php-keyword1">return</span> config(<span class="php-quote">'filesystems.disks.backups-build.root'</span>) .<span class="php-quote">'/'</span>. <span class="php-var">$this</span>-&gt;meta[<span class="php-quote">'id'</span>];
+</span><span id="236" class="l"><a href="#236">236 </a>    }
+</span><span id="237" class="l"><a href="#237">237 </a>}
+</span><span id="238" class="l"><a href="#238">238 </a></span></code></pre>
 	</div>
 
 	<div id="footer">
@@ -503,6 +530,6 @@
 	</div>
 </div>
 <script src="resources/combined.js?7f316eeabf2751a4eb1050572e1bd4eee4ea59e6"></script>
-<script src="elementlist.js?0cd7085cf5fe77baa95dc28d3ca7f63ad018433c"></script>
+<script src="elementlist.js?c339a94ba8154a9ce438ab5ec26fca8f88d2d0ac"></script>
 </body>
 </html>

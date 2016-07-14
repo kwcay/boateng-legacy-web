@@ -181,17 +181,27 @@
 				<li><a href="class-App.Commands.Command.html">App\Commands\Command</a></li>
 				<li><a href="class-App.Console.Commands.Backup.html">App\Console\Commands\Backup</a></li>
 				<li><a href="class-App.Console.Commands.Inspire.html">App\Console\Commands\Inspire</a></li>
+				<li><a href="class-App.Console.Commands.ListBackup.html">App\Console\Commands\ListBackup</a></li>
+				<li><a href="class-App.Console.Commands.RestoreBackup.html">App\Console\Commands\RestoreBackup</a></li>
 				<li><a href="class-App.Console.Kernel.html">App\Console\Kernel</a></li>
 				<li><a href="class-App.Events.Event.html">App\Events\Event</a></li>
 				<li><a href="class-App.Exceptions.Handler.html">App\Exceptions\Handler</a></li>
+				<li><a href="class-App.Factories.BackupFactory.html">App\Factories\BackupFactory</a></li>
 				<li><a href="class-App.Factories.DataExportFactory.html">App\Factories\DataExportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.AlphabetImportFactory.html">App\Factories\DataImport\AlphabetImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.CountryImportFactory.html">App\Factories\DataImport\CountryImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.CultureImportFactory.html">App\Factories\DataImport\CultureImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImport.DefinitionImportFactory.html">App\Factories\DataImport\DefinitionImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImport.LanguageImportFactory.html">App\Factories\DataImport\LanguageImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.ReferenceImportFactory.html">App\Factories\DataImport\ReferenceImportFactory</a></li>
+				<li><a href="class-App.Factories.DataImport.UserImportFactory.html">App\Factories\DataImport\UserImportFactory</a></li>
 				<li><a href="class-App.Factories.DataImportFactory.html">App\Factories\DataImportFactory</a></li>
+				<li><a href="class-App.Factories.Factory.html">App\Factories\Factory</a></li>
 				<li><a href="class-App.Factories.Transliteration.LatnTransliterationFactory.html">App\Factories\Transliteration\LatnTransliterationFactory</a></li>
 				<li><a href="class-App.Factories.TransliterationFactory.html">App\Factories\TransliterationFactory</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AdminController.html">App\Http\Controllers\Admin\AdminController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.AlphabetController.html">App\Http\Controllers\Admin\AlphabetController</a></li>
+				<li><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.CountryController.html">App\Http\Controllers\Admin\CountryController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.DefinitionController.html">App\Http\Controllers\Admin\DefinitionController</a></li>
 				<li><a href="class-App.Http.Controllers.Admin.LanguageController.html">App\Http\Controllers\Admin\LanguageController</a></li>
@@ -275,6 +285,53 @@
 <div id="content">
 	<h1>Todo</h1>
 
+			<div class="panel panel-default">
+                <div class="panel-heading"><h2>Classes summary</h2></div>
+				<table class="summary table table-bordered table-striped" id="classes">
+	<tr>
+		<td class="name"><a href="class-App.Factories.DataImport.AlphabetImportFactory.html">App\Factories\DataImport\AlphabetImportFactory</a></td>
+		<td>
+					This class can be improved for efficiency, especially keeping in mind the BackupFactory.<br>
+		</td>
+	</tr>
+	<tr>
+		<td class="name"><a href="class-App.Factories.DataImport.CountryImportFactory.html">App\Factories\DataImport\CountryImportFactory</a></td>
+		<td>
+					This class can be improved for efficiency, especially keeping in mind the BackupFactory.<br>
+		</td>
+	</tr>
+	<tr>
+		<td class="name"><a href="class-App.Factories.DataImport.CultureImportFactory.html">App\Factories\DataImport\CultureImportFactory</a></td>
+		<td>
+					This class can be improved for efficiency, especially keeping in mind the BackupFactory.<br>
+		</td>
+	</tr>
+	<tr>
+		<td class="name"><a href="class-App.Factories.DataImport.LanguageImportFactory.html">App\Factories\DataImport\LanguageImportFactory</a></td>
+		<td>
+					This class can be improved for efficiency, especially keeping in mind the BackupFactory.<br>
+		</td>
+	</tr>
+	<tr>
+		<td class="name"><a href="class-App.Factories.DataImport.ReferenceImportFactory.html">App\Factories\DataImport\ReferenceImportFactory</a></td>
+		<td>
+					This class can be improved for efficiency, especially keeping in mind the BackupFactory.<br>
+		</td>
+	</tr>
+	<tr>
+		<td class="name"><a href="class-App.Factories.DataImport.UserImportFactory.html">App\Factories\DataImport\UserImportFactory</a></td>
+		<td>
+					This class can be improved for efficiency, especially keeping in mind the BackupFactory.<br>
+		</td>
+	</tr>
+	<tr>
+		<td class="name"><a href="class-App.Factories.DataImportFactory.html">App\Factories\DataImportFactory</a></td>
+		<td>
+					This class can be improved for efficiency, especially keeping in mind the BackupFactory.<br>
+		</td>
+	</tr>
+				</table>
+			</div>
 
 
 
@@ -282,6 +339,48 @@
 			<div class="panel panel-default">
                 <div class="panel-heading"><h2>Methods summary</h2></div>
 				<table class="summary table table-bordered table-striped" id="methods">
+					<tr>
+						<td class="name"><a href="class-App.Factories.BackupFactory.html">App\Factories\BackupFactory</a></td>
+						<td class="name"><code><a href="class-App.Factories.BackupFactory.html#_delete">delete()</a></code></td>
+						<td>
+										Restrict access based on roles.<br>
+						</td>
+					</tr>
+					<tr>
+						<td class="name"><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></td>
+						<td class="name"><code><a href="class-App.Http.Controllers.Admin.BackupController.html#_index">index()</a></code></td>
+						<td>
+										Restrict access based on roles<br>
+						</td>
+					</tr>
+					<tr>
+						<td class="name"><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></td>
+						<td class="name"><code><a href="class-App.Http.Controllers.Admin.BackupController.html#_create">create()</a></code></td>
+						<td>
+										Restrict access based on roles<br>
+						</td>
+					</tr>
+					<tr>
+						<td class="name"><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></td>
+						<td class="name"><code><a href="class-App.Http.Controllers.Admin.BackupController.html#_upload">upload()</a></code></td>
+						<td>
+										Restrict access based on roles<br>
+						</td>
+					</tr>
+					<tr>
+						<td class="name"><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></td>
+						<td class="name"><code><a href="class-App.Http.Controllers.Admin.BackupController.html#_download">download()</a></code></td>
+						<td>
+										Restrict access based on roles<br>
+						</td>
+					</tr>
+					<tr>
+						<td class="name"><a href="class-App.Http.Controllers.Admin.BackupController.html">App\Http\Controllers\Admin\BackupController</a></td>
+						<td class="name"><code><a href="class-App.Http.Controllers.Admin.BackupController.html#_destroy">destroy()</a></code></td>
+						<td>
+										Restrict access based on roles<br>
+						</td>
+					</tr>
 					<tr>
 						<td class="name"><a href="class-App.Http.Controllers.Admin.LanguageController.html">App\Http\Controllers\Admin\LanguageController</a></td>
 						<td class="name"><code><a href="class-App.Http.Controllers.Admin.LanguageController.html#_update">update()</a></code></td>
@@ -350,13 +449,6 @@
 						<td class="name"><code><a href="class-App.Http.Controllers.Controller.html#_forceDestroy">forceDestroy()</a></code></td>
 						<td>
 										Restrict access based on roles.<br>
-						</td>
-					</tr>
-					<tr>
-						<td class="name"><a href="class-App.Http.Controllers.Controller.html">App\Http\Controllers\Controller</a></td>
-						<td class="name"><code><a href="class-App.Http.Controllers.Controller.html#_getEmbedArray">getEmbedArray()</a></code></td>
-						<td>
-										Replace with trait from frnkly/laravel-embeds<br>
 						</td>
 					</tr>
 					<tr>
