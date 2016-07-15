@@ -11,7 +11,7 @@
                         data-toggle="tooltip"></a>
                     <a
                         href="{{ route('definition.random') }}"
-                        class="fa fa-retweet fa-fw"
+                        class="fa fa-random fa-fw"
                         title="Random definition"
                         data-toggle="tooltip"></a>
                     <a

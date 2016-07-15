@@ -6,7 +6,7 @@
 
     <div class="row">
         <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 text-center">
-            <h1>
+            <h1 class="larger">
                 &ldquo; {{ $query }} &rdquo;
             </h1>
         </div>
