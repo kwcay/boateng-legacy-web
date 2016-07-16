@@ -1,7 +1,7 @@
 @extends('layouts.narrow')
 
 {{-- Page meta --}}
-@section('title', $lang->name .' Language')
+@section('title', $lang->name .' Dictionary & Reference')
 @section('description', 'Learn new words and sayings in '. $lang->name)
 @section('keywords', implode(',', ['dictionary', 'learn', $lang->name, $lang->code, 'free']))
 
