@@ -149,7 +149,7 @@
 
 @task('update-symlinks')
 
-    {{ msg('Creating symlink to latest release...') }}
+    {{ msg('Updating symbolic links...') }}
 
     # Make sure the persistent storage directory exists.
     #[ -d {{ $baseDir }}/storage ] || mkdir -p {{ $baseDir }}/storage;
