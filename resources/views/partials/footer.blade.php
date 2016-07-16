@@ -29,14 +29,6 @@
                         class="fa fa-graduation-cap fa-fw"
                         title="@lang('branding.learning_app_title')"
                         data-toggle="tooltip"></a>
-
-                    @if (Auth::check())
-                        <a
-                            href="{{ route('admin.index') }}"
-                            class="fa fa-cubes fa-fw"
-                            title="Admin"
-                            data-toggle="tooltip"></a>
-                    @endif
                 </div>
 
                 <div class="footer-row">
@@ -70,7 +62,12 @@
                         sitemap
                     </a>
                     |
+
                     @if (Auth::check())
+                        <a href="{{ route('admin.index') }}">
+                            admin
+                        </a>
+                        |
                         <a href="{{ route('auth.logout') }}">
                             sign out
                         </a>

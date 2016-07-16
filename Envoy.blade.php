@@ -45,8 +45,8 @@
     setup-app
     composer-install
     update-permissions
-    update-symlinks
     optimize
+    update-symlinks
     purge-releases
 
 @endmacro
@@ -245,6 +245,17 @@
     else
         echo "No releases found for purging at this time";
     fi
+
+@endtask
+
+@task('backup', ['on' => 'production'])
+
+    {{ msg('Creating backup...') }}
+
+    cd {{ $liveDir }};
+
+    # Optimize installation.
+    php artisan backup;
 
 @endtask
 
