@@ -61,7 +61,9 @@ var DiNkomoDictionary = function(options) {
 
         // Start ajax request
         $.ajax({
-            url: form.endpoint.replace(':query', App.urlencode(query)) + '?lang='+ (options.langCode || ''),
+            url: form.endpoint.replace(':query', App.urlencode(query)) +
+                    '?lang='+ (options.langCode || '') +
+                    '&locale=eng',
             type: 'GET',
             error: form.onSubmitError,
             success: function(results)
@@ -172,7 +174,7 @@ var DiNkomoDictionary = function(options) {
                     '(' + definition.subType + ')' +
                 '</small> '+
                 'is a ' + definition.type + ' that means ' +
-                '<i>' + definition.translation.practical.eng + '</i> in '+
+                '<i>' + definition.translation.practical + '</i> in '+
                 '<a href="' + definition.mainLanguage.uri + '">' +
                     definition.mainLanguage.name +
                 '</a>' +
