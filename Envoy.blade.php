@@ -169,7 +169,7 @@
 
 @endtask
 
-@task('down')
+@task('down', ['on' => 'production'])
 
     {{ msg('Putting app in maintenance mode...') }}
 
@@ -179,7 +179,7 @@
 
 @endtask
 
-@task('migrate')
+@task('migrate', ['on' => 'production'])
 
     {{ msg('Running migrations...') }}
 
@@ -188,7 +188,7 @@
 
 @endtask
 
-@task('rollback')
+@task('rollback', ['on' => 'production'])
 
     {{ msg('Rolling back last migration...') }}
 
@@ -197,7 +197,7 @@
 
 @endtask
 
-@task('refresh')
+@task('refresh', ['on' => 'production'])
 
     {{ msg('Refreshing database migrations...') }}
 
@@ -206,14 +206,14 @@
 
 @endtask
 
-@task('up')
+@task('up', ['on' => 'production'])
 
     cd {{ $liveDir }};
     php artisan up;
 
 @endtask
 
-@task('optimize')
+@task('optimize', ['on' => 'production'])
 
     {{ msg('Optimizing...') }}
 
@@ -232,7 +232,7 @@
 
 @endtask
 
-@task('purge-releases')
+@task('purge-releases', ['on' => 'production'])
 
     {{ msg('Purging old releases...') }}
 

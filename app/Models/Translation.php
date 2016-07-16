@@ -82,7 +82,7 @@ class Translation extends Model
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function references() {
-        return $this->morphToMany('App\Models\Reference', 'referenceable');
+        return $this->morphToMany('App\Models\Reference', 'referenceable', 'referenceable');
     }
 
 

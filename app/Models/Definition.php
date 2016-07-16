@@ -43,16 +43,17 @@ class Definition extends Model
      * database relations.
      */
     public $embedable = [
-        'uri'           => [],
-        'editUri'       => [],
-        'mainTitle'     => ['titles'],
-        'titleString'   => ['titles'],
-        'titleList'     => ['titles'],
-        'relatedDefinitionList' => [],
-        'tagList'       => [],
-        'translation'   => [],
-        'mainLanguage'  => [],
-        'languageList'  => [],
+        'uri'               => [],
+        'editUri'           => [],
+        'mainTitle'         => ['titles'],
+        'titleString'       => ['titles'],
+        'titleList'         => ['titles'],
+        'relatedDefinitionList' => ['relatedDefinitions'],
+        'tagList'           => ['tags'],
+        'translation'       => ['translations'],
+        'allTranslations'   => ['translations'],
+        'mainLanguage'      => ['languages'],
+        'languageList'      => ['languages'],
     ];
 
 
@@ -1083,9 +1084,19 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->translation. Used to combine translation data when arraying this model.
+     * Accessor for $this->translation.
      */
     public function getTranslationAttribute()
+    {
+        $results = $this->translations->where('language', 'eng');
+
+        return $results->count() ? $results->first() : null;
+    }
+
+    /**
+     * Accessor for $this->allTranslations. Used to combine translation data when arraying this model.
+     */
+    public function getAllTranslationsAttribute()
     {
         return [
             'practical' => $this->practicalTranslations,
@@ -1126,6 +1137,13 @@ class Definition extends Model
      */
     public function getEditUriAdminAttribute() {
         return route('r.definition.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
+    }
+
+    /**
+     * Accessor for $this->references.
+     */
+    public function getReferencesAttribute() {
+        return $this->translation ? $this->translation->references : new Collection;
     }
 
     /**
