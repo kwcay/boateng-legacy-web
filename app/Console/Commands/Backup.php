@@ -202,6 +202,8 @@ class Backup extends Command
         Phar::unlinkArchive($this->getDirName() .'/'. $this->meta['id'] .'.tar.gz');
         $this->tempStorage->deleteDirectory($this->meta['id']);
         $this->progressBar->advance();
+
+        print "\n";
     }
 
     /**

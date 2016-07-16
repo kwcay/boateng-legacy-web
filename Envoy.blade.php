@@ -254,8 +254,8 @@
 
     cd {{ $liveDir }};
 
-    # Optimize installation.
-    php artisan backup;
+    # Run backup command.
+    php artisan backup
 
 @endtask
 

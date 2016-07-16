@@ -152,12 +152,12 @@ class BackupController extends BaseController
      *
      * @todo Restrict access based on roles
      */
-    public function download($timestamp, $file)
+    public function download($file)
     {
         // Retrieve local path.
         try
         {
-            $filename = $this->factory->getPath($file, $timestamp);
+            $filename = $this->factory->getPath($file);
         }
         catch (Exception $e)
         {
