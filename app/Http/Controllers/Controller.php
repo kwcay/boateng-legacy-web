@@ -542,6 +542,17 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * Resets a parameter value.
+     *
+     * @param string $key
+     * @return mixed
+     */
+    protected function resetParam($key)
+    {
+        return Session::pull('res-'. $this->name .'-'. $key);
+    }
+
+    /**
      * Determines the class name of the model associated with this controller.
      *
      * @return string

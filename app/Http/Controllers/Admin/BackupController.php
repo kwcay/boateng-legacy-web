@@ -113,6 +113,9 @@ class BackupController extends BaseController
         // Launch backup task in the background.
         Artisan::queue('backup');
 
+        // Reset index limit.
+        $this->resetParam('limit');
+
         return redirect(route('admin.backup.index'))
             ->withMessages(['Creating backup file... Please check back in a few moments.']);
     }
@@ -140,6 +143,9 @@ class BackupController extends BaseController
         {
             return redirect(route('admin.backup.index'))->withMessages([$e->getMessage()]);
         }
+
+        // Reset index limit.
+        $this->resetParam('limit');
 
         return redirect(route('admin.backup.index'))->withMessages($results->getMessages());
     }
@@ -196,6 +202,9 @@ class BackupController extends BaseController
         {
             return redirect(route('admin.backup.index'))->withMessages([$e->getMessage()]);
         }
+
+        // Reset index limit.
+        $this->resetParam('limit');
 
         return redirect(route('admin.backup.index'))->withMessages($results->getMessages());
     }

@@ -69,7 +69,7 @@ class BackupFactory extends FactoryContract
     {
         // Retrieve filename.
         $file = $this->request->file('file');
-        $filename = date('Y-m') .'/'. $file->getClientOriginalName();
+        $filename = $file->getClientOriginalName();
 
         // Make sure a file with the same name doesn't already exist.
         if ($this->storage->exists($filename))
