@@ -38,6 +38,11 @@ class BackupFactory extends FactoryContract
     ];
 
     /**
+     * @var int
+     */
+    protected $startTime;
+
+    /**
     * @param Illuminate\Http\Request $request
      */
     public function __construct(Request $request, DataImportFactory $importHelper)
@@ -55,6 +60,8 @@ class BackupFactory extends FactoryContract
     {
         $this->storage = Storage::disk('backups');
         $this->tempStorage = Storage::disk('backups-build');
+
+        $this->startTime = time();
     }
 
     /**
@@ -108,7 +115,11 @@ class BackupFactory extends FactoryContract
             throw new Exception('Can\'t find backup file "'. $file .'"');
         }
 
+        // Reset start time.
+        $this->startTime = time();
+
         // Run some pre-restore checks & tasks.
+        $this->msg('Putting app in maintenance mode...');
         Artisan::call('down');
 
         // Unpack backup file.
@@ -166,7 +177,7 @@ class BackupFactory extends FactoryContract
         // Refresh database.
         if (isset($options['refresh-db']))
         {
-            print "Refreshing migrations...\n";
+            $this->msg('Refreshing migrations...');
             Artisan::call('migrate:refresh');
         }
 
@@ -180,7 +191,7 @@ class BackupFactory extends FactoryContract
                 continue;
             }
 
-            print "Loading {$meta[$resource]['files']} {$resource} files...\n";
+            $this->msg("Loading {$meta[$resource]['files']} {$resource} files...");
 
             // Setup our DataImportFactory.
             $this->importHelper->setDataModel('App\\Models\\'. ucfirst($resource));
@@ -221,7 +232,7 @@ class BackupFactory extends FactoryContract
 
                     foreach ($results->getMessages() as $msg)
                     {
-                        print "[$i] {$msg}\n";
+                        $this->msg("#$i: {$msg}");
                     }
                 }
                 catch (Exception $e)
@@ -322,5 +333,30 @@ class BackupFactory extends FactoryContract
      */
     protected function getDirName($folder = '') {
         return config('filesystems.disks.backups-build.root') .'/'. $folder;
+    }
+
+    /**
+     * @param   string  $msg
+     */
+    protected function msg($msg = '')
+    {
+        // Prepend elapsed time.
+        $time   = '';
+        $sec    = time() - $this->startTime;
+        if ($sec < 60) {
+            $time   = $sec .' sec';
+        } else {
+            $mins   = floor($sec / 60);
+            $time   = $mins .' mins '. ($sec - $mins * 60) .' sec';
+        }
+        print "[$time]";
+
+        // Print message.
+        if (strlen($msg)) {
+            print " $msg";
+        }
+
+        // Newline character.
+        print "\n";
     }
 }

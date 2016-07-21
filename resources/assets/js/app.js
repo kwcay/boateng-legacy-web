@@ -4,20 +4,19 @@
  */
 var App =
 {
-
-    _kbFocus: null,
+  _kbFocus: null,
 
 	init: function()
 	{
 		// Save URL root for redirects.
-        this.root = $('base').attr('href');
+      this.root = $('base').attr('href');
 
-        // Set the environment of the app.
-        this.isLocalEnvironment = (
-            window.location.hostname == 'localhost' ||
-            window.location.hostname.match(/.*\.local$/i) ||
-            window.location.hostname.match(/.*\.vagrant$/i)
-        ) ? true : false;
+      // Set the environment of the app.
+      this.isLocalEnvironment = (
+        window.location.hostname == 'localhost' ||
+        window.location.hostname.match(/.*\.local$/i) ||
+        window.location.hostname.match(/.*\.vagrant$/i)
+      ) ? true : false;
 
         // Setup AJAX headers.
         $.ajaxSetup({

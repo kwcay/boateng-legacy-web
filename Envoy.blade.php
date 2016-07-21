@@ -268,13 +268,13 @@
     cd ~/dev/dinkomo/web/
 
     # Update bower dependencies.
-    # TODO: update bower: https://www.npmjs.com/package/bower-update
     {{ msg('Updating bower dependencies...') }}
+    npm install bower -g &> /dev/null
     bower update &> /dev/null
 
     # Update npm dependencies.
-    # TODO: update npm: https://www.npmjs.com/package/npm-check-updates
     {{ msg('Updating node dependencies...') }}
+    npm install npm -g &> /dev/null
     npm update &> /dev/null
 
     # Build front-end assets.

@@ -89,7 +89,7 @@ class Definition extends Model
     protected $appendsOnExport = [
         'titleList',
         'tagList',
-        'translation',
+        'translationData',
         'languageList',
         'relatedDefinitionList',
     ];
@@ -1094,15 +1094,40 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->allTranslations. Used to combine translation data when arraying this model.
+     * Accessor for $this->translationList. Used to combine translation data when arraying this model.
+     *
+     * @deprecated
      */
-    public function getAllTranslationsAttribute()
+    public function getTranslationListAttribute()
     {
         return [
             'practical' => $this->practicalTranslations,
             'literal'   => $this->literalTranslations,
             'meaning'   => $this->meanings
         ];
+    }
+
+    /**
+     * Accessor for $this->translationData. Used to combine translation data when arraying this
+     * model.
+     */
+    public function getTranslationDataAttribute()
+    {
+        $data = [];
+
+        if (count($this->translations))
+        {
+            foreach ($this->translations as $translation)
+            {
+                $data[$translation->language] = array_only((array) $translation, [
+                    'practical',
+                    'literal',
+                    'meaning'
+                ]);
+            }
+        }
+
+        return $data;
     }
 
     /**

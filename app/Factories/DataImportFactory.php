@@ -101,6 +101,11 @@ class DataImportFactory
     protected $dataSet;
 
     /**
+     * @var array
+     */
+    protected $dataArray;
+
+    /**
      *
      *
      * @var array
