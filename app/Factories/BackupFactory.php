@@ -237,7 +237,7 @@ class BackupFactory extends FactoryContract
                 }
                 catch (Exception $e)
                 {
-                    $this->tempStorage->deleteDirectory($restoreId);
+                    //$this->tempStorage->deleteDirectory($restoreId);
 
                     throw new Exception($e->getMessage());
                 }

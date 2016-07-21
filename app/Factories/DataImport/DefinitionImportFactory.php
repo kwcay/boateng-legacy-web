@@ -62,20 +62,15 @@ class DefinitionImportFactory extends DataImportFactory
 
             // Retrieve translations.
             $translations = [];
-            if (array_key_exists('translationList', $data) && is_array($data['translationList']))
+            if (array_key_exists('translationData', $data) && is_array($data['translationData']))
             {
-                // Retrieve translations.
-                $practical  = isset($data['translationList']['practical']) ? $data['translationList']['practical'] : [];
-                $literal    = isset($data['translationList']['literal']) ? $data['translationList']['literal'] : [];
-                $meaning    = isset($data['translationList']['meaning']) ? $data['translationList']['meaning'] : [];
-
-                foreach ($practical as $langCode => $practicalTranslation)
+                foreach ($data['translationData'] as $langCode => $data)
                 {
                     $translations[] = new Translation([
-                        'language' => $langCode,
-                        'practical' => $practical[$langCode],
-                        'literal' => $literal[$langCode],
-                        'meaning' => $meaning[$langCode]
+                        'language'  => $langCode,
+                        'practical' => $data['practical'],
+                        'literal'   => $data['literal'],
+                        'meaning'   => $data['meaning']
                     ]);
                 }
             }

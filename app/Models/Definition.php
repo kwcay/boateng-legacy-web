@@ -1119,7 +1119,7 @@ class Definition extends Model
         {
             foreach ($this->translations as $translation)
             {
-                $data[$translation->language] = array_only((array) $translation, [
+                $data[$translation->language] = array_only($translation->toArray(), [
                     'practical',
                     'literal',
                     'meaning'
