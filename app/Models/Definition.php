@@ -50,10 +50,11 @@ class Definition extends Model
         'titleList'         => ['titles'],
         'relatedDefinitionList' => ['relatedDefinitions'],
         'tagList'           => ['tags'],
-        'translation'       => ['translations'],
+        'translationData'   => ['translations'],
         'allTranslations'   => ['translations'],
         'mainLanguage'      => ['languages'],
         'languageList'      => ['languages'],
+        'referenceList'     => ['translations'],
     ];
 
 
@@ -1169,6 +1170,13 @@ class Definition extends Model
      */
     public function getReferencesAttribute() {
         return $this->translation ? $this->translation->references : new Collection;
+    }
+
+    /**
+     * Accessor for $this->referenceList.
+     */
+    public function getReferenceListAttribute() {
+        return $this->references;
     }
 
     /**
