@@ -38,7 +38,7 @@ class CountryImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' countries added to database.');
+        $this->setMessage($saved .' of '. ($saved + $skipped) .' countries updated.');
 
         return $this;
     }

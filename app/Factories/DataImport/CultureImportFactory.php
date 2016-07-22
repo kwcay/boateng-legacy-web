@@ -40,7 +40,7 @@ class CultureImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' cultures added to database.');
+        $this->setMessage($saved .' of '. ($saved + $skipped) .' cultures updated.');
 
         return $this;
     }

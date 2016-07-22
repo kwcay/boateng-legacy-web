@@ -40,7 +40,7 @@ class UserImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' users added to database.');
+        $this->setMessage($saved .' of '. ($saved + $skipped) .' users updated.');
 
         return $this;
     }

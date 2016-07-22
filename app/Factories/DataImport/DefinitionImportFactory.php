@@ -21,8 +21,17 @@ class DefinitionImportFactory extends DataImportFactory
 {
     /**
      * Stores loaded languages.
+     *
+     * @var array
      */
     private $_languages = [];
+
+    /**
+     * Stores loaded tags.
+     *
+     * @var array
+     */
+    private $_tags = [];
 
     /**
      *
@@ -64,13 +73,13 @@ class DefinitionImportFactory extends DataImportFactory
             $translations = [];
             if (array_key_exists('translationData', $data) && is_array($data['translationData']))
             {
-                foreach ($data['translationData'] as $langCode => $data)
+                foreach ($data['translationData'] as $langCode => $translation)
                 {
                     $translations[] = new Translation([
                         'language'  => $langCode,
-                        'practical' => $data['practical'],
-                        'literal'   => $data['literal'],
-                        'meaning'   => $data['meaning']
+                        'practical' => $translation['practical'],
+                        'literal'   => $translation['literal'],
+                        'meaning'   => $translation['meaning']
                     ]);
                 }
             }
@@ -156,16 +165,17 @@ class DefinitionImportFactory extends DataImportFactory
             }
 
             // Add tag relations.
-            if (array_key_exists('tags', $data))
+            if (array_key_exists('tagList', $data) && is_array($data['tagList']))
             {
                 $tags = [];
-                $tagTitles = @explode(',', $data['tags']);
 
-                foreach ($tagTitles as $tag) {
-                    $tags[] = Tag::firstOrCreate(['title' => $tag]);
+                foreach ($data['tagList'] as $tag) {
+                    $tags[] = Tag::firstOrCreate(['title' => $tag])->id;
                 }
 
-                $definition->tags()->sync($tags);
+                if (count($tags)) {
+                    $definition->tags()->sync($tags);
+                }
             }
 
             // Add languages.
@@ -180,7 +190,7 @@ class DefinitionImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage('Updated '. $saved .' of '. ($saved + $skipped) .' definitions.');
+        $this->setMessage($saved .' of '. ($saved + $skipped) .' definitions updated.');
 
         return $this;
     }

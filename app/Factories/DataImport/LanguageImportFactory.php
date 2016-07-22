@@ -65,7 +65,7 @@ class LanguageImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' languages added to database.');
+        $this->setMessage($saved .' of '. ($saved + $skipped) .' languages updated.');
 
         return $this;
     }

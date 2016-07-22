@@ -40,7 +40,7 @@ class AlphabetImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' alphabets added to database.');
+        $this->setMessage($saved .' of '. ($saved + $skipped) .' alphabets updated.');
 
         return $this;
     }

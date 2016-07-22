@@ -232,14 +232,14 @@ class BackupFactory extends FactoryContract
 
                     foreach ($results->getMessages() as $msg)
                     {
-                        $this->msg("#$i: {$msg}");
+                        $this->msg("File #$i: {$msg}");
                     }
                 }
                 catch (Exception $e)
                 {
-                    //$this->tempStorage->deleteDirectory($restoreId);
+                    $this->tempStorage->deleteDirectory($restoreId);
 
-                    throw new Exception($e->getMessage());
+                    throw new Exception($e->getMessage() .' in '. $e->getFile() .' on line '. $e->getLine());
                 }
             }
         }
