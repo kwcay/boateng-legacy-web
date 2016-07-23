@@ -1,7 +1,7 @@
 {
-  "name": "dinkomo",
-  "version": "0.6.0",
   "private": true,
+  "name": "dinkomo-web",
+  "version": "0.6.0",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.13",
     "concat": "~1.0.0",
