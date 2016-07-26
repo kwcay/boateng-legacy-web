@@ -5,11 +5,14 @@
     (new \Dotenv\Dotenv(__DIR__, '.env'))->load();
 
     # Setup variables.
-    $repository = "git@bitbucket.org:dinkomo/web.git";
-    $baseDir = "/var/www/html/apps/dinkomo-web";
-    $releasesDir = "{$baseDir}/releases";
-    $liveDir = "/var/www/html/live/dinkomo-web";
+    $repository     = 'git@github.com:frnkly/dinkomo-web.git';
+    $baseDir        = env('ENVOY_BASE_DIR', '/var/www/apps');
+    $releasesDir    = "{$baseDir}/releases";
+    $liveDir        = env('ENVOY_LIVE_DIR', '/var/www/live');
     $newReleaseName = date('Ymd-His');
+
+    $productionServer   = env('ENVOY_PRODUCTION', '127.0.0.1');
+    $localServer        = env('ENVOY_LOCAL', '127.0.0.1');
 
     /**
      * Logs a message to the console.
@@ -27,7 +30,7 @@
 
 {{-- Servers --}}
 
-@servers(['local' => '127.0.0.1', 'production' => 'root@45.55.60.14'])
+@servers(['local' => $localServer, 'production' => $productionServer])
 
 
 
