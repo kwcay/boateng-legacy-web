@@ -1,5 +1,5 @@
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
+ * Copyright Di Nkɔmɔ(TM) 2016, all rights reserved.
  *
  * @author  Frank Yaw (frank@frnk.ca)
  */
