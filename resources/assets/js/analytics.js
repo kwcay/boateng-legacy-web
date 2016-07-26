@@ -32,6 +32,10 @@ var Analytics =
         this.log('An error occured while trying to track the event "'+ event +'".');
       }
 
+      else {
+        this.log('New event "'+ event +'" tracked.');
+      }
+
     }.bind(this));
   },
 
