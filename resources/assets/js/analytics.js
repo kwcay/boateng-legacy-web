@@ -15,8 +15,8 @@ var Analytics =
   track: function(event, data) {
 
     // Performance check.
-    if (!window.Keen)
-      return;
+    if (!Keen)
+      return this.log('Keen not loaded.');
 
     data = data || {};
     data.referrer = document.referrer;
@@ -25,7 +25,7 @@ var Analytics =
     };
 
     // Track event w/ Keen.io
-    window.Keen.addEvent(event, data, function(err, res) {
+    Keen.addEvent(event, data, function(err, res) {
 
       // Handle errors.
       if (err) {

@@ -68,18 +68,18 @@ gulp.task('css', ['clear-css', 'sass'], function() {
 
 // Paths to javascript files.
 var js = {
-    dev: ['resources/assets/js/*.js', 'resources/assets/js/**/*.js'],
-    dependencies: [
-        'bower_components/microplugin/src/microplugin.js',
-        'bower_components/jquery/dist/jquery.min.js',
-        'bower_components/jquery-ui/jquery-ui.min.js',
-        'bower_components/bootstrap/dist/js/bootstrap.min.js',
-        'bower_components/sifter/sifter.min.js',
-        // 'bower_components/selectize/dist/js/selectize.min.js'
-        'bower_components/selectize/dist/js/selectize.js',
-        'bower_components/clipboard/dist/clipboard.min.js',
-        'bower_components/typed.js/dist/typed.min.js'
-    ]
+  dev: ['resources/assets/js/*.js', 'resources/assets/js/**/*.js'],
+  dependencies: [
+    'bower_components/microplugin/src/microplugin.js',
+    'bower_components/jquery/dist/jquery.min.js',
+    'bower_components/jquery-ui/jquery-ui.min.js',
+    'bower_components/bootstrap/dist/js/bootstrap.min.js',
+    'bower_components/sifter/sifter.min.js',
+    // 'bower_components/selectize/dist/js/selectize.min.js'
+    'bower_components/selectize/dist/js/selectize.js',
+    'bower_components/clipboard/dist/clipboard.min.js',
+    'bower_components/typed.js/dist/typed.min.js'
+  ]
 };
 
 // Removes existing javascript files.
