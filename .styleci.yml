@@ -1,5 +1,5 @@
 
-preset: recommended
+preset: laravel
 
 risky: false
 
