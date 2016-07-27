@@ -83,9 +83,9 @@ var Utilities =
      * @return void
      */
     log: function(msg) {
-        if (this.isLocalEnvironment && console) {
-            console.log('App.js - '+ msg);
-        }
+      if (App.isLocalEnvironment && console) {
+        console.log(msg);
+      }
     },
 
     /**
@@ -95,10 +95,9 @@ var Utilities =
      * @return void
      */
     info: function(msg) {
-
-        if (App.isLocalEnvironment && console && typeof console.info == 'function') {
-            console.info(msg);
-        }
+      if (/*App.isLocalEnvironment &&*/ console && typeof console.info == 'function') {
+        console.info(msg);
+      }
     },
 
     /**

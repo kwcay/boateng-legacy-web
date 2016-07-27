@@ -15,7 +15,7 @@ var Analytics =
   track: function(event, data) {
 
     // Performance check.
-    if (!Keen)
+    if (typeof Keen == 'undefined')
       return this.log('Keen not loaded.');
 
     data = data || {};

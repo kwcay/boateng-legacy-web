@@ -27,8 +27,14 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    new DiNkomoDictionary({
-        langCode: "{{ $code or '' }}"
+    $(document.dictionary).dictionary({
+        langCode: "{{ $code or '' }}",
+        container: "{{ $container or '#results' }}"
     });
 });
+// $(document).ready(function() {
+//     new DiNkomoDictionary({
+//         langCode: "{{ $code or '' }}"
+//     });
+// });
 </script>
