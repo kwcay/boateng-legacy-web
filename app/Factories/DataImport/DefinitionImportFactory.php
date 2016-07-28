@@ -27,7 +27,6 @@ class DefinitionImportFactory extends DataImportFactory
      */
     private $_tags = [];
 
-
     public function importDataSet()
     {
         // Loop through definitions and import them one by one.

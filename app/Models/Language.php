@@ -305,7 +305,6 @@ class Language extends Model
         return $code ? static::with($embed)->where(['code' => $code])->first() : null;
     }
 
-
     public static function sortedBy($sort = 'name', $dir = 'asc')
     {
         return static::query()->orderBy($sort, $dir)->get();

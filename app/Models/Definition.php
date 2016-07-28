@@ -345,7 +345,6 @@ class Definition extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -1196,12 +1195,10 @@ class Definition extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     public function setRelationToBeImported($relation, $data)
     {
         $this->relationsToBeImported[$relation] = $data;
     }
-
 
     public function getRelationsToBeImported()
     {
