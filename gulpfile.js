@@ -70,6 +70,7 @@ gulp.task('css', ['clear-css', 'sass'], function() {
 var js = {
   dev: ['resources/assets/js/*.js', 'resources/assets/js/**/*.js'],
   dependencies: [
+    'bower_components/keen-js/dist/keen-tracker.min.js',
     'bower_components/microplugin/src/microplugin.js',
     'bower_components/jquery/dist/jquery.min.js',
     'bower_components/jquery-ui/jquery-ui.min.js',

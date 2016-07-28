@@ -33,7 +33,7 @@ var Analytics =
       }
 
       else {
-        this.log('New event "'+ event +'" tracked.');
+        this.log('Tracking event "'+ event +'".');
       }
 
     }.bind(this));

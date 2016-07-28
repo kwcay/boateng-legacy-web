@@ -13,13 +13,14 @@
 		<meta name="robots" content="noindex, nofollow">
 		<meta name="csrf-token" content="{{ csrf_token() }}">
         <link rel="search" type="application/opensearchdescription+xml" href="{{ route('api.os') }}" title="Di Nkɔmɔ Cultural Reference">
-        <script src="{{ $helper->rev('all.js') }}" type="text/javascript"></script>
-		<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
-		<link rel="stylesheet" type="text/css" href="{{ $helper->rev('all.css') }}">
-        @include('partials.analytics')
 	@show
+    
 </head>
 <body>
+    <script src="{{ $helper->rev('all.js') }}" type="text/javascript"></script>
+    @include('partials.analytics')
+    <!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+    <link rel="stylesheet" type="text/css" href="{{ $helper->rev('all.css') }}">
 
     @include('partials.header')
 

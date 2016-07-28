@@ -24,10 +24,10 @@
             href="{{ route('api.os') }}" title="Di Nkɔmɔ Cultural Reference">
 	@show
 
-    @include('partials.analytics')
 </head>
 <body>
     <script src="{{ App\Utilities::rev('all.js') }}" type="text/javascript"></script>
+    @include('partials.analytics')
     <!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
     <link rel="stylesheet" type="text/css" href="{{ App\Utilities::rev('all.css') }}">
 
