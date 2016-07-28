@@ -83,3 +83,12 @@
 </div>
 
 @include('partials.dialogs')
+
+<script type="text/javascript">
+Analytics.track('pageviews', {
+    route: '{{ Route::currentRouteName() }}',
+    path: '/{{ Request::path() }}',
+    user: '{{ Auth::check() ? Auth::user()->uniqueId : '' }}',
+    locale: 'en'
+});
+</script>

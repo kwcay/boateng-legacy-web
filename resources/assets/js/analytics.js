@@ -32,8 +32,9 @@ var Analytics =
         console.error('Keen.io error: ' + err);
       }
 
-      else {
-        console.info('Tracking event "'+ event +'".');
+      else
+      {
+
       }
 
     });

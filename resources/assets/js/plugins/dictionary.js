@@ -58,7 +58,7 @@
       Analytics.track('queries', {
         type: 'general',
         query: query,
-        language: (options.langCode || ''),
+        language: (options.langCode || 'All Languages'),
         locale: 'en'
       });
 
