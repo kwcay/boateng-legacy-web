@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved.
+ * Copyright Di Nkɔmɔ(TM) 2015, all rights reserved.
  *
  * @brief   Route definitions for API v0.1
  */

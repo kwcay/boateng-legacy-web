@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved.
+ * Copyright Di Nkɔmɔ(TM) 2016, all rights reserved.
  */
 namespace App\Http\Controllers;
 
