@@ -23,24 +23,26 @@ var Analytics =
     data.referrer = document.referrer;
     data.keen = data.keen || {};
     data.keen.timestamp = new Date().toISOString();
-    data.keen.ip = '${keen.ip}';
-    data.keen.ua = '${keen.user_agent}';
     data.keen.addons = data.keen.addons || [];
+    data.meta = {
+      ip: '${keen.ip}',
+      ua: '${keen.user_agent}'
+    };
 
     data.keen.addons.push({
       name: "keen:ip_to_geo",
       input: {
-        ip: "keen.ip"
+        ip: "meta.ip"
       },
-      output: "geo_data"
+      output: "meta.geo_data"
     });
 
     data.keen.addons.push({
       name: "keen:ua_parser",
       input: {
-        ua_string: "keen.ua"
+        ua_string: "meta.ua"
       },
-      output: "ua_data"
+      output: "meta.ua_data"
     });
 
     // Track event w/ Keen.io
