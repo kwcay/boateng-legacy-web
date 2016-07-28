@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Factories;
 
@@ -18,7 +17,7 @@ class DataExportFactory
         'alphabet',
         'country',
         'definition',
-        'language'
+        'language',
     ];
 
     /**
@@ -34,7 +33,6 @@ class DataExportFactory
      */
     public function boot()
     {
-
     }
 
     /**
@@ -47,14 +45,14 @@ class DataExportFactory
     public function exportResource($type, $format)
     {
         // Quick check.
-        if (!in_array($type, $this->supportedResources)) {
+        if (! in_array($type, $this->supportedResources)) {
             throw new Exception('Invalid Resource Type.');
         }
 
-        $className = 'App\\Models\\'. ucfirst($type);
+        $className = 'App\\Models\\'.ucfirst($type);
 
         // Double-check data format.
-        if (!in_array($format, $className::getExportFormats())) {
+        if (! in_array($format, $className::getExportFormats())) {
             throw new Exception('Invalid Format.');
         }
 
@@ -66,7 +64,7 @@ class DataExportFactory
                 'total' => count($data),
                 'schema' => 'dinkomo-0.2',
             ],
-            'data' => []
+            'data' => [],
         ];
 
         foreach ($data as $resource) {
@@ -80,7 +78,7 @@ class DataExportFactory
         return [
             'Content-Type' => $className::getContentType($format),
             'filename' => $className::getExportFileName($format),
-            'content' => $className::export($export, $format)
+            'content' => $className::export($export, $format),
         ];
     }
 

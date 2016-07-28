@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Factories;
 
@@ -12,13 +11,9 @@ use PharData;
 use Exception;
 use Illuminate\Http\Request;
 use Symfony\Component\Yaml\Yaml;
-use App\Factories\DataImportFactory;
 use Illuminate\Http\UploadedFile as File;
 use App\Factories\Factory as FactoryContract;
 
-/**
- *
- */
 class BackupFactory extends FactoryContract
 {
     /**
@@ -43,7 +38,7 @@ class BackupFactory extends FactoryContract
     protected $startTime;
 
     /**
-    * @param Illuminate\Http\Request $request
+     * @param Illuminate\Http\Request $request
      */
     public function __construct(Request $request, DataImportFactory $importHelper)
     {
@@ -79,15 +74,13 @@ class BackupFactory extends FactoryContract
         $filename = $file->getClientOriginalName();
 
         // Make sure a file with the same name doesn't already exist.
-        if ($this->storage->exists($filename))
-        {
+        if ($this->storage->exists($filename)) {
             throw new Exception('Backup file already exists.');
         }
 
         // Upload file to backups disk.
         $handle = fopen($file->getRealPath(), 'r');
-        if (!$this->storage->put($filename, $handle))
-        {
+        if (! $this->storage->put($filename, $handle)) {
             fclose($handle);
             throw new Exception('Could not upload backup file.');
         }
@@ -111,8 +104,8 @@ class BackupFactory extends FactoryContract
     {
         // Performance check.
         $file = $this->getPath($filename);
-        if (!$this->storage->exists($file)) {
-            throw new Exception('Can\'t find backup file "'. $file .'"');
+        if (! $this->storage->exists($file)) {
+            throw new Exception('Can\'t find backup file "'.$file.'"');
         }
 
         // Reset start time.
@@ -123,30 +116,25 @@ class BackupFactory extends FactoryContract
         Artisan::call('down');
 
         // Unpack backup file.
-        $restoreId = 'restore-'. date('Ymd') .'-'. substr(md5(microtime()), 20);
-        if (!$this->tempStorage->makeDirectory($restoreId))
-        {
+        $restoreId = 'restore-'.date('Ymd').'-'.substr(md5(microtime()), 20);
+        if (! $this->tempStorage->makeDirectory($restoreId)) {
             throw new Exception('Could not create temp directory to unpack backup file.');
         }
 
-        if (!$this->tempStorage->put($restoreId .'/data.tar.gz', $this->storage->get($file)))
-        {
+        if (! $this->tempStorage->put($restoreId.'/data.tar.gz', $this->storage->get($file))) {
             $this->tempStorage->deleteDirectory($restoreId);
 
             throw new Exception('Could not copy backup file to temp directory.');
         }
 
         // Extract backup file.
-        $phar = new PharData($this->getDirName($restoreId) .'/data.tar.gz');
-        try
-        {
+        $phar = new PharData($this->getDirName($restoreId).'/data.tar.gz');
+        try {
             $phar->decompress();
             $phar->extractTo($this->getDirName($restoreId));
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             unset($phar);
-            Phar::unlinkArchive($this->getDirName($restoreId) .'/data.tar.gz');
+            Phar::unlinkArchive($this->getDirName($restoreId).'/data.tar.gz');
             $this->tempStorage->deleteDirectory($restoreId);
 
             throw new Exception($e->getMessage());
@@ -154,29 +142,26 @@ class BackupFactory extends FactoryContract
 
         // Retrieve meta data.
         $meta = $phar->getMetaData();
-        if (empty($meta))
-        {
-            if (!$this->tempStorage->exists($restoreId .'/meta.yaml'))
-            {
+        if (empty($meta)) {
+            if (! $this->tempStorage->exists($restoreId.'/meta.yaml')) {
                 unset($phar);
-                Phar::unlinkArchive($this->getDirName($restoreId) .'/data.tar');
-                Phar::unlinkArchive($this->getDirName($restoreId) .'/data.tar.gz');
+                Phar::unlinkArchive($this->getDirName($restoreId).'/data.tar');
+                Phar::unlinkArchive($this->getDirName($restoreId).'/data.tar.gz');
                 $this->tempStorage->deleteDirectory($restoreId);
 
                 throw new Exception('Could not find metadata for backup file.');
             }
 
-            $meta = Yaml::parse($this->tempStorage->get($restoreId .'/meta.yaml'));
+            $meta = Yaml::parse($this->tempStorage->get($restoreId.'/meta.yaml'));
         }
 
         // Remove phar files.
         unset($phar);
-        Phar::unlinkArchive($this->getDirName($restoreId) .'/data.tar');
-        Phar::unlinkArchive($this->getDirName($restoreId) .'/data.tar.gz');
+        Phar::unlinkArchive($this->getDirName($restoreId).'/data.tar');
+        Phar::unlinkArchive($this->getDirName($restoreId).'/data.tar.gz');
 
         // Refresh database.
-        if (isset($options['refresh-db']))
-        {
+        if (isset($options['refresh-db'])) {
             $this->msg('Refreshing migrations...');
             Artisan::call('migrate:refresh');
         }
@@ -184,24 +169,22 @@ class BackupFactory extends FactoryContract
 
         // Restore backup.
         $this->importHelper->setDataMeta($meta);
-        foreach ($this->resourceLimits as $resource => $limit)
-        {
+        foreach ($this->resourceLimits as $resource => $limit) {
             // Performance check.
-            if (!isset($meta[$resource]) || $meta[$resource]['files'] < 1) {
+            if (! isset($meta[$resource]) || $meta[$resource]['files'] < 1) {
                 continue;
             }
 
             $this->msg("Loading {$meta[$resource]['files']} {$resource} files...");
 
             // Setup our DataImportFactory.
-            $this->importHelper->setDataModel('App\\Models\\'. ucfirst($resource));
+            $this->importHelper->setDataModel('App\\Models\\'.ucfirst($resource));
 
 
             // Loop through each file and import data using the DataImportFactory.
-            for ($i = 0; $i < $meta[$resource]['files']; $i++)
-            {
+            for ($i = 0; $i < $meta[$resource]['files']; $i++) {
                 $dataFile = "{$restoreId}/{$resource}-{$i}.{$meta['format']}";
-                if (!$this->tempStorage->exists($dataFile)) {
+                if (! $this->tempStorage->exists($dataFile)) {
                     continue;
                 }
 
@@ -210,36 +193,30 @@ class BackupFactory extends FactoryContract
                 $data = $meta['format'] == 'yaml' ? Yaml::parse($data) : json_decode($data, true);
 
                 // File checksum.
-                if (!isset($options['skipChecksum']) || !$options['skipChecksum'])
-                {
-                    if ($meta[$resource]['checksums'][$i] !== $this->checksum($data, $meta['checksum-method']))
-                    {
+                if (! isset($options['skipChecksum']) || ! $options['skipChecksum']) {
+                    if ($meta[$resource]['checksums'][$i] !== $this->checksum($data, $meta['checksum-method'])) {
                         $this->tempStorage->deleteDirectory($restoreId);
 
                         throw new Exception(
                             "Checksum failed for {$resource}-{$i}.{$meta['format']} (expected \"".
-                            $meta[$resource]['checksums'][$i] .'", got "'.
-                            $this->checksum($data, $meta['checksum-method']) .'")'
+                            $meta[$resource]['checksums'][$i].'", got "'.
+                            $this->checksum($data, $meta['checksum-method']).'")'
                         );
                     }
                 }
 
                 // Import data.
-                try
-                {
+                try {
                     $this->importHelper->setDataArray($data);
                     $results = $this->importHelper->importDataSet();
 
-                    foreach ($results->getMessages() as $msg)
-                    {
+                    foreach ($results->getMessages() as $msg) {
                         $this->msg("File #$i: {$msg}");
                     }
-                }
-                catch (Exception $e)
-                {
+                } catch (Exception $e) {
                     $this->tempStorage->deleteDirectory($restoreId);
 
-                    throw new Exception($e->getMessage() .' in '. $e->getFile() .' on line '. $e->getLine());
+                    throw new Exception($e->getMessage().' in '.$e->getFile().' on line '.$e->getLine());
                 }
             }
         }
@@ -264,9 +241,8 @@ class BackupFactory extends FactoryContract
     public function delete($filename, $timestamp = null)
     {
         // Delete backup file.
-        if (!$this->storage->delete($this->getPath($filename, $timestamp)))
-        {
-            throw new Exception('Couldn\'t delete backup file "'. $this->getPath($filename, $timestamp) .'".');
+        if (! $this->storage->delete($this->getPath($filename, $timestamp))) {
+            throw new Exception('Couldn\'t delete backup file "'.$this->getPath($filename, $timestamp).'".');
         }
 
         $this->setMessage('Backup file successfully deleted.');
@@ -295,23 +271,19 @@ class BackupFactory extends FactoryContract
         $fullName = null;
 
         // If a timestamp was provided, look for that specific backup.
-        if ($timestamp > 0)
-        {
-            $fullName = date('Y-m', $timestamp) .'/'. $filename;
+        if ($timestamp > 0) {
+            $fullName = date('Y-m', $timestamp).'/'.$filename;
 
-            if (!$this->storage->exists($fullName))
-            {
+            if (! $this->storage->exists($fullName)) {
                 throw new Exception('Timestamp-filename combination does not exist.');
             }
         }
 
         // If none was provided, look for the latest backup matching the filename.
-        else
-        {
+        else {
             $files = $this->storage->allFiles('/');
 
-            foreach ($files as $file)
-            {
+            foreach ($files as $file) {
                 if (strpos($file, $filename) !== false) {
                     $fullName = $file;
                 }
@@ -319,7 +291,7 @@ class BackupFactory extends FactoryContract
         }
 
         // Make sure a file was found.
-        if (!$fullName) {
+        if (! $fullName) {
             throw new Exception('Backup file not found.');
         }
 
@@ -331,8 +303,9 @@ class BackupFactory extends FactoryContract
      *
      * @return string
      */
-    protected function getDirName($folder = '') {
-        return config('filesystems.disks.backups-build.root') .'/'. $folder;
+    protected function getDirName($folder = '')
+    {
+        return config('filesystems.disks.backups-build.root').'/'.$folder;
     }
 
     /**
@@ -341,22 +314,22 @@ class BackupFactory extends FactoryContract
     protected function msg($msg = '')
     {
         // Prepend elapsed time.
-        $time   = '';
-        $sec    = time() - $this->startTime;
+        $time = '';
+        $sec = time() - $this->startTime;
         if ($sec < 60) {
-            $time   = $sec .' sec';
+            $time = $sec.' sec';
         } else {
-            $mins   = floor($sec / 60);
-            $time   = $mins .' mins '. ($sec - $mins * 60) .' sec';
+            $mins = floor($sec / 60);
+            $time = $mins.' mins '.($sec - $mins * 60).' sec';
         }
-        print "[$time]";
+        echo "[$time]";
 
         // Print message.
         if (strlen($msg)) {
-            print " $msg";
+            echo " $msg";
         }
 
         // Newline character.
-        print "\n";
+        echo "\n";
     }
 }

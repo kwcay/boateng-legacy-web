@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  *
  * @version 0.1
  * @brief   Handles language-related API requests.
@@ -11,10 +11,7 @@ use Lang;
 use Session;
 use Redirect;
 use Request;
-use Validator;
 use App\Models\Language;
-use App\Models\Definition;
-use App\Models\Definitions\Word;
 use App\Http\Controllers\Controller;
 
 class LanguageController extends Controller
@@ -22,7 +19,7 @@ class LanguageController extends Controller
     public function __construct()
     {
         // Enable the auth middleware.
-		// $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
+        // $this->middleware('auth', ['except' => ['index', 'show', 'search']]);
     }
 
     /**
@@ -50,15 +47,13 @@ class LanguageController extends Controller
         );
 
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id, $embed['relations'])) {
+        if (! $lang = $this->getLanguage($id, $embed['relations'])) {
             return response('Language Not Found.', 404);
         }
 
         // Append extra attributes.
-        if (count($embed['attributes']))
-        {
-            foreach ($embed['attributes'] as $accessor)
-            {
+        if (count($embed['attributes'])) {
+            foreach ($embed['attributes'] as $accessor) {
                 $lang->setAttribute($accessor, $lang->$accessor);
             }
         }
@@ -66,16 +61,16 @@ class LanguageController extends Controller
         return $lang;
     }
 
-	/**
-	 * Displays the form to add a new language.
+    /**
+     * Displays the form to add a new language.
      *
      * TODO: integrate with API.
-	 *
+     *
      * @param \App\Models\Language $lang
-	 * @return Response
-	 */
-	public function create(Language $lang)
-	{
+     * @return Response
+     */
+    public function create(Language $lang)
+    {
         // Set some defaults
         $lang->code = preg_replace('/[^a-z\-]/', '', Request::get('code', Request::old('code', '')));
         $lang->parent = preg_replace('/[^a-z\-]/', '', Request::get('parent', Request::old('parent', '')));
@@ -85,26 +80,27 @@ class LanguageController extends Controller
         $lang->desc = Request::get('desc', Request::old('desc', []));
 
         return view('forms.language.default')->withLang($lang);
-	}
+    }
 
-	/**
-	 * Displays the form to add a new language.
-	 *
-	 * @return Response
-	 */
-	public function walkthrough() {
+    /**
+     * Displays the form to add a new language.
+     *
+     * @return Response
+     */
+    public function walkthrough()
+    {
         return view('forms.language.walkthrough');
-	}
+    }
 
-	/**
-	 * Store a newly created resource in storage.
+    /**
+     * Store a newly created resource in storage.
      *
      * TODO: integrate with API.
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
+     *
+     * @return Response
+     */
+    public function store()
+    {
         // Retrieve the language details.
         $data = Request::only(['code', 'parent_code', 'name', 'alt_names', 'countries']);
 
@@ -112,36 +108,36 @@ class LanguageController extends Controller
         $return = Request::input('next') == 'continue' ? 'edit' : 'index';
 
         return $this->save(new Language, $data, $return);
-	}
+    }
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param string $id    Either the ISO 639-3 language code or language ID.
-	 * @return Response
-	 */
-	public function edit($id)
-	{
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param string $id    Either the ISO 639-3 language code or language ID.
+     * @return Response
+     */
+    public function edit($id)
+    {
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
+        if (! $lang = $this->getLanguage($id)) {
             abort(404, Lang::get('errors.resource_not_foud'));
         }
 
         return view('forms.language.default')->withLang($lang);
-	}
+    }
 
-	/**
-	 * Update the specified resource in storage.
-	 *
+    /**
+     * Update the specified resource in storage.
+     *
      * TODO: integrate with API.
      *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
+     * @param  int  $id
+     * @return Response
+     */
+    public function update($id)
+    {
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
+        if (! $lang = $this->getLanguage($id)) {
             abort(404, 'Can\'t find that languge :( [todo: throw exception]');
         }
 
@@ -149,20 +145,20 @@ class LanguageController extends Controller
         $data = Request::only(['parent_code', 'name', 'alt_names', 'countries']);
 
         return $this->save($lang, $data, 'index');
-	}
+    }
 
-	/**
-	 * Remove the specified resource from storage.
+    /**
+     * Remove the specified resource from storage.
      *
      * TODO: integrate with API.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
         abort(501, 'LanguageController::destroy Not Implemented');
-	}
+    }
 
     /**
      * Shortcut to create a new language or save an existing one.
@@ -183,13 +179,13 @@ class LanguageController extends Controller
 
         // Validate input data
         $test = Language::validate($data);
-        if ($test->fails())
-        {
+        if ($test->fails()) {
             // Flash input data to session
             Request::flashExcept('_token');
 
             // Return to form
             $return = $lang->exists ? route('language.edit', ['id' => $lang->getId()]) : route('language.create');
+
             return redirect($return)->withErrors($test);
         }
 
@@ -206,8 +202,7 @@ class LanguageController extends Controller
         $lang->save();
 
         // ...
-        switch ($return)
-        {
+        switch ($return) {
             case 'index':
                 $return = $lang->getUri(false);
                 break;
@@ -221,7 +216,8 @@ class LanguageController extends Controller
                 break;
         }
 
-        Session::push('messages', 'The details for <em>'. $lang->name .'</em> were successfully saved, thanks :)');
+        Session::push('messages', 'The details for <em>'.$lang->name.'</em> were successfully saved, thanks :)');
+
         return redirect($return);
     }
 
@@ -237,7 +233,7 @@ class LanguageController extends Controller
         }
 
         // Performance check
-        $query  = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $query)));
+        $query = trim(preg_replace('/[\s+]/', ' ', strip_tags((string) $query)));
         if (strlen($query) < 2) {
             return response('Query Too Short.', 400);
         }
@@ -248,7 +244,7 @@ class LanguageController extends Controller
         $langs = Language::search($query, $offset, $limit);
 
         // Format results
-        $results  = [];
+        $results = [];
         $semantic = (bool) Request::has('semantic');
         if (count($langs)) {
             foreach ($langs as $lang) {
@@ -269,8 +265,8 @@ class LanguageController extends Controller
     private function getLanguage($id, array $embed = [])
     {
         // Performance check.
-        if (empty($id) || is_numeric($id) || !is_string($id)) {
-            return null;
+        if (empty($id) || is_numeric($id) || ! is_string($id)) {
+            return;
         }
 
         // Find language by code.
@@ -279,10 +275,9 @@ class LanguageController extends Controller
         }
 
         // Or find language by ID.
-        else
-        {
-            if (!$id = Language::decodeId($id)) {
-                return null;
+        else {
+            if (! $id = Language::decodeId($id)) {
+                return;
             }
 
             $lang = Language::with($embed)->find($id);

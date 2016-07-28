@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Traits;
 
@@ -12,7 +11,7 @@ trait ExportableTrait
     public static $contentTypes = [
         'json' => 'application/json',
         'yaml' => 'text/x-yaml',
-        'yml' => 'text/x-yaml'
+        'yml' => 'text/x-yaml',
     ];
 
     /**
@@ -26,8 +25,8 @@ trait ExportableTrait
     {
         // Temporarily disable hidden fields.
         $originallyHidden = $this->hidden;
-        $this->hidden = $this->hiddenOnExport ?: array_where($this->hidden, function($key, $value) {
-            return !in_array($value, ['params', 'created_at', 'deleted_at']);
+        $this->hidden = $this->hiddenOnExport ?: array_where($this->hidden, function ($key, $value) {
+            return ! in_array($value, ['params', 'created_at', 'deleted_at']);
         });
 
         // Include all apendable attributes.
@@ -40,8 +39,7 @@ trait ExportableTrait
         $attributes = $this->attributesToArray();
 
         // Remove hidden fields.
-        foreach ($attributes as $attribute => $value)
-        {
+        foreach ($attributes as $attribute => $value) {
             if (in_array($attribute, $this->hidden) || in_array(snake_case($attribute), $this->hidden)) {
                 unset($attributes[$attribute]);
             }
@@ -63,8 +61,7 @@ trait ExportableTrait
      */
     public static function export($data, $format = 'yaml')
     {
-        switch ($format)
-        {
+        switch ($format) {
             case 'json':
                 $result = json_encode($data);
                 break;
@@ -84,8 +81,10 @@ trait ExportableTrait
     /**
      * Returns a list of supported export formats.
      */
-    public static function getExportFormats() {
+    public static function getExportFormats()
+    {
         $static = new static;
+
         return $static->exportFormats ?: ['yml', 'yaml', 'js', 'json'];
     }
 
@@ -99,15 +98,15 @@ trait ExportableTrait
     {
         // Header name.
         $className = explode('\\', get_called_class());
-        $name = 'Di Nkomo '. array_pop($className);
+        $name = 'Di Nkomo '.array_pop($className);
 
         // Unique name.
-        $unique = date('Y-m-d') .'_'. substr(sha1(microtime()), 0, 8);
+        $unique = date('Y-m-d').'_'.substr(sha1(microtime()), 0, 8);
 
         // File extension.
-        $extension = strlen($format) ? '.'. $format : '';
+        $extension = strlen($format) ? '.'.$format : '';
 
-        return $name .'_'. $unique . $extension;
+        return $name.'_'.$unique.$extension;
     }
 
     /**
@@ -116,7 +115,8 @@ trait ExportableTrait
      * @param string $format
      * @return string
      */
-    public static function getContentType($format) {
+    public static function getContentType($format)
+    {
         return static::$contentTypes[$format] ?: 'text/plain';
     }
 
@@ -131,13 +131,12 @@ trait ExportableTrait
         $results = [
             'total' => count($data),
             'imported' => 0,
-            'skipped' => 0
+            'skipped' => 0,
         ];
 
-        foreach ($data as $resource)
-        {
+        foreach ($data as $resource) {
             // Performance check.
-            if (!$resource instanceof static) {
+            if (! $resource instanceof static) {
                 $results['skipped']++;
                 continue;
             }

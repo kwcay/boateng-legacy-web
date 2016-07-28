@@ -1,9 +1,7 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
-
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -21,16 +19,16 @@ class DebugAccountSeeder extends Seeder
         // Debug account details
         $email = env('DEBUG_USER_EMAIL');
         $password = env('DEBUG_USER_PASSWORD');
-        if (empty($email) || empty($password))
-        {
+        if (empty($email) || empty($password)) {
             $this->command->info('No debug user found.');
+
             return;
         }
 
         // Check if debug account already exists.
-        if ($debug = User::where('email', $email)->first())
-        {
+        if ($debug = User::where('email', $email)->first()) {
             $this->command->info('Debug user already exists.');
+
             return;
         }
 
@@ -41,7 +39,7 @@ class DebugAccountSeeder extends Seeder
         ]);
 
         $result ?
-            $this->command->info('Debug user "'. $email .'" created.') :
-            $this->command->info('Could not create debug user "'. $email .'".');
+            $this->command->info('Debug user "'.$email.'" created.') :
+            $this->command->info('Could not create debug user "'.$email.'".');
     }
 }

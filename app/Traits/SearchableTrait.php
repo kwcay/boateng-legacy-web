@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Traits;
 
@@ -25,14 +24,12 @@ trait SearchableTrait
 
         // Retrieve tags. We look for the occurence of "#" before doing a preg_match
         // for performance.
-        if (strpos($term, '#') !== false && preg_match('/#([a-z0-9\-_]+)/i', $term) > 0)
-        {
+        if (strpos($term, '#') !== false && preg_match('/#([a-z0-9\-_]+)/i', $term) > 0) {
             $options['tags'] = isset($options['tags']) ? $options['tags'] : [];
 
             preg_match_all('/#([a-z0-9\-_]+)/i', $term, $matches);
 
-            foreach ($matches[1] as $tag)
-            {
+            foreach ($matches[1] as $tag) {
                 $options['tags'][] = $tag;
                 $term = preg_replace("/#{$tag}/", '', $term);
             }
@@ -56,14 +53,12 @@ trait SearchableTrait
         // dd($rawScores);
 
         // Format results.
-        if (count($rawScores))
-        {
+        if (count($rawScores)) {
             // Loop through raw scores to (1) create an array of IDs, and (2) collect score data
             // and find the highest score so we can normalize them to 1.
             $IDs = $scores = $results = [];
 
-            foreach ($rawScores as $rawScore)
-            {
+            foreach ($rawScores as $rawScore) {
                 $IDs[] = $rawScore->id;
                 $scores[$rawScore->id] = $rawScore;
                 $scores[$rawScore->id]->total = static::getSearchScore($rawScore);
@@ -78,12 +73,10 @@ trait SearchableTrait
                 static::normalizeSearchResult($model, $scores[$model->id], $maxScore);
             }
 
-            $results = $unsorted->sortByDesc(function($searchable) {
+            $results = $unsorted->sortByDesc(function ($searchable) {
                 return $searchable->score;
             })->values();
-        }
-
-        else {
+        } else {
             $results = new Collection;
         }
 

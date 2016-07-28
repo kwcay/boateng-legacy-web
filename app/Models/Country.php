@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Models;
 
@@ -71,8 +70,8 @@ class Country extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    CONST SEARCH_LIMIT = 10;        // Maximum number of results to return on a search.
-    CONST SEARCH_QUERY_LENGTH = 2;  // Minimum length of search query.
+    const SEARCH_LIMIT = 10;        // Maximum number of results to return on a search.
+    const SEARCH_QUERY_LENGTH = 2;  // Minimum length of search query.
 
     /**
      * Indicates whether search results can be filtered by tags.
@@ -116,7 +115,7 @@ class Country extends Model
     /**
      * Validation rules.
      */
-    public $validationRules  = [
+    public $validationRules = [
         'name' => 'required|string|min:2|max:400',
         'altNames' => 'string|min:2|max:400',
         'code' => 'required|string|size:2',
@@ -128,7 +127,6 @@ class Country extends Model
     // Helper methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Looks up a country model by code.
@@ -145,16 +143,15 @@ class Country extends Model
 
         // Retrieve country by code.
         $code = preg_replace('/[^a-z]/', '', strtolower($code));
+
         return $code ? static::where('code', '=', strtoupper($code))->first() : null;
     }
-
 
     //
     //
     // Search-related methods.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * @param string $term      Search query.
@@ -172,7 +169,7 @@ class Country extends Model
                 'c.name LIKE ? AS name_score_low, '.
                 'c.alt_names LIKE ? AS alt_name_score_low, '.
                 'c.code = ? AS code_score ',
-                [$term, '%'. $term .'%', '%'. $term .'%', $term]
+                [$term, '%'.$term.'%', '%'.$term.'%', $term]
             )
 
             // Try to search in a relevant way.
@@ -183,7 +180,7 @@ class Country extends Model
                     'c.alt_names LIKE ? OR '.
                     'c.code = ? '.
                 ')',
-                [$term, '%'. $term .'%', '%'. $term .'%', $term]
+                [$term, '%'.$term.'%', '%'.$term.'%', $term]
             );
 
         return $builder;
@@ -197,12 +194,11 @@ class Country extends Model
      */
     protected static function getSearchScore($rawScore)
     {
-        return (
+        return
             $rawScore->name_score * 10 +
             $rawScore->name_score_low * 3 +
             $rawScore->alt_name_score_low * 3 +
-            $rawScore->code_score
-        );
+            $rawScore->code_score;
     }
 
     /**
@@ -211,7 +207,8 @@ class Country extends Model
      * @param array $IDs
      * @return \Illuminate\Support\Collection
      */
-    protected static function getSearchResults(array $IDs) {
+    protected static function getSearchResults(array $IDs)
+    {
         return static::whereIn('id', $IDs)->get();
     }
 
@@ -235,20 +232,19 @@ class Country extends Model
         }
     }
 
-
     //
     //
     // Accessors and mutators.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Accessor for $this->uri.
      *
      * @return string
      */
-    public function getUriAttribute() {
+    public function getUriAttribute()
+    {
         return 'javascript:;';
     }
 
@@ -257,7 +253,8 @@ class Country extends Model
      *
      * @return string
      */
-    public function getEditUriAttribute() {
+    public function getEditUriAttribute()
+    {
         return route('r.country.edit', $this->uniqueId);
     }
 
@@ -266,7 +263,8 @@ class Country extends Model
      *
      * @return string
      */
-    public function getEditUriAdminAttribute() {
+    public function getEditUriAdminAttribute()
+    {
         return route('r.country.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 
@@ -275,7 +273,8 @@ class Country extends Model
      *
      * @return string
      */
-    public function getResourceTypeAttribute() {
+    public function getResourceTypeAttribute()
+    {
         return 'country';
     }
 }

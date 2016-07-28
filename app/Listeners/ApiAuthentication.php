@@ -8,9 +8,7 @@ namespace App\Listeners;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Routing\Events\RouteMatched;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ApiAuthentication
 {
@@ -33,8 +31,7 @@ class ApiAuthentication
      */
     public function handle(RouteMatched $event)
     {
-        if ($this->route->getPrefix() == 'api/0.1')
-        {
+        if ($this->route->getPrefix() == 'api/0.1') {
             // Authenticate through OAuth2.
             if ($this->request->headers->has('Authorization') || $this->request->has('access_token')) {
                 $this->route->middleware(\LucaDegasperi\OAuth2Server\Middleware\OAuthMiddleware::class);

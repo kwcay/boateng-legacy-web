@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Factories;
 
@@ -15,7 +14,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as File;
 class DataImportFactory
 {
     /**
-     * Supported file formats
+     * Supported file formats.
      *
      * @var array
      */
@@ -29,12 +28,12 @@ class DataImportFactory
     ];
 
     /**
-     * Supported MIME types
+     * Supported MIME types.
      *
      * @var array
      */
     protected $supportedMimeTypes = [
-        'text/plain'
+        'text/plain',
     ];
 
     /**
@@ -45,21 +44,17 @@ class DataImportFactory
     private $rawDataPath;
 
     /**
-     *
-     *
      * @var File
      */
     protected $rawDataFile;
 
     /**
-     *
-     *
      * @var string
      */
     protected $fileName;
 
     /**
-     * Original format of data (e.g. YAML, JSON, etc.)
+     * Original format of data (e.g. YAML, JSON, etc.).
      *
      * @var string
      */
@@ -87,7 +82,7 @@ class DataImportFactory
     protected $dataModel;
 
     /**
-     * Meta data
+     * Meta data.
      *
      * @var array
      */
@@ -106,8 +101,6 @@ class DataImportFactory
     protected $dataArray;
 
     /**
-     *
-     *
      * @var array
      */
     protected $messages = [];
@@ -144,8 +137,7 @@ class DataImportFactory
         $movedDataFile = $this->rawDataFile->move($this->rawDataPath, $this->getFileName());
 
         // Open/parse data file.
-        switch ($this->dataFormat)
-        {
+        switch ($this->dataFormat) {
             // Single data file.
             case 'js':
             case 'json':
@@ -153,7 +145,7 @@ class DataImportFactory
             case 'yaml':
 
                 // Read contents of file.
-                $this->setRawData(file_get_contents($this->rawDataPath .'/'. $this->getFileName()));
+                $this->setRawData(file_get_contents($this->rawDataPath.'/'.$this->getFileName()));
 
                 // Parse raw data into an array.
                 $this->parseRawData();
@@ -175,12 +167,12 @@ class DataImportFactory
             case 'dictd':
             case 'xml':
             default:
-                throw new Exception('"'. $this->dataFormat .'" format not yet supported :/');
+                throw new Exception('"'.$this->dataFormat.'" format not yet supported :/');
                 break;
         }
 
         // Delete uploaded file.
-        unlink($this->rawDataPath .'/'. $this->getFileName());
+        unlink($this->rawDataPath.'/'.$this->getFileName());
 
         return $results;
     }
@@ -193,8 +185,7 @@ class DataImportFactory
         $this->rawDataFile = $rawDataFile;
 
         // Performance check.
-        if (!in_array($this->rawDataFile->getMimeType(), $this->supportedMimeTypes))
-        {
+        if (! in_array($this->rawDataFile->getMimeType(), $this->supportedMimeTypes)) {
             throw new Exception('Unsupported MIME type :/');
         }
 
@@ -217,8 +208,7 @@ class DataImportFactory
         $this->dataFormat = strtolower(preg_replace('/[^a-z\.]/i', '', $format));
 
         // Performance check
-        if (!in_array($this->dataFormat, $this->supportedFormats))
-        {
+        if (! in_array($this->dataFormat, $this->supportedFormats)) {
             throw new Exception('Unsupported file format :/');
         }
     }
@@ -230,12 +220,11 @@ class DataImportFactory
      */
     public function getFileName()
     {
-        if (is_null($this->fileName) && $this->hasValidDataFile())
-        {
+        if (is_null($this->fileName) && $this->hasValidDataFile()) {
             // TODO: make file name format a configurable parameter.
             $this->fileName =
-                date('Y-m-d') .'-'.
-                md5($this->rawDataFile->getBasename()) .'.'.
+                date('Y-m-d').'-'.
+                md5($this->rawDataFile->getBasename()).'.'.
                 $this->rawDataFile->getClientOriginalExtension();
         }
 
@@ -260,8 +249,7 @@ class DataImportFactory
             throw new Exception('No data received.');
         }
 
-        switch ($this->dataFormat)
-        {
+        switch ($this->dataFormat) {
             case 'yml':
             case 'yaml':
                 $this->rawDataObject = Yaml::parse($this->rawDataString);
@@ -277,23 +265,23 @@ class DataImportFactory
         }
 
         // Check that data really was parsed.
-        if (!is_array($this->rawDataObject) || empty($this->rawDataObject)) {
+        if (! is_array($this->rawDataObject) || empty($this->rawDataObject)) {
             throw new Exception('Invalid data.');
         }
 
         // Check format of array.
-        if (!isset($this->rawDataObject['meta']) || !isset($this->rawDataObject['data'])) {
+        if (! isset($this->rawDataObject['meta']) || ! isset($this->rawDataObject['data'])) {
             throw new Exception('Invalid data structure.');
         }
 
         $this->setDataMeta($this->rawDataObject['meta']);
         $this->setDataArray($this->rawDataObject['data']);
-        if (!is_array($this->dataArray) || empty($this->dataArray)) {
+        if (! is_array($this->dataArray) || empty($this->dataArray)) {
             throw new Exception('No data found.');
         }
 
         // Data integrity check.
-        if (!$this->isDataIntegral()) {
+        if (! $this->isDataIntegral()) {
             throw new Exception('Checksum failed.');
         }
 
@@ -325,13 +313,12 @@ class DataImportFactory
     public function isDataIntegral()
     {
         // Performance check.
-        if (!$this->hasValidDataFile() || !isset($this->dataMeta['checksum'])) {
+        if (! $this->hasValidDataFile() || ! isset($this->dataMeta['checksum'])) {
             return false;
         }
 
         // Build checksum.
-        switch (@$this->dataMeta['schema'])
-        {
+        switch (@$this->dataMeta['schema']) {
             case 'dinkomo-1':
             default:
                 $checksum = md5(json_encode($this->dataArray));
@@ -345,7 +332,8 @@ class DataImportFactory
      *
      * @return bool
      */
-    public function hasValidDataFile() {
+    public function hasValidDataFile()
+    {
         return $this->rawDataFile instanceof File;
     }
 
@@ -357,10 +345,8 @@ class DataImportFactory
     public function setDataModel($model = null)
     {
         // Set model from meta data.
-        if (!$model)
-        {
-            switch (strtolower($this->dataMeta['type']))
-            {
+        if (! $model) {
+            switch (strtolower($this->dataMeta['type'])) {
                 case 'language':
                     $this->dataModel = 'App\\Models\\Language';
                     break;
@@ -372,15 +358,13 @@ class DataImportFactory
                 case 'definition/word':
                 case 'definition/expression':
                 case 'definition/story':
-                    $this->dataModel = 'App\\Models\\'. str_replace('/', '\\\\', $this->dataMeta['type']);
+                    $this->dataModel = 'App\\Models\\'.str_replace('/', '\\\\', $this->dataMeta['type']);
             }
         }
 
         // Set model from object.
         // TODO
-        elseif (false)
-        {
-
+        elseif (false) {
         }
 
         // Set model directly.
@@ -403,8 +387,7 @@ class DataImportFactory
 
         // Since we're in the general DataImportFactory, we will create a new factory that
         // is specific to this data set.
-        switch ($this->dataModel)
-        {
+        switch ($this->dataModel) {
             case 'App\\Models\\Alphabet':
                 $factory = $this->make('AlphabetImportFactory');
                 break;
@@ -460,7 +443,8 @@ class DataImportFactory
     /**
      * @return array
      */
-    public function getMessages() {
+    public function getMessages()
+    {
         return $this->messages;
     }
 
@@ -471,7 +455,7 @@ class DataImportFactory
      */
     public function make($factory)
     {
-        $className = 'App\\Factories\\DataImport\\'. $factory;
+        $className = 'App\\Factories\\DataImport\\'.$factory;
 
         return new $className;
     }

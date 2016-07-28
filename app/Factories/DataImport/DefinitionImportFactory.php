@@ -1,22 +1,16 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Factories\DataImport;
 
-use Exception;
 use App\Models\Tag;
-use App\Models\Alphabet;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Translation;
 use App\Models\DefinitionTitle;
 use App\Factories\DataImportFactory;
 
-/**
- *
- */
 class DefinitionImportFactory extends DataImportFactory
 {
     /**
@@ -33,15 +27,12 @@ class DefinitionImportFactory extends DataImportFactory
      */
     private $_tags = [];
 
-    /**
-     *
-     */
+
     public function importDataSet()
     {
         // Loop through definitions and import them one by one.
         $saved = $skipped = 0;
-        foreach ($this->dataArray as $data)
-        {
+        foreach ($this->dataArray as $data) {
             // TODO: check database for duplicates somehow...
             // ...
 
@@ -56,36 +47,33 @@ class DefinitionImportFactory extends DataImportFactory
                 $titleData = $data['titleList'];
             }
 
-            if (count($titleData))
-            {
+            if (count($titleData)) {
                 foreach ($titleData as $title) {
                     $titles[] = new DefinitionTitle($title);
                 }
             }
 
             // Performance check.
-            if (!count($titles)) {
+            if (! count($titles)) {
                 $skipped++;
                 continue;
             }
 
             // Retrieve translations.
             $translations = [];
-            if (array_key_exists('translationData', $data) && is_array($data['translationData']))
-            {
-                foreach ($data['translationData'] as $langCode => $translation)
-                {
+            if (array_key_exists('translationData', $data) && is_array($data['translationData'])) {
+                foreach ($data['translationData'] as $langCode => $translation) {
                     $translations[] = new Translation([
                         'language'  => $langCode,
                         'practical' => $translation['practical'],
                         'literal'   => $translation['literal'],
-                        'meaning'   => $translation['meaning']
+                        'meaning'   => $translation['meaning'],
                     ]);
                 }
             }
 
             // Performance check.
-            if (!count($translations)) {
+            if (! count($translations)) {
                 $skipped++;
                 continue;
             }
@@ -98,8 +86,7 @@ class DefinitionImportFactory extends DataImportFactory
                 $languageData = $data['languageList'];
             }
 
-            foreach ($languageData as $code => $name)
-            {
+            foreach ($languageData as $code => $name) {
                 // Check if language has already been loaded.
                 if (isset($this->_languages[$code])) {
                     $languages[] = $this->_languages[$code];
@@ -115,15 +102,13 @@ class DefinitionImportFactory extends DataImportFactory
                 elseif ($lang = Language::create(['code' => $code, 'name' => $name])) {
                     $languages[] = $lang;
                     $this->_languages[] = $lang;
-                }
-
-                else {
-                    $this->setMessage('Could not add related language "'. $code .'".');
+                } else {
+                    $this->setMessage('Could not add related language "'.$code.'".');
                 }
             }
 
             // Performance check.
-            if (!count($languages)) {
+            if (! count($languages)) {
                 $skipped++;
                 continue;
             }
@@ -139,8 +124,9 @@ class DefinitionImportFactory extends DataImportFactory
                 'deleted_at' => array_get($data, 'deletedAt', null),
             ];
 
-            if (!strlen($attributes['meta']))
+            if (! strlen($attributes['meta'])) {
                 $attributes['meta'] = '{}';
+            }
 
             // Create a definition object and save it right away, so that we can add the
             // relations afterwards.
@@ -153,20 +139,17 @@ class DefinitionImportFactory extends DataImportFactory
             $definition->translations()->saveMany($translations);
 
             // Add data relation.
-            if (array_key_exists('data', $data) && is_array($data['data']))
-            {
+            if (array_key_exists('data', $data) && is_array($data['data'])) {
                 // TODO ...
             }
 
             // Add media relation.
-            if (array_key_exists('media', $data) && is_array($data['media']))
-            {
+            if (array_key_exists('media', $data) && is_array($data['media'])) {
                 // TODO ...
             }
 
             // Add tag relations.
-            if (array_key_exists('tagList', $data) && is_array($data['tagList']))
-            {
+            if (array_key_exists('tagList', $data) && is_array($data['tagList'])) {
                 $tags = [];
 
                 foreach ($data['tagList'] as $tag) {
@@ -190,7 +173,7 @@ class DefinitionImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' definitions updated.');
+        $this->setMessage($saved.' of '.($saved + $skipped).' definitions updated.');
 
         return $this;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  *
  * @version 0.1
  */
@@ -12,11 +12,6 @@ use App\Models\Country;
 use App\Models\Language;
 use App\Models\Alphabet;
 use App\Models\Definition;
-use App\Models\Definition\Name;
-use App\Models\Definition\Expression;
-use App\Models\Definition\Poem;
-use App\Models\Definition\Story;
-use App\Models\Definition\Word;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
@@ -24,9 +19,6 @@ use App\Http\Controllers\Controller;
 
 class ApiController extends Controller
 {
-    /**
-     *
-     */
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
@@ -34,9 +26,10 @@ class ApiController extends Controller
     }
 
     /**
-     * Returns the version number of the API
+     * Returns the version number of the API.
      */
-    public function version() {
+    public function version()
+    {
         return 'Di Nkɔmɔ API 0.1';
     }
 
@@ -49,7 +42,7 @@ class ApiController extends Controller
     public function count($resource)
     {
         // Retrieve model.
-        if (!$model = $this->getResourceModel($resource)) {
+        if (! $model = $this->getResourceModel($resource)) {
             return response('Invalid resource type.', 400);
         }
 
@@ -65,7 +58,7 @@ class ApiController extends Controller
     public function search($resourceName, $query)
     {
         // Retrieve model.
-        if (!$model = $this->getResourceModel($resourceName)) {
+        if (! $model = $this->getResourceModel($resourceName)) {
             return response('Invalid resource type.', 400);
         }
 
@@ -73,7 +66,7 @@ class ApiController extends Controller
         $options = [
             'offset' => $this->request->input('offset', 0),
             'limit' => $this->request->input('limit', $model::SEARCH_LIMIT),
-            'lang' => $this->request->input('lang', '')
+            'lang' => $this->request->input('lang', ''),
         ];
 
         // Perform search.
@@ -105,7 +98,7 @@ class ApiController extends Controller
         $results = $results->merge(Language::search($query, $options));
 
         // Sort results by score.
-        $results = $results->sortByDesc(function($result) {
+        $results = $results->sortByDesc(function ($result) {
             return $result->score;
         })->values();
 
@@ -113,7 +106,7 @@ class ApiController extends Controller
         $limit = max([
             Country::SEARCH_LIMIT,
             Definition::SEARCH_LIMIT,
-            Language::SEARCH_LIMIT
+            Language::SEARCH_LIMIT,
         ]);
 
         $results = $results->slice(
@@ -122,8 +115,7 @@ class ApiController extends Controller
         );
 
         // Format results.
-        switch (strtolower($this->request->input('format')))
-        {
+        switch (strtolower($this->request->input('format'))) {
             case 'opensearch':
                 return $this->getOpenSearchResults($results);
 
@@ -147,7 +139,7 @@ class ApiController extends Controller
         $root->addChild('Description', 'Use the Di Nkɔmɔ Cultural Reference to look up words and concepts.');
         $root->addChild('Tags', 'Di Nkɔmɔ cultural culture language reference dictionary encyclopedia');
         $root->addChild('Developer', 'Francis Amankrah (frank@frnk.ca)');
-        $root->addChild('Attribution', 'Search data Copyright '. date('Y') .', Di Nkɔmɔ, All Rights Reserved');
+        $root->addChild('Attribution', 'Search data Copyright '.date('Y').', Di Nkɔmɔ, All Rights Reserved');
         $root->addChild('SyndicationRight', 'open');
         $root->addChild('AdultContent', 'false');
         $root->addChild('OutputEncoding', 'UTF-8');
@@ -210,7 +202,6 @@ class ApiController extends Controller
      */
     public function options()
     {
-        return null;
     }
 
     /**
@@ -226,15 +217,13 @@ class ApiController extends Controller
         $this->addMapEntry($root, route('home'));
 
         // Languages & definitions
-        foreach (\App\Models\Language::with('definitions')->get() as $language)
-        {
+        foreach (\App\Models\Language::with('definitions')->get() as $language) {
             $this->addMapEntry($root, $language->uri, [
                 'lastmod' => $language->updatedAt,
-                'priority' => 0.8
+                'priority' => 0.8,
             ]);
 
-            foreach ($language->definitions()->limit(200)->orderBy('created_at', 'desc')->get() as $definition)
-            {
+            foreach ($language->definitions()->limit(200)->orderBy('created_at', 'desc')->get() as $definition) {
                 // Only add definitions where the main language is the current one.
                 if ($definition->mainLanguage->code != $language->code) {
                     continue;
@@ -242,7 +231,7 @@ class ApiController extends Controller
 
                 $this->addMapEntry($root, $definition->uri, [
                     'lastmod' => $definition->updatedAt,
-                    'priority' => 1
+                    'priority' => 1,
                 ]);
             }
         }
@@ -257,8 +246,6 @@ class ApiController extends Controller
     }
 
     /**
-     *
-     *
      * @param \SimpleXMLElement $root
      */
     private function addMapEntry(\SimpleXMLElement $root, $location, array $optional = [])
@@ -294,16 +281,14 @@ class ApiController extends Controller
         }
 
         // Or another model.
-        else
-        {
-            switch (strtolower($resourceName))
-            {
+        else {
+            switch (strtolower($resourceName)) {
                 case 'alphabet':
                 case 'country':
                 case 'definition':
                 case 'language':
                 case 'tag':
-                    $className = '\\App\\Models\\'. ucfirst(strtolower($resourceName));
+                    $className = '\\App\\Models\\'.ucfirst(strtolower($resourceName));
                     $model = new $className;
                     break;
 

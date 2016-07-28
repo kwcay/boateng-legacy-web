@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Traits;
 
@@ -13,7 +12,8 @@ trait CamelCaseAttributesTrait
      * @param string $key
      * @param return mixed
      */
-    public function getAttribute($key) {
+    public function getAttribute($key)
+    {
         return parent::getAttribute(snake_case($key));
     }
 
@@ -24,7 +24,8 @@ trait CamelCaseAttributesTrait
      * @param mixed $value
      * @return mixed
      */
-    public function setAttribute($key, $value) {
+    public function setAttribute($key, $value)
+    {
         return parent::setAttribute(snake_case($key), $value);
     }
 
@@ -33,7 +34,8 @@ trait CamelCaseAttributesTrait
      *
      * @return array
      */
-    public function toArray() {
+    public function toArray()
+    {
         return $this->convertToCamelCase(parent::toArray());
     }
 
@@ -42,7 +44,8 @@ trait CamelCaseAttributesTrait
      *
      * @return array
      */
-    public function attributesToArray() {
+    public function attributesToArray()
+    {
         return $this->convertToCamelCase(parent::attributesToArray());
     }
 

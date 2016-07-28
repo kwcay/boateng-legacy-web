@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  *
  * @todo    Deprecate for App\Http\Controllers\LanguageController ?
  */
@@ -8,12 +8,7 @@ namespace App\Http\Controllers\Admin;
 
 use Session;
 use Redirect;
-use App\Models\Alphabet;
-use App\Models\Country;
 use App\Models\Language;
-use App\Models\Definition;
-use App\Models\Definitions\Word;
-use Illuminate\Support\Collection;
 use App\Http\Controllers\LanguageController as Controller;
 
 /**
@@ -21,17 +16,17 @@ use App\Http\Controllers\LanguageController as Controller;
  */
 class LanguageController extends Controller
 {
-	/**
-	 * Update the specified resource in storage.
+    /**
+     * Update the specified resource in storage.
      *
      * @todo Review method
-	 * @param int $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
+     * @param int $id
+     * @return Response
+     */
+    public function update($id)
+    {
         // Retrieve the language object.
-        if (!$lang = Language::find($id)) {
+        if (! $lang = Language::find($id)) {
             abort(404);
         }
 
@@ -42,16 +37,16 @@ class LanguageController extends Controller
             'parentCode',
             'name',
             'transliteration',
-            'altNames'
+            'altNames',
         ]));
 
-        if (!$lang->save()) {
+        if (! $lang->save()) {
             abort(500);
         }
 
         // Update alphabets.
         $alphabets = $this->getAlphabets($this->request->get('alphabets', ''));
-        $alphabetIDs = $alphabets->map(function($item) {
+        $alphabetIDs = $alphabets->map(function ($item) {
             return $item->id;
         })->toArray();
 
@@ -59,19 +54,18 @@ class LanguageController extends Controller
 
         // Update countries.
         $countries = $this->getCountries($this->request->get('countries', ''));
-        $countryIDs = $countries->map(function($item) {
+        $countryIDs = $countries->map(function ($item) {
             return $item->id;
         })->toArray();
 
         $lang->countries()->sync($countryIDs);
 
         // Send success message to client, and a thank you.
-        Session::push('messages', 'The details for <em>'. $lang->name .
+        Session::push('messages', 'The details for <em>'.$lang->name.
             '</em> were successfully saved, thanks :)');
 
         // Return URI
-        switch ($this->request->get('return'))
-        {
+        switch ($this->request->get('return')) {
             case 'admin':
                 $return = route('admin.language.index');
                 break;
@@ -87,29 +81,28 @@ class LanguageController extends Controller
         }
 
         return redirect($return);
-	}
+    }
 
-	/**
-	 * Removes the specified resource from storage.
-	 *
+    /**
+     * Removes the specified resource from storage.
+     *
      * @todo Review method
-	 * @param int $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
+     * @param int $id
+     * @return Response
+     */
+    public function destroy($id)
+    {
         // Retrieve the language model.
-        if (!$lang = Language::find($id)) {
+        if (! $lang = Language::find($id)) {
             throw new \Exception(trans('errors.resource_not_found'), 404);
         }
 
         // Delete record
-        Session::push('messages', '<em>'. $lang->name .'</em> has been succesfully deleted.');
+        Session::push('messages', '<em>'.$lang->name.'</em> has been succesfully deleted.');
         $lang->delete();
 
         // Return URI
-        switch ($this->request->get('return'))
-        {
+        switch ($this->request->get('return')) {
             case 'home':
                 $return = route('home');
                 break;
@@ -121,5 +114,5 @@ class LanguageController extends Controller
         }
 
         return redirect($return);
-	}
+    }
 }

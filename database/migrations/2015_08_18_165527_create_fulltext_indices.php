@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 class CreateFulltextIndices extends Migration
@@ -17,12 +16,12 @@ class CreateFulltextIndices extends Migration
 
         // We want ot be able to search the title, alt_titles, data and tags
         // columns and assign a weight to each column.
-		DB::statement('CREATE FULLTEXT INDEX idx_title ON definitions (title, alt_titles)');
-		DB::statement('CREATE FULLTEXT INDEX idx_data ON definitions (data)');
-		DB::statement('CREATE FULLTEXT INDEX idx_tags ON definitions (tags)');
+        DB::statement('CREATE FULLTEXT INDEX idx_title ON definitions (title, alt_titles)');
+        DB::statement('CREATE FULLTEXT INDEX idx_data ON definitions (data)');
+        DB::statement('CREATE FULLTEXT INDEX idx_tags ON definitions (tags)');
 
         // We only need a single fulltext index for translations.
-		DB::statement('CREATE FULLTEXT INDEX idx_translation ON translations (translation, literal, meaning)');
+        DB::statement('CREATE FULLTEXT INDEX idx_translation ON translations (translation, literal, meaning)');
     }
 
     /**

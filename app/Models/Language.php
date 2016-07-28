@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Models;
 
@@ -9,7 +8,6 @@ use DB;
 use Log;
 use Frnkly\Traits\Embedable;
 use cebe\markdown\MarkdownExtra;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\ExportableTrait as Exportable;
@@ -17,7 +15,6 @@ use App\Traits\SearchableTrait as Searchable;
 use App\Traits\ValidatableTrait as Validatable;
 use App\Traits\ObfuscatableTrait as Obfuscatable;
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
-
 
 class Language extends Model
 {
@@ -99,8 +96,8 @@ class Language extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
-    CONST SEARCH_QUERY_LENGTH = 2;  // Minimum length of search query.
+    const SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
+    const SEARCH_QUERY_LENGTH = 2;  // Minimum length of search query.
 
     /**
      * Indicates whether search results can be filtered by tags.
@@ -117,9 +114,7 @@ class Language extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    /**
-     *
-     */
+
     private $markdown;
 
     /**
@@ -184,12 +179,12 @@ class Language extends Model
      */
     protected $dates = ['deleted_at'];
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
         'code',
         'parentCode',
         'name',
@@ -202,11 +197,11 @@ class Language extends Model
     /**
      * Validation rules.
      */
-    public $validationRules  = [
+    public $validationRules = [
         'code' => 'sometimes|required|min:3|max:7|unique:languages',
         'parent_code' => 'min:3|max:7',
         'name' => 'required|min:2',
-        'alt_names' => 'min:2'
+        'alt_names' => 'min:2',
     ];
 
 
@@ -216,13 +211,13 @@ class Language extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Defines relation to Language model (parent relation).
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function parent() {
+    public function parent()
+    {
         return $this->belongsTo('App\Models\Language', 'parent_code', 'code');
     }
 
@@ -231,7 +226,8 @@ class Language extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function children() {
+    public function children()
+    {
         return $this->hasMany('App\Models\Language', 'parent_code', 'code');
     }
 
@@ -240,7 +236,8 @@ class Language extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function definitions() {
+    public function definitions()
+    {
         return $this->belongsToMany('App\Models\Definition');
     }
 
@@ -249,7 +246,8 @@ class Language extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function alphabets() {
+    public function alphabets()
+    {
         return $this->belongsToMany('App\Models\Alphabet', 'alphabet_language', 'language_id', 'alphabet_id');
     }
 
@@ -258,17 +256,16 @@ class Language extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function countries() {
+    public function countries()
+    {
         return $this->belongsToMany('App\Models\Country', 'country_language', 'language_id', 'country_id');
     }
-
 
     //
     //
     // Main methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * @param array $attributes
@@ -282,13 +279,11 @@ class Language extends Model
         $this->markdown->html5 = true;
     }
 
-
     //
     //
     // Helper methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Looks up a language model by code.
@@ -306,12 +301,11 @@ class Language extends Model
 
         // Retrieve langauge by code.
         $code = static::sanitizeCode($code);
+
         return $code ? static::with($embed)->where(['code' => $code])->first() : null;
     }
 
-    /**
-     *
-     */
+
     public static function sortedBy($sort = 'name', $dir = 'asc')
     {
         return static::query()->orderBy($sort, $dir)->get();
@@ -324,8 +318,8 @@ class Language extends Model
     public static function sanitizeCode($code)
     {
         // Performance check.
-        if (!is_string($code)) {
-            return null;
+        if (! is_string($code)) {
+            return;
         }
 
         // A language code can contain letters and dashes.
@@ -335,20 +329,19 @@ class Language extends Model
         return preg_match('/^([a-z]{3}(-[a-z]{3})?)$/', $code) ? $code : null;
     }
 
-
     //
     //
     // Accessors and mutators.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Accessor for $this->parentName.
      *
      * @return string
      */
-    public function getParentNameAttribute($data = null) {
+    public function getParentNameAttribute($data = null)
+    {
         return $this->parent ? $this->parent->name : '';
     }
 
@@ -357,7 +350,8 @@ class Language extends Model
      *
      * @return string
      */
-    public function getParentUriAttribute($data = null) {
+    public function getParentUriAttribute($data = null)
+    {
         return $this->parent ? $this->parent->uri : '';
     }
 
@@ -366,7 +360,8 @@ class Language extends Model
      *
      * @return string
      */
-    public function getParentLanguageAttribute($data = null) {
+    public function getParentLanguageAttribute($data = null)
+    {
         return $this->parent ?: null;
     }
 
@@ -375,7 +370,8 @@ class Language extends Model
      *
      * @return string
      */
-    public function getUriAttribute() {
+    public function getUriAttribute()
+    {
         return route('language.show', ['code' => $this->code]);
     }
 
@@ -384,7 +380,8 @@ class Language extends Model
      *
      * @return string
      */
-    public function getEditUriAttribute() {
+    public function getEditUriAttribute()
+    {
         return route('r.language.edit', ['code' => $this->code, 'return' => 'summary']);
     }
 
@@ -393,17 +390,17 @@ class Language extends Model
      *
      * @return string
      */
-    public function getEditUriAdminAttribute() {
+    public function getEditUriAdminAttribute()
+    {
         return route('r.language.edit', ['code' => $this->code, 'return' => 'admin']);
     }
 
     /**
-     * Accessors for $this->countryString
+     * Accessors for $this->countryString.
      */
     public function getCountryStringAttribute()
     {
-        switch (count($this->countries))
-        {
+        switch (count($this->countries)) {
             case 0:
                 $countryStr = '';
                 break;
@@ -415,10 +412,10 @@ class Language extends Model
             default:
                 $countryStr = '';
                 for ($i = 0; $i < count($this->countries) - 2; $i++) {
-                    $countryStr = $countryStr . $this->countries[$i]->name .', ';
+                    $countryStr = $countryStr.$this->countries[$i]->name.', ';
                 }
 
-                $countryStr = $countryStr . $this->countries[$i++]->name .' and '. $this->countries[$i]->name;
+                $countryStr = $countryStr.$this->countries[$i++]->name.' and '.$this->countries[$i]->name;
         }
 
         return $countryStr;
@@ -429,7 +426,8 @@ class Language extends Model
      *
      * @return int
      */
-    public function getDefinitionCountAttribute() {
+    public function getDefinitionCountAttribute()
+    {
         return $this->definitions()->count();
     }
 
@@ -440,7 +438,8 @@ class Language extends Model
      *
      * @return int
      */
-    public function getCountAttribute() {
+    public function getCountAttribute()
+    {
         return $this->definitions()->count();
     }
 
@@ -451,7 +450,8 @@ class Language extends Model
      *
      * @return int
      */
-    public function getDefinitionsCountAttribute() {
+    public function getDefinitionsCountAttribute()
+    {
         return $this->getCountAttribute();
     }
 
@@ -464,8 +464,7 @@ class Language extends Model
     {
         $first = null;
 
-        if ($definition = $this->definitions()->first())
-        {
+        if ($definition = $this->definitions()->first()) {
             $first = [
                 'mainTitle' => $definition->titles[0]->title,
                 'translation' => $definition->translation,
@@ -486,8 +485,7 @@ class Language extends Model
     {
         $latest = null;
 
-        if ($definition = $this->definitions()->orderBy('created_at', 'DESC')->first())
-        {
+        if ($definition = $this->definitions()->orderBy('created_at', 'DESC')->first()) {
             $latest = [
                 'mainTitle' => $definition->titles[0]->title,
                 'translation' => $definition->translation,
@@ -508,8 +506,7 @@ class Language extends Model
     {
         $random = null;
 
-        if ($definition = $this->definitions()->orderByRaw('RAND()')->first())
-        {
+        if ($definition = $this->definitions()->orderByRaw('RAND()')->first()) {
             $random = [
                 'mainTitle' => $definition->titles[0]->title,
                 'translation' => $definition->translation,
@@ -526,17 +523,16 @@ class Language extends Model
      *
      * @return string
      */
-    public function getResourceTypeAttribute() {
+    public function getResourceTypeAttribute()
+    {
         return 'language';
     }
-
 
     //
     //
     // Methods used by App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * @param string $term      Search query.
@@ -550,24 +546,24 @@ class Language extends Model
             // Create a temporary score column so we can sort the IDs.
             ->selectRaw(
                 'l.id,'.
-                'l.code = ? AS code_score, ' .
-                'l.parent_code = ? AS code_score_low, ' .
-                'l.name = ? AS name_score, ' .
+                'l.code = ? AS code_score, '.
+                'l.parent_code = ? AS code_score_low, '.
+                'l.name = ? AS name_score, '.
                 'l.name LIKE ? AS name_score_low, '.
                 'l.alt_names LIKE ? AS alt_score, '.
                 'MATCH(l.transliteration) AGAINST(?) AS transliteration_score ',
-                [$term, $term, $term, '%'. $term .'%', '%'. $term .'%', $term]
+                [$term, $term, $term, '%'.$term.'%', '%'.$term.'%', $term]
             )
 
             // Try to search in a relevant way.
             ->whereRaw(
-                '(l.code = ? OR ' .
-                'l.parent_code = ? OR ' .
-                'l.name = ? OR ' .
+                '(l.code = ? OR '.
+                'l.parent_code = ? OR '.
+                'l.name = ? OR '.
                 'l.name LIKE ? OR '.
                 'l.alt_names LIKE ? OR '.
                 'MATCH(l.transliteration) AGAINST(?))',
-                [$term, $term, $term, '%'. $term .'%', '%'. $term .'%', $term]
+                [$term, $term, $term, '%'.$term.'%', '%'.$term.'%', $term]
             );
 
         return $builder;
@@ -581,21 +577,21 @@ class Language extends Model
      */
     protected static function getSearchScore($rawScore)
     {
-        return (
+        return
             $rawScore->code_score * 3 +
             $rawScore->name_score * 3 +
             $rawScore->transliteration_score * 2 +
             $rawScore->code_score_low * 1.5 +
             $rawScore->name_score_low +
-            $rawScore->alt_score
-        );
+            $rawScore->alt_score;
     }
 
     /**
      * @param array $IDs
      * @return \Illuminate\Support\Collection
      */
-    protected static function getSearchResults(array $IDs) {
+    protected static function getSearchResults(array $IDs)
+    {
         return static::whereIn('id', $IDs)->get();
     }
 
@@ -634,17 +630,6 @@ class Language extends Model
         $language->setAttribute('parentUri', $language->parentUri);
     }
 
-
-
-
-
-
-
-
-
-
-
-
     /**
      * Gets the URI to the language edit form.
      *
@@ -653,21 +638,25 @@ class Language extends Model
      *
      * @deprecated  Use url($this->editUri) instead.
      */
-    public function getEditUri($full = true) {
+    public function getEditUri($full = true)
+    {
         return route('admin.language.edit', ['code' => $this->code], $full);
     }
 
     // TODO: add description relations for each description (en, fr, ...)
-    public function hasDescription($lang) {
+    public function hasDescription($lang)
+    {
         return false;
     }
 
-    public function getDescription($lang = 'en') {
+    public function getDescription($lang = 'en')
+    {
         return '';
     }
 
-    public function setDescription($lang, $desc) {}
-
+    public function setDescription($lang, $desc)
+    {
+    }
 
     //
     //
@@ -675,10 +664,9 @@ class Language extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    /**
-     * Creates the relation between an language and a definition.
-     */
+     /**
+      * Creates the relation between an language and a definition.
+      */
      public static function addRelatedDefinition($code, $def)
      {
          // Keep a static array of languages so that we don't have to
@@ -686,18 +674,19 @@ class Language extends Model
          static $languages;
 
          // Performance check.
-         if (!strlen($code) || !$def instanceof Definition) {
+         if (! strlen($code) || ! $def instanceof Definition) {
              Log::debug('Invalid code or definition object in Language::addRelatedDefinition.');
+
              return false;
          }
 
          // Retrieve language object.
-         if (!isset($languages[$code]))
-         {
+         if (! isset($languages[$code])) {
              $languages[$code] = static::findByCode($code);
 
-             if (!$languages[$code]) {
+             if (! $languages[$code]) {
                  Log::debug('Language::addRelatedDefinition - Could not retrieve language object.');
+
                  return false;
              }
          }
@@ -707,7 +696,7 @@ class Language extends Model
             ? $languages[$code]->definitions()->attach($def)
             : $languages[$code]->definitions()->save($def);
 
-        return true;
+         return true;
      }
 
     /**
@@ -719,9 +708,9 @@ class Language extends Model
     public static function getCountryList($locale = 'en')
     {
         $locale = preg_replace('/[^a-z_]/', '', $locale);
-        $list   = file_exists(base_path() .'/resources/countries/'. $locale .'.php') ?
-            include base_path() .'/resources/countries/'. $locale .'.php' :
-            include base_path() .'/resources/countries/en.php';
+        $list = file_exists(base_path().'/resources/countries/'.$locale.'.php') ?
+            include base_path().'/resources/countries/'.$locale.'.php' :
+            include base_path().'/resources/countries/en.php';
 
         return $list;
     }
@@ -734,7 +723,6 @@ class Language extends Model
      */
     public static function checkAttributes($lang)
     {
-
         return true;
     }
 }

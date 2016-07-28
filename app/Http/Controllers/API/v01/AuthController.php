@@ -1,20 +1,16 @@
 <?php
 /**
- * AuthController - API v0.1
+ * AuthController - API v0.1.
  */
 namespace App\Http\Controllers\API\v01;
 
 use Auth;
 use Crypt;
 use Request;
-
 use App\Http\Controllers\Controller;
 
 class AuthController extends Controller
 {
-    /**
-     *
-     */
     public function login()
     {
         // Performance check.
@@ -27,24 +23,21 @@ class AuthController extends Controller
         // ...
 
         // Authenticate.
-        if (!Auth::attempt($credentials, false)) {
+        if (! Auth::attempt($credentials, false)) {
             return response('Unauthorized.', 401);
         }
 
         // Return encrypted token.
         return [
-            'token' => Crypt::encrypt(csrf_token())
+            'token' => Crypt::encrypt(csrf_token()),
         ];
     }
 
-    /**
-     *
-     */
+
     public function sendToService($service)
     {
         // ...
-        switch (strtolower($service))
-        {
+        switch (strtolower($service)) {
             case static::SERVICE_FACEBOOK:
             case static::SERVICE_GOODLE:
             case static::SERVICE_LINKEDIN:

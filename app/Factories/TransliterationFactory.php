@@ -1,10 +1,8 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Factories;
-
 
 class TransliterationFactory
 {
@@ -25,7 +23,7 @@ class TransliterationFactory
     public function getTransliteration($text, $script = 'Latn')
     {
         // Performance check.
-        if (!is_string($text) || !strlen($text) || !in_array($script, $this->supportedScripts)) {
+        if (! is_string($text) || ! strlen($text) || ! in_array($script, $this->supportedScripts)) {
             return $text;
         }
 
@@ -51,7 +49,7 @@ class TransliterationFactory
      */
     public static function make($script)
     {
-        $className = 'App\\Factories\\Transliteration\\'. $script .'TransliterationFactory';
+        $className = 'App\\Factories\\Transliteration\\'.$script.'TransliterationFactory';
 
         return new $className;
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  *
  * @brief   Serves the mostly static app pages.
  */
@@ -12,33 +12,29 @@ use App\Models\Definition;
 
 class PageController extends Controller
 {
-    /**
-     *
-     */
     protected $name = 'page';
 
     /**
-	 * About the app.
+     * About the app.
      *
      * @param string $topic
      * @return View
-	 */
-	public function about($topic = '')
+     */
+    public function about($topic = '')
     {
         $data = [];
 
-        switch ($topic)
-        {
+        switch ($topic) {
             case 'api':
             case 'author':
             case 'sponsors':
             case 'translation-engine':
-                $view = 'pages.about.'. $topic;
+                $view = 'pages.about.'.$topic;
                 break;
 
             case 'learning-app':
             case 'stats':
-                $view = 'pages.about.'. $topic;
+                $view = 'pages.about.'.$topic;
 
                 // Retrieve top languages.
                 $topLangs = [];
@@ -50,8 +46,7 @@ class PageController extends Controller
                                 ->orderBy('total', 'desc')
                                 ->get();
 
-                for ($i = 0; $i < min(5, count($topLangQuery)); $i++)
-                {
+                for ($i = 0; $i < min(5, count($topLangQuery)); $i++) {
                     $lang = Language::findByCode($topLangQuery[$i]->code);
                     $topLangs[] = [
                         'name' => $lang->name,
@@ -61,7 +56,7 @@ class PageController extends Controller
                 }
 
                 $data = [
-                    'topLanguages' => $topLangs
+                    'topLanguages' => $topLangs,
                 ];
                 break;
 
@@ -69,7 +64,7 @@ class PageController extends Controller
                 $view = 'pages.about.story';
                 $data = [
                     'defs' => Definition::count(),
-                    'langs' => Language::count()
+                    'langs' => Language::count(),
                 ];
                 break;
 
@@ -81,40 +76,55 @@ class PageController extends Controller
                 $view = 'pages.about.index';
                 $data = [
                     'defs' => Definition::count(),
-                    'langs' => Language::count()
+                    'langs' => Language::count(),
                 ];
         }
 
-		return view($view, $data);
-	}
+        return view($view, $data);
+    }
 
-    public function api() {
+    public function api()
+    {
         return $this->about('api');
     }
-    public function author() {
+
+    public function author()
+    {
         return $this->about('author');
     }
-    public function learningApp() {
+
+    public function learningApp()
+    {
         return $this->about('learning-app');
     }
-    public function stats() {
+
+    public function stats()
+    {
         return $this->about('stats');
     }
-    public function story() {
+
+    public function story()
+    {
         return $this->about('story');
     }
-    public function team() {
+
+    public function team()
+    {
         return $this->about('team');
     }
-    public function translationEngine() {
+
+    public function translationEngine()
+    {
         return $this->about('translation-engine');
     }
-    public function sponsors() {
+
+    public function sponsors()
+    {
         return $this->about('sponsors');
     }
 
     /**
-     * humans.txt
+     * humans.txt.
      */
     public function humans()
     {
@@ -147,19 +157,21 @@ class PageController extends Controller
             ->setContent($txt);
     }
 
-	/**
-	 * Main landing page.
-	 */
-	public function home() {
-		return view('pages.reference');
-	}
+    /**
+     * Main landing page.
+     */
+    public function home()
+    {
+        return view('pages.reference');
+    }
 
-	/**
-	 * Contribute page.
-	 */
-	public function contribute() {
-		return view('pages.contribute');
-	}
+    /**
+     * Contribute page.
+     */
+    public function contribute()
+    {
+        return view('pages.contribute');
+    }
 
     /**
      * Random definition.
@@ -182,35 +194,39 @@ class PageController extends Controller
         return view('pages.sitemap');
     }
 
-
     //
     //
     // Redirects
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    public function redirectAdd() {
+    public function redirectAdd()
+    {
         return redirect(route('contribute'));
     }
 
-    public function redirectAgoro() {
+    public function redirectAgoro()
+    {
         return redirect(route('about.agoro'));
     }
 
-    public function redirectContribute() {
+    public function redirectContribute()
+    {
         return redirect(route('contribute'));
     }
 
-    public function redirectHome() {
+    public function redirectHome()
+    {
         return redirect(route('home'));
     }
 
-    public function redirectInNumbers() {
+    public function redirectInNumbers()
+    {
         return redirect(route('about.stats'));
     }
 
-    public function redirectStats() {
+    public function redirectStats()
+    {
         return redirect(route('about.stats'));
     }
 }

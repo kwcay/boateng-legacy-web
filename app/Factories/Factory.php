@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Factories;
 
@@ -10,14 +9,9 @@ namespace App\Factories;
  */
 abstract class Factory
 {
-    /**
-     *
-     */
     protected $isBooted = false;
 
     /**
-     *
-     *
      * @var array
      */
     protected $messages = [];
@@ -25,7 +19,9 @@ abstract class Factory
     /**
      * Called once class has been instantiated.
      */
-    public function boot() {}
+    public function boot()
+    {
+    }
 
     /**
      * @param string $msg
@@ -38,7 +34,8 @@ abstract class Factory
     /**
      * @return array
      */
-    public function getMessages() {
+    public function getMessages()
+    {
         return $this->messages;
     }
 }
