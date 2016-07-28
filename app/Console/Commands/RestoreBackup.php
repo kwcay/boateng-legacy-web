@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Console\Commands;
 
@@ -58,38 +57,35 @@ class RestoreBackup extends Command
         // Retrieve backup filename.
         $filename = $this->argument('file');
 
-        if (empty($filename))
-        {
+        if (empty($filename)) {
             $files = array_reverse($this->storage->allFiles('/'));
             $filename = $this->choice('Select a backup file to restore:', $files, 0);
         }
 
         // Performance check.
-        if (!$this->storage->exists($filename))
-        {
-            $this->error('Can\'t find backup file "'. $filename .'".');
+        if (! $this->storage->exists($filename)) {
+            $this->error('Can\'t find backup file "'.$filename.'".');
+
             return 0;
         }
 
         // Confirm backup restore.
-        if (!$this->confirm('Are you sure you want to restore the backup file "'. $filename .'"?')) {
+        if (! $this->confirm('Are you sure you want to restore the backup file "'.$filename.'"?')) {
             return 0;
         }
 
         // Restore backup file.
         $this->info('Reading backup file...');
-        try
-        {
+        try {
             $this->factory->restore($filename, [
-                'refresh-db' => ($this->option('refresh-db'))
+                'refresh-db' => ($this->option('refresh-db')),
             ]);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->error($e->getMessage());
+
             return 0;
         }
 
-        $this->info('The backup file "'. $filename .'" has been restored.');
+        $this->info('The backup file "'.$filename.'" has been restored.');
     }
 }

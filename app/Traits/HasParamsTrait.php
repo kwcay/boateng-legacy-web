@@ -1,4 +1,6 @@
-<?php namespace App\Traits;
+<?php
+
+namespace App\Traits;
 
 use Illuminate\Support\Arr;
 
@@ -10,7 +12,8 @@ trait HasParamsTrait
      * @param string $key
      * @return bool
      */
-    public function hasParam($key) {
+    public function hasParam($key)
+    {
         return Arr::has($this->params, $key);
     }
 
@@ -21,7 +24,8 @@ trait HasParamsTrait
      * @param string $default
      * @return mixed
      */
-    public function getParam($key, $default = '') {
+    public function getParam($key, $default = '')
+    {
         return Arr::get($this->params, $key, $default);
     }
 

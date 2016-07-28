@@ -17,23 +17,20 @@ class Architecture051 extends Migration
             DB::statement('ALTER TABLE alphabets DROP INDEX idx_transliteration') : null;
 
         // Remove reference column from definition_titles table
-        Schema::table('definition_titles', function(Blueprint $table)
-		{
+        Schema::table('definition_titles', function (Blueprint $table) {
             $table->dropColumn('reference');
         });
 
         // Add related_definitions column to definitions table
-        Schema::table('definitions', function(Blueprint $table)
-		{
+        Schema::table('definitions', function (Blueprint $table) {
             $table->text('related_definitions');
         });
 
         // Create references table.
-        Schema::create('references', function(Blueprint $table)
-        {
+        Schema::create('references', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id');
+            $table->increments('id');
 
             $table->string('type', 20);
             $table->text('data');
@@ -42,8 +39,7 @@ class Architecture051 extends Migration
         DB::statement('CREATE FULLTEXT INDEX idx_reference ON `references` (string)');
 
         // Create reference pivot table.
-        Schema::create('referenceable', function(Blueprint $table)
-        {
+        Schema::create('referenceable', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->integer('reference_id')->unsigned();
@@ -72,14 +68,12 @@ class Architecture051 extends Migration
         Schema::hasTable('references') ? Schema::drop('references') : null;
 
         // Remove related_definitions column from definitions table
-        Schema::table('definitions', function(Blueprint $table)
-		{
+        Schema::table('definitions', function (Blueprint $table) {
             $table->dropColumn('related_definitions');
         });
 
         // Create reference column on definition_titles table
-        Schema::table('definition_titles', function(Blueprint $table)
-		{
+        Schema::table('definition_titles', function (Blueprint $table) {
             $table->string('reference');
         });
 

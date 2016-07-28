@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  *
  * @version 0.1
  * @brief   Handles tag-related API requests.
@@ -11,7 +11,6 @@ use Request;
 use App\Models\Tag;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 
 class TagController extends Controller
 {
@@ -34,7 +33,7 @@ class TagController extends Controller
     public function show($id)
     {
         // Performance check.
-        if (!$id = Tag::decodeId($id)) {
+        if (! $id = Tag::decodeId($id)) {
             return response('Invalid Tag ID.', 400);
         }
 
@@ -45,19 +44,19 @@ class TagController extends Controller
         );
 
         // Retrieve definition object
-        if (!$tag = Tag::with($embed['relations'])->find($id)) {
+        if (! $tag = Tag::with($embed['relations'])->find($id)) {
             return response('Tag Not Found.', 404);
         }
 
         return $tag;
     }
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return Response
+     */
+    public function store()
     {
         return response('Not Implemented.', 501);
 
@@ -75,11 +74,10 @@ class TagController extends Controller
      * @throws \Exception
      * @return Response
      */
-	public function update($id)
-	{
-
+    public function update($id)
+    {
         return response('Not Implemented.', 501);
-	}
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -88,8 +86,8 @@ class TagController extends Controller
      * @throws \Exception
      * @return Response
      */
-	public function destroy($id)
-	{
+    public function destroy($id)
+    {
         return response('Not Implemented.', 501);
-	}
+    }
 }

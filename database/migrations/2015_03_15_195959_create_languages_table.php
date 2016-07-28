@@ -5,19 +5,18 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateLanguagesTable extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('languages', function(Blueprint $table)
-		{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('languages', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             // Internal ID.
-			$table->increments('id')->length(6);
+            $table->increments('id')->length(6);
 
             // Language codes.
             $table->string('code', 7)->unique();
@@ -30,18 +29,18 @@ class CreateLanguagesTable extends Migration
 
             //
             $table->text('params');
-			$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
-		});
-	}
+        });
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('languages');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('languages');
+    }
 }

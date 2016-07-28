@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Models;
 
@@ -33,8 +32,8 @@ class Translation extends Model
     protected $guarded = ['id'];
 
     /**
-    * The attributes that should be hidden for arrays.
-    */
+     * The attributes that should be hidden for arrays.
+     */
     protected $hidden = ['id', 'definition_id', 'created_at', 'updated_at', 'deleted_at'];
 
     /**
@@ -50,7 +49,7 @@ class Translation extends Model
     /**
      * @var array   Validation rules.
      */
-    public $validationRules  = [];
+    public $validationRules = [];
 
     /**
      * All of the relationships to be touched.
@@ -66,13 +65,13 @@ class Translation extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Defines relation to Definition model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function definition() {
+    public function definition()
+    {
         return $this->belongsTo('App\Models\Definition');
     }
 
@@ -81,17 +80,16 @@ class Translation extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function references() {
+    public function references()
+    {
         return $this->morphToMany('App\Models\Reference', 'referenceable', 'referenceable');
     }
-
 
     //
     //
     // Main methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * @param array $attributes

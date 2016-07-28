@@ -13,10 +13,8 @@ class Architecture052 extends Migration
     public function up()
     {
         // Add deleted_at column to countries, references, tags, and users table
-        foreach (['countries', 'references', 'tags', 'users'] as $tableName)
-        {
-            Schema::table($tableName, function(Blueprint $table)
-    		{
+        foreach (['countries', 'references', 'tags', 'users'] as $tableName) {
+            Schema::table($tableName, function (Blueprint $table) {
                 $table->softDeletes();
             });
         }
@@ -30,10 +28,8 @@ class Architecture052 extends Migration
     public function down()
     {
         // Remove deleted_at column from tags, users and countries tables
-        foreach (['countries', 'references', 'tags', 'users'] as $tableName)
-        {
-            Schema::table($tableName, function(Blueprint $table)
-    		{
+        foreach (['countries', 'references', 'tags', 'users'] as $tableName) {
+            Schema::table($tableName, function (Blueprint $table) {
                 $table->dropColumn('deleted_at');
             });
         }

@@ -1,36 +1,27 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Http\Controllers;
 
 use Session;
 use Redirect;
 use Request;
-use Validator;
-use App\Http\Requests;
 use App\Models\Country;
 use App\Models\Alphabet;
 use App\Models\Language;
 use App\Models\Definition;
 use App\Models\Definitions\Word;
 use Illuminate\Support\Collection;
-use App\Http\Controllers\Controller;
 
 /**
  * @abstract Main controller for the Language resource.
  */
 class LanguageController extends Controller
 {
-    /**
-     *
-     */
     protected $defaultQueryLimit = 20;
 
-    /**
-     *
-     */
+
     protected $supportedOrderColumns = [
         'id' => 'ID',
         'code' => 'ISO 639-3 code',
@@ -38,14 +29,10 @@ class LanguageController extends Controller
         'createdAt' => 'Created date',
     ];
 
-    /**
-     *
-     */
+
     protected $defaultOrderColumn = 'code';
 
-    /**
-     *
-     */
+
     protected $defaultOrderDirection = 'asc';
 
     /**
@@ -57,7 +44,7 @@ class LanguageController extends Controller
     public function show($id)
     {
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
+        if (! $lang = $this->getLanguage($id)) {
             abort(404, 'Can\'t find that languge :(');
         }
 
@@ -84,25 +71,25 @@ class LanguageController extends Controller
             'lang' => $lang,
             'random' => $random,
             'first' => $first,
-            'latest' => $latest
+            'latest' => $latest,
         ]);
     }
 
-	/**
-	 * Show the form for editing a language.
-	 *
+    /**
+     * Show the form for editing a language.
+     *
      * @param   string  $id     Either the ISO 639-3 language code or language ID.
-	 * @return  Response
-	 */
-	public function edit($id)
+     * @return  Response
+     */
+    public function edit($id)
     {
         // Retrieve the language object.
-        if (!$lang = $this->getLanguage($id)) {
+        if (! $lang = $this->getLanguage($id)) {
             abort(404, 'Can\'t find that languge :(');
         }
 
         // Alphabet data for selectize plugin.
-        $alphabetOptions = $lang->alphabets->map(function($item) {
+        $alphabetOptions = $lang->alphabets->map(function ($item) {
             return [
                 'code' => $item->code,
                 'name' => $item->name,
@@ -112,8 +99,7 @@ class LanguageController extends Controller
 
         // Parent language data for selectize plugin.
         $parentOptions = [];
-        if ($lang->parent)
-        {
+        if ($lang->parent) {
             $parentOptions[] = [
                 'code' => $lang->parent->code,
                 'name' => $lang->parent->name,
@@ -123,7 +109,7 @@ class LanguageController extends Controller
         }
 
         // Country data for selectize plugin.
-        $countryOptions = $lang->countries->map(function($item) {
+        $countryOptions = $lang->countries->map(function ($item) {
             return [
                 'code' => $item->code,
                 'name' => $item->name,
@@ -139,16 +125,16 @@ class LanguageController extends Controller
         ]);
     }
 
-	/**
-	 * Update the specified resource in storage.
+    /**
+     * Update the specified resource in storage.
      *
-	 * @param int $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
+     * @param int $id
+     * @return Response
+     */
+    public function update($id)
+    {
         // Retrieve the language object.
-        if (!$lang = Language::find($id)) {
+        if (! $lang = Language::find($id)) {
             abort(404);
         }
 
@@ -159,16 +145,16 @@ class LanguageController extends Controller
             'parentCode',
             'name',
             'transliteration',
-            'altNames'
+            'altNames',
         ]));
 
-        if (!$lang->save()) {
+        if (! $lang->save()) {
             abort(500);
         }
 
         // Update alphabets.
         $alphabets = $this->getAlphabets($this->request->get('alphabets', ''));
-        $alphabetIDs = $alphabets->map(function($item) {
+        $alphabetIDs = $alphabets->map(function ($item) {
             return $item->id;
         })->toArray();
 
@@ -176,19 +162,18 @@ class LanguageController extends Controller
 
         // Update countries.
         $countries = $this->getCountries($this->request->get('countries', ''));
-        $countryIDs = $countries->map(function($item) {
+        $countryIDs = $countries->map(function ($item) {
             return $item->id;
         })->toArray();
 
         $lang->countries()->sync($countryIDs);
 
         // Send success message to client, and a thank you.
-        Session::push('messages', 'The details for <em>'. $lang->name .
+        Session::push('messages', 'The details for <em>'.$lang->name.
             '</em> were successfully saved, thanks :)');
 
         // Return URI
-        switch ($this->request->get('return'))
-        {
+        switch ($this->request->get('return')) {
             case 'admin':
                 $return = route('admin.language.index');
                 break;
@@ -204,7 +189,7 @@ class LanguageController extends Controller
         }
 
         return redirect($return);
-	}
+    }
 
     /**
      * Shortcut to retrieve a language object.
@@ -215,8 +200,8 @@ class LanguageController extends Controller
     protected function getLanguage($id, array $embed = ['parent'])
     {
         // Performance check.
-        if (empty($id) || is_numeric($id) || !is_string($id)) {
-            return null;
+        if (empty($id) || is_numeric($id) || ! is_string($id)) {
+            return;
         }
 
         // Find langauge by code.
@@ -227,9 +212,7 @@ class LanguageController extends Controller
         // Find language by ID.
         elseif ($id = Language::decodeId($id)) {
             $lang = Language::with($embed)->find($id);
-        }
-
-        else {
+        } else {
             $lang = null;
         }
 
@@ -248,10 +231,8 @@ class LanguageController extends Controller
 
         // Retrieve alphabet models.
         $raw = trim($raw);
-        if (strlen($raw))
-        {
-            foreach (@explode(',', $raw) as $code)
-            {
+        if (strlen($raw)) {
+            foreach (@explode(',', $raw) as $code) {
                 if ($alphabet = Alphabet::findByCode($code)) {
                     $alphabets->push($alphabet);
                 }
@@ -273,10 +254,8 @@ class LanguageController extends Controller
 
         // Retrieve alphabet models.
         $raw = trim($raw);
-        if (strlen($raw))
-        {
-            foreach (@explode(',', $raw) as $code)
-            {
+        if (strlen($raw)) {
+            foreach (@explode(',', $raw) as $code) {
                 if ($country = Country::findByCode($code)) {
                     $countries->push($country);
                 }

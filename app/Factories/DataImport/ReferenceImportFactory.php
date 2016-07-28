@@ -1,25 +1,19 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Factories\DataImport;
 
-use Exception;
 use App\Models\Reference;
 use App\Factories\DataImportFactory;
 
 class ReferenceImportFactory extends DataImportFactory
 {
-    /**
-     *
-     */
     public function importDataSet()
     {
         // Loop through dataset and import each model one by one.
         $saved = $skipped = 0;
-        foreach ($this->dataArray as $array)
-        {
+        foreach ($this->dataArray as $array) {
             // TODO: performance check.
             // ...
 
@@ -33,7 +27,7 @@ class ReferenceImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' references added to database.');
+        $this->setMessage($saved.' of '.($saved + $skipped).' references added to database.');
 
         return $this;
     }

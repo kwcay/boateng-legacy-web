@@ -1,4 +1,6 @@
-<?php return array (
+<?php
+
+return  [
   'AD' => 'Andorre',
   'AE' => 'Émirats arabes unis',
   'AF' => 'Afghanistan',
@@ -247,4 +249,4 @@
   'ZM' => 'Zambie',
   'ZW' => 'Zimbabwe',
   'ZZ' => 'région indéterminée',
-);
+];

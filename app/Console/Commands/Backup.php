@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Console\Commands;
 
@@ -107,7 +106,7 @@ class Backup extends Command
     public function handle()
     {
         // Generate a unique backup name.
-        $this->meta['id'] = 'Di_Nkomo_'. date('ymd') .'-'. substr(time(), -5) .'-'. substr(md5(microtime()), -3);
+        $this->meta['id'] = 'Di_Nkomo_'.date('ymd').'-'.substr(time(), -5).'-'.substr(md5(microtime()), -3);
 
         // Store the default internal data format.
         $this->meta['format'] = $this->option('yaml') ? 'yaml' : 'json';
@@ -126,12 +125,11 @@ class Backup extends Command
         // Step n+3: Copy backgup file to backups disk.
         // Step n+4: Cleanup.
         $steps = 6;
-        foreach ($this->limits as $resource => $limit)
-        {
-            $className = 'App\\Models\\'. ucfirst($resource);
+        foreach ($this->limits as $resource => $limit) {
+            $className = 'App\\Models\\'.ucfirst($resource);
 
             $this->meta[$resource] = [
-                'files' => (int) ceil($className::count() / $limit)
+                'files' => (int) ceil($className::count() / $limit),
             ];
 
             $steps += $this->meta[$resource]['files'];
@@ -145,8 +143,7 @@ class Backup extends Command
         $this->progressBar->advance();
 
         // Start dumping resources.
-        foreach ($this->limits as $resource => $limit)
-        {
+        foreach ($this->limits as $resource => $limit) {
             // Performance check.
             if ($this->meta[$resource]['files'] < 1) {
                 continue;
@@ -158,11 +155,10 @@ class Backup extends Command
             // We will split the resource data into separate files, depending on the specified
             // limits. Using "$className::withTrashed()->chunk()" somehow isn't helpful here,
             // so we will chunk the data manually.
-            for ($i = 0; $i < $this->meta[$resource]['files']; $i++)
-            {
+            for ($i = 0; $i < $this->meta[$resource]['files']; $i++) {
                 $dump = [];
                 $skip = $i * $limit;
-                $className = 'App\\Models\\'. ucfirst($resource);
+                $className = 'App\\Models\\'.ucfirst($resource);
                 $models = $className::withTrashed()->skip($skip)->take($limit)->get();
 
                 foreach ($models as $model) {
@@ -183,7 +179,7 @@ class Backup extends Command
         $this->progressBar->advance();
 
         // tar & gzip folder
-        $phar = new PharData($this->getDirName() .'/'. $this->meta['id'] .'.tar');
+        $phar = new PharData($this->getDirName().'/'.$this->meta['id'].'.tar');
         $phar->buildFromDirectory($this->getDirName());
         $phar->setMetadata($this->meta);
         $phar->compress(Phar::GZ);
@@ -191,19 +187,19 @@ class Backup extends Command
 
         // Copy backup file to backups disk.
         $this->storage->put(
-            $this->meta['id'] .'.nko',
-            $this->tempStorage->get($this->meta['id'] .'/'. $this->meta['id'] .'.tar.gz')
+            $this->meta['id'].'.nko',
+            $this->tempStorage->get($this->meta['id'].'/'.$this->meta['id'].'.tar.gz')
         );
         $this->progressBar->advance();
 
         // Remove temporary files.
         unset($phar);
-        Phar::unlinkArchive($this->getDirName() .'/'. $this->meta['id'] .'.tar');
-        Phar::unlinkArchive($this->getDirName() .'/'. $this->meta['id'] .'.tar.gz');
+        Phar::unlinkArchive($this->getDirName().'/'.$this->meta['id'].'.tar');
+        Phar::unlinkArchive($this->getDirName().'/'.$this->meta['id'].'.tar.gz');
         $this->tempStorage->deleteDirectory($this->meta['id']);
         $this->progressBar->advance();
 
-        print "\n";
+        echo "\n";
     }
 
     /**
@@ -216,12 +212,11 @@ class Backup extends Command
     protected function createFile($filename, $contents, $format = null)
     {
         // Serialize file data.
-        if (!is_string($contents))
-        {
+        if (! is_string($contents)) {
             $contents = $this->option('yaml') ? Yaml::dump($contents, 4) : json_encode($contents);
         }
 
-        if (!$format) {
+        if (! $format) {
             $format = $this->option('yaml') ? 'yaml' : 'json';
         }
 
@@ -233,7 +228,8 @@ class Backup extends Command
      *
      * @return string
      */
-    protected function getDirName() {
-        return config('filesystems.disks.backups-build.root') .'/'. $this->meta['id'];
+    protected function getDirName()
+    {
+        return config('filesystems.disks.backups-build.root').'/'.$this->meta['id'];
     }
 }

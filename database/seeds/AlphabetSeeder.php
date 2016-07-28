@@ -1,10 +1,8 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 use Illuminate\Database\Seeder;
-
 use App\Models\Alphabet;
 
 class AlphabetSeeder extends Seeder
@@ -23,10 +21,9 @@ class AlphabetSeeder extends Seeder
             'transliteration' => 'Twi Alphabet',
             'code' => 'twi-Latn',
             'script_code' => 'Latn',
-            'letters' =>
-                'abdeɛfghiklmnoɔprstuwy' .
-                "\n" .
-                'ABDEƐFGHIKLMNOƆPRSTUWY'
+            'letters' => 'abdeɛfghiklmnoɔprstuwy'.
+                "\n".
+                'ABDEƐFGHIKLMNOƆPRSTUWY',
         ]);
     }
 }

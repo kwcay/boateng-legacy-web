@@ -12,8 +12,7 @@ class CreateLangDefPivot extends Migration
      */
     public function up()
     {
-        Schema::create('definition_language', function(Blueprint $table)
-        {
+        Schema::create('definition_language', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             // Language ID

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  *
  * @brief   This controller serves as an abstract for all the models of the applications.
  */
@@ -8,7 +8,6 @@ namespace App\Http\Controllers;
 
 use Auth;
 use Session;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
@@ -16,7 +15,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 
 abstract class Controller extends BaseController
 {
-	use ValidatesRequests;
+    use ValidatesRequests;
 
     /**
      * Internal name used to map controller to its model, views, etc.
@@ -25,24 +24,16 @@ abstract class Controller extends BaseController
      */
     protected $name;
 
-    /**
-     *
-     */
+
     protected $defaultQueryLimit = 20;
 
-    /**
-     *
-     */
+
     protected $supportedOrderColumns = [];
 
-    /**
-     *
-     */
+
     protected $defaultOrderColumn = 'id';
 
-    /**
-     *
-     */
+
     protected $defaultOrderDirection = 'desc';
 
     /**
@@ -53,8 +44,7 @@ abstract class Controller extends BaseController
     public function __construct(Request $request, Response $response)
     {
         // Determine internal name from class name.
-        if (!$this->name)
-        {
+        if (! $this->name) {
             $namespace = explode('\\', get_class($this));
             $this->name = strtolower(substr(array_pop($namespace), 0, -10));
         }
@@ -63,25 +53,24 @@ abstract class Controller extends BaseController
         $this->response = $response;
     }
 
-	/**
-	 * Setup the layout used by the controller.
-	 *
-	 * @return void
-	 */
-	protected function setupLayout()
-	{
-		if ( ! is_null($this->layout))
-		{
-			$this->layout = View::make($this->layout);
-		}
-	}
+    /**
+     * Setup the layout used by the controller.
+     *
+     * @return void
+     */
+    protected function setupLayout()
+    {
+        if (! is_null($this->layout)) {
+            $this->layout = View::make($this->layout);
+        }
+    }
 
     /**
-     * Displays a listing of the resource
+     * Displays a listing of the resource.
      *
      * @todo Restrict access based on roles.
      *
-	 * @return Illuminate\View\View
+     * @return Illuminate\View\View
      */
     public function index()
     {
@@ -102,11 +91,21 @@ abstract class Controller extends BaseController
         $this->setParam('limit', $limit);
 
         $limits = [];
-        if ($total > 10)    $limits[10] = 10;
-        if ($total > 20)    $limits[20] = 20;
-        if ($total > 30)    $limits[30] = 30;
-        if ($total > 50)    $limits[50] = 50;
-        if ($total > 100)    $limits[100] = 100;
+        if ($total > 10) {
+            $limits[10] = 10;
+        }
+        if ($total > 20) {
+            $limits[20] = 20;
+        }
+        if ($total > 30) {
+            $limits[30] = 30;
+        }
+        if ($total > 50) {
+            $limits[50] = 50;
+        }
+        if ($total > 100) {
+            $limits[100] = 100;
+        }
         $limits[$total] = $total;
 
         $orders = collect($this->supportedOrderColumns);
@@ -142,45 +141,46 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Shows the specified resource
+     * Shows the specified resource.
      *
      * @todo Restrict access based on roles.
      *
      * @param int|string $id
-	 * @return Illuminate\View\View
+     * @return Illuminate\View\View
      */
     public function show($id)
     {
-        if (!$model = $this->getModelInstance($id)) {
+        if (! $model = $this->getModelInstance($id)) {
             abort(404);
         }
 
         return view("pages.{$this->name}", [
-            $this->name => $model
+            $this->name => $model,
         ]);
     }
 
-	/**
-	 * Displays the form to add a new resource.
-	 *
-	 * @return Illuminate\View\View
-	 */
-	public function walkthrough() {
+    /**
+     * Displays the form to add a new resource.
+     *
+     * @return Illuminate\View\View
+     */
+    public function walkthrough()
+    {
         return view("forms.{$this->name}.walkthrough");
-	}
+    }
 
-	/**
-	 * Store a newly created resource in storage.
+    /**
+     * Store a newly created resource in storage.
      *
      * @todo Restrict access based on roles.
-	 *
-	 * @return Illuminate\Http\RedirectResponse
-	 */
-	public function store()
-	{
+     *
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function store()
+    {
         // Retrieve model classname.
         $className = $this->getModelClassName();
-        if (!class_exists($className)) {
+        if (! class_exists($className)) {
             abort(500);
         }
 
@@ -196,69 +196,65 @@ abstract class Controller extends BaseController
             ($model->uri ?: route("{$this->name}.create"));
 
         Session::push('messages',
-            'The details for <em>'. ($model->name ?: $model->title) .'</em> were successfully saved, thanks :)');
+            'The details for <em>'.($model->name ?: $model->title).'</em> were successfully saved, thanks :)');
 
         return redirect($return);
-	}
+    }
 
-	/**
-	 * Show the form for editing the specified resource.
+    /**
+     * Show the form for editing the specified resource.
      *
      * @todo Restrict access based on roles.
-	 *
+     *
      * @param mixed $id ID or Eloquent model.
-	 * @return Illuminate\View\View
-	 */
-	public function edit($id)
-	{
+     * @return Illuminate\View\View
+     */
+    public function edit($id)
+    {
         // If we already have an instance of the model, great.
-        if (is_a($id, 'Illuminate\Database\Eloquent\Model'))
-        {
+        if (is_a($id, 'Illuminate\Database\Eloquent\Model')) {
             $model = $id;
         }
 
         // If we have an encoded ID, decode it.
-        elseif (!is_numeric($id) && is_string($id) && strlen($id) >= 8)
-        {
+        elseif (! is_numeric($id) && is_string($id) && strlen($id) >= 8) {
             $className = $this->getModelClassName();
 
-            if (!$model = $className::find($id)) {
+            if (! $model = $className::find($id)) {
                 abort(404);
             }
         }
 
         // Performance check.
-        elseif (!is_numeric($id))
-        {
+        elseif (! is_numeric($id)) {
             abort(404);
         }
 
         // Retrieve the model by ID.
-        elseif (!$model = $this->getModel()->find($id))
-        {
+        elseif (! $model = $this->getModel()->find($id)) {
             // TODO: should this throw a 400 Bad Request if ID was found?
 
             abort(404);
         }
 
         return view("admin.{$this->name}.edit", compact([
-            'model'
+            'model',
         ]));
     }
 
-	/**
-	 * Updates the specified resource in storage.
+    /**
+     * Updates the specified resource in storage.
      *
      * @todo Restrict access based on roles.
      *
-	 * @param int|string $id
-	 * @return Illuminate\Http\RedirectResponse
-	 */
-	public function update($id)
-	{
+     * @param int|string $id
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function update($id)
+    {
         // Retrieve model.
         $className = $this->getModelClassName();
-        if (!$model = $className::find($id)) {
+        if (! $model = $className::find($id)) {
             abort(404);
         }
 
@@ -268,17 +264,16 @@ abstract class Controller extends BaseController
         // Update attributes.
         $model->fill($this->getAttributesFromRequest());
 
-        if (!$model->save()) {
+        if (! $model->save()) {
             abort(500);
         }
 
         // Send success message to client, and a thank you.
-        Session::push('messages', 'The details for <em>'. ($model->name ?: $model->title) .
+        Session::push('messages', 'The details for <em>'.($model->name ?: $model->title).
             '</em> were successfully saved, thanks :)');
 
         // Return URI
-        switch ($this->request->get('return'))
-        {
+        switch ($this->request->get('return')) {
             case 'edit':
                 $return = $model->editUri;
                 break;
@@ -296,33 +291,32 @@ abstract class Controller extends BaseController
         return redirect($return);
     }
 
-	/**
-	 * Removes or trashes the specified resource from storage.
+    /**
+     * Removes or trashes the specified resource from storage.
      *
      * @todo Restrict access based on roles.
-	 *
-	 * @param int $id
-	 * @return Illuminate\Http\RedirectResponse
-	 */
-	public function destroy($id)
-	{
+     *
+     * @param int $id
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function destroy($id)
+    {
         // Retrieve model.
         $className = $this->getModelClassName();
-        if (!$model = $className::find($id)) {
+        if (! $model = $className::find($id)) {
             abort(404);
         }
 
         // Delete record
         $name = $model->name ?: $model->title;
         if ($model->delete()) {
-            Session::push('messages', '<em>'. $name .'</em> has been succesfully deleted.');
+            Session::push('messages', '<em>'.$name.'</em> has been succesfully deleted.');
         } else {
-            Session::push('messages', 'Could not delete <em>'. $name .'</em>.');
+            Session::push('messages', 'Could not delete <em>'.$name.'</em>.');
         }
 
         // Return URI
-        switch ($this->request->get('return'))
-        {
+        switch ($this->request->get('return')) {
             case 'home':
                 $return = route('home');
                 break;
@@ -333,7 +327,7 @@ abstract class Controller extends BaseController
         }
 
         return redirect($return);
-	}
+    }
 
     /**
      * Restores a soft-deleted model.
@@ -347,26 +341,25 @@ abstract class Controller extends BaseController
     {
         // Retrieve model.
         $className = $this->getModelClassName();
-        if (!$model = $className::findTrashed($id)) {
+        if (! $model = $className::findTrashed($id)) {
             abort(404);
         }
 
         // Make sure the model can soft-delete.
-        if (!in_array(SoftDeletes::class, class_uses_recursive(get_class($model)))) {
+        if (! in_array(SoftDeletes::class, class_uses_recursive(get_class($model)))) {
             abort(400);
         }
 
         // Restore model.
         if ($model->restore()) {
-            Session::push('messages', '<em>'. ($model->name ?: $model->title) .
+            Session::push('messages', '<em>'.($model->name ?: $model->title).
                 '</em> was successfully restored.');
         } else {
-            Session::push('messages', 'Could not restore '. ($model->name ?: $model->title) .'.');
+            Session::push('messages', 'Could not restore '.($model->name ?: $model->title).'.');
         }
 
         // Return URI
-        switch ($this->request->get('return'))
-        {
+        switch ($this->request->get('return')) {
             case 'edit':
                 $return = $model->editUri;
                 break;
@@ -384,30 +377,29 @@ abstract class Controller extends BaseController
         return redirect($return);
     }
 
-	/**
-	 * Permanently deletes the specified resource from storage.
+    /**
+     * Permanently deletes the specified resource from storage.
      *
      * @todo Restrict access based on roles.
-	 *
-	 * @param int $id
-	 * @return Illuminate\Http\RedirectResponse
-	 */
-	public function forceDestroy($id)
-	{
+     *
+     * @param int $id
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function forceDestroy($id)
+    {
         // Retrieve model.
         $className = $this->getModelClassName();
-        if (!$model = $className::findTrashed($id)) {
+        if (! $model = $className::findTrashed($id)) {
             abort(404);
         }
 
         // Delete record
         $name = $model->name ?: $model->title;
         $model->forceDelete();
-        Session::push('messages', '<em>'. $name .'</em> has been permanently deleted.');
+        Session::push('messages', '<em>'.$name.'</em> has been permanently deleted.');
 
         // Return URI
-        switch ($this->request->get('return'))
-        {
+        switch ($this->request->get('return')) {
             case 'home':
                 $return = route('home');
                 break;
@@ -418,7 +410,7 @@ abstract class Controller extends BaseController
         }
 
         return redirect($return);
-	}
+    }
 
     /**
      * Retrieves the relations and attributes that may be appended to a model.
@@ -437,8 +429,7 @@ abstract class Controller extends BaseController
         $attributes = array_intersect($appendable, $embed);
 
         // Separate the database relations from the appendable attributes.
-        foreach ($embed as $key => $embedable)
-        {
+        foreach ($embed as $key => $embedable) {
             // Remove invalid relations.
             $embedable = preg_replace('/[^0-9a-z_]/i', '', $embedable);
             if (empty($embedable)) {
@@ -452,7 +443,7 @@ abstract class Controller extends BaseController
 
         return [
             'relations' => collect($embed),
-            'attributes' => collect($attributes)
+            'attributes' => collect($attributes),
         ];
     }
 
@@ -468,14 +459,11 @@ abstract class Controller extends BaseController
     protected function applyEmbedableAttributes($model, array $attributes = null)
     {
         // TODO: support passing a colletion of models.
-        if (is_a($model, 'Illuminate\Support\Collection'))
-        {
-
+        if (is_a($model, 'Illuminate\Support\Collection')) {
         }
 
         // Retrieve list of appendable attributes.
-        if (is_null($attributes))
-        {
+        if (is_null($attributes)) {
             $className = get_class($model);
             if (isset($className::$embedableAttributes) && is_array($className::$embedableAttributes)) {
                 $attributes = $className::$embedableAttributes;
@@ -493,10 +481,8 @@ abstract class Controller extends BaseController
         }
 
         // Append extra attributes.
-        if (count($attributes))
-        {
-            foreach ($attributes as $accessor)
-            {
+        if (count($attributes)) {
+            foreach ($attributes as $accessor) {
                 // TODO: support model types other than Illuminate\Database\Eloquent\Model
                 $model->setAttribute($accessor, $model->$accessor);
             }
@@ -516,7 +502,7 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Retrieves a parameter from the request, or the session
+     * Retrieves a parameter from the request, or the session.
      *
      * @param string $key
      * @param mixed $default
@@ -524,7 +510,7 @@ abstract class Controller extends BaseController
      */
     protected function getParam($key, $default = null)
     {
-        return $this->request->get($key, Session::get('res-'. $this->name .'-'. $key, $default));
+        return $this->request->get($key, Session::get('res-'.$this->name.'-'.$key, $default));
     }
 
     /**
@@ -536,7 +522,7 @@ abstract class Controller extends BaseController
      */
     protected function setParam($key, $value = null)
     {
-        Session::put('res-'. $this->name .'-'. $key, $value);
+        Session::put('res-'.$this->name.'-'.$key, $value);
 
         return $value;
     }
@@ -549,7 +535,7 @@ abstract class Controller extends BaseController
      */
     protected function resetParam($key)
     {
-        return Session::pull('res-'. $this->name .'-'. $key);
+        return Session::pull('res-'.$this->name.'-'.$key);
     }
 
     /**
@@ -557,8 +543,9 @@ abstract class Controller extends BaseController
      *
      * @return string
      */
-    protected function getModelClassName() {
-        return '\\App\\Models\\'. ucfirst($this->name);
+    protected function getModelClassName()
+    {
+        return '\\App\\Models\\'.ucfirst($this->name);
     }
 
     /**
@@ -570,14 +557,12 @@ abstract class Controller extends BaseController
     protected function getModelInstance($id)
     {
         // If we already have an instance of the model, great.
-        if (is_a($id, 'Illuminate\Database\Eloquent\Model'))
-        {
+        if (is_a($id, 'Illuminate\Database\Eloquent\Model')) {
             return $id;
         }
 
         // If we have an encoded ID, decode it.
-        elseif (!is_numeric($id) && is_string($id) && strlen($id) >= 8)
-        {
+        elseif (! is_numeric($id) && is_string($id) && strlen($id) >= 8) {
             $className = $this->getModelClassName();
 
             return $className::find($id);
@@ -585,12 +570,9 @@ abstract class Controller extends BaseController
 
         // If the ID was already decoded, this defeats the purpose of obfuscation...
         // We won't allow it !!
-        elseif (is_numeric($id))
-        {
-            return null;
+        elseif (is_numeric($id)) {
+            return;
         }
-
-        return null;
     }
 
     /**

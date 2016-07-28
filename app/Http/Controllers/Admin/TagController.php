@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Http\Controllers\Admin;
 
@@ -13,5 +12,4 @@ use App\Http\Controllers\TagController as Controller;
  */
 class TagController extends Controller
 {
-
 }

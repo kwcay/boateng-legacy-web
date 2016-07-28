@@ -1,11 +1,9 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
 use App\Http\Controllers\UserController as Controller;
 
 /**
@@ -13,5 +11,4 @@ use App\Http\Controllers\UserController as Controller;
  */
 class UserController extends Controller
 {
-    
 }

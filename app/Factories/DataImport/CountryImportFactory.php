@@ -1,27 +1,21 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Factories\DataImport;
 
-use Exception;
 use App\Models\Country;
 use App\Factories\DataImportFactory;
 
 class CountryImportFactory extends DataImportFactory
 {
-    /**
-     *
-     */
     public function importDataSet()
     {
         // Loop through countries and import them one by one.
         $saved = $skipped = 0;
-        foreach ($this->dataArray as $countryArray)
-        {
+        foreach ($this->dataArray as $countryArray) {
             // Performance check.
-            if (!array_key_exists('code', $countryArray) || Country::findByCode($countryArray['code'])) {
+            if (! array_key_exists('code', $countryArray) || Country::findByCode($countryArray['code'])) {
                 $skipped++;
                 continue;
             }
@@ -38,7 +32,7 @@ class CountryImportFactory extends DataImportFactory
             $saved++;
         }
 
-        $this->setMessage($saved .' of '. ($saved + $skipped) .' countries updated.');
+        $this->setMessage($saved.' of '.($saved + $skipped).' countries updated.');
 
         return $this;
     }

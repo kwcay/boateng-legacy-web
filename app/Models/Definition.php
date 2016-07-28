@@ -1,15 +1,10 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Models;
 
 use DB;
-use Log;
-use App\Models\Tag;
-use App\Models\Language;
-use App\Models\Translation;
 use Illuminate\Support\Arr;
 use Frnkly\Traits\Embedable;
 use cebe\markdown\MarkdownExtra;
@@ -116,8 +111,8 @@ class Definition extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    CONST SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
-    CONST SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.
+    const SEARCH_LIMIT = 100;       // Maximum number of results to return on a search.
+    const SEARCH_QUERY_LENGTH = 1;  // Minimum length of search query.
 
     /**
      * Indicates whether search results can be filtered by tags.
@@ -134,18 +129,18 @@ class Definition extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    CONST TYPE_WORD = 0;        // Regular definitions.
-    CONST TYPE_NAME = 5;        // Proper names.
-    CONST TYPE_EXPRESSION = 10;     // Proverbs, sayings, etc.
-    CONST TYPE_STORY = 30;      // Short stories, poems, songs, etc.
+    const TYPE_WORD = 0;        // Regular definitions.
+    const TYPE_NAME = 5;        // Proper names.
+    const TYPE_EXPRESSION = 10;     // Proverbs, sayings, etc.
+    const TYPE_STORY = 30;      // Short stories, poems, songs, etc.
 
-    CONST STATE_HIDDEN = 0;     // Hidden definition.
-    CONST STATE_VISIBLE = 10;   // Default state.
+    const STATE_HIDDEN = 0;     // Hidden definition.
+    const STATE_VISIBLE = 10;   // Default state.
 
-    CONST RATING_DEFAULT = 1;       // Default rating.
-    CONST RATING_AUTHENTICATED = 3; // Rating for definitions added by an authenticated user.
-    CONST RATING_HAS_LITERAL = 5;   // Rating for definitions with literal translations.
-    CONST RATING_FULL_TRANS = 10;   // Rating for definitions with literal translations & meanings.
+    const RATING_DEFAULT = 1;       // Default rating.
+    const RATING_AUTHENTICATED = 3; // Rating for definitions added by an authenticated user.
+    const RATING_HAS_LITERAL = 5;   // Rating for definitions with literal translations.
+    const RATING_FULL_TRANS = 10;   // Rating for definitions with literal translations & meanings.
 
     /**
      * Definition types.
@@ -190,7 +185,7 @@ class Definition extends Model
 
         // Types of phrases.
         10 => [
-            'expression'=> 'common expression',
+            'expression' => 'common expression',
             'phrase'    => 'simple phrase',
             'proverb'   => 'proverb or saying',
         ],
@@ -200,7 +195,7 @@ class Definition extends Model
             'poem'  => 'poem',
             'story'  => 'short story',
             'song'  => 'song',
-        ]
+        ],
     ];
 
     /*
@@ -214,7 +209,7 @@ class Definition extends Model
     ];
 
     /**
-     * Rating of definition
+     * Rating of definition.
      *
      * @todo Define how to use this
      */
@@ -298,13 +293,13 @@ class Definition extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Defines relation to Translation model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function translations() {
+    public function translations()
+    {
         return $this->hasMany('App\Models\Translation', 'definition_id');
     }
 
@@ -313,7 +308,8 @@ class Definition extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function titles() {
+    public function titles()
+    {
         return $this->hasMany('App\Models\DefinitionTitle', 'definition_id');
     }
 
@@ -322,7 +318,8 @@ class Definition extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function languages() {
+    public function languages()
+    {
         return $this->belongsToMany('App\Models\Language', 'definition_language', 'definition_id', 'language_id');
     }
 
@@ -331,7 +328,8 @@ class Definition extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function tags() {
+    public function tags()
+    {
         return $this->belongsToMany('App\Models\Tag', 'definition_tag', 'definition_id', 'tag_id');
     }
 
@@ -348,9 +346,6 @@ class Definition extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    /**
-     *
-     */
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -360,13 +355,11 @@ class Definition extends Model
         // $this->markdown->html5 = true;
     }
 
-
     //
     //
     // Helper methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Creates an instance of a definition type.
@@ -380,17 +373,18 @@ class Definition extends Model
     {
         // Return a general instance.
         if ($type == 'Definition' || $type == 'App\\Models\\Definition') {
-            return new Definition($attributes, $exists);
+            return new self($attributes, $exists);
         }
 
         // Check that the definition type is valid.
         $types = static::types();
-        if (!array_key_exists($type, $types)) {
-            return null;
+        if (! array_key_exists($type, $types)) {
+            return;
         }
 
         // Return new instance.
-        $className = '\\App\\Models\\Definitions\\'. ucfirst(strtolower($types[$type]));
+        $className = '\\App\\Models\\Definitions\\'.ucfirst(strtolower($types[$type]));
+
         return new $className($attributes, $exists);
     }
 
@@ -399,7 +393,8 @@ class Definition extends Model
      *
      * @return array
      */
-    public static function types() {
+    public static function types()
+    {
         return (new static)->types;
     }
 
@@ -409,8 +404,9 @@ class Definition extends Model
      * @param int $type
      * @return string
      */
-    public static function getTypeName($type) {
-        return (new Definition)->types[$type];
+    public static function getTypeName($type)
+    {
+        return (new self)->types[$type];
     }
 
     /**
@@ -421,8 +417,7 @@ class Definition extends Model
      */
     public static function getTypeConstant($type, $default = 0)
     {
-        switch (strtolower(trim($type)))
-        {
+        switch (strtolower(trim($type))) {
             case 'word':
                 return static::TYPE_WORD;
 
@@ -455,8 +450,6 @@ class Definition extends Model
         elseif (in_array($type, $types)) {
             return static::getTypeConstant($type);
         }
-
-        return null;
     }
 
     /**
@@ -464,7 +457,8 @@ class Definition extends Model
      *
      * @return array
      */
-    public function getSubTypes() {
+    public function getSubTypes()
+    {
         // return $this->subTypes[$this->getAttributeFromArray('type')];
         return $this->subTypes[$this->rawType];
     }
@@ -480,8 +474,7 @@ class Definition extends Model
         $type = is_numeric($type) ? (int) $type : static::getTypeConstant($type);
 
         // Find the sub type abbreviation.
-        foreach ((new static)->subTypes as $abbr => $sub)
-        {
+        foreach ((new static)->subTypes as $abbr => $sub) {
             if ($sub == $subType) {
                 return $abbr;
             }
@@ -506,13 +499,11 @@ class Definition extends Model
         return $query->with('languages', 'translations', 'titles')->orderByRaw('RAND()')->first();
     }
 
-
     //
     //
     // Methods for App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * @param string $term      Search query.
@@ -532,7 +523,7 @@ class Definition extends Model
             // Create temporary score columns so we can sort the IDs.
             ->selectRaw(
                 'd.id, '.
-                'i.title = ? AS title_score, ' .
+                'i.title = ? AS title_score, '.
                 'i.title LIKE ? AS title_score_low, '.
                 'MATCH(i.transliteration) AGAINST(?) AS transliteration_score, '.
                 'MATCH(t.practical) AGAINST(?) AS practical_score, '.
@@ -540,7 +531,7 @@ class Definition extends Model
                 't.practical = ? AS practical_score_multiplier, '.
                 'MATCH(t.literal) AGAINST(?) AS literal_score, '.
                 'MATCH(t.meaning) AGAINST(?) AS meaning_score ',
-                [$term, '%'. $term .'%', $term, $term, '%'. $term .'%', $term, $term, $term]
+                [$term, '%'.$term.'%', $term, $term, '%'.$term.'%', $term, $term, $term]
             )
 
             // Try to search in a relevant way.
@@ -554,24 +545,22 @@ class Definition extends Model
                     'MATCH(t.literal) AGAINST(?) OR '.
                     'MATCH(t.meaning) AGAINST(?)'.
                 ')',
-                [$term, '%'. $term .'%', $term, $term, '%'. $term .'%', $term, $term]
+                [$term, '%'.$term.'%', $term, $term, '%'.$term.'%', $term, $term]
             );
 
         // Limit scope to a specific language.
-        if (isset($options['lang']) && $lang = Language::findByCode($options['lang']))
-        {
+        if (isset($options['lang']) && $lang = Language::findByCode($options['lang'])) {
             $builder->join('definition_language AS pivot', 'pivot.definition_id', '=', 'd.id')
                 ->where('pivot.language_id', '=', DB::raw($lang->id));
         }
 
         // Limit scope to a specific definition type.
-        if ( isset($options['type']) && in_array($options['type'], static::types()) ) {
+        if (isset($options['type']) && in_array($options['type'], static::types())) {
             $builder->where('d.type', '=', DB::raw(static::getTypeConstant($options['type'])));
         }
 
         // Limit scope to certain tags
-        if (isset($options['tags']) && count($options['tags']))
-        {
+        if (isset($options['tags']) && count($options['tags'])) {
             $tagIds = Tag::whereIn('title', $options['tags'])->lists('id');
 
             $builder->join('definition_tag AS tag_pivot', 'tag_pivot.definition_id', '=', 'd.id')
@@ -589,15 +578,14 @@ class Definition extends Model
      */
     protected static function getSearchScore($rawScore)
     {
-        return (
+        return
             $rawScore->title_score * 10 +
             $rawScore->title_score_low * 1.5 +
             $rawScore->transliteration_score +
             $rawScore->practical_score * ($rawScore->practical_score_multiplier + 0.8) +
             $rawScore->practical_score_low * 0.5 +
             $rawScore->literal_score * 0.8 +
-            $rawScore->meaning_score * 0.8
-        );
+            $rawScore->meaning_score * 0.8;
     }
 
     /**
@@ -606,8 +594,9 @@ class Definition extends Model
      * @param array $IDs
      * @return \Illuminate\Support\Collection
      */
-    protected static function getSearchResults(array $IDs) {
-        return Definition::with('languages', 'titles.alphabet', 'translations')
+    protected static function getSearchResults(array $IDs)
+    {
+        return self::with('languages', 'titles.alphabet', 'translations')
                         ->whereIn('id', $IDs)->get();
     }
 
@@ -643,13 +632,11 @@ class Definition extends Model
         $definition->mainLanguage->setAttribute('uri', $definition->mainLanguage->uri);
     }
 
-
     //
     //
     // Translations-related methods.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Retrieves a translation relation.
@@ -659,7 +646,7 @@ class Definition extends Model
      */
     public function getTranslationRelation($lang)
     {
-        $found = Arr::where($this->translations, function($key, $translation) use($lang) {
+        $found = Arr::where($this->translations, function ($key, $translation) use ($lang) {
             return $translation->language == $lang;
         });
 
@@ -676,7 +663,7 @@ class Definition extends Model
     protected function _hasTranslationAttribute($lang, $attribute)
     {
         if ($translation = $this->getTranslationRelation($lang)) {
-            return (strlen($translation->$attribute));
+            return strlen($translation->$attribute);
         }
 
         return false;
@@ -710,18 +697,16 @@ class Definition extends Model
     protected function _setTranslationAttribute($lang, $attribute, $data, $create = false)
     {
         // Update an existing translation.
-        if ($translation = $this->getTranslationRelation($lang))
-        {
+        if ($translation = $this->getTranslationRelation($lang)) {
             $translation->$attribute = $data;
             $translation->save();
         }
 
         // Create a new translation.
-        elseif ($create === true && $attribute == 'practical')
-        {
+        elseif ($create === true && $attribute == 'practical') {
             $this->translations()->create([
                 'language' => $lang,
-                'practical' => $data
+                'practical' => $data,
             ]);
         }
     }
@@ -730,15 +715,18 @@ class Definition extends Model
     // Translations attribute.
     //
 
-    public function hasPracticalTranslation($lang) {
+    public function hasPracticalTranslation($lang)
+    {
         return $this->_hasTranslationAttribute($lang, 'practical');
     }
 
-    public function getPracticalTranslation($lang = 'eng') {
+    public function getPracticalTranslation($lang = 'eng')
+    {
         return $this->_getTranslationAttribute($lang, 'practical');
     }
 
-    public function setPracticalTranslation($lang, $translation, $create = false) {
+    public function setPracticalTranslation($lang, $translation, $create = false)
+    {
         return $this->_setTranslationAttribute($lang, 'practical', $translation, $create);
     }
 
@@ -746,15 +734,18 @@ class Definition extends Model
     // Literal translations attribute.
     //
 
-    public function hasLiteralTranslation($lang) {
+    public function hasLiteralTranslation($lang)
+    {
         return $this->_hasTranslationAttribute($lang, 'literal');
     }
 
-    public function getLiteralTranslation($lang = 'en') {
+    public function getLiteralTranslation($lang = 'en')
+    {
         return $this->_getTranslationAttribute($lang, 'literal');
     }
 
-    public function setLiteralTranslation($lang, $translation) {
+    public function setLiteralTranslation($lang, $translation)
+    {
         return $this->_setTranslationAttribute($lang, 'literal', $translation);
     }
 
@@ -762,25 +753,26 @@ class Definition extends Model
     // Meanings attribute.
     //
 
-    public function hasMeaning($lang) {
+    public function hasMeaning($lang)
+    {
         return $this->_hasTranslationAttribute($lang, 'meaning');
     }
 
-    public function getMeaning($lang = 'en') {
+    public function getMeaning($lang = 'en')
+    {
         return $this->_getTranslationAttribute($lang, 'meaning');
     }
 
-    public function setMeaning($lang, $meaning) {
+    public function setMeaning($lang, $meaning)
+    {
         return $this->_setTranslationAttribute($lang, 'meaning', $meaning);
     }
-
 
     //
     //
     // Accessors and mutators.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Accessor for $this->mainLanguage.
@@ -793,12 +785,9 @@ class Definition extends Model
         $mainLanguage = null;
 
         // Loop through related languages.
-        if ($code = $this->getParam('mainLang', false))
-        {
-            foreach ($this->languages as $lang)
-            {
-                if ($lang->code == $code)
-                {
+        if ($code = $this->getParam('mainLang', false)) {
+            foreach ($this->languages as $lang) {
+                if ($lang->code == $code) {
                     $mainLanguage = $lang;
                     break;
                 }
@@ -806,7 +795,7 @@ class Definition extends Model
         }
 
         // Or pick first language as a default.
-        if (!$mainLanguage) {
+        if (! $mainLanguage) {
             $mainLanguage = $this->languages->first();
         }
 
@@ -819,7 +808,8 @@ class Definition extends Model
      * @param int $type
      * @return string
      */
-    public function getTypeAttribute($type = 0) {
+    public function getTypeAttribute($type = 0)
+    {
         return Arr::get($this->types, $type, $this->types[0]);
     }
 
@@ -842,7 +832,8 @@ class Definition extends Model
     /**
      * Accessor for $this->rawType.
      */
-    public function getRawTypeAttribute($type = '') {
+    public function getRawTypeAttribute($type = '')
+    {
         return $this->getAttributeFromArray('type');
     }
 
@@ -853,10 +844,9 @@ class Definition extends Model
     {
         // "subType" will be null, since it will try to retrieve it from $this->attributes['subType']
         // which doesn't exist. We set it to the correct value here.
-        if (!$subType = $this->rawSubType)
-        {
+        if (! $subType = $this->rawSubType) {
             // Set and return a default type/sub-type.
-            if (!$this->rawType) {
+            if (! $this->rawType) {
                 $this->attributes['type'] = static::TYPE_WORD;
             }
 
@@ -892,50 +882,56 @@ class Definition extends Model
     /**
      * Accessor for $this->rawSubType.
      */
-    public function getRawSubTypeAttribute($subType = '') {
+    public function getRawSubTypeAttribute($subType = '')
+    {
         return $this->getAttributeFromArray('sub_type');
     }
 
-    public function getTitlesArrayAttribute($titles) {
+    public function getTitlesArrayAttribute($titles)
+    {
         return $this->titles;
     }
 
     /**
-     * Accessor for $this->mainTitle
+     * Accessor for $this->mainTitle.
      *
      * @return string
      */
-    public function getMainTitleAttribute($title = '') {
+    public function getMainTitleAttribute($title = '')
+    {
         return $this->titles[0]->title;
     }
 
     /**
-     * Accessor for $this->title (alias of $this->mainTitle)
+     * Accessor for $this->title (alias of $this->mainTitle).
      */
-    public function getTitleAttribute($title = '') {
+    public function getTitleAttribute($title = '')
+    {
         return $this->mainTitle;
     }
 
     /**
-     * Accessor for $this->titleString
+     * Accessor for $this->titleString.
      *
      * @return string
      */
-    public function getTitleStringAttribute($str = '') {
+    public function getTitleStringAttribute($str = '')
+    {
         return $this->titles->implode('title', ', ');
     }
 
     /**
-     * Accessor for $this->titleList
+     * Accessor for $this->titleList.
      *
      * @return array
      */
-    public function getTitleListAttribute($list = []) {
+    public function getTitleListAttribute($list = [])
+    {
         return $this->titles;
     }
 
     /**
-     * Accessor for $this->altTitles
+     * Accessor for $this->altTitles.
      *
      * @deprecated  2016-05-15
      *
@@ -953,15 +949,15 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->relatedDefinitionList
+     * Accessor for $this->relatedDefinitionList.
      */
     public function getRelatedDefinitionListAttribute()
     {
-        if (!count($this->relatedDefinitions)) {
+        if (! count($this->relatedDefinitions)) {
             return new Collection;
         }
 
-        return Definition::whereIn('id', $this->relatedDefinitions)->get();
+        return self::whereIn('id', $this->relatedDefinitions)->get();
     }
 
     /**
@@ -970,7 +966,8 @@ class Definition extends Model
      * @param int $state
      * @return string
      */
-    public function getStateAttribute($state = 0) {
+    public function getStateAttribute($state = 0)
+    {
         return array_get($this->states, $state, $this->states[static::STATE_VISIBLE]);
     }
 
@@ -990,14 +987,15 @@ class Definition extends Model
         // Else, try to find the right constant.
         else {
             $this->attributes['state'] = is_int(array_search(strtolower($state), $this->states)) ?
-                array_flip($this->states)[$state] : Definition::STATE_VISIBLE;
+                array_flip($this->states)[$state] : self::STATE_VISIBLE;
         }
     }
 
     /**
      * Accessor for $this->rawState.
      */
-    public function getRawStateAttribute($state = 0) {
+    public function getRawStateAttribute($state = 0)
+    {
         return $this->getAttributeFromArray('state');
     }
 
@@ -1018,7 +1016,7 @@ class Definition extends Model
     }
 
     /**
-     * Accessor for $this->tagList
+     * Accessor for $this->tagList.
      *
      * @return array
      */
@@ -1038,7 +1036,8 @@ class Definition extends Model
      *
      * @return array
      */
-    public function getLanguageAttribute() {
+    public function getLanguageAttribute()
+    {
         return $this->getLanguageListAttribute();
     }
 
@@ -1104,7 +1103,7 @@ class Definition extends Model
         return [
             'practical' => $this->practicalTranslations,
             'literal'   => $this->literalTranslations,
-            'meaning'   => $this->meanings
+            'meaning'   => $this->meanings,
         ];
     }
 
@@ -1116,14 +1115,12 @@ class Definition extends Model
     {
         $data = [];
 
-        if (count($this->translations))
-        {
-            foreach ($this->translations as $translation)
-            {
+        if (count($this->translations)) {
+            foreach ($this->translations as $translation) {
                 $data[$translation->language] = array_only($translation->toArray(), [
                     'practical',
                     'literal',
-                    'meaning'
+                    'meaning',
                 ]);
             }
         }
@@ -1144,7 +1141,7 @@ class Definition extends Model
         // Remove question marks.
         $slug = str_replace('?', '__', $slug);
 
-        return url($this->mainLanguage->code .'/'. $slug);
+        return url($this->mainLanguage->code.'/'.$slug);
     }
 
     /**
@@ -1152,7 +1149,8 @@ class Definition extends Model
      *
      * @return string
      */
-    public function getEditUriAttribute() {
+    public function getEditUriAttribute()
+    {
         return route('r.definition.edit', ['id' => $this->uniqueId, 'return' => 'summary']);
     }
 
@@ -1161,21 +1159,24 @@ class Definition extends Model
      *
      * @return string
      */
-    public function getEditUriAdminAttribute() {
+    public function getEditUriAdminAttribute()
+    {
         return route('r.definition.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 
     /**
      * Accessor for $this->references.
      */
-    public function getReferencesAttribute() {
+    public function getReferencesAttribute()
+    {
         return $this->translation ? $this->translation->references : new Collection;
     }
 
     /**
      * Accessor for $this->referenceList.
      */
-    public function getReferenceListAttribute() {
+    public function getReferenceListAttribute()
+    {
         return $this->references;
     }
 
@@ -1184,7 +1185,8 @@ class Definition extends Model
      *
      * @return string
      */
-    public function getResourceTypeAttribute() {
+    public function getResourceTypeAttribute()
+    {
         return 'definition';
     }
 
@@ -1195,17 +1197,14 @@ class Definition extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    /**
-     *
-     */
-    public function setRelationToBeImported($relation, $data) {
+    public function setRelationToBeImported($relation, $data)
+    {
         $this->relationsToBeImported[$relation] = $data;
     }
 
-    /**
-     *
-     */
-    public function getRelationsToBeImported() {
+
+    public function getRelationsToBeImported()
+    {
         return $this->relationsToBeImported;
     }
 
@@ -1219,16 +1218,15 @@ class Definition extends Model
     {
         // Check relations to be imported, if any.
         $relations = $def->getRelationsToBeImported();
-        if (count($relations))
-        {
+        if (count($relations)) {
             // This definition must exist in some language.
-            if (!isset($relations['languages']) || !count($relations['languages'])) {
+            if (! isset($relations['languages']) || ! count($relations['languages'])) {
                 return false;
             }
 
             // Check that languages exist in our database.
             foreach ($relations['languages'] as $code) {
-                if (!Language::where('code', $code)->exists()) {
+                if (! Language::where('code', $code)->exists()) {
                     return false;
                 }
             }
@@ -1246,27 +1244,25 @@ class Definition extends Model
     public static function importRelations($def)
     {
         $relations = $def->getRelationsToBeImported();
-        if (!count($relations)) {
+        if (! count($relations)) {
             return true;
         }
 
         // Update language relations.
         foreach ($relations['languages'] as $code) {
-            if (!Language::addRelatedDefinition($code, $def)) {
+            if (! Language::addRelatedDefinition($code, $def)) {
                 return false;
             }
         }
 
         // Update translations relations.
-        if (isset($relations['translations']) && count($relations['translations']))
-        {
-            foreach ($relations['translations'] as $lang => $translation)
-            {
+        if (isset($relations['translations']) && count($relations['translations'])) {
+            foreach ($relations['translations'] as $lang => $translation) {
                 $def->translations()->save(new Translation([
                     'language' => $lang,
                     'translation' => $translation,
                     'literal' => Arr::get($relations['literals'], $lang, ''),
-                    'meaning' => Arr::get($relations['meanings'], $lang, '')
+                    'meaning' => Arr::get($relations['meanings'], $lang, ''),
                 ]));
             }
         }
@@ -1281,9 +1277,8 @@ class Definition extends Model
             return;
         }
 
-        foreach ($relations as $relation => $data)
-        {
-            $methodName = 'update'. ucfirst(strtolower($relation)) .'Relation';
+        foreach ($relations as $relation => $data) {
+            $methodName = 'update'.ucfirst(strtolower($relation)).'Relation';
             if (method_exists($this, $methodName)) {
                 $this->$methodName($data);
             }
@@ -1303,12 +1298,10 @@ class Definition extends Model
         }
 
         // Make sure we have an array of IDs.
-        foreach ($languages as $index => $langID)
-        {
-            if (!is_numeric($langID))
-            {
+        foreach ($languages as $index => $langID) {
+            if (! is_numeric($langID)) {
                 // If we can't find the language by code, assume it was invalid.
-                if (!$lang = Language::findByCode($langID)) {
+                if (! $lang = Language::findByCode($langID)) {
                     unset($languages[$index]);
                     continue;
                 }

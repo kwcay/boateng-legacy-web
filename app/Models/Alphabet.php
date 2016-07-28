@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Models;
 
@@ -71,8 +70,8 @@ class Alphabet extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    CONST SEARCH_LIMIT = 10;        // Maximum number of results to return on a search.
-    CONST SEARCH_QUERY_LENGTH = 3;  // Minimum length of search query.
+    const SEARCH_LIMIT = 10;        // Maximum number of results to return on a search.
+    const SEARCH_QUERY_LENGTH = 3;  // Minimum length of search query.
 
     /**
      * Indicates whether search results can be filtered by tags.
@@ -107,7 +106,7 @@ class Alphabet extends Model
     /**
      * Validation rules.
      */
-    public $validationRules  = [
+    public $validationRules = [
         'name' => 'required|min:2|max:100',
         'transliteration' => 'min:2|max:100',
         // 'code' => 'sometimes|required|min:6|max:20|unique:alphabets',
@@ -123,23 +122,21 @@ class Alphabet extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Defines relation to Language model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function languages() {
+    public function languages()
+    {
         return $this->belongsToMany('App\Models\Language');
     }
-
 
     //
     //
     // Helper methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Looks up an alphabet model by code.
@@ -156,16 +153,15 @@ class Alphabet extends Model
 
         // Retrieve alphabet by code.
         $code = preg_replace('/[^a-z\-]/', '', strtolower($code));
+
         return $code ? static::where('code', '=', ucfirst($code))->first() : null;
     }
-
 
     //
     //
     // Search-related methods.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * @param string $term      Search query.
@@ -182,13 +178,13 @@ class Alphabet extends Model
             // Create temporary score columns so we can sort the IDs.
             ->selectRaw(
                 'a.id, '.
-                'a.name = ? AS name_score, ' .
+                'a.name = ? AS name_score, '.
                 'a.name LIKE ? AS name_score_low, '.
                 'MATCH(a.transliteration) AGAINST(?) AS transliteration_score, '.
-                'a.code = ? AS code_score, ' .
-                'a.script_code = ? AS script_code_score, ' .
+                'a.code = ? AS code_score, '.
+                'a.script_code = ? AS script_code_score, '.
                 'a.letters LIKE ? AS letters_score ',
-                [$term, '%'. $term .'%', $term, $term, $term, '%'. $term .'%']
+                [$term, '%'.$term.'%', $term, $term, $term, '%'.$term.'%']
             )
 
             // Try to search in a relevant way.
@@ -201,12 +197,11 @@ class Alphabet extends Model
                     'a.script_code = ? OR '.
                     'a.letters LIKE ? '.
                 ')',
-                [$term, '%'. $term .'%', $term, $term, $term, '%'. $term .'%']
+                [$term, '%'.$term.'%', $term, $term, $term, '%'.$term.'%']
             );
 
         // Limit scope to a specific language.
-        if (isset($options['lang']) && $lang = Language::findByCode($options['lang']))
-        {
+        if (isset($options['lang']) && $lang = Language::findByCode($options['lang'])) {
             $builder->join('alphabet_language AS pivot', 'pivot.alphabet_id', '=', 'a.id')
                 ->where('pivot.language_id', '=', DB::raw($lang->id));
         }
@@ -222,13 +217,12 @@ class Alphabet extends Model
      */
     protected static function getSearchScore($rawScore)
     {
-        return (
+        return
             $rawScore->name_score * 10 +
             $rawScore->name_score_low * 1.5 +
             $rawScore->code_score * 10 +
             $rawScore->script_code_score * 7 +
-            $rawScore->letters_score
-        );
+            $rawScore->letters_score;
     }
 
     /**
@@ -237,8 +231,9 @@ class Alphabet extends Model
      * @param array $IDs
      * @return \Illuminate\Support\Collection
      */
-    protected static function getSearchResults(array $IDs) {
-        return Alphabet::with('languages')->whereIn('id', $IDs)->get();
+    protected static function getSearchResults(array $IDs)
+    {
+        return self::with('languages')->whereIn('id', $IDs)->get();
     }
 
     /**
@@ -266,20 +261,19 @@ class Alphabet extends Model
         }
     }
 
-
     //
     //
     // Accessors and mutators.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Accessor for $this->uri.
      *
      * @return string
      */
-    public function getUriAttribute() {
+    public function getUriAttribute()
+    {
         return 'javascript:;';
     }
 
@@ -288,7 +282,8 @@ class Alphabet extends Model
      *
      * @return string
      */
-    public function getEditUriAttribute() {
+    public function getEditUriAttribute()
+    {
         return route('r.alphabet.edit', ['id' => $this->uniqueId, 'return' => 'create']);
     }
 
@@ -297,7 +292,8 @@ class Alphabet extends Model
      *
      * @return string
      */
-    public function getEditUriAdminAttribute() {
+    public function getEditUriAdminAttribute()
+    {
         return route('r.alphabet.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 }

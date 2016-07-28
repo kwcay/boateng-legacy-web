@@ -19,18 +19,15 @@ class Architecture041 extends Migration
         // Drop all existing tables except for password_resets.
         Schema::hasTable('users') ? Schema::drop('users') : null;
         Schema::hasTable('definition_language') ? Schema::drop('definition_language') : null;
-        if (Schema::hasTable('translations'))
-        {
+        if (Schema::hasTable('translations')) {
             DB::statement('ALTER TABLE translations DROP INDEX idx_translation');
             Schema::drop('translations');
         }
-        if (Schema::hasTable('languages'))
-        {
+        if (Schema::hasTable('languages')) {
             DB::statement('ALTER TABLE languages DROP INDEX idx_name');
             Schema::drop('languages');
         }
-        if (Schema::hasTable('definitions'))
-        {
+        if (Schema::hasTable('definitions')) {
             DB::statement('ALTER TABLE definitions DROP INDEX idx_title');
             DB::statement('ALTER TABLE definitions DROP INDEX idx_data');
             DB::statement('ALTER TABLE definitions DROP INDEX idx_tags');
@@ -38,54 +35,50 @@ class Architecture041 extends Migration
         }
 
         // Languages.
-        Schema::create('languages', function(Blueprint $table)
-		{
+        Schema::create('languages', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id');
+            $table->increments('id');
             $table->string('code', 7)->unique();
             $table->string('parent_code', 7)->nullable()->index();
             $table->string('name', 100);
             $table->string('alt_names', 300)->nullable();
-			$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
-		});
+        });
         DB::statement('CREATE FULLTEXT INDEX idx_name ON languages (name, alt_names)');
 
         // Language scripts.
-        Schema::create('scripts', function(Blueprint $table)
-		{
+        Schema::create('scripts', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id');
+            $table->increments('id');
             $table->string('name', 100)->unique();
             $table->string('abbreviation', 10)->unique();
             $table->text('alphabet')->nullable();
             $table->text('partial_alphabet')->nullable();
-			$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
-		});
+        });
 
         // Definitions.
-        Schema::create('definitions', function(Blueprint $table)
-		{
+        Schema::create('definitions', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id');
-            $table->string('title', 400);               	// e.g. word, title of a poem, etc.
-            $table->string('alt_titles', 400)->nullable();	// Alternate spellings.
-            $table->tinyInteger('type')->unsigned();		// Data type, e.g. word.
-            $table->string('sub_type');	    				// Data sub-type, e.g. noun.
+            $table->increments('id');
+            $table->string('title', 400);                   // e.g. word, title of a poem, etc.
+            $table->string('alt_titles', 400)->nullable();    // Alternate spellings.
+            $table->tinyInteger('type')->unsigned();        // Data type, e.g. word.
+            $table->string('sub_type');                        // Data sub-type, e.g. noun.
             $table->tinyInteger('state');
             $table->text('params');
-			$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
-		});
+        });
         DB::statement('CREATE FULLTEXT INDEX idx_title ON definitions (title, alt_titles)');
 
         // Translations.
-        Schema::create('translations', function(Blueprint $table)
-        {
+        Schema::create('translations', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
@@ -104,8 +97,7 @@ class Architecture041 extends Migration
         DB::statement('CREATE FULLTEXT INDEX idx_translation ON translations (practical, literal, meaning)');
 
         // Tags.
-        Schema::create('tags', function(Blueprint $table)
-        {
+        Schema::create('tags', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
@@ -115,8 +107,7 @@ class Architecture041 extends Migration
         DB::statement('CREATE FULLTEXT INDEX idx_title ON tags (title)');
 
         // Sentences.
-        Schema::create('sentences', function(Blueprint $table)
-        {
+        Schema::create('sentences', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
@@ -127,8 +118,7 @@ class Architecture041 extends Migration
         DB::statement('CREATE FULLTEXT INDEX idx_content ON sentences (content)');
 
         // Media.
-        Schema::create('media', function(Blueprint $table)
-        {
+        Schema::create('media', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
@@ -144,8 +134,7 @@ class Architecture041 extends Migration
         });
 
         // Data.
-        Schema::create('data', function(Blueprint $table)
-        {
+        Schema::create('data', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
@@ -156,8 +145,7 @@ class Architecture041 extends Migration
         DB::statement('CREATE FULLTEXT INDEX idx_content ON data (content)');
 
         // Cultures.
-        Schema::create('cultures', function(Blueprint $table)
-        {
+        Schema::create('cultures', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
@@ -173,8 +161,7 @@ class Architecture041 extends Migration
         DB::statement('CREATE FULLTEXT INDEX idx_name ON cultures (name, alt_names)');
 
         // Countries.
-        Schema::create('countries', function(Blueprint $table)
-        {
+        Schema::create('countries', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
@@ -187,34 +174,31 @@ class Architecture041 extends Migration
         DB::statement('CREATE FULLTEXT INDEX idx_name ON countries (name, alt_names)');
 
         // Users.
-        Schema::create('users', function(Blueprint $table)
-		{
+        Schema::create('users', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id');
-			$table->string('name', 70);
-			$table->string('email', 100)->unique();
-			$table->string('password', 60);
-			$table->rememberToken();
+            $table->increments('id');
+            $table->string('name', 70);
+            $table->string('email', 100)->unique();
+            $table->string('password', 60);
+            $table->rememberToken();
             $table->text('params')->nullable();
-			$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
-		});
+        });
 
         // Roles: handled by zizaco/entrust.
-        Schema::create('roles', function(Blueprint $table)
-		{
+        Schema::create('roles', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id');
-			$table->string('name', 100)->unique();
-			$table->string('display_name')->nullable();
+            $table->increments('id');
+            $table->string('name', 100)->unique();
+            $table->string('display_name')->nullable();
             $table->text('description')->nullable();
-		});
+        });
 
         // Permissions: handled by zizaco/entrust.
-        Schema::create('permissions', function (Blueprint $table)
-        {
+        Schema::create('permissions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 100)->unique();
             $table->string('display_name')->nullable();
@@ -232,21 +216,18 @@ class Architecture041 extends Migration
             'language_script',
         ];
 
-        foreach ($pivots as $pivot)
-        {
-            Schema::create($pivot, function(Blueprint $table) use($pivot)
-            {
+        foreach ($pivots as $pivot) {
+            Schema::create($pivot, function (Blueprint $table) use ($pivot) {
                 list($table1, $table2) = explode('_', $pivot);
 
                 $table->engine = 'InnoDB';
-                $table->integer($table1 .'_id')->unsigned();
-                $table->integer($table2 .'_id')->unsigned();
+                $table->integer($table1.'_id')->unsigned();
+                $table->integer($table2.'_id')->unsigned();
             });
         }
 
         // Role-User (Many-to-Many).
-        Schema::create('role_user', function (Blueprint $table)
-        {
+        Schema::create('role_user', function (Blueprint $table) {
             $table->integer('user_id')->unsigned();
             $table->integer('role_id')->unsigned();
             $table->foreign('user_id')
@@ -264,8 +245,7 @@ class Architecture041 extends Migration
         });
 
         // Permission-Role (Many-to-Many)
-        Schema::create('permission_role', function (Blueprint $table)
-        {
+        Schema::create('permission_role', function (Blueprint $table) {
             $table->integer('permission_id')->unsigned();
             $table->integer('role_id')->unsigned();
             $table->foreign('permission_id')
@@ -312,38 +292,35 @@ class Architecture041 extends Migration
         //     }
         // }
 
-        Schema::create('users', function(Blueprint $table)
-		{
+        Schema::create('users', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id');
-			$table->string('name', 70);
-			$table->string('email', 100)->unique();
-			$table->string('password', 60);
-			$table->rememberToken();
-			$table->timestamps();
-		});
+            $table->increments('id');
+            $table->string('name', 70);
+            $table->string('email', 100)->unique();
+            $table->string('password', 60);
+            $table->rememberToken();
+            $table->timestamps();
+        });
 
-		Schema::create('languages', function(Blueprint $table)
-		{
+        Schema::create('languages', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id')->length(6);
+            $table->increments('id')->length(6);
             $table->string('code', 7)->unique();
             $table->string('parent_code', 7)->nullable()->index();
             $table->string('name', 100);
             $table->string('alt_names', 300)->nullable();
             $table->string('countries', 60)->nullable();
             $table->text('params');
-			$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
-		});
+        });
 
-		Schema::create('definitions', function(Blueprint $table)
-		{
+        Schema::create('definitions', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
-			$table->increments('id')->length(9);
+            $table->increments('id')->length(9);
             $table->string('title', 400);
             $table->string('alt_titles', 400)->nullable();
             $table->text('data')->nullable();
@@ -352,12 +329,11 @@ class Architecture041 extends Migration
             $table->text('tags')->nullable();
             $table->tinyInteger('state');
             $table->text('params');
-			$table->timestamps();
+            $table->timestamps();
             $table->softDeletes();
-		});
+        });
 
-        Schema::create('translations', function(Blueprint $table)
-        {
+        Schema::create('translations', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
@@ -374,8 +350,7 @@ class Architecture041 extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('definition_language', function(Blueprint $table)
-        {
+        Schema::create('definition_language', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             $table->integer('language_id')->length(6)->unsigned();
@@ -384,9 +359,9 @@ class Architecture041 extends Migration
 
         // Re-create the fulltext indices.
         DB::statement('CREATE FULLTEXT INDEX idx_name ON languages (name, alt_names)');
-		DB::statement('CREATE FULLTEXT INDEX idx_title ON definitions (title, alt_titles)');
-		DB::statement('CREATE FULLTEXT INDEX idx_data ON definitions (data)');
-		DB::statement('CREATE FULLTEXT INDEX idx_tags ON definitions (tags)');
-		DB::statement('CREATE FULLTEXT INDEX idx_translation ON translations (translation, literal, meaning)');
+        DB::statement('CREATE FULLTEXT INDEX idx_title ON definitions (title, alt_titles)');
+        DB::statement('CREATE FULLTEXT INDEX idx_data ON definitions (data)');
+        DB::statement('CREATE FULLTEXT INDEX idx_tags ON definitions (tags)');
+        DB::statement('CREATE FULLTEXT INDEX idx_translation ON translations (translation, literal, meaning)');
     }
 }

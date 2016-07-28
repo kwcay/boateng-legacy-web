@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Http\Controllers\Auth;
 
@@ -16,7 +15,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 class AuthController extends Controller
 {
-	use AuthenticatesAndRegistersUsers, ThrottlesLogins {
+    use AuthenticatesAndRegistersUsers, ThrottlesLogins {
         // AuthenticatesAndRegistersUsers::postLogin as loginUser;
     }
 
@@ -31,18 +30,17 @@ class AuthController extends Controller
         'twitter',
     ];
 
-	/**
-	 * Create a new authentication controller instance.
-	 */
-	public function __construct()
-	{
+    /**
+     * Create a new authentication controller instance.
+     */
+    public function __construct()
+    {
         $this->loginPath = route('auth.login');
 
         // Let API know if we're coming from the app.
 
         // Define rediretion paths (used internally).
-        switch (Request::input('next'))
-        {
+        switch (Request::input('next')) {
             case 'app':
                 Session::put('next', 'app');
                 $this->redirectPath = 'http://dinkomo.frnk.ca/#/token';
@@ -60,8 +58,8 @@ class AuthController extends Controller
         }
 
         // Enable the guest middleware.
-		$this->middleware('guest', ['except' => 'getLogout']);
-	}
+        $this->middleware('guest', ['except' => 'getLogout']);
+    }
 
     /**
      * Get a validator for an incoming registration request.
@@ -102,7 +100,7 @@ class AuthController extends Controller
     public function redirectToProvider($provider)
     {
         // Performance check.
-        if (!in_array($provider, $this->oAuthProviders)) {
+        if (! in_array($provider, $this->oAuthProviders)) {
             abort(400);
         }
 
@@ -118,7 +116,7 @@ class AuthController extends Controller
     public function handleProviderCallback($provider)
     {
         // Performance check.
-        if (!in_array($provider, $this->oAuthProviders)) {
+        if (! in_array($provider, $this->oAuthProviders)) {
             abort(400);
         }
 
