@@ -1,3 +1,7 @@
+# Di Nkɔmɔ: A reference of cultures past and present.
+
+[![StyleCI](https://styleci.io/repos/26736195/shield)](https://styleci.io/repos/26736195)
+
 # Installation
 
 ## Requirements
