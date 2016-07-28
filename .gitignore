@@ -1,7 +1,6 @@
 # Vendor files & environment-specific files.
 /bower_components
 /node_modules
-/public/google*.html
 /storage
 /vendor
 .env
