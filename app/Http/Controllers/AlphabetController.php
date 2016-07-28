@@ -41,6 +41,5 @@ class AlphabetController extends Controller
         return $attributes;
     }
 
-
     protected $defaultOrderDirection = 'asc';
 }
