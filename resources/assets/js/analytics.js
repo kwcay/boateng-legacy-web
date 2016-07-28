@@ -30,7 +30,7 @@ var Analytics =
     data.keen.addons.push({
       name: "keen:ip_to_geo",
       input: {
-        ip: "ip"
+        ip: "keen.ip"
       },
       output: "geo_data"
     });
@@ -38,7 +38,7 @@ var Analytics =
     data.keen.addons.push({
       name: "keen:ua_parser",
       input: {
-        ua_string: "ua"
+        ua_string: "keen.ua"
       },
       output: "ua_data"
     });
