@@ -15,8 +15,8 @@ var Analytics =
   track: function(event, data) {
 
     // Performance check.
-    if (typeof Keen == 'undefined')
-      return this.log('Keen not loaded.');
+    if (typeof keenClient == 'undefined')
+      return this.log('Keen client not loaded.');
 
     data = data || {};
     data.referrer = document.referrer;
@@ -25,18 +25,18 @@ var Analytics =
     };
 
     // Track event w/ Keen.io
-    Keen.addEvent(event, data, function(err, res) {
+    keenClient.addEvent(event, data, function(err, res) {
 
       // Handle errors.
       if (err) {
-        this.log('An error occured while trying to track the event "'+ event +'".');
+        console.error('Keen.io error: ' + err);
       }
 
       else {
-        this.log('Tracking event "'+ event +'".');
+        console.info('Tracking event "'+ event +'".');
       }
 
-    }.bind(this));
+    });
   },
 
 	log: function(msg) {
