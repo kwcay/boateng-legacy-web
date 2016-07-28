@@ -57,8 +57,9 @@
       // Track event.
       Analytics.track('queries', {
         type: 'general',
+        medium: 'web',
         query: query,
-        language: (options.langCode || 'All Languages'),
+        language: (options.langCode || 'None specified'),
         locale: 'en'
       });
 
