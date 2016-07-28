@@ -15,7 +15,6 @@ class LanguageImportFactory extends DataImportFactory
      */
     private $_alphabets = [];
 
-
     public function importDataSet()
     {
         // Loop through languages and import them one by one.
@@ -62,7 +61,6 @@ class LanguageImportFactory extends DataImportFactory
 
         return $this;
     }
-
 
     private function getAlphabet($code)
     {
