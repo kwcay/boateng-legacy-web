@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Http\Controllers;
 
@@ -13,14 +12,9 @@ use App\Factories\TransliterationFactory as Transliterator;
  */
 class AlphabetController extends Controller
 {
-    /**
-     *
-     */
     protected $defaultQueryLimit = 20;
 
-    /**
-     *
-     */
+
     protected $supportedOrderColumns = [
         'id' => 'ID',
         'name' => 'Name',
@@ -29,9 +23,7 @@ class AlphabetController extends Controller
         'createdAt' => 'Created date',
     ];
 
-    /**
-     *
-     */
+
     protected $defaultOrderColumn = 'name';
 
     /**
@@ -49,8 +41,6 @@ class AlphabetController extends Controller
         return $attributes;
     }
 
-    /**
-     *
-     */
+
     protected $defaultOrderDirection = 'asc';
 }

@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Http\Controllers\Admin;
 
@@ -11,15 +10,9 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Factories\BackupFactory;
-use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Factories\DataExportFactory as ExportHelper;
 use App\Http\Controllers\Controller as BaseController;
 
-/**
- *
- */
 class BackupController extends BaseController
 {
     /**
@@ -44,14 +37,13 @@ class BackupController extends BaseController
         $disk = Storage::disk('backups');
         $filenames = $disk->files('/');
 
-        foreach ($filenames as $filename)
-        {
+        foreach ($filenames as $filename) {
             $files[] = [
                 'name' => $filename,
                 'ext' => substr($filename, strrpos($filename, '.') + 1),
-                'size' => number_format($disk->size($filename) / 1000) .' kb',
+                'size' => number_format($disk->size($filename) / 1000).' kb',
                 'date' => date('M j, Y', $disk->lastModified($filename)),
-                'timestamp' => $disk->lastModified($filename)
+                'timestamp' => $disk->lastModified($filename),
             ];
         }
 
@@ -64,10 +56,18 @@ class BackupController extends BaseController
         $this->setParam('limit', $limit);
 
         $limits = [];
-        if ($total > 15)    $limits[15] = 15;
-        if ($total > 30)    $limits[30] = 30;
-        if ($total > 50)    $limits[50] = 50;
-        if ($total > 100)    $limits[100] = 100;
+        if ($total > 15) {
+            $limits[15] = 15;
+        }
+        if ($total > 30) {
+            $limits[30] = 30;
+        }
+        if ($total > 50) {
+            $limits[50] = 50;
+        }
+        if ($total > 100) {
+            $limits[100] = 100;
+        }
         $limits[$total] = $total;
 
         $orders = collect(['timestamp' => 'Date', 'name' => 'Name', 'size' => 'Size']);
@@ -128,19 +128,16 @@ class BackupController extends BaseController
     public function upload()
     {
         // Performance check.
-        if (!$this->request->hasFile('file')) {
+        if (! $this->request->hasFile('file')) {
             return back()->withMessages(['No backup file received :/']);
         }
 
         // Upload file to backups disk.
         $file = $this->request->file('file');
 
-        try
-        {
+        try {
             $results = $this->factory->upload($file);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect(route('admin.backup.index'))->withMessages([$e->getMessage()]);
         }
 
@@ -161,12 +158,9 @@ class BackupController extends BaseController
     public function download($file)
     {
         // Retrieve local path.
-        try
-        {
+        try {
             $filename = $this->factory->getPath($file);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             abort(404);
         }
 
@@ -194,12 +188,9 @@ class BackupController extends BaseController
     public function destroy($filename)
     {
         // Try to delete backup file.
-        try
-        {
+        try {
             $results = $this->factory->delete($filename, $this->request->get('timestamp', 0));
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect(route('admin.backup.index'))->withMessages([$e->getMessage()]);
         }
 
@@ -217,12 +208,9 @@ class BackupController extends BaseController
     public function restore($filename)
     {
         // Try to restore backup file.
-        try
-        {
+        try {
             $results = $this->factory->restore($filename);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect(route('admin.backup.index'))->withMessages([$e->getMessage()]);
         }
 

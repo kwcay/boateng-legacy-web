@@ -1,16 +1,13 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Http\Controllers;
 
-use Session;
 use Redirect;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Http\Controllers\Controller;
 use App\Factories\DataImportFactory as ImportHelper;
 
 class ImportController extends Controller
@@ -28,19 +25,16 @@ class ImportController extends Controller
         $this->request = $request;
         $this->response = $response;
     }
-    
+
     /**
      * Imports data into the database.
      */
     public function import()
     {
         // Use the DataImportFactory to parse and import data into the database.
-        try
-        {
+        try {
             $result = $this->importHelper->importFromFile($this->request->file('data'));
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect(route('admin.import'))->withMessages([$e->getMessage()]);
         }
 

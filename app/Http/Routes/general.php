@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 
 
@@ -56,8 +55,7 @@ Route::get('u/{id}', 'UserController@show')->name('user.show');
 //
 // Resource routes.
 //
-Route::group(['prefix' => 'r'], function()
-{
+Route::group(['prefix' => 'r'], function () {
     $resActions = ['only' => ['store', 'edit', 'update', 'destroy']];
 
     Route::resource('alphabet', 'AlphabetController', $resActions);
@@ -92,8 +90,7 @@ Route::group(['prefix' => 'r'], function()
 //
 // Authentication routes.
 //
-Route::group(['namespace' => 'Auth'], function()
-{
+Route::group(['namespace' => 'Auth'], function () {
     Route::get('oauth/{service}', 'AuthController@redirectToProvider')->name('auth.oauth');
     Route::get('oauth/{service}/callback', 'AuthController@handleProviderCallback');
     Route::get('login', 'AuthController@getLogin')->name('auth.login');
@@ -102,9 +99,9 @@ Route::group(['namespace' => 'Auth'], function()
 });
 
 // Redirects.
-Route::get('add',           'PageController@redirectAdd');
-Route::get('agoro',         'PageController@redirectAgoro');
-Route::get('contribute',    'PageController@redirectContribute');
-Route::get('home',          'PageController@redirectHome');
-Route::get('in-numbers',    'PageController@redirectInNumbers');
-Route::get('stats',         'PageController@redirectStats');
+Route::get('add', 'PageController@redirectAdd');
+Route::get('agoro', 'PageController@redirectAgoro');
+Route::get('contribute', 'PageController@redirectContribute');
+Route::get('home', 'PageController@redirectHome');
+Route::get('in-numbers', 'PageController@redirectInNumbers');
+Route::get('stats', 'PageController@redirectStats');

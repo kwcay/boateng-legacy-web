@@ -12,8 +12,7 @@ class CreateTranslationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('translations', function(Blueprint $table)
-        {
+        Schema::create('translations', function (Blueprint $table) {
             $table->engine = 'InnoDB';
 
             // Primary key.

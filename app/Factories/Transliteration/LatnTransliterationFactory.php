@@ -1,11 +1,9 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Factories\Transliteration;
 
-use Exception;
 use App\Factories\TransliterationFactory;
 
 class LatnTransliterationFactory extends TransliterationFactory

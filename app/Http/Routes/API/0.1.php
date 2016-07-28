@@ -4,8 +4,6 @@
  *
  * @brief   Route definitions for API v0.1
  */
-
-
 Route::get('/', 'ApiController@version');
 
 // General resource endpoints.

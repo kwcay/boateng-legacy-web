@@ -1,25 +1,21 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  *
  * @deprecated
  */
 namespace App\Http\Controllers\Data\v050;
 
-use Session;
 use Redirect;
-
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-
 use App\Factories\DataExportFactory as ExportHelper;
 use App\Factories\DataImportFactory as ImportHelper;
 
 class DataController extends Controller
 {
-
     /**
      * Injects the dependencies into the controller.
      *
@@ -35,20 +31,18 @@ class DataController extends Controller
         $this->response = $response;
 
         // Define the directory to upload data.
-        $this->dataPath = storage_path() .'/app/import';
+        $this->dataPath = storage_path().'/app/import';
     }
+
     /**
      * Imports data into the database.
      */
     public function import()
     {
         // Use the DataImportFactory to parse and import data into the database.
-        try
-        {
+        try {
             $result = $this->importHelper->importFromFile($this->request->file('data'));
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect(route('admin.import'))->withMessages([$e->getMessage()]);
         }
 
@@ -64,12 +58,9 @@ class DataController extends Controller
     public function export($resourceName, $format)
     {
         // Use the DataExportFactory to export and format data from the database.
-        try
-        {
+        try {
             $result = $this->exportHelper->exportResource($resourceName, $format);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             return redirect(route('admin.export'))->withMessages([$e->getMessage()]);
         }
 

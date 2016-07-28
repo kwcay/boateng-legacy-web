@@ -1,10 +1,8 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 use Illuminate\Database\Seeder;
-
 use App\Models\Country;
 
 class CountrySeeder extends Seeder

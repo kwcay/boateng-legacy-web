@@ -1,24 +1,10 @@
-<?php namespace App\Models\Definitions;
+<?php
 
-use DB;
-use Log;
+namespace App\Models\Definitions;
 
-use App\Models\Language;
-use App\Models\Translation;
 use App\Models\Definition;
-use Illuminate\Support\Arr;
-use cebe\markdown\MarkdownExtra;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Traits\HasParamsTrait as HasParams;
-use App\Traits\ExportableTrait as Exportable;
-use App\Traits\ValidatableTrait as Validatable;
-use App\Traits\ObfuscatableTrait as Obfuscatable;
 
-/**
- *
- */
 class Story extends Definition
 {
     public function __construct(array $attributes = [])
@@ -58,7 +44,8 @@ class Story extends Definition
     /**
      * Gets the list of sub types for this definition.
      */
-    public function getSubTypes() {
+    public function getSubTypes()
+    {
         return $this->subTypes[Definition::TYPE_STORY];
     }
 
@@ -67,7 +54,8 @@ class Story extends Definition
      *
      * @return string
      */
-    public function getUriAttribute() {
-        return url($this->mainLanguage->code .'/_story/'. str_replace(' ', '_', $this->title));
+    public function getUriAttribute()
+    {
+        return url($this->mainLanguage->code.'/_story/'.str_replace(' ', '_', $this->title));
     }
 }

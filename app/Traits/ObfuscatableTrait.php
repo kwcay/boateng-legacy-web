@@ -1,4 +1,6 @@
-<?php namespace App\Traits;
+<?php
+
+namespace App\Traits;
 
 use App;
 use Exception;
@@ -21,7 +23,7 @@ trait ObfuscatableTrait
      */
     public static function getObfuscator()
     {
-        if (!isset(static::$obfuscator)) {
+        if (! isset(static::$obfuscator)) {
             static::$obfuscator = App::make('Obfuscator');
         }
 
@@ -33,8 +35,7 @@ trait ObfuscatableTrait
      */
     public function getUniqueId()
     {
-        if (is_null($this->_id))
-        {
+        if (is_null($this->_id)) {
             $this->obfuscatorId = $this->obfuscatorId ?: 3;
             $this->_id = $this->id > 0 ?
                 static::getObfuscator()->encode($this->obfuscatorId, $this->id) : 0;
@@ -46,7 +47,8 @@ trait ObfuscatableTrait
     /**
      * Accessor for $this->uniqueId.
      */
-    public function getUniqueIdAttribute() {
+    public function getUniqueIdAttribute()
+    {
         return $this->getUniqueId();
     }
 
@@ -61,18 +63,13 @@ trait ObfuscatableTrait
         $id = 0;
 
         // Un-obfuscate ID
-        if (is_string($encodedId) && !is_numeric($encodedId) && strlen($encodedId) >= 8)
-        {
+        if (is_string($encodedId) && ! is_numeric($encodedId) && strlen($encodedId) >= 8) {
             if ($decoded = static::getObfuscator()->decode($encodedId)) {
                 $id = $decoded[1];
-            }
-
-            else {
+            } else {
                 $id = null;
             }
-        }
-
-        elseif (is_numeric($encodedId)) {
+        } elseif (is_numeric($encodedId)) {
             $id = (int) $encodedId;
         }
 
@@ -91,8 +88,6 @@ trait ObfuscatableTrait
         if ($id = static::decodeId($id)) {
             return static::query()->find($id, $columns);
         }
-
-        return null;
     }
 
     /**
@@ -104,15 +99,13 @@ trait ObfuscatableTrait
      */
     public static function findTrashed($id, $columns = ['*'])
     {
-        if (!in_array(SoftDeletes::class, class_uses_recursive(get_called_class()))) {
-            throw new Exception(get_called_class() .' does not soft-delete.');
+        if (! in_array(SoftDeletes::class, class_uses_recursive(get_called_class()))) {
+            throw new Exception(get_called_class().' does not soft-delete.');
         }
 
         if ($id = static::decodeId($id)) {
             return static::onlyTrashed()->find($id, $columns);
         }
-
-        return null;
     }
 
     /**
@@ -123,7 +116,7 @@ trait ObfuscatableTrait
     public static function findOrNew($id, $columns = ['*'])
     {
         // Un-obfuscate ID
-        if (is_string($id) && !is_numeric($id) && strlen($id) >= 8) {
+        if (is_string($id) && ! is_numeric($id) && strlen($id) >= 8) {
             $id = static::getObfuscator()->decode($id)[0];
         }
 
@@ -138,7 +131,7 @@ trait ObfuscatableTrait
     public static function findOrFail($id, $columns = ['*'])
     {
         // Un-obfuscate ID
-        if (is_string($id) && !is_numeric($id) && strlen($id) >= 8) {
+        if (is_string($id) && ! is_numeric($id) && strlen($id) >= 8) {
             $id = static::getObfuscator()->decode($id)[0];
         }
 

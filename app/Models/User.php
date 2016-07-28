@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Models;
 
@@ -19,7 +18,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
-	use Authenticatable, CamelCaseAttrs, CanResetPassword, Embedable, Exportable, HasRoles, ObfuscatesID, SoftDeletes;
+    use Authenticatable, CamelCaseAttrs, CanResetPassword, Embedable, Exportable, HasRoles, ObfuscatesID, SoftDeletes;
 
 
     //
@@ -73,19 +72,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	/**
-	 * The database table used by the model.
-	 *
-	 * @var string
-	 */
-	protected $table = 'users';
+    /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
         'name',
         'email',
         'password',
@@ -93,15 +92,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'deletedAt',
     ];
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = [
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
         'id',
         'password',
-        'remember_token'
+        'remember_token',
     ];
 
 
@@ -110,7 +109,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     // Helper methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * Looks up a user by their email address.
@@ -129,20 +127,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return static::where('email', '=', $email)->first();
     }
 
-
     //
     //
     // Accessors and mutators.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Accessor for $this->uri.
      *
      * @return string
      */
-    public function getUriAttribute() {
+    public function getUriAttribute()
+    {
         return route('user.show', $this->uniqueId);
     }
 
@@ -151,7 +148,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return string
      */
-    public function getEditUriAttribute() {
+    public function getEditUriAttribute()
+    {
         return route('r.user.edit', ['id' => $this->uniqueId, 'return' => 'summary']);
     }
 
@@ -160,7 +158,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return string
      */
-    public function getEditUriAdminAttribute() {
+    public function getEditUriAdminAttribute()
+    {
         return route('r.user.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 }

@@ -1,12 +1,10 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
 use App\Traits\CamelCaseAttributesTrait as CamelCaseAttrs;
 
 class DefinitionTitle extends Model
@@ -55,7 +53,8 @@ class DefinitionTitle extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function alphabet() {
+    public function alphabet()
+    {
         return $this->belongsTo('App\Models\Alphabet');
     }
 
@@ -64,7 +63,8 @@ class DefinitionTitle extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function definition() {
+    public function definition()
+    {
         return $this->belongsTo('App\Models\Definition', 'definition_id');
     }
 }

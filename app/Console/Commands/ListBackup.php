@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Console\Commands;
 
@@ -46,12 +45,11 @@ class ListBackup extends Command
     {
         $files = array_reverse($this->storage->allFiles('/'));
 
-        foreach ($files as $index => $filename)
-        {
+        foreach ($files as $index => $filename) {
             $files[$index] = [
                 $filename,
-                number_format($this->storage->size($filename) / 1000) .' kb',
-                date('M j, Y', $this->storage->lastModified($filename))
+                number_format($this->storage->size($filename) / 1000).' kb',
+                date('M j, Y', $this->storage->lastModified($filename)),
             ];
         }
 

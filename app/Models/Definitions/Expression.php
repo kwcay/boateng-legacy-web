@@ -1,25 +1,13 @@
-<?php namespace App\Models\Definitions;
+<?php
 
-use DB;
-use Log;
+namespace App\Models\Definitions;
+
 use Cache;
 use Carbon\Carbon;
 use App\Models\Language;
-use App\Models\Translation;
 use App\Models\Definition;
-use Illuminate\Support\Arr;
-use cebe\markdown\MarkdownExtra;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Traits\HasParamsTrait as HasParams;
-use App\Traits\ExportableTrait as Exportable;
-use App\Traits\ValidatableTrait as Validatable;
-use App\Traits\ObfuscatableTrait as Obfuscatable;
 
-/**
- *
- */
 class Expression extends Definition
 {
     public function __construct(array $attributes = [])
@@ -63,11 +51,11 @@ class Expression extends Definition
      */
     public static function daily($lang = 'all')
     {
-        $cacheKey = 'definitions.expression.daily.'. $lang;
+        $cacheKey = 'definitions.expression.daily.'.$lang;
 
         $expires = Carbon::now()->addDay();
 
-        return Cache::remember($cacheKey, $expires, function() use ($lang) {
+        return Cache::remember($cacheKey, $expires, function () use ($lang) {
             return Expression::random($lang);
         });
     }
@@ -84,14 +72,15 @@ class Expression extends Definition
     public static function search($query, array $options = [])
     {
         return parent::search($query, array_merge($options, [
-            'type' => static::types()[static::TYPE_EXPRESSION]
+            'type' => static::types()[static::TYPE_EXPRESSION],
         ]));
     }
 
     /**
      * Gets the list of sub types for this definition.
      */
-    public function getSubTypes() {
+    public function getSubTypes()
+    {
         return $this->subTypes[Definition::TYPE_EXPRESSION];
     }
 }

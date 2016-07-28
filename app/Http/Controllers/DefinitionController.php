@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2015, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2015, all rights reserved.
  */
 namespace App\Http\Controllers;
 
@@ -23,27 +22,18 @@ use App\Factories\TransliterationFactory as Transliterator;
  */
 class DefinitionController extends Controller
 {
-    /**
-     *
-     */
     protected $defaultQueryLimit = 50;
 
-    /**
-     *
-     */
+
     protected $supportedOrderColumns = [
         'id' => 'ID',
         'createdAt' => 'Created date',
     ];
 
-    /**
-     *
-     */
+
     protected $defaultOrderColumn = 'id';
 
-    /**
-     *
-     */
+
     protected $defaultOrderDirection = 'desc';
 
     /**
@@ -56,7 +46,7 @@ class DefinitionController extends Controller
     public function show($code, $raw = null)
     {
         // Retrieve language object
-        if (!$lang = Language::findByCode($code)) {
+        if (! $lang = Language::findByCode($code)) {
             abort(404);
         }
 
@@ -65,7 +55,7 @@ class DefinitionController extends Controller
         if (strlen($str) < 2) {
             abort(404);
         } elseif ($str != $raw) {
-            return redirect($lang->code .'/'. $str);
+            return redirect($lang->code.'/'.$str);
         }
 
         // Find definitions matching the query
@@ -74,12 +64,11 @@ class DefinitionController extends Controller
         $definitions = $lang->definitions()
                         ->with('languages', 'translations', 'titles', 'tags')
                         ->whereIn('type', [Definition::TYPE_WORD, Definition::TYPE_EXPRESSION])
-                        ->whereHas('titles', function($query) use($str) {
+                        ->whereHas('titles', function ($query) use ($str) {
                             $query->where('title', $str);
                         })->get();
 
-        if (!count($definitions))
-        {
+        if (! count($definitions)) {
             // If no definitions were found, check alternate titles...
             $alts = Definition::search($str, ['offset' => 0, 'limit' => 1]);
             if (count($alts)) {
@@ -92,45 +81,46 @@ class DefinitionController extends Controller
         return view('pages.definitions', [
             'lang'  => $lang,
             'query' => $str,
-            'definitions' => $definitions
+            'definitions' => $definitions,
         ]);
     }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function walkthrough() {
+    /**
+     * {@inheritdoc}
+     */
+    public function walkthrough()
+    {
         return view("forms.{$this->name}.walkthrough");
-	}
+    }
 
-	/**
-	 * Displays the form to add a new definition.
+    /**
+     * Displays the form to add a new definition.
      *
      * @todo Restrict access based on roles
-	 *
+     *
      * @param string $type
      * @param string $langCode
-	 * @return Illuminate\View\View
-	 */
+     * @return Illuminate\View\View
+     */
     protected function createType($type, $langCode)
     {
         // Create a specific definition instance.
-        if (!$definition = Definition::getInstance($type)) {
+        if (! $definition = Definition::getInstance($type)) {
             abort(500);
         }
 
         // Retrieve language object.
-        if (!$lang = Language::findByCode($langCode)) {
+        if (! $lang = Language::findByCode($langCode)) {
             abort(404);
         }
 
         // Define view.
-        $template = 'forms.definition.'. Definition::getTypeName($type) .'.walkthrough';
+        $template = 'forms.definition.'.Definition::getTypeName($type).'.walkthrough';
 
         return view($template, [
             'lang' => $lang,
             'type' => $type,
-            'definition' => $definition
+            'definition' => $definition,
         ]);
     }
 
@@ -138,9 +128,10 @@ class DefinitionController extends Controller
      * Displays the form to add a new word-type definition.
      *
      * @param string $langCode
-	 * @return Illuminate\View\View
+     * @return Illuminate\View\View
      */
-    public function createWord($langCode) {
+    public function createWord($langCode)
+    {
         return $this->createType(Definition::TYPE_WORD, $langCode);
     }
 
@@ -148,9 +139,10 @@ class DefinitionController extends Controller
      * Displays the form to add a new expression-type definition.
      *
      * @param string $langCode
-	 * @return Illuminate\View\View
+     * @return Illuminate\View\View
      */
-    public function createExpression($langCode) {
+    public function createExpression($langCode)
+    {
         return $this->createType(Definition::TYPE_EXPRESSION, $langCode);
     }
 
@@ -158,38 +150,40 @@ class DefinitionController extends Controller
      * Displays the form to add a new story-type definition.
      *
      * @param string $langCode
-	 * @return Illuminate\View\View
+     * @return Illuminate\View\View
      */
-    public function createStory($langCode) {
+    public function createStory($langCode)
+    {
         return $this->createType(Definition::TYPE_STORY, $langCode);
     }
 
-	/**
-	 * Stores a newly created resource in storage.
-	 *
-	 * @return Illuminate\Http\RedirectResponse
-	 */
-	public function store()
+    /**
+     * Stores a newly created resource in storage.
+     *
+     * @return Illuminate\Http\RedirectResponse
+     */
+    public function store()
     {
         // Performance check.
-        if (!$definition = Definition::getInstance(Request::input('type'))) {
+        if (! $definition = Definition::getInstance(Request::input('type'))) {
             Session::push('messages', 'Internal Error.');
+
             return redirect(route('home'));
         }
 
         // Check definition titles.
         // TODO: use proper script.
-        if (!$titles = $this->getTitles(Request::input('titleStr'), 'Latn')) {
+        if (! $titles = $this->getTitles(Request::input('titleStr'), 'Latn')) {
             return back();
         }
 
         // Check translations.
-        if (!$translations = $this->getTranslations(Request::input('translations'))) {
+        if (! $translations = $this->getTranslations(Request::input('translations'))) {
             return back();
         }
 
         // Check languagees
-        if (!$languageData = $this->getLanguages(Request::input('languages'), $titles[0]->title)) {
+        if (! $languageData = $this->getLanguages(Request::input('languages'), $titles[0]->title)) {
             return back();
         }
 
@@ -198,13 +192,11 @@ class DefinitionController extends Controller
 
         // Attach language alphabet to titles.
         // TODO: Check request for ID of default alphabet to use.
-        if ($mainLanguage && $mainLanguage->alphabets->count())
-        {
+        if ($mainLanguage && $mainLanguage->alphabets->count()) {
             $defaultAlphabet = $mainLanguage->alphabets->first();
 
-            foreach ($titles as $title)
-            {
-                if (!$title->alphabetId) {
+            foreach ($titles as $title) {
+                if (! $title->alphabetId) {
                     $title->alphabetId = $defaultAlphabet->id;
                 }
             }
@@ -222,8 +214,9 @@ class DefinitionController extends Controller
             Definition::RATING_DEFAULT;
 
         // Create definition.
-        if (!$definition->save()) {
+        if (! $definition->save()) {
             Session::push('messages', 'Could not save definition.');
+
             return back();
         }
 
@@ -232,7 +225,7 @@ class DefinitionController extends Controller
         $definition->translations()->saveMany($translations);
         $definition->languages()->sync($languages);
 
-        Session::push('messages', 'The details for <em>'. $definition->titles[0]->title .
+        Session::push('messages', 'The details for <em>'.$definition->titles[0]->title.
             '</em> were successfully saved, thanks :)');
 
         $rdir = Request::input('return') == 'continue' ?
@@ -240,23 +233,23 @@ class DefinitionController extends Controller
             $definition->uri;
 
         return redirect($rdir);
-	}
+    }
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
+    /**
+     * Show the form for editing the specified resource.
+     *
      * @param string $id    Definition ID
-	 * @return Response
-	 */
-	public function edit($id)
-	{
+     * @return Response
+     */
+    public function edit($id)
+    {
         // Retrieve the definition object.
-        if (!$definition = Definition::find($id)) {
+        if (! $definition = Definition::find($id)) {
             abort(404);
         }
 
         // Related definition array for selectize plugin.
-        $relatedDefinitions = $definition->relatedDefinitionList->map(function($item) {
+        $relatedDefinitions = $definition->relatedDefinitionList->map(function ($item) {
             return [
                 'uniqueId' => $item->uniqueId,
                 'mainTitle' => $item->mainTitle,
@@ -265,24 +258,23 @@ class DefinitionController extends Controller
 
         // Language arrays for selectize plugin.
         $options = $items = [];
-        foreach ($definition->languages as $lang)
-        {
+        foreach ($definition->languages as $lang) {
             // Only the value is used for the selected items.
             $items[] = $lang->code;
 
             // The value and name will be json-encoded for the selectize options.
             $options[] = [
                 'code' => $lang->code,
-                'name' => $lang->name
+                'name' => $lang->name,
             ];
         }
 
         return view('admin.definition.edit', [
             'model' => $definition,
             'relatedDefinitionOptions' => $relatedDefinitions,
-            'languageOptions' => $options
+            'languageOptions' => $options,
         ]);
-	}
+    }
 
     /**
      * Update the specified resource in storage.
@@ -291,26 +283,26 @@ class DefinitionController extends Controller
      * @throws \Exception
      * @return Response
      */
-	public function update($id)
-	{
+    public function update($id)
+    {
         // Retrieve the definition object.
-        if (!$definition = Definition::find($id)) {
+        if (! $definition = Definition::find($id)) {
             abort(404);
         }
 
         // Check definition titles.
         // TODO: user proper script.
-        if (!$titles = $this->getTitles(Request::input('titleStr'), 'Latn')) {
+        if (! $titles = $this->getTitles(Request::input('titleStr'), 'Latn')) {
             return back();
         }
 
         // Check translations.
-        if (!$translations = $this->getTranslations(Request::input('translations'))) {
+        if (! $translations = $this->getTranslations(Request::input('translations'))) {
             return back();
         }
 
         // Check languages
-        if (!$languageData = $this->getLanguages(Request::input('languages'), $titles[0]->title)) {
+        if (! $languageData = $this->getLanguages(Request::input('languages'), $titles[0]->title)) {
             return back();
         }
 
@@ -329,7 +321,7 @@ class DefinitionController extends Controller
         // Related definitions.
         $related = $this->getRelatedDefinitions(Request::input('relatedDefinitions'));
         $oldRelatedIDs = $definition->relatedDefinitions;
-        $newRelatedIDs = $definition->relatedDefinitions = $related->map(function($item, $key) {
+        $newRelatedIDs = $definition->relatedDefinitions = $related->map(function ($item, $key) {
             return $item->id;
         });
 
@@ -337,14 +329,10 @@ class DefinitionController extends Controller
         // TODO: this can be done in a cleaner way...
         $addRelated = collect($newRelatedIDs)->diff($oldRelatedIDs);
         $removeRelated = collect($oldRelatedIDs)->diff($newRelatedIDs);
-        if (count($addRelated))
-        {
-            foreach ($addRelated as $id)
-            {
-                if ($def = Definition::find($id))
-                {
-                    if (!$def->relatedDefinitions || !in_array($definition->id, $def->relatedDefinitions))
-                    {
+        if (count($addRelated)) {
+            foreach ($addRelated as $id) {
+                if ($def = Definition::find($id)) {
+                    if (! $def->relatedDefinitions || ! in_array($definition->id, $def->relatedDefinitions)) {
                         $defRelated = (array) $def->relatedDefinitions;
                         $defRelated[] = $definition->id;
                         $def->relatedDefinitions = $defRelated;
@@ -353,14 +341,10 @@ class DefinitionController extends Controller
                 }
             }
         }
-        if (count($removeRelated))
-        {
-            foreach ($removeRelated as $id)
-            {
-                if ($def = Definition::find($id))
-                {
-                    if ($def->relatedDefinitions && in_array($definition->id, $def->relatedDefinitions))
-                    {
+        if (count($removeRelated)) {
+            foreach ($removeRelated as $id) {
+                if ($def = Definition::find($id)) {
+                    if ($def->relatedDefinitions && in_array($definition->id, $def->relatedDefinitions)) {
                         $defRelated = (array) $def->relatedDefinitions;
                         $key = array_search($definition->id, $defRelated);
                         array_splice($defRelated, $key, 1);
@@ -372,7 +356,7 @@ class DefinitionController extends Controller
         }
 
         // Update definition.
-        if (!$definition->save()) {
+        if (! $definition->save()) {
             abort(500);
         }
 
@@ -392,12 +376,11 @@ class DefinitionController extends Controller
         $definition->languages()->sync($languages);
 
         // TODO: handle AJAX requests.
-        Session::push('messages', 'The details for <em>'. $definition->titles[0]->title .
+        Session::push('messages', 'The details for <em>'.$definition->titles[0]->title.
             '</em> were successfully saved, thanks :)');
 
         // Return URI
-        switch (Request::input('return'))
-        {
+        switch (Request::input('return')) {
             case 'admin':
                 $return = route('admin.definition.index');
                 break;
@@ -417,7 +400,7 @@ class DefinitionController extends Controller
         }
 
         return redirect($return);
-	}
+    }
 
     /**
      * Removes the specified resource from storage.
@@ -426,10 +409,10 @@ class DefinitionController extends Controller
      * @throws \Exception
      * @return Response
      */
-	public function destroy($id)
-	{
+    public function destroy($id)
+    {
         // Retrieve the definition model.
-        if (!$def = Definition::find($id)) {
+        if (! $def = Definition::find($id)) {
             abort(404);
         }
 
@@ -437,12 +420,11 @@ class DefinitionController extends Controller
         $lang = $def->mainLanguage;
 
         // Delete record
-        Session::push('messages', '<em>'. $def->titles[0]->title .'</em> has been succesfully deleted.');
+        Session::push('messages', '<em>'.$def->titles[0]->title.'</em> has been succesfully deleted.');
         $def->delete();
 
         // Return URI
-        switch (Request::input('return'))
-        {
+        switch (Request::input('return')) {
             case 'admin':
                 $return = route('admin.definition.index');
                 break;
@@ -457,7 +439,7 @@ class DefinitionController extends Controller
         }
 
         return redirect($return);
-	}
+    }
 
     /**
      * Retrieves definition titles from request.
@@ -472,23 +454,20 @@ class DefinitionController extends Controller
 
         // Retrieve titles from title string.
         $titleStr = trim($titleStr);
-        if (strlen($titleStr))
-        {
-            foreach (@explode(',', $titleStr) as $title)
-            {
+        if (strlen($titleStr)) {
+            foreach (@explode(',', $titleStr) as $title) {
                 $title = trim($title);
 
                 if (strlen($title)) {
                     $titles[] = new Title([
                         'title' => $title,
-                        'transliteration' => Transliterator::make($script)->transliterate($title)
+                        'transliteration' => Transliterator::make($script)->transliterate($title),
                     ]);
                 }
             }
         }
 
-        if (!count($titles))
-        {
+        if (! count($titles)) {
             // Flash input data to session.
             Request::flashExcept('_token');
 
@@ -513,14 +492,11 @@ class DefinitionController extends Controller
 
         // Retrieve tag objects.
         $tagStr = trim($tagStr);
-        if (strlen($tagStr))
-        {
-            foreach (@explode(',', $tagStr) as $tagId)
-            {
+        if (strlen($tagStr)) {
+            foreach (@explode(',', $tagStr) as $tagId) {
                 $tagId = trim($tagId);
 
-                if (strlen($tagId))
-                {
+                if (strlen($tagId)) {
                     // Find tag by ID.
                     if ($tag = Tag::find($tagId)) {
                         $tags[] = $tag->id;
@@ -558,34 +534,30 @@ class DefinitionController extends Controller
         $languages = [];
         $mainLanguage = null;
 
-        foreach ($raw as $code)
-        {
-            if ($lang = Language::findByCode($code))
-            {
+        foreach ($raw as $code) {
+            if ($lang = Language::findByCode($code)) {
                 $languages[] = $lang->id;
 
-                if (!$mainLanguage) {
+                if (! $mainLanguage) {
                     $mainLanguage = $lang;
                 }
 
                 // Check if the language has a parent, and whether that parent is already
                 // in the list.
-                if (strlen($lang->parentCode) >= 3 && !in_array($lang->parentCode, $languages) && $lang->parent)
-                {
+                if (strlen($lang->parentCode) >= 3 && ! in_array($lang->parentCode, $languages) && $lang->parent) {
                     $languages[] = $lang->parent->id;
 
                     // Notify the user of the change
                     Session::push('messages',
-                        '<em>'. $lang->parent->name .'</em> is the parent language for <em>'.
-                        $lang->name .'</em>, and was added to the list of languages the expression <em>'.
-                        $title .'</em> exists in.');
+                        '<em>'.$lang->parent->name.'</em> is the parent language for <em>'.
+                        $lang->name.'</em>, and was added to the list of languages the expression <em>'.
+                        $title.'</em> exists in.');
                 }
             }
         }
 
         // Make sure we have a valid language.
-        if (!count($languages))
-        {
+        if (! count($languages)) {
             // Flash input data to session.
             Request::flashExcept('_token');
 
@@ -608,22 +580,20 @@ class DefinitionController extends Controller
     {
         // Retrieve translations
         $translations = [];
-        if (is_array($raw))
-        {
-            foreach ($raw as $langCode => $data)
-            {
+        if (is_array($raw)) {
+            foreach ($raw as $langCode => $data) {
                 // Performance check.
-                if (!is_array($data) || empty($data)) {
+                if (! is_array($data) || empty($data)) {
                     continue;
                 }
 
                 // Validate language code.
-                if (!$langCode = Language::sanitizeCode($langCode)) {
+                if (! $langCode = Language::sanitizeCode($langCode)) {
                     continue;
                 }
 
                 // Make sure we have a practical translation.
-                if (!array_key_exists('practical', $data) || empty($data['practical'])) {
+                if (! array_key_exists('practical', $data) || empty($data['practical'])) {
                     continue;
                 }
 
@@ -632,8 +602,7 @@ class DefinitionController extends Controller
             }
         }
 
-        if (!count($translations))
-        {
+        if (! count($translations)) {
             // Flash input data to session.
             Request::flashExcept('_token');
 
@@ -656,21 +625,20 @@ class DefinitionController extends Controller
     {
         // Performance check.
         $raw = trim($raw);
-        if (!strlen($raw)) {
+        if (! strlen($raw)) {
             return new Collection;
         }
 
         // Un-obfuscate IDs.
         $ids = [];
-        foreach (@explode(',', $raw) as $id)
-        {
+        foreach (@explode(',', $raw) as $id) {
             if ($id = Definition::decodeId($id)) {
                 $ids[] = $id;
             }
         }
 
         // Performance check.
-        if (!count($ids)) {
+        if (! count($ids)) {
             return new Collection;
         }
 

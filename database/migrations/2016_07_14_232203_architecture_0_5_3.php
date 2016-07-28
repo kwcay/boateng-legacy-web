@@ -13,10 +13,8 @@ class Architecture053 extends Migration
     public function up()
     {
         // Add language column to data and tags tables.
-        foreach (['data', 'tags'] as $tableName)
-        {
-            Schema::table($tableName, function(Blueprint $table)
-    		{
+        foreach (['data', 'tags'] as $tableName) {
+            Schema::table($tableName, function (Blueprint $table) {
                 $table->string('language', 3);
             });
         }
@@ -30,10 +28,8 @@ class Architecture053 extends Migration
     public function down()
     {
         // Remove language column from data and tags tables.
-        foreach (['data', 'tags'] as $tableName)
-        {
-            Schema::table($tableName, function(Blueprint $table)
-    		{
+        foreach (['data', 'tags'] as $tableName) {
+            Schema::table($tableName, function (Blueprint $table) {
                 $table->dropColumn('language');
             });
         }

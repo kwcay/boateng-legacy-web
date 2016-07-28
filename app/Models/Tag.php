@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright Di Nkomo(TM) 2016, all rights reserved
- *
+ * Copyright Di Nkomo(TM) 2016, all rights reserved.
  */
 namespace App\Models;
 
@@ -71,8 +70,8 @@ class Tag extends Model
     ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    CONST SEARCH_LIMIT = 15;        // Maximum number of results to return on a search.
-    CONST SEARCH_QUERY_LENGTH = 2;  // Minimum length of search query.
+    const SEARCH_LIMIT = 15;        // Maximum number of results to return on a search.
+    const SEARCH_QUERY_LENGTH = 2;  // Minimum length of search query.
 
     /**
      * Indicates whether search results can be filtered by tags.
@@ -99,7 +98,7 @@ class Tag extends Model
      */
     protected $hidden = [
         'id',
-        'pivot'
+        'pivot',
     ];
 
     /**
@@ -124,8 +123,8 @@ class Tag extends Model
     /**
      * Validation rules.
      */
-    public $validationRules  = [
-        'title' => 'required|min:2'
+    public $validationRules = [
+        'title' => 'required|min:2',
     ];
 
 
@@ -135,23 +134,21 @@ class Tag extends Model
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Defines relation to Tag model.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function definitions() {
+    public function definitions()
+    {
         return $this->belongsToMany('App\Models\Definition', 'definition_tag', 'tag_id', 'definition_id');
     }
-
 
     //
     //
     // Main methods
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * @param array $attributes
@@ -161,13 +158,11 @@ class Tag extends Model
         parent::__construct($attributes);
     }
 
-
     //
     //
     // Methods for App\Traits\SearchableTrait
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
-
 
     /**
      * @param string $term      Search query.
@@ -177,17 +172,17 @@ class Tag extends Model
     protected static function getSearchQueryBuilder($term, array $options = [])
     {
         return static::selectRaw(
-            'id, ' .
+            'id, '.
             'MATCH(title) AGAINST(?) AS title_score, '.
             'title LIKE ? AS title_score_low',
-            [$term, '%'. $term .'%']
+            [$term, '%'.$term.'%']
         )
         ->whereRaw(
             '('.
                 'MATCH(title) AGAINST(?) OR '.
                 'title LIKE ? '.
             ')',
-            [$term, '%'. $term .'%']
+            [$term, '%'.$term.'%']
         );
     }
 
@@ -197,17 +192,17 @@ class Tag extends Model
      */
     protected static function getSearchScore($rawScore)
     {
-        return (
+        return
             $rawScore->title_score * 10 +
-            $rawScore->title_score_low * 3
-        );
+            $rawScore->title_score_low * 3;
     }
 
     /**
      * @param array $IDs
      * @return \Illuminate\Support\Collection
      */
-    protected static function getSearchResults(array $IDs) {
+    protected static function getSearchResults(array $IDs)
+    {
         return static::whereIn('id', $IDs)->get();
     }
 
@@ -224,21 +219,20 @@ class Tag extends Model
         $tag->score = $scores->total / $maxScore;
     }
 
-
     //
     //
     // Accessors and mutators.
     //
     ////////////////////////////////////////////////////////////////////////////////////////////
 
-
     /**
      * Accessor for $this->uri.
      *
      * @return string
      */
-    public function getUriAttribute() {
-        return url('/') . '?q=%23' . $this->title;
+    public function getUriAttribute()
+    {
+        return url('/').'?q=%23'.$this->title;
     }
 
     /**
@@ -246,7 +240,8 @@ class Tag extends Model
      *
      * @return string
      */
-    public function getEditUriAttribute() {
+    public function getEditUriAttribute()
+    {
         return route('r.tag.edit', ['id' => $this->uniqueId, 'return' => 'summary']);
     }
 
@@ -255,16 +250,18 @@ class Tag extends Model
      *
      * @return string
      */
-    public function getEditUriAdminAttribute() {
+    public function getEditUriAdminAttribute()
+    {
         return route('r.tag.edit', ['id' => $this->uniqueId, 'return' => 'admin']);
     }
 
     /**
-     * Accessor for $this->definitionCount
+     * Accessor for $this->definitionCount.
      *
      * @return string
      */
-    public function getDefinitionCountAttribute() {
+    public function getDefinitionCountAttribute()
+    {
         return number_format($this->definitions()->count());
     }
 }

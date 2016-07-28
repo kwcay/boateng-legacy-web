@@ -5,16 +5,12 @@
  */
 namespace App\Http\Controllers;
 
-use Session;
 use Redirect;
-
 use App\Models\Language;
 use App\Models\Definition;
-use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\Yaml\Yaml;
-use App\Http\Controllers\Controller;
 
 class DataController extends Controller
 {
@@ -24,7 +20,7 @@ class DataController extends Controller
     private $dataPath;
 
     /**
-     * Original format of data (e.g. YAML, JSON, etc.)
+     * Original format of data (e.g. YAML, JSON, etc.).
      */
     private $dataFormat;
 
@@ -53,16 +49,14 @@ class DataController extends Controller
      */
     private $error = '';
 
-    /**
-     *
-     */
+
     public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
         $this->response = $response;
 
         // Define the directory to upload data.
-        $this->dataPath = storage_path() .'/app/import';
+        $this->dataPath = storage_path().'/app/import';
     }
 
     /**
@@ -73,19 +67,18 @@ class DataController extends Controller
     public function import()
     {
         // Retrieve data.
-        if (!$this->getDataFromRequest()) {
+        if (! $this->getDataFromRequest()) {
             return redirect(route('admin.import'))->withMessages(['Couldn\'t parse data.']);
         }
 
         // Parse data.
-        if (!$this->parseData() || !$this->analyzeData()) {
+        if (! $this->parseData() || ! $this->analyzeData()) {
             return redirect(route('admin.import'))->withMessages([$this->error]);
         }
 
         // Import data.
         $success = '%d of %d %s were imported into the database.';
-        switch ($this->dataType)
-        {
+        switch ($this->dataType) {
             case 'language':
                 $results = Language::import($this->dataSet);
                 $message = sprintf($success, $results['imported'], $results['total'], 'languages');
@@ -106,14 +99,14 @@ class DataController extends Controller
     public function export($resourceType, $format = 'yaml')
     {
         //
-        if (!in_array($resourceType, ['language', 'definition'])) {
+        if (! in_array($resourceType, ['language', 'definition'])) {
             return redirect(route('admin.export'))->withMessages(['Invalid resource type.']);
         }
 
-        $className = 'App\\Models\\'. ucfirst($resourceType);
+        $className = 'App\\Models\\'.ucfirst($resourceType);
 
         // Double-check data format.
-        if (!in_array($format, $className::getExportFormats())) {
+        if (! in_array($format, $className::getExportFormats())) {
             return redirect(route('admin.export'))->withMessages(['Invalid format.']);
         }
 
@@ -122,9 +115,9 @@ class DataController extends Controller
         $export = [
             'meta' => [
                 'type' => $resourceType,
-                'total' => count($data)
+                'total' => count($data),
             ],
-            'data' => []
+            'data' => [],
         ];
 
         foreach ($data as $resource) {
@@ -151,34 +144,33 @@ class DataController extends Controller
     private function getDataFromRequest()
     {
         // Retrieve raw data from file.
-        if ($this->request->hasFile('data'))
-        {
+        if ($this->request->hasFile('data')) {
             $temp = $this->request->file('data');
 
             // Our data files should have a mime type of 'text/plain'
             if ($temp->getMimeType() != 'text/plain') {
                 $this->error = 'Invalid file type.';
+
                 return false;
             }
 
             // Move data file so we can manipulate it. We put the date in the filename so we can
             // keep track on files if ever needed.
-            $filename = date('Y-m-d') .'-'. md5($temp->getBasename()) .'.'. $temp->getClientOriginalExtension();
+            $filename = date('Y-m-d').'-'.md5($temp->getBasename()).'.'.$temp->getClientOriginalExtension();
             $file = $temp->move($this->dataPath, $filename);
 
             // We use the file extension only for parsing purposes.
             $this->dataFormat = $temp->getClientOriginalExtension();
 
             // Read contents of file.
-            $this->rawData = file_get_contents($this->dataPath .'/'. $filename);
+            $this->rawData = file_get_contents($this->dataPath.'/'.$filename);
 
             // Delete uploaded file.
-            unlink($this->dataPath .'/'. $filename);
+            unlink($this->dataPath.'/'.$filename);
         }
 
         // Retrieve raw data from query.
-        elseif ($this->request->has('data') && $this->request->isMethod('post'))
-        {
+        elseif ($this->request->has('data') && $this->request->isMethod('post')) {
             $this->rawData = $this->request->input('data');
 
             // Save the data format.
@@ -199,12 +191,12 @@ class DataController extends Controller
             return false;
         } elseif (strlen($this->rawData) < 1) {
             $this->error = 'No data received.';
+
             return false;
         }
 
         // Parse data into an array.
-        switch ($this->dataFormat)
-        {
+        switch ($this->dataFormat) {
             case 'yml':
             case 'yaml':
                 $this->dataObject = Yaml::parse($this->rawData);
@@ -214,24 +206,27 @@ class DataController extends Controller
                 $this->dataObject = json_decode($this->rawData, true);
                 if (json_last_error() != JSON_ERROR_NONE) {
                     $this->error = json_last_error_msg();
+
                     return false;
                 }
                 break;
 
             default:
                 $this->error = 'Invalid data format.';
+
                 return false;
         }
 
-        if (!is_array($this->dataObject)) {
+        if (! is_array($this->dataObject)) {
             $this->error = 'Invalid data.';
+
             return false;
         }
 
         // Remove duplicates.
         $this->dataObject = array_map('unserialize', array_unique(array_map('serialize', $this->dataObject)));
 
-        return (strlen($this->error) == 0);
+        return strlen($this->error) == 0;
     }
 
     private function analyzeData()
@@ -239,57 +234,53 @@ class DataController extends Controller
         // Performance check.
         if (strlen($this->error)) {
             return false;
-        } elseif (!$this->dataObject || !is_array($this->dataObject) || empty($this->dataObject)) {
+        } elseif (! $this->dataObject || ! is_array($this->dataObject) || empty($this->dataObject)) {
             $this->error = 'Couldn\'t import data.';
+
             return false;
         }
 
         // Data files with meta data.
-        if (isset($this->dataObject['meta']) && isset($this->dataObject['data']))
-        {
+        if (isset($this->dataObject['meta']) && isset($this->dataObject['data'])) {
             $meta = $this->dataObject['meta'];
             $data = $this->dataObject['data'];
 
             // Data integrity check.
-            if (!isset($meta['checksum']) || $meta['checksum'] != md5(json_encode($data))) {
+            if (! isset($meta['checksum']) || $meta['checksum'] != md5(json_encode($data))) {
                 $this->error = 'Checksum failed.';
             }
 
             // Performance check.
-            elseif (!is_array($data) || empty($data)) {
+            elseif (! is_array($data) || empty($data)) {
                 $this->error = 'No data found.';
             }
 
             // Since our dataset seems valid, try and import it.
-            else
-            {
+            else {
                 $this->dataSet = $this->importDefinitions($data);
                 $this->dataType = $meta['type'];
             }
         }
 
         // Pure array.
-        elseif (isset($this->dataObject[0]) && isset($this->dataObject[0]['params']))
-        {
+        elseif (isset($this->dataObject[0]) && isset($this->dataObject[0]['params'])) {
             // Try to classify this data set.
             $sample = $this->dataObject[0];
 
             // Old languages file.
-            if (isset($sample['code']))
-            {
+            if (isset($sample['code'])) {
                 $this->dataType = 'language';
                 $this->dataSet = $this->convertOldLanguageSet($this->dataObject);
             }
 
             // Old definitions file.
-            elseif (isset($sample['word']))
-            {
+            elseif (isset($sample['word'])) {
                 $this->dataType = 'definition';
                 $this->dataSet = $this->convertoldDefinitionSet($this->dataObject);
             }
         }
 
-        return (strlen($this->error) == 0);
+        return strlen($this->error) == 0;
     }
 
     public function convertOldLanguageSet(array $oldFormat)
@@ -298,8 +289,7 @@ class DataController extends Controller
         $sortedByCode = []; // This references languages by code.
         $hasParent = [];    // This will hold the index of languages with parents.
 
-        foreach($oldFormat as $oldLang)
-        {
+        foreach ($oldFormat as $oldLang) {
             $lang = new Language(array_only($oldLang, ['code', 'countries', 'created_at']));
 
             // If the language has a code, remember its index in $data so we can try
@@ -327,12 +317,9 @@ class DataController extends Controller
         }
 
         // Update parents.
-        if (count($hasParent))
-        {
-            foreach ($hasParent as $index => $parentCode)
-            {
-                if (isset($sortedByCode[$parentCode]))
-                {
+        if (count($hasParent)) {
+            foreach ($hasParent as $index => $parentCode) {
+                if (isset($sortedByCode[$parentCode])) {
                     $data[$index]->parent_code = $parentCode;
                     $data[$index]->setParam('parentName', $sortedByCode[$parentCode]->name);
                 }
@@ -346,8 +333,7 @@ class DataController extends Controller
     {
         $data = [];
 
-        foreach ($oldFormat as $oldDef)
-        {
+        foreach ($oldFormat as $oldDef) {
             $def = new \App\Models\Definitions\Word(array_only($oldDef, ['created_at']));
             // $def->setAttribute('type', Definition::TYPE_WORD);
 
@@ -402,13 +388,11 @@ class DataController extends Controller
         $data = [];
 
         // Create definitions one by one, so that we may update the relations at the same time.
-        foreach ($rawData as $raw)
-        {
+        foreach ($rawData as $raw) {
             $def = new \App\Models\Definitions\Word(array_only($raw, ['created_at', 'deleted_at']));
 
             // Title.
-            if (isset($raw['word']))
-            {
+            if (isset($raw['word'])) {
                 if (strpos($raw['word'], ',')) {
                     $titles = @explode(',', $raw['word']);
                     $def->title = array_pull($titles, 0);
@@ -416,17 +400,12 @@ class DataController extends Controller
                 } else {
                     $def->title = $raw['word'];
                 }
-            }
-
-            elseif (isset($raw['alt_data']))
-            {
+            } elseif (isset($raw['alt_data'])) {
                 $def->title = $raw['data'];
                 $def->altTitles = $raw['alt_data'];
 
                 unset($raw['data'], $raw['alt_data']);
-            }
-
-            else {
+            } else {
                 $def->title = $raw['title'];
                 $def->altTitles = $raw['alt_titles'];
             }
@@ -446,26 +425,20 @@ class DataController extends Controller
             $langCodes = [];
             if (isset($raw['language']) && is_array($raw['language'])) {
                 $langCodes = array_keys($raw['language']);
-            }
-            elseif (isset($raw['languages']) && is_string($raw['languages'])) {
+            } elseif (isset($raw['languages']) && is_string($raw['languages'])) {
                 $langCodes = @explode(',', $raw['languages']);
-            }
-            elseif (isset($raw['language']) && is_string($raw['language'])) {
+            } elseif (isset($raw['language']) && is_string($raw['language'])) {
                 $langCodes = @explode(',', $raw['language']);
             }
 
             $def->setRelationToBeImported('languages', $langCodes);
 
             // Translation set.
-            if (isset($raw['translation']) && is_array($raw['translation']) && !isset($raw['translation']['code']))
-            {
+            if (isset($raw['translation']) && is_array($raw['translation']) && ! isset($raw['translation']['code'])) {
                 $def->setRelationToBeImported('translations', $raw['translation']['practical']);
                 $def->setRelationToBeImported('literals', $raw['translation']['literal']);
                 $def->setRelationToBeImported('meanings', $raw['translation']['meaning']);
-            }
-
-            else
-            {
+            } else {
                 // Translations.
                 if (isset($raw['translations']) || (isset($raw['translation']) && is_string($raw['translation']))) {
                     $translations = isset($raw['translations']) ? $raw['translations'] : $raw['translation'];
@@ -478,22 +451,17 @@ class DataController extends Controller
                 }
 
                 // Meanings.
-                if (isset($raw['meanings']) || isset($raw['meaning']))
-                {
+                if (isset($raw['meanings']) || isset($raw['meaning'])) {
                     $meanings = isset($raw['meanings']) ? $raw['meanings'] : $raw['meaning'];
                     $def->setRelationToBeImported('meanings', json_decode($meanings, true));
                 }
             }
 
             // Parameters.
-            if (isset($raw['params']))
-            {
+            if (isset($raw['params'])) {
                 if (is_array($raw['params'])) {
                     $def->params = $raw['params'];
-                }
-
-                elseif ($params = json_decode($raw['params'], true))
-                {
+                } elseif ($params = json_decode($raw['params'], true)) {
                     // Some old formats will have the sub-type hidden here.
                     if (array_has($params, 'type')) {
                         $def->subType = $params['type'];
