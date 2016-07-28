@@ -87,7 +87,7 @@
 <script type="text/javascript">
 Analytics.track('pageviews', {
     route: '{{ Route::currentRouteName() }}',
-    path: '/{{ Request::path() }}',
+    path: '{{ Request::path() == '/' ? Request::path() : '/'. Request::path() }}',
     user: '{{ Auth::check() ? Auth::user()->uniqueId : '' }}',
     locale: 'en'
 });

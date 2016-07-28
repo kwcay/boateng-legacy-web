@@ -18,11 +18,30 @@ var Analytics =
     if (typeof keenClient == 'undefined')
       return this.log('Keen client not loaded.');
 
+    // Configure defaults & Keen.io parameters.
     data = data || {};
     data.referrer = document.referrer;
-    data.keen = {
-      timestamp: new Date().toISOString()
-    };
+    data.keen = data.keen || {};
+    data.keen.timestamp = new Date().toISOString();
+    data.keen.ip = '${keen.ip}';
+    data.keen.ua = '${keen.user_agent}';
+    data.keen.addons = data.keen.addons || [];
+
+    data.keen.addons.push({
+      name: "keen:ip_to_geo",
+      input: {
+        ip: "ip"
+      },
+      output: "geo_data"
+    });
+
+    data.keen.addons.push({
+      name: "keen:ua_parser",
+      input: {
+        ua_string: "ua"
+      },
+      output: "ua_data"
+    });
 
     // Track event w/ Keen.io
     keenClient.addEvent(event, data, function(err, res) {
