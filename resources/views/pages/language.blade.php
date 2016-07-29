@@ -24,7 +24,10 @@
     @if ($lang->definitions->count())
 
         {{-- Form --}}
-        @include('partials.dictionary-form', ['code' => $lang->code])
+        @include('partials.dictionary-form', [
+            'code' => $lang->code,
+            'name' => $lang->name,
+        ])
 
         {{-- Results / Twitter pitch --}}
         <div id="results">

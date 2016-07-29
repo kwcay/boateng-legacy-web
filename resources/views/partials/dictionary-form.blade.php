@@ -29,6 +29,7 @@
 $(document).ready(function() {
     $(document.dictionary).dictionary({
         langCode: "{{ $code or '' }}",
+        langName: "{{ $name or '' }}",
         container: "{{ $container or '#results' }}"
     });
 });

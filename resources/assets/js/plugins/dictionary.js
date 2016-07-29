@@ -59,7 +59,7 @@
         type: 'general',
         medium: 'web',
         query: query,
-        language: (options.langCode || 'None specified'),
+        language: (options.langName || options.langCode || 'None specified'),
         locale: 'en'
       });
 
