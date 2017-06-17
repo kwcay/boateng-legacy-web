@@ -1,35 +1,38 @@
-# Dora Boateng Web
+# Dora Boateng: A reference of cultures past and present.
 
-**_A reference of cultures past and present._**
-
-## Todos
-
-- Make this readme readable.
+This is the codebase for [Dora Boateng](https://www.doraboateng.com).
 
 ## Local setup
 
-### 1. Local tools
-
 Make sure you have all the tools you need to run Dora Boateng locally:
 
-- Virtualbox
-- Vagrant
-- Laravel Homestead
-- Git
-- Composer
-- Node package manager
+- [Git](https://git-scm.com)
+- [Composer](https://getcomposer.org/download) & [npm](https://www.npmjs.com/package/npm) package managers
 
-Install the `jshint` node package globally `npm install jshint -g`;
+Suggested:
 
-### 2. Clone the web repository
+- [Laravel Homestead](https://laravel.com/docs/homestead)
+    - [VirtualBox](https://www.virtualbox.org) + [Vagrant](https://www.vagrantup.com)
 
-`git clone git@github.com:doraboateng/web.git`
+Clone the web repository:
 
-### 3. Install project dependencies
+    git clone git@github.com:doraboateng/web.git
 
-`composer install`
-`npm install --global jshint` or `npm i -g jshint`
-`npm install` or `npm i`
+Install project dependencies
+
+    cd web
+    composer install
+    npm install --global jshint
+    npm install
+
+## Staging environment
+
+We use Heroku as a staging environment. Simply setup a remote to push/deploy to staging:
+
+    heroku login
+    heroku git:remote -a doraboateng-staging
+    git remote rename heroku staging
+    git remote -v
 
 ## Production setup on Ubuntu 14.04
 
