@@ -31,6 +31,8 @@ We use [Heroku](https://www.heroku.com) as a staging environment. To push/deploy
     git remote rename heroku staging
     git remote -v
 
+Pushing to staging is then as simple as running `git push staging`. To generate a new application key, run `php artisan key:generate --show` from a local setup.
+
 ## Production setup on Ubuntu 14.04
 
 Install the MySQL 5.6, cURL & TCL packages.
