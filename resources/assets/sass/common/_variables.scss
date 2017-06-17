@@ -1,0 +1,33 @@
+/**
+ * Copyright Dora Boateng(TM) 2017. All rights reserved.
+ */
+
+// Colour palette
+$primary-color-dark:   #00796B;
+$primary-color:        #009688;
+$primary-color-light:  #B2DFDB;
+$primary-color-text:   #f7f7f7;
+$accent-color:         #FFC107;
+$primary-text-color:   #333333;
+$secondary-text-color: #727272;
+$divider-color:        #B6B6B6;
+
+// Body
+$body-bg: $primary-color-text;
+
+// Typography
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$font-family-sans-serif: "Crimson Text", sans-serif;
+$font-size-base: 21px;
+$line-height-base: 1.6;
+$text-color: $primary-text-color;
+$link-color: $primary-color;
+$link-hover-color: $accent-color;
+$link-hover-decoration: none;
+$text-muted: #ddd !default;
+
+// Jumbotron
+$jumbotron-bg: $text-color;
+$jumbotron-color: $body-bg;
+
+$border-radius-base: 3px;

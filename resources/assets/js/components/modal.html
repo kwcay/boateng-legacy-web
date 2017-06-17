@@ -1,0 +1,37 @@
+
+<script type="text/x-template" id="vue-component-modal">
+    <transition name="modal">
+        <div class="modal-mask">
+            <div class="modal-wrapper">
+                <div class="modal-container form">
+
+                    <div class="modal-header">
+                        <slot name="header"></slot>
+                    </div>
+
+                    <div class="modal-body">
+                        <slot name="body"></slot>
+                    </div>
+
+                    <div class="modal-footer">
+                        <slot name="footer">
+                            <input type="submit" name="return" value="save" class="form-like" @click="$emit('close')">
+                            <input
+                                type="button"
+                                name="cancel"
+                                value="cancel"
+                                class="form-like"
+                                @click="$emit('close')">
+                        </slot>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
+</script>
+
+<script type="text/javascript">
+Vue.component('modal', {
+    template: '#vue-component-modal'
+});
+</script>

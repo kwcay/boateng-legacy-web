@@ -1,0 +1,46 @@
+/**
+ * Copyright Dora Boateng(TM) 2017. All rights reserved.
+ */
+
+.definition-meta {
+  text-align: left;
+
+  .meta-param {
+    font-size: 0.8em;
+    line-height: 35px;
+  }
+
+  .meta-value {
+    margin-left: 15px;
+  }
+
+  .text-muted {
+    color: #aaa;
+  }
+
+  .text-muted .meta-value {
+    font-size: 0.8em;
+    font-style: italic;
+    line-height: 35px;
+  }
+}
+
+.definition-title {
+  font-family: serif;
+}
+
+@media (min-width: $screen-sm-min) {
+  .definition-meta {
+    .meta-param {
+      text-align: right;
+    }
+
+    .meta-value {
+      margin-left: 0;
+    }
+
+    .text-muted .meta-value {
+      font-style: normal;
+    }
+  }
+}

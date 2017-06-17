@@ -1,0 +1,22 @@
+/**
+ * Copyright Dora Boateng(TM) 2017. All rights reserved.
+ */
+
+.half-hero header {
+  text-align: right;
+
+  a {
+    color: $body-bg;
+    font-size: 32px;
+    padding: 0 6px;
+
+    &:hover {
+      text-decoration: none;
+      color: $accent-color;
+    }
+
+    &:-webkit-any-link {
+      text-decoration: none;
+    }
+  }
+}

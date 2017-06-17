@@ -1,0 +1,29 @@
+/**
+ * Copyright Dora Boateng(TM) 2017. All rights reserved.
+ */
+
+.shaded-well {
+  margin: 10px auto;
+  overflow: hidden;
+  background: transparent center center;
+  @include box-shadow(2px 2px 6px #aaa);
+  @include border-radius($border-radius-base);
+
+  a {
+    color: $body-bg;
+  }
+
+  > div {
+    padding: 10px;
+    color: $body-bg;
+    background: transparent repeat url(/img/shades/back.50.png);
+  }
+}
+
+.shade-50 {
+  background-color: rgba(0, 0, 0, .5);
+}
+
+.shade-25 {
+  background-color: rgba(0, 0, 0, .25);
+}

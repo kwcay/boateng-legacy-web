@@ -1,0 +1,41 @@
+/**
+ * Copyright Dora Boateng(TM) 2017. All rights reserved.
+ */
+
+footer  {
+	margin: 40px auto 80px;
+	text-align: center;
+  color: $secondary-text-color;
+
+  a {
+    margin: auto 5px;
+    text-decoration: none;
+  	color: $secondary-text-color;
+
+    &:hover, &:focus {
+      text-decoration: none;
+      color: $accent-color;
+    }
+  }
+
+  .footer-row {
+    display: block;
+    width: 100%;
+  	margin: 15px auto 5px;
+    font-size: .6em;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+  }
+
+  .credits .ghana {
+    position: relative;
+    margin: 0 10px;
+    top: 8px;
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: transparent center center no-repeat url('/img/flag-of-ghana.png');
+    background-size: contain;
+    border-radius: 10px;
+  }
+}

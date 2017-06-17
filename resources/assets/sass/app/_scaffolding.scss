@@ -1,0 +1,11 @@
+/**
+ * Copyright Dora Boateng(TM) 2017. All rights reserved.
+ */
+
+body {
+  font-weight: 100;
+}
+
+a {
+  @include vendor-prefix(transition-duration, .3s);
+}

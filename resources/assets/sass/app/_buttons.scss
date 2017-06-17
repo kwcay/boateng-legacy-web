@@ -1,0 +1,14 @@
+/**
+ * Copyright Dora Boateng(TM) 2017. All rights reserved.
+ */
+
+.card-btn {
+  display: block;
+  padding: 20px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, .3);
+  }
+}

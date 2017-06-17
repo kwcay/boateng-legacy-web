@@ -1,0 +1,22 @@
+/**
+ * Copyright Dora Boateng(TM) 2017. All rights reserved.
+ */
+
+.home-banner {
+  background: center center no-repeat;
+  background-size: cover;
+}
+
+.jumbotron {
+  @include box-shadow(0px 3px 8px #aaa);
+  background: transparent repeat url(/img/shades/back.50.png);
+  position: relative;
+}
+
+.bg-credits {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  color: $primary-color-text;
+  font-size: 0.7em;
+}
