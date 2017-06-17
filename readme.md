@@ -7,27 +7,24 @@ This is the codebase for [Dora Boateng](https://www.doraboateng.com).
 Make sure you have all the tools you need to run Dora Boateng locally:
 
 - [Git](https://git-scm.com)
-- [Composer](https://getcomposer.org/download) & [npm](https://www.npmjs.com/package/npm) package managers
+- [Composer](https://getcomposer.org/download) + [npm](https://www.npmjs.com/package/npm)
 
 Suggested:
 
 - [Laravel Homestead](https://laravel.com/docs/homestead)
     - [VirtualBox](https://www.virtualbox.org) + [Vagrant](https://www.vagrantup.com)
 
-Clone the web repository:
+Clone the web repository: `git clone git@github.com:doraboateng/web.git`
 
-    git clone git@github.com:doraboateng/web.git
+`cd` into the cloned repository and install the project dependencies:
 
-Install project dependencies
-
-    cd web
     composer install
     npm install --global jshint
     npm install
 
 ## Staging environment
 
-We use Heroku as a staging environment. Simply setup a remote to push/deploy to staging:
+We use [Heroku](https://www.heroku.com) as a staging environment. To push/deploy to staging, install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and add a git remote for staging inside the `web` directory:
 
     heroku login
     heroku git:remote -a doraboateng-staging
