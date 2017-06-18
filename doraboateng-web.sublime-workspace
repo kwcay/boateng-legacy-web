@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"vue",
+				"vue-resource"
+			],
+			[
 				"call_user",
 				"call_user_func_array"
 			],
@@ -141,9 +145,6 @@
 			]
 		]
 	},
-	"buffers":
-	[
-	],
 	"build_system": "",
 	"build_system_choices":
 	[
@@ -183,14 +184,10 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
-	"expanded_folders":
-	[
-		"/C/Users/Frank/dev/boateng/web",
-		"/C/Users/Frank/dev/boateng/web/app/Http",
-		"/C/Users/Frank/dev/boateng/web/app/Http/Controllers"
-	],
 	"file_history":
 	[
+		"/C/Users/Frank/dev/boateng/web/gulpfile.js",
+		"/C/Users/Frank/dev/boateng/web/composer.lock",
 		"/C/Users/Frank/dev/boateng/web/package.json",
 		"/C/Users/Frank/dev/boateng/web/app/Http/Controllers/DefinitionController.php",
 		"/C/Users/Frank/dev/boateng/web/.env",
@@ -200,7 +197,6 @@
 		"/C/Users/Frank/dev/boateng/web/Procfile",
 		"/C/Users/Frank/dev/boateng/web/.Procfile..Procfile",
 		"/C/Users/Frank/dev/boateng/web/composer.json",
-		"/C/Users/Frank/dev/boateng/web/gulpfile.js",
 		"/C/Users/Frank/dev/boateng/web/resources/views/forms/definition/subtypes.blade.php",
 		"/C/Users/Frank/dev/boateng/web/resources/views/pages/definition.blade.php",
 		"/C/Users/Frank/dev/boateng/web/resources/views/forms/definition/expression/modal.blade.php",
@@ -317,8 +313,7 @@
 		"/C/Users/Frank/dev/frnkly/flighthub-trip-builder/app/Console/Commands/ImportAirports.php",
 		"/C/Users/Frank/dev/frnkly/flighthub-trip-builder/app/Models/Airport.php",
 		"/C/Users/Frank/dev/frnkly/flighthub-trip-builder/app/Console/Kernel.php",
-		"/C/Users/Frank/dev/frnkly/flighthub-trip-builder/database/migrations/2014_10_12_000000_create_users_table.php",
-		"/C/Users/Frank/dev/frnkly/flighthub-trip-builder/database/migrations/2014_10_12_100000_create_password_resets_table.php"
+		"/C/Users/Frank/dev/frnkly/flighthub-trip-builder/database/migrations/2014_10_12_000000_create_users_table.php"
 	],
 	"find":
 	{
@@ -479,14 +474,6 @@
 		"whole_word": false,
 		"wrap": true
 	},
-	"groups":
-	[
-		{
-			"sheets":
-			[
-			]
-		}
-	],
 	"incremental_find":
 	{
 		"height": 31.0
@@ -523,7 +510,6 @@
 		"height": 0.0
 	},
 	"pinned_build_system": "",
-	"project": "doraboateng-web.sublime-project",
 	"replace":
 	{
 		"height": 58.0
@@ -560,7 +546,6 @@
 		],
 		"width": 1268.0
 	},
-	"selected_group": 0,
 	"settings":
 	{
 	},
