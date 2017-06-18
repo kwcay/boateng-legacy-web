@@ -36,8 +36,19 @@
   .hero-text {
     display: none;
   }
+}
 
-  &.full-hero {
+.bg-credits {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  color: $primary-color-text;
+  font-size: 0.7em;
+}
+
+@media (min-width: $screen-md-min) {
+
+  .hero.full-hero {
     height: 100%;
 
     .form {
@@ -52,12 +63,4 @@
       left: 0;
     }
   }
-}
-
-.bg-credits {
-  position: absolute;
-  bottom: 5px;
-  right: 10px;
-  color: $primary-color-text;
-  font-size: 0.7em;
 }
