@@ -1,15 +1,20 @@
-@extends('layouts.half-hero')
+@extends('layouts.hero')
 
 @section('hero')
 
-    <h1>Dora Boateng</h1>
-    <h4>
-        Lookup proverbs, stories, and other cultural gems.
-    </h4>
+    <h1 class="hero-title">Dora Boateng</h1>
+    <h4 class="hero-subtitle">Lookup proverbs, stories, and other cultural gems.</h4>
 
-    <br>
-    <br>
     @include('partials.search.form')
+
+    <div class="hero-text">
+        <h4>
+            Let us know what you think.
+        </h4>
+        <h3>
+            <a href="http://goo.gl/WcthaE">Take our survey</a>
+        </h3>
+    </div>
 
 @stop
 

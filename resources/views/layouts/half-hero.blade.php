@@ -9,7 +9,7 @@
     @inject('vue', 'App\Utilities\Vue')
     {{ $vue->load('modal') }}
 
-    <div class="home-banner" style="background-image:url({{ App\Utilities::bgSrc() }});">
+    <div class="hero half-hero" style="background-image:url({{ App\Utilities::bgSrc() }});">
         <div class="jumbotron">
             <div class="container text-center">
                 @yield('hero')

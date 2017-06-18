@@ -2,15 +2,56 @@
  * Copyright Dora Boateng(TM) 2017. All rights reserved.
  */
 
-.home-banner {
+.hero {
+  position: relative;
   background: center center no-repeat;
   background-size: cover;
-}
 
-.jumbotron {
-  @include box-shadow(0px 3px 8px #aaa);
-  background: transparent repeat url(/img/shades/back.50.png);
-  position: relative;
+  a {
+    color: $body-bg;
+    border-bottom: 1px solid $body-bg;
+
+    &:hover {
+      color: $accent-color;
+    }
+  }
+
+  .jumbotron {
+    position: relative;
+    margin-bottom: 0;
+    height: 100%;
+    background: transparent repeat url(/img/shades/back.50.png);
+    @include box-shadow(0px 3px 8px #aaa);
+
+    .container {
+      position: relative;
+      height: 100%;
+    }
+  }
+
+  .hero-title, .hero-subtitle, .hero-text, .form {
+    width: 100%;
+  }
+
+  .hero-text {
+    display: none;
+  }
+
+  &.full-hero {
+    height: 100%;
+
+    .form {
+      position: absolute;
+      top: 35%;
+    }
+
+    .hero-text {
+      display: inline-block;
+      position: absolute;
+      bottom: 20%;
+      left: 0;
+    }
+  }
 }
 
 .bg-credits {
