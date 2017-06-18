@@ -78,4 +78,44 @@ class Controller extends BaseController
         $this->cache    = $cache;
         $this->request  = $request;
     }
+
+    /**
+     * Retrieves search results.
+     *
+     * @param  string $langCode
+     * @return array
+     */
+    protected function getSearchResults($langCode = null)
+    {
+        $search = [
+            'query'     => trim($this->request->get('q')),
+            'results'   => null,
+        ];
+
+        if (! $search['query']) {
+            return $search;
+        }
+
+        $cacheKey = ($langCode ? 'search.'.$langCode : 'search.all').'-'.base64_encode($search['query']);
+
+        $response = $this->cache->remember($cacheKey, 5, function() use ($search, $langCode) {
+            return $langCode
+                ? $this->api->searchDefinitions($search['query'], $langCode)
+                : $this->api->search($search['query']);
+        });
+
+        if (is_object($response)) {
+            $search['results'] = $response->results;
+        }
+
+        return $search;
+    }
+
+    protected function getWeeklyLanguage()
+    {
+        // Cache language of the week for 3 hours
+        return $this->cache->remember('language.weekly', 180, function() {
+            return $this->api->getLanguageOfTheWeek();
+        });
+    }
 }

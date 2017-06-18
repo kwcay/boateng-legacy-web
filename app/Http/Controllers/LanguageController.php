@@ -14,7 +14,7 @@ class LanguageController extends Controller
      */
     public function show($code)
     {
-        $language = Cache::remember('language.'.$code, 60, function() use ($code) {
+        $language = $this->cache->remember('language.'.$code, 60, function() use ($code) {
             return $this->api->getLanguage($code, [
                 'definitionCount',
                 'parentName',
@@ -29,29 +29,13 @@ class LanguageController extends Controller
             abort(404);
         }
 
-        // Todo: move to parent class
-        $results    = null;
-        $query      = trim($this->request->get('q'));
-        $query      = strlen($query) ? $query : null;
-
-        // Do general search
-        if ($query) {
-            $response = Cache::remember('language.search.'.$code.'-'.$query, 5, function() use ($query, $language) {
-                return $this->api->searchDefinitions($query, $language->code);
-            });
-
-            if (is_int($response)) {
-                // TODO: handle errors
-                // ...
-            } else {
-                $results = $response->results;
-            }
-        }
+        // Retrieve search results if a query we have a search query.
+        $search = $this->getSearchResults($code);
 
         return view('pages.language', [
             'lang'      => $language,
-            'query'     => $query,
-            'results'   => $results,
+            'query'     => $search['query'],
+            'results'   => $search['results'],
         ]);
     }
 }

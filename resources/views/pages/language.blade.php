@@ -24,7 +24,6 @@
 
 @section('body')
 
-    {{-- Search results --}}
     @include('partials.search.results')
 
     {{-- Edit form --}}
@@ -125,7 +124,8 @@
             </div>
         </div>
     </div>
-    <br>
+
+    @include('partials.ui.divider')
 
     @if (isset($lang->randomDefinition) && $lang->randomDefinition)
     <div class="row">

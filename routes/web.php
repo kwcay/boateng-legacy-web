@@ -11,11 +11,14 @@
 |
 */
 
-Route::group(['prefix' => Localization::setLocale(), 'middleware' => [ 'localeSessionRedirect', 'localizationRedirect' ]], function()
-{
+Route::group([
+    'prefix' => Localization::setLocale(),
+    'middleware' => [ 'localeSessionRedirect', 'localizationRedirect' ]
+], function() {
     // General routes
-    Route::get('/', 'PageController@home')->name('home');
-    Route::get('/about', 'PageController@about')->name('about');
+    Route::get('/',         'PageController@home')->name('home');
+    Route::get('/search',   'PageController@search')->name('search');
+    Route::get('/about',    'PageController@about')->name('about');
 
     // Definition routes
     Route::get('/gem/{id}', 'DefinitionController@show')->name('definition');

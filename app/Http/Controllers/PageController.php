@@ -16,39 +16,33 @@ class PageController extends Controller
 
     /**
      * Main landing page.
+     *
+     * @return Illuminate\Http\Response
      */
     public function home()
     {
-        // Move to parent class
-        $results    = null;
-        $query      = trim($this->request->get('q'));
-        $query      = strlen($query) ? $query : null;
-
-        // Do general search
-        if ($query) {
-            $response = Cache::remember('home.search.'.$query, 10, function() use ($query) {
-                return $this->api->search($query);
-            });
-
-            if (is_int($response)) {
-                // TODO: handle errors
-
-                $response = new stdClass;
-                $response->results = null;
-            } else {
-                $results = $response->results;
-            }
+        // Redirect searches to search page.
+        if ($this->request->has('q')) {
+            return redirect(route('search', ['q' => $this->request->get('q')]));
         }
 
-        // Cache language of the week for 3 hours
-        $language = Cache::remember('languages.weekly', 180, function() {
-            return $this->api->getLanguageOfTheWeek();
-        });
+        return view('pages.home')
+            ->withLanguage($this->getWeeklyLanguage());
+    }
 
-        return view('pages.home', [
-            'query'     => $query,
-            'results'   => $results,
-            'language'  => $language,
+    /**
+     * Search page.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function search()
+    {
+        $search = $this->getSearchResults();
+
+        return view('pages.search', [
+            'query'     => $search['query'],
+            'results'   => $search['results'],
+            'language'  => $this->getWeeklyLanguage(),
         ]);
     }
 
@@ -203,17 +197,6 @@ class PageController extends Controller
     public function contribute()
     {
         return view('pages.contribute');
-    }
-
-    /**
-     * Random definition.
-     */
-    public function random()
-    {
-        // Find a random definition.
-        $definition = Definition::random();
-
-        return redirect($definition->uri);
     }
 
     /**

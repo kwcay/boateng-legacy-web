@@ -28,6 +28,7 @@
             @endif
         </div>
     </div>
+    <br>
 
     @section('errors')
         @include('partials.errors')

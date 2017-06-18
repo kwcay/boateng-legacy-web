@@ -1,5 +1,9 @@
 
-<form name="dictionary" class="search form">
+<form
+    name="dictionary"
+    class="search form"
+    action="{{ isset($code) && $code ? route('language', [$code]) : route('search') }}">
+
     <div class="row">
         <div class="col-xs-12 col-lg-10 col-lg-offset-1">
             <div class="input-wrapper">

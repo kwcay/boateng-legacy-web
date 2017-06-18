@@ -128,11 +128,11 @@
             </div>
         </div>
     </div>
-    <br>
+
+    @include('partials.ui.divider')
 
     <div class="row">
         <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
-            <hr>
             @lang('branding.pitch')
             <a href="http://goo.gl/WcthaE">Learn more</a>
             <hr>
