@@ -22,6 +22,7 @@ class DefinitionController extends Controller
                 'titleString',
                 'mainLanguage',
                 'translationData',
+                'tagList',
             ]);
         });
 

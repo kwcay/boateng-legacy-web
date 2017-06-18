@@ -97,12 +97,12 @@ var js = {
   },
   devDependencies: {
     app: ['node_modules/vue/dist/vue.js'],
-    user: [],
+    user: ['node_modules/vue-resource/dist/vue-resource.js'],
     admin: [],
   },
   prodDependencies: {
     app: ['node_modules/vue/dist/vue.min.js'],
-    user: [],
+    user: ['node_modules/vue-resource/dist/vue-resource.min.js'],
     admin: [],
   }
 };
