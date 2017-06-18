@@ -5,7 +5,7 @@
     (new \Dotenv\Dotenv(__DIR__, '.env'))->load();
 
     # Setup variables.
-    $repository     = 'git@deployer:doraboateng/web.git';
+    $repository     = 'git@deployer-web:doraboateng/web.git';
     $baseDir        = env('ENVOY_BASE_DIR', '/var/www/apps');
     $releasesDir    = "{$baseDir}/releases";
     $liveDir        = env('ENVOY_LIVE_DIR', '/var/www/live');
@@ -303,6 +303,6 @@
 @task('test-prod', ['on' => 'production'])
 
     {{ msg('Testing Envoy on production server...') }}
-    ssh -T git@deployer
+    ssh -T git@deployer-web
 
 @endtask
