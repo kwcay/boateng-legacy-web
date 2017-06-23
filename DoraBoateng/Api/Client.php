@@ -25,18 +25,42 @@ class Client
         'tag',
     ];
 
+    /**
+     *
+     */
     public $client;
 
+    /**
+     *
+     */
     protected $clientId;
 
+    /**
+     *
+     */
     protected $secret;
 
+    /**
+     *
+     */
     protected $cache;
 
+    /**
+     * @var array
+     */
+    protected $events = [
+        'get-token' => [],
+        'set-token' => [],
+    ];
+
+    /**
+     *
+     */
     protected $errors = [];
 
     /**
-     * @param array $config
+     * @param  array $config
+     * @return void
      */
     public function __construct(array $config = [])
     {
@@ -76,7 +100,7 @@ class Client
             return static::ERROR_INVALID_ID;
         }
 
-        return $this->apiGet('definitions/'.$id, [
+        return $this->get('definitions/'.$id, [
             'embed' => implode(',', $embed)
         ]);
     }
@@ -100,7 +124,7 @@ class Client
             return self::ERROR_INVALID_ID;
         }
 
-        return $this->apiGet('definitions/search/'.urlencode($query), [
+        return $this->get('definitions/search/'.urlencode($query), [
             'lang' => $langCode,
         ]);
     }
@@ -121,7 +145,7 @@ class Client
             $langId = '';
         }
 
-        return $this->apiGet('definitions/random/'.$langId, [
+        return $this->get('definitions/random/'.$langId, [
             'embed' => implode(',', $embed)
         ]);
     }
@@ -135,7 +159,7 @@ class Client
             return self::ERROR_INVALID_ID;
         }
 
-        return $this->apiGet('languages/'.$id, [
+        return $this->get('languages/'.$id, [
             'embed' => implode(',', $embed)
         ]);
     }
@@ -145,7 +169,7 @@ class Client
      */
     public function getLanguageOfTheWeek(array $embed = [])
     {
-        return $this->apiGet('languages/weekly', [
+        return $this->get('languages/weekly', [
             'embed' => $embed ? implode(',', $embed) : null
         ]);
     }
@@ -161,7 +185,7 @@ class Client
             return self::ERROR_INVALID_QUERY;
         }
 
-        return $this->apiGet('search/'.$query);
+        return $this->get('search/'.$query);
     }
 
     /**
@@ -292,6 +316,10 @@ class Client
         return $token;
     }
 
+    /**
+     * @param  string $msg
+     * @return false
+     */
     protected function addError($msg)
     {
         $this->errors[] = $msg;
@@ -299,18 +327,24 @@ class Client
         return false;
     }
 
+    /**
+     * @return array
+     */
     public function getErrors()
     {
         return $this->errors;
     }
 
+    /**
+     * @return string
+     */
     public function getLastError()
     {
         return end($this->errors);
     }
 
     /**
-     * @param int $id
+     * @param  int|string $id
      * @return bool
      */
     protected function isValidId($id)
@@ -326,6 +360,10 @@ class Client
                 : $sanitizedId === $id;
     }
 
+    /**
+     * @param  string $code
+     * @return bool
+     */
     protected function isValidLanguageCode($code)
     {
         if (! is_string($code)) {
@@ -335,7 +373,7 @@ class Client
         // A language code can contain letters and dashes.
         $sanitizedCode = preg_replace('/[^a-z\-]/', '', strtolower($code));
 
-        if (strtolower($code) != $sanitizedCode) {
+        if (strtolower($code) !== $sanitizedCode) {
             return false;
         }
 
@@ -344,7 +382,8 @@ class Client
     }
 
     /**
-     * @param string $resourceName
+     * @param  string $resourceName
+     * @return bool
      */
     protected function validateResourceName($resourceName)
     {
@@ -352,8 +391,8 @@ class Client
             return false;
         }
 
-        $resourceName   = str_replace('_', '', strtolower($resourceName));
-        $sanitized      = preg_replace('/[^a-z]/', '', $resourceName);
+        $resourceName = str_replace('_', '', strtolower($resourceName));
+        $sanitized    = preg_replace('/[^a-z]/', '', $resourceName);
 
         if (strlen($sanitized) < 1 || $sanitized != $resourceName) {
             return false;
