@@ -2,6 +2,7 @@
 
 namespace DoraBoateng\Laravel;
 
+use Sentry;
 use DoraBoateng\Api\Client;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
@@ -48,6 +49,24 @@ class ServiceProvider extends BaseServiceProvider
             $client->addListener(Client::EVENT_GET_ACCESS_TOKEN, function() {
                 return app('cache')->store()->get('doraboateng.accesstoken');
             });
+
+            // Track response time
+            // TODO: decouple from Sentry
+            if (app()->environment() != 'local') {
+                $client->addListener(Client::EVENT_RESPONSE, function($stats) {
+                if (! $stats instanceof \GuzzleHttp\TransferStats) {
+                    return;
+                }
+
+                Sentry::captureMessage('', [
+                    'fingerprint'   => ['{{ default }}', 'other value'],
+                    'level'         => $stats->getTransferTime() > 4 ? 'warning' : 'info',
+                    'extra'         => [
+                        'transfer-time' => $stats->getTransferTime()
+                    ],
+                ]);
+            });
+            }
 
             return $client;
         });

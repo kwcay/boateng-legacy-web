@@ -4,11 +4,12 @@ namespace DoraBoateng\Api;
 
 use Sentry;
 use Exception;
+use GuzzleHttp\TransferStats;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
 use DoraBoateng\Api\Exceptions\Exception        as ApiException;
 use DoraBoateng\Api\Exceptions\Configuration    as ConfigException;
-use DoraBoateng\Api\Exceptions\InvalidRequest;
+use DoraBoateng\Api\Exceptions\InvalidRequest   as InvalidRequestException;
 
 class Client
 {
@@ -21,6 +22,7 @@ class Client
 
     const EVENT_SET_ACCESS_TOKEN    = 'accesstoken.store';
     const EVENT_GET_ACCESS_TOKEN    = 'accesstoken.retrieve';
+    const EVENT_RESPONSE            = 'response';
 
     const RESOURCE_TYPES = [
         'culture',
@@ -80,17 +82,79 @@ class Client
     }
 
     /**
+     * Performs a GET request on the API.
+     *
+     * @param  string  $endpoint
+     * @param  array   $query
+     * @param  string  $token
+     * @return stdClass
+     */
+    public function get($endpoint, array $query = [], $token = null)
+    {
+        // TODO: we shouldn't have to specify the token to use.
+        $token = $token ?: $this->getAccessToken();
+
+        try {
+            $response = $this->client->get($endpoint, [
+                'query'     => $query,
+                'headers'   => [
+                    'Accept'        => 'application/json',
+                    'Authorization' => "Bearer {$token}",
+                ],
+                'on_stats' => array($this, 'handleTransferStats'),
+            ]);
+        } catch (ClientException $e) {
+            switch ($e->getResponse()->getStatusCode()) {
+                case 401:
+                case 500:
+                case 503:
+                    Sentry::captureException($e);
+                    return null;
+                    break;
+
+                // Unhandled exception
+                default:
+                    throw $e;
+            }
+        } catch (Exception $e) {
+            // TODO: handle
+            throw $e;
+        }
+
+        if ($response->getStatusCode() !== 200) {
+            // TODO: handle
+            throw new \Exception('HTTP Error: '. $response->getStatusCode());
+        }
+
+        if (! $response->hasHeader('Content-Type') ||
+            ! in_array('application/json', $response->getHeader('Content-Type'))
+        ) {
+            // TODO: handle
+            throw new \Exception('Invalid Content-Type');
+        }
+
+        $data = json_decode((string) $response->getBody());
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // TODO: handle
+            throw new \Exception('JSON Error: '. json_last_error_msg());
+        }
+
+        return $data;
+    }
+
+    /**
      * Retrieves a definition.
      *
      * @param  int   $id     Definition ID
      * @param  array $embed  Relations to include with definition
-     * @throws InvalidRequest
+     * @throws InvalidRequestException
      * @return stdClass
      */
     public function getDefinition($id, array $embed = [])
     {
         if (! $this->isValidId($id)) {
-            throw new InvalidRequest('"'.$id.'" is not a valid ID');
+            throw new InvalidRequestException('"'.$id.'" is not a valid identifier.');
         }
 
         return $this->get('definitions/'.$id, [
@@ -190,64 +254,6 @@ class Client
     }
 
     /**
-     * @param  string  $endpoint
-     * @param  array   $query
-     * @param  string  $token
-     */
-    public function get($endpoint, array $query = [], $token = null)
-    {
-        // TODO: we shouldn't have to specify the token to use.
-        $token = $token ?: $this->getAccessToken();
-
-        try {
-            $response = $this->client->get($endpoint, [
-                'query'     => $query,
-                'headers'   => [
-                    'Accept'        => 'application/json',
-                    'Authorization' => "Bearer {$token}",
-                ],
-            ]);
-        } catch (ClientException $e) {
-            switch ($e->getResponse()->getStatusCode()) {
-                case 401:
-                case 500:
-                case 503:
-                    Sentry::captureException($e);
-                    return null;
-                    break;
-
-                // Unhandled exception
-                default:
-                    throw $e;
-            }
-        } catch (Exception $e) {
-            // TODO: handle
-            throw $e;
-        }
-
-        if ($response->getStatusCode() !== 200) {
-            // TODO: handle
-            throw new \Exception('HTTP Error: '. $response->getStatusCode());
-        }
-
-        if (! $response->hasHeader('Content-Type') ||
-            ! in_array('application/json', $response->getHeader('Content-Type'))
-        ) {
-            // TODO: handle
-            throw new \Exception('Invalid Content-Type');
-        }
-
-        $data = json_decode((string) $response->getBody());
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            // TODO: handle
-            throw new \Exception('JSON Error: '. json_last_error_msg());
-        }
-
-        return $data;
-    }
-
-    /**
      * @param  string  $name
      * @param  mixed   $callback
      * @return static
@@ -286,7 +292,8 @@ class Client
                     'username'      => $username,
                     'password'      => $password,
                     'scope'         => $scope,
-                ]
+                ],
+                'on_stats' => array($this, 'handleTransferStats'),
             ]);
         } catch (Exception $e) {
             return $this->addError($e->getMessage());
@@ -311,7 +318,8 @@ class Client
                         'client_id'     => $this->clientId,
                         'client_secret' => $this->secret,
                         'scope'         => 'resource-read resource-write',
-                    ]
+                    ],
+                    'on_stats' => array($this, 'handleTransferStats'),
                 ]);
             } catch (Exception $e) {
                 // TODO: handle
@@ -442,5 +450,14 @@ class Client
         }
 
         return $result;
+    }
+
+    /**
+     * @param  TransferStats  $stats
+     * @return void
+     */
+    public function handleTransferStats(TransferStats $stats)
+    {
+        $this->fireEvent(static::EVENT_RESPONSE, [$stats]);
     }
 }
