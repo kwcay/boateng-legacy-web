@@ -54,18 +54,20 @@ class ServiceProvider extends BaseServiceProvider
             // TODO: decouple from Sentry
             if (app()->environment() != 'local') {
                 $client->addListener(Client::EVENT_RESPONSE, function($stats) {
-                if (! $stats instanceof \GuzzleHttp\TransferStats) {
-                    return;
-                }
+                    if (! $stats instanceof \GuzzleHttp\TransferStats ||
+                        $stats->getTransferTime() <= 4.0
+                    ) {
+                        return;
+                    }
 
-                Sentry::captureMessage('Slow API response time', [
-                    'fingerprint'   => ['{{ default }}', 'other value'],
-                    'level'         => $stats->getTransferTime() > 4 ? 'warning' : 'info',
-                    'extra'         => [
-                        'transfer-time' => $stats->getTransferTime()
-                    ],
-                ]);
-            });
+                    Sentry::captureMessage('Slow API response time', [
+                        'fingerprint'   => ['{{ default }}', 'other value'],
+                        'level'         => $stats->getTransferTime() > 8.0 ? 'warning' : 'info',
+                        'extra'         => [
+                            'transfer-time' => $stats->getTransferTime()
+                        ],
+                    ]);
+                });
             }
 
             return $client;
