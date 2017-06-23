@@ -58,7 +58,7 @@ class ServiceProvider extends BaseServiceProvider
                     return;
                 }
 
-                Sentry::captureMessage('', [
+                Sentry::captureMessage('Slow API response time', [
                     'fingerprint'   => ['{{ default }}', 'other value'],
                     'level'         => $stats->getTransferTime() > 4 ? 'warning' : 'info',
                     'extra'         => [
