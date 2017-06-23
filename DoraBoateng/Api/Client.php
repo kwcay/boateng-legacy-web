@@ -47,11 +47,6 @@ class Client
     protected $secret;
 
     /**
-     *
-     */
-    protected $cache;
-
-    /**
      * @var array
      */
     protected $events = [];
@@ -69,20 +64,14 @@ class Client
     {
         // Set client credentials
         if (empty($config['id']) || empty($config['secret'])) {
-            // TODO: throw proper error
-            throw new \Exception('Invalid API Credentials.');
+            throw new ConfigException('Invalid API Credentials.');
         }
 
         $this->clientId = $config['id'];
-        $this->secret = $config['secret'];
-
-        // TODO: save reference to cache, or callback to handle caching?
-        $this->cache = $config['temp_cache'];
+        $this->secret   = $config['secret'];
 
         // Configure base URI
-        $endpoint = isset($config['api_host'])
-            ? $config['api_host']
-            : 'https://api.doraboateng.com';
+        $endpoint = isset($config['api_host']) ? $config['api_host'] : 'https://api.doraboateng.com';
         $endpoint .= '/'.static::API_VERSION.'/';
 
         $config['base_uri'] = $endpoint;
