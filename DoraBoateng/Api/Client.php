@@ -6,6 +6,9 @@ use Sentry;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
+use DoraBoateng\Api\Exceptions\Exception        as ApiException;
+use DoraBoateng\Api\Exceptions\Configuration    as ConfigException;
+use DoraBoateng\Api\Exceptions\InvalidRequest;
 
 class Client
 {
@@ -15,6 +18,9 @@ class Client
     const ERROR_INVALID_CODE        = 11;
     const ERROR_INVALID_QUERY       = 12;
     const ERROR_INVALID_RESOURCE    = 13;
+
+    const EVENT_SET_ACCESS_TOKEN    = 'accesstoken.store';
+    const EVENT_GET_ACCESS_TOKEN    = 'accesstoken.retrieve';
 
     const RESOURCE_TYPES = [
         'culture',
@@ -48,10 +54,7 @@ class Client
     /**
      * @var array
      */
-    protected $events = [
-        'get-token' => [],
-        'set-token' => [],
-    ];
+    protected $events = [];
 
     /**
      *
@@ -92,12 +95,13 @@ class Client
      *
      * @param  int   $id     Definition ID
      * @param  array $embed  Relations to include with definition
+     * @throws InvalidRequest
      * @return stdClass
      */
     public function getDefinition($id, array $embed = [])
     {
         if (! $this->isValidId($id)) {
-            return static::ERROR_INVALID_ID;
+            throw new InvalidRequest('"'.$id.'" is not a valid ID');
         }
 
         return $this->get('definitions/'.$id, [
@@ -108,20 +112,21 @@ class Client
     /**
      * Searches the API for definitions.
      *
-     * @param string $query
-     * @param string $langCode
-     * @return stdClass|int
+     * @param  string  $query
+     * @param  string  $langCode
+     * @throws InvalidRequest
+     * @return stdClass
      */
     public function searchDefinitions($query, $langCode = null)
     {
         $query = trim($query);
 
         if (strlen($query) < 1) {
-            return self::ERROR_INVALID_QUERY;
+            throw new InvalidRequest('Query string too short', static::ERROR_INVALID_QUERY);
         }
 
         if ($langCode && ! $this->isValidLanguageCode($langCode)) {
-            return self::ERROR_INVALID_ID;
+            throw new InvalidRequest('Invalid language code', static::ERROR_INVALID_CODE);
         }
 
         return $this->get('definitions/search/'.urlencode($query), [
@@ -130,16 +135,18 @@ class Client
     }
 
     /**
-     * @param int|string $langId
-     * @param array $embed
+     * @param  int|string  $langId
+     * @param  array       $embed
+     * @throws InvalidRequest
+     * @return stdClass
      */
     public function getRandomDefinition($langId = null, array $embed = [])
     {
         if ($langId) {
             if (is_numeric($langId) && ! $this->isValidId($langId)) {
-                return static::ERROR_INVALID_ID;
+                throw new InvalidRequest('Invalid language identifier', static::ERROR_INVALID_ID);
             } elseif (! $this->isValidLanguageCode($langId)) {
-                return static::ERROR_INVALID_CODE;
+                throw new InvalidRequest('Invalid language code', static::ERROR_INVALID_CODE);
             }
         } else {
             $langId = '';
@@ -151,12 +158,15 @@ class Client
     }
 
     /**
-     *
+     * @param  int|string  $id
+     * @param  array       $embed
+     * @throws InvalidRequest
+     * @return stdClass
      */
     public function getLanguage($id, array $embed = [])
     {
         if (! $this->isValidId($id) && ! $this->isValidLanguageCode($id)) {
-            return self::ERROR_INVALID_ID;
+            throw new InvalidRequest('Invalid language code', static::ERROR_INVALID_CODE);
         }
 
         return $this->get('languages/'.$id, [
@@ -165,7 +175,7 @@ class Client
     }
 
     /**
-     *
+     * @return stdClass
      */
     public function getLanguageOfTheWeek(array $embed = [])
     {
@@ -175,29 +185,25 @@ class Client
     }
 
     /**
-     * @param string $query
+     * @param  string $query
+     * @throws InvalidRequest
+     * @return array
      */
     public function search($query)
     {
         $query = trim($query);
 
         if (strlen($query) < 1) {
-            return self::ERROR_INVALID_QUERY;
+            throw new InvalidRequest('Query string too short', static::ERROR_INVALID_QUERY);
         }
 
         return $this->get('search/'.$query);
     }
 
     /**
-     * @deprecated
-     */
-    public function apiGet($endpoint, array $query = [])
-    {
-        return $this->get($endpoint, $query);
-    }
-
-    /**
-     *
+     * @param  string  $endpoint
+     * @param  array   $query
+     * @param  string  $token
      */
     public function get($endpoint, array $query = [], $token = null)
     {
@@ -253,6 +259,26 @@ class Client
     }
 
     /**
+     * @param  string  $name
+     * @param  mixed   $callback
+     * @return static
+     */
+    public function addListener($name, $callback)
+    {
+        if (! $name) {
+            throw new ConfigException('Invalid listener.');
+        }
+
+        if (! array_key_exists($name, $this->events)) {
+            $this->events[$name] = [];
+        }
+
+        array_push($this->events[$name], $callback);
+
+        return $this;
+    }
+
+    /**
      * Retrieves an access token based on the password grant.
      *
      * @param  string  $username
@@ -288,7 +314,7 @@ class Client
 
     protected function getAccessToken()
     {
-        if (! $token = $this->cache->get('doraboateng.accesstoken')) {
+        if (! $token = $this->fireEvent(static::EVENT_GET_ACCESS_TOKEN)) {
             try {
                 $response = $this->client->post('/oauth/token', [
                     'form_params' => [
@@ -307,10 +333,14 @@ class Client
 
             if (json_last_error() !== JSON_ERROR_NONE) {
                 // TODO: handle
-                throw new \Exception('JSON Error: '. json_last_error_msg());
+                throw new ApiException('JSON Error: '. json_last_error_msg());
             }
 
-            $this->cache->put('doraboateng.accesstoken', $token = $data->access_token, $data->expires_in / 60);
+            $this->fireEvent(static::EVENT_SET_ACCESS_TOKEN, [
+                'token-type'    => $data->token_type,
+                'expires'       => $data->expires_in,
+                'access-token'  => $token = $data->access_token,
+            ]);
         }
 
         return $token;
@@ -399,5 +429,29 @@ class Client
         }
 
         return in_array($sanitized, self::RESOURCE_TYPES) ? $sanitized : false;
+    }
+
+    /**
+     * @param  string  $name
+     * @param  array   $arguments
+     * @return mixed
+     */
+    protected function fireEvent($name, array $arguments = [])
+    {
+        $result = null;
+
+        if (! isset($this->events[$name])) {
+            return $result;
+        }
+
+        foreach ($this->events[$name] as $callable) {
+            if (! is_callable($callable)) {
+                continue;
+            }
+
+            $result = call_user_func_array($callable, $arguments);
+        }
+
+        return $result;
     }
 }

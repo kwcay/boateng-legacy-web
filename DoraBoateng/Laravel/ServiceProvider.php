@@ -9,7 +9,7 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 class ServiceProvider extends BaseServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
+     * Defers the loading of this provider.
      *
      * @var bool
      */
@@ -32,14 +32,24 @@ class ServiceProvider extends BaseServiceProvider
     public function register()
     {
         $this->app->singleton(Client::class, function ($app) {
-            return new Client([
+            $client = new Client([
                 'id'        => config('doraboateng.id'),
                 'secret'    => config('doraboateng.secret'),
                 'timeout'   => config('doraboateng.timeout', 4.0),
                 'api_host'  => config('doraboateng.host', 'https://api.doraboateng.com'),
-
-                'temp_cache'    => app('cache')->store()
             ]);
+
+            // Store access token
+            $client->addListener(Client::EVENT_SET_ACCESS_TOKEN, function($type, $expires, $token) {
+                app('cache')->store()->put('doraboateng.accesstoken', $token, $expires / 60);
+            });
+
+            // Retrieve saved access token
+            $client->addListener(Client::EVENT_GET_ACCESS_TOKEN, function() {
+                return app('cache')->store()->get('doraboateng.accesstoken');
+            });
+
+            return $client;
         });
     }
 

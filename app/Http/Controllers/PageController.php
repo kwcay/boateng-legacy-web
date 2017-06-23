@@ -224,7 +224,7 @@ class PageController extends Controller
         ]);
 
         try {
-            $resources = $this->api->apiGet('latest');
+            $resources = $this->api->get('latest');
 
             foreach ($resources as $r) {
                 switch ($r->resourceType) {
