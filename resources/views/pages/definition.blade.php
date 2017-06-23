@@ -9,10 +9,25 @@
     </h1>
     <h4>
         @if ($definition->type == 'word')
-            means <em>{{ $definition->translationData->eng->practical }}</em>
-            in <em>{{ $definition->mainLanguage->name }}</em>
+            means
+            <em>
+                <a href="{{ route('definition', $definition->uniqueId) }}">
+                    {{ $definition->translationData->eng->practical }}
+                </a>
+            </em>
+
+            in
+            <em>
+                <a href="{{ route('language', $definition->mainLanguage->code) }}">
+                    {{ $definition->mainLanguage->name }}
+                </a>
+            </em>
         @else
-            <em>{{ $definition->translationData->eng->practical }}</em>
+            <em>
+                <a href="{{ route('definition', $definition->uniqueId) }}">
+                    {{ $definition->translationData->eng->practical }}
+                </a>
+            </em>
         @endif
     </h4>
 
