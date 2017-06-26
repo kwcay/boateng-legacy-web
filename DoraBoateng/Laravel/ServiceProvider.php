@@ -4,6 +4,7 @@ namespace DoraBoateng\Laravel;
 
 use Sentry;
 use DoraBoateng\Api\Client;
+use Raven_Client as ErrorLevel;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -51,7 +52,7 @@ class ServiceProvider extends BaseServiceProvider
             });
 
             // Track response time
-            // TODO: decouple from Sentry
+            // TODO: decouple from Sentry or move to API
             if (app()->environment() != 'local') {
                 $client->addListener(Client::EVENT_RESPONSE, function($stats) {
                     if (! $stats instanceof \GuzzleHttp\TransferStats ||
@@ -60,10 +61,9 @@ class ServiceProvider extends BaseServiceProvider
                         return;
                     }
 
-                    Sentry::captureMessage('Slow API response time', [
-                        'fingerprint'   => ['{{ default }}', 'other value'],
-                        'level'         => $stats->getTransferTime() > 8.0 ? 'warning' : 'info',
-                        'extra'         => [
+                    Sentry::captureMessage('Slow API response time', null, [
+                        'level' => $stats->getTransferTime() > 8.0 ? ErrorLevel::WARNING : ErrorLevel::INFO,
+                        'extra' => [
                             'transfer-time' => $stats->getTransferTime()
                         ],
                     ]);
