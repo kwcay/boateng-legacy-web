@@ -53,7 +53,7 @@
             show me something new
         </a> |
         <a href="http://goo.gl/WcthaE">
-            contribute
+            take our survey
         </a>
     </div>
 
