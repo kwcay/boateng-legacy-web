@@ -4,12 +4,12 @@
  */
 namespace App\Utilities;
 
-class Display
+class View
 {
     /**
      *
      */
-    public static function languageCount()
+    public function languageCount()
     {
         return number_format(23);
     }
@@ -17,8 +17,8 @@ class Display
     /**
      *
      */
-     public static function definitionCount()
+     public function definitionCount()
      {
-         return number_format(1217);
+        return number_format(1217);
      }
 }

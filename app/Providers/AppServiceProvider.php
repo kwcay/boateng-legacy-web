@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Utilities\View as ViewHelper;
 use Laravel\Dusk\DuskServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Share the view helper with all views
+        view()->share('viewHelper', new ViewHelper);
     }
 
     /**
