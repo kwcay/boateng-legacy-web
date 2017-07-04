@@ -18,17 +18,16 @@ class DefinitionController extends Controller
     {
         $definition = $this->cache->remember('definition.'.$id, 60, function() use ($id) {
             return $this->api->getDefinition($id, [
+                'languageList',
                 'mainTitle',
                 'titleString',
-                'mainLanguage',
+                'mainLanguage',     // DEPRECATED
                 'translationData',
                 'tagList',
             ]);
         });
 
-        if (is_int($definition)) {
-            // TODO: handle errors
-
+        if (! $definition) {
             abort(404);
         }
 

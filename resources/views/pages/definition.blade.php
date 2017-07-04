@@ -4,6 +4,7 @@
 
 @section('hero')
 
+    {{-- TODO: use languageList instead, through helper --}}
     <h1 class="definition-title">
         {{ $definition->mainTitle }}
     </h1>
