@@ -20,6 +20,16 @@
 
 @section('body')
 
+    {{-- Admin tools --}}
+    @if (Auth::check())
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3 col-sm-10 col-sm-offset-1 well">
+                Temporary shortcuts:
+                <input type="button" class="form-like" value="new language">
+            </div>
+        </div>
+    @endif
+
     <div class="row">
         <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
             @lang('branding.pitch')

@@ -22,6 +22,9 @@ new Vue({
     },
     methods: {
         toggle: function () {
+            window.console.log('Saving...');
+            window.console.log(this.data);
+            window.console.log(arguments);
             this.showModal = !this.showModal;
         }
     }

@@ -2,7 +2,7 @@
 <script type="text/x-template" id="vue-expression-modal-form">
     <modal v-if="showModal" @close="$emit('toggle')">
         <h3 slot="header">
-            <small>edit</small> {{ definition.mainTitle }}
+            <small>edit the expression</small> {{ definition.mainTitle }}
         </h3>
 
         <div slot="body">
@@ -27,6 +27,7 @@
                         id="subType"
                         v-model="definition.subType">
 
+                        <option disabled value="">[ expression type ]</option>
                         <option>common expression</option>
                         <option>simple phrase</option>
                         <option>proverb or saying</option>
@@ -42,6 +43,7 @@
             <div class="row">
                 <div class="col-md-10 col-md-offset-1">
                     <input
+                        v-model.trim="definition.titleString"
                         type="text"
                         name="translations[eng][practical]"
                         class="en-text-input center form-like"

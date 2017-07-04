@@ -2,7 +2,7 @@
 <script type="text/x-template" id="vue-word-modal-form">
     <modal v-if="showModal" @close="$emit('toggle')">
         <h3 slot="header">
-            <small>edit</small> {{ definition.mainTitle }}
+            <small>edit the word</small> {{ definition.mainTitle }}
         </h3>
 
         <div slot="body">
@@ -27,6 +27,7 @@
                         id="subType"
                         v-model="definition.subType">
 
+                        <option disabled value="">[ parts of speech ]</option>
                         <option>adjective</option>
                         <option>adverb</option>
                         <option>connective</option>

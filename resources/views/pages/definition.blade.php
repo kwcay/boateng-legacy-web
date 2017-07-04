@@ -38,7 +38,7 @@
     {{-- Admin tools --}}
     @if (Auth::check())
         <div class="row">
-            <div class="col-sm-12 well">
+            <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1 well">
                 @if ($formTemplate)
                     @include($formTemplate)
                 @endif

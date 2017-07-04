@@ -15,7 +15,12 @@
 
                     <div class="modal-footer">
                         <slot name="footer">
-                            <input type="submit" name="return" value="save" class="form-like" @click="$emit('close')">
+                            <input
+                                type="submit"
+                                name="return"
+                                value="save"
+                                class="form-like"
+                                @click="$emit('close')">
                             <input
                                 type="button"
                                 name="cancel"
