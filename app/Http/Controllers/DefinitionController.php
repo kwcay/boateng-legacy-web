@@ -47,7 +47,7 @@ class DefinitionController extends Controller
             }
         }
 
-        return view('pages.definition')->with([
+        return view('definition.index')->with([
             'definition'    => $definition,
             'formTemplate'  => $form,
         ]);
