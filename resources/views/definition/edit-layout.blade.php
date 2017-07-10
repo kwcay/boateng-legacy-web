@@ -3,7 +3,7 @@
 @section('hero')
 
     <h1>
-        @yield('page-title', 'Update')
+        @yield('page-title', 'Update '. $definition->mainTitle)
     </h1>
 
     <h4>
@@ -21,8 +21,8 @@
         action="">
 
         {!! csrf_field() !!}
-        <input type="hidden" name="type" value="{{ $type }}">
-        <input type="hidden" name="languages[]" value="">
+        <input type="hidden" name="type" value="{{ $definition->resourceType }}">
+        <input type="hidden" name="languages[]" value="{{ implode(',', array_keys((array) $definition->languageList)) }}">
 
         @yield('form')
 
@@ -30,12 +30,7 @@
         <br>
         <br>
         <div class="row center">
-            @if (Auth::check())
-            <input type="submit" name="return" value="continue">
-            <input type="submit" name="return" value="finish">
-            @else
             <input type="submit" name="return" value="save">
-            @endif
             <input
                 type="button"
                 name="cancel"
