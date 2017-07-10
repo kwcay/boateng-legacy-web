@@ -1,25 +1,28 @@
-@extends('layouts.narrow')
+@extends('layouts.half-hero')
 
-@section('body')
+@section('hero')
 
     <h1>
-        @yield('page-title', 'Suggest a new definition')
-        <br>
-
-        <small>
-            And help improve @lang('branding.title') for everyone.
-        </small>
+        @yield('page-title', 'Update')
     </h1>
+
+    <h4>
+        And help improve @lang('branding.title') for everyone.
+    </h4>
+
+@stop
+
+@section('body')
 
     <form
         class="edit form"
         method="post"
         name="definition"
-        action="{{ route('definition.store') }}">
+        action="">
 
         {!! csrf_field() !!}
         <input type="hidden" name="type" value="{{ $type }}">
-        <input type="hidden" name="languages[]" value="{{ $lang->code }}">
+        <input type="hidden" name="languages[]" value="">
 
         @yield('form')
 
@@ -37,7 +40,7 @@
                 type="button"
                 name="cancel"
                 value="cancel"
-                onclick="return confirm('Cancel?') ? App.redirect('{{ $lang->code }}') : false;">
+                onclick="return confirm('Cancel?') ? App.redirect('/') : false;">
         </div>
     </form>
 

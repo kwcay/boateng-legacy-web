@@ -4,6 +4,7 @@
  */
 namespace App\Http\Controllers;
 
+use Auth;
 use Illuminate\Http\Request;
 
 class DefinitionController extends Controller
@@ -71,5 +72,42 @@ class DefinitionController extends Controller
         }
 
         return redirect(route('definition', $definition->uniqueId));
+    }
+
+    /**
+     *
+     */
+    public function edit($id)
+    {
+        // TODO
+        if (! Auth::check()) {
+            abort(404);
+        }
+
+        if (! $definition = $this->getdefinition($id)) {
+            abort(404);
+        }
+
+        return view('definition.word.edit', [
+            'definition'    => $definition,
+            'type'          => 'word',
+        ]);
+    }
+
+    /**
+     *
+     */
+    protected function getDefinition($id)
+    {
+        return $this->cache->remember('definition.'.$id, 60, function() use ($id) {
+            return $this->api->getDefinition($id, [
+                'languageList',
+                'mainTitle',
+                'titleString',
+                'mainLanguage',     // DEPRECATED
+                'translationData',
+                'tagList',
+            ]);
+        });
     }
 }

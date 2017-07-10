@@ -23,6 +23,7 @@ Route::group([
     // Definition routes
     Route::get('/gem/{id}', 'DefinitionController@show')->name('definition');
     Route::get('/random/{lang?}', 'DefinitionController@random')->name('definition.random');
+    Route::get('/gem/{id}/edit', 'DefinitionController@edit')->name('definition.edit');
 
     // Language routes
     Route::get('/lang/{code}', 'LanguageController@show')->name('language');

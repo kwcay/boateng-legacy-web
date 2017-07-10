@@ -21,12 +21,12 @@
     {{-- Sub type --}}
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-            @include('forms.definition.subtypes', ['subType' => $definition->rawSubType])
+            @include('forms.definition.subtypes', ['subType' => $definition->subType])
         </div>
     </div>
 
     <div class="row center">
-        is a word in <em>{{ $lang->name }}</em> that means
+        is a word in <em>TODO</em> that means
     </div>
 
     <!-- Translation -->
