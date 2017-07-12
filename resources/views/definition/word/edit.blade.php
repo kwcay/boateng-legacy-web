@@ -24,16 +24,17 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
             <select class="text-center en-text-input" name="subType">
-                <option disabled value="">[ part of speech ]</option>
-                <option>adjective</option>
-                <option>adverb</option>
-                <option>connective</option>
-                <option>exclamation</option>
-                <option>preposition</option>
-                <option>pronoun</option>
-                <option>noun</option>
-                <option>verb</option>
-                <option>intransitive verb</option>
+                @foreach ($subTypes as $subType)
+                    @if ($loop->first)
+                        <option disabled value="">
+                            {{ $subType }}
+                        </option>
+                    @else
+                        <option value="{{ $subType }}"{{ $definition->subType == $subType ? ' selected' : '' }}>
+                            {{ $subType }}
+                        </option>
+                    @endif
+                @endforeach
             </select>
             <label for="subType">
                 part of speech
@@ -50,7 +51,7 @@
                 name="languages"
                 class="text-input center"
                 placeholder="e.g. Gonja"
-                value="{{ implode(',', array_keys((array) $definition->languageList)) }}"
+                value="{{ implode(', ', array_keys((array) $definition->languageList)) }}"
                 autocomplete="off"
                 required>
             <label for="languages">

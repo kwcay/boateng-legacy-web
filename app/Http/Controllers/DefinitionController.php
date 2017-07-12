@@ -88,14 +88,41 @@ class DefinitionController extends Controller
             abort(404);
         }
 
-        return view('definition.word.edit', [
+        // TODO
+        if (! in_array($definition->type, array('word'))) {
+            abort(501, 'Unsupported Definition Type.');
+        }
+
+        // TODO: use helper to generate select field.
+        $subTypes = [];
+        switch ($definition->type) {
+            case 'word':
+                $subTypes = [
+                    '[ part of speech ]',
+                    'adjective',
+                    'adverb',
+                    'connective',
+                    'exclamation',
+                    'preposition',
+                    'pronoun',
+                    'noun',
+                    'verb',
+                    'intransitive verb',
+                ];
+                break;
+        }
+
+        return view('definition.'.$definition->type.'.edit', [
             'definition'    => $definition,
-            'type'          => 'word',
+            'subTypes'      => $subTypes,
         ]);
     }
 
     /**
+     * Retrieves a definition by ID.
      *
+     * @param  int $id
+     * @return stdClass|null
      */
     protected function getDefinition($id)
     {
