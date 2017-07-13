@@ -12,7 +12,7 @@
         @if ($definition->type == 'word')
             means
             <em>
-                <a href="{{ route('definition', $definition->uniqueId) }}">
+                <a href="{{ route('definition.show', $definition->uniqueId) }}">
                     {{ $definition->translationData->eng->practical }}
                 </a>
             </em>
@@ -25,7 +25,7 @@
             </em>
         @else
             <em>
-                <a href="{{ route('definition', $definition->uniqueId) }}">
+                <a href="{{ route('definition.show', $definition->uniqueId) }}">
                     {{ $definition->translationData->eng->practical }}
                 </a>
             </em>
@@ -58,7 +58,7 @@
                     {{ $definition->type }} :
                 </div>
                 <div class="col-sm-8 meta-value definition-title">
-                    <a href="{{ route('definition', $definition->uniqueId) }}">
+                    <a href="{{ route('definition.show', $definition->uniqueId) }}">
                         {{ $definition->titleString ?: $definition->mainTitle }}
                     </a>
                 </div>

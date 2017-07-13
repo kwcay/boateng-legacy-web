@@ -131,7 +131,7 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
             <div class="shaded-well" style="background-image:url(/img/bg/9ad291d387f72a04a57e2b4c8945f945-640x480.jpg);">
-                <a href="{{ route('definition', $lang->randomDefinition->uniqueId) }}" class="card-btn shade-50">
+                <a href="{{ route('definition.show', $lang->randomDefinition->uniqueId) }}" class="card-btn shade-50">
                     Discover what
                     <br>
 

@@ -17,23 +17,12 @@ class DefinitionController extends Controller
      */
     public function show($id)
     {
-        $definition = $this->cache->remember('definition.'.$id, 60, function() use ($id) {
-            return $this->api->getDefinition($id, [
-                'languageList',
-                'mainTitle',
-                'titleString',
-                'mainLanguage',     // DEPRECATED
-                'translationData',
-                'tagList',
-            ]);
-        });
-
-        if (! $definition) {
+        if (! $definition = $this->getDefinition($id)) {
             abort(404);
         }
 
         // Template path for edit form
-        // TODO: use authorization flow insread.
+        // TODO: use authorization flow instead.
         $form = null;
 
         if ($this->request->user()) {
@@ -71,7 +60,7 @@ class DefinitionController extends Controller
             return redirect(route('home'));
         }
 
-        return redirect(route('definition', $definition->uniqueId));
+        return redirect(route('definition.show', $definition->uniqueId));
     }
 
     /**

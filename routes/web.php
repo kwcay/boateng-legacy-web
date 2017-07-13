@@ -21,12 +21,18 @@ Route::group([
     Route::get('/about',    'PageController@about')->name('about');
 
     // Definition routes
-    Route::get('/gem/+',            'DefinitionController@create')->name('definition.create');
-    Route::post('/gem',             'DefinitionController@store')->name('definition.store');
-    Route::get('/gem/{id}',         'DefinitionController@show')->name('definition');
-    Route::get('/random/{lang?}',   'DefinitionController@random')->name('definition.random');
-    Route::get('/gem/{id}/edit',    'DefinitionController@edit')->name('definition.edit');
-    Route::patch('/gem/{id}',       'DefinitionController@update')->name('definition.update');
+    Route::get('/gem/+', 'DefinitionController@create')->name('definition.create');
+    Route::get('/random/{lang?}', 'DefinitionController@random')->name('definition.random');
+    Route::resource('gem', 'DefinitionController', [
+        'except' => ['index', 'create'],
+        'names' => [
+            'store' => 'definition.store',
+            'show' => 'definition.show',
+            'edit' => 'definition.edit',
+            'update' => 'definition.update',
+            'destroy' => 'definition.destroy',
+        ]
+    ]);
 
     // Language routes
     Route::get('/lang/{code}', 'LanguageController@show')->name('language');

@@ -35,7 +35,7 @@ class LoginController extends Controller
 
     protected function setRedirectUrl()
     {
-        if (app()->request->route()->getName() !== 'login') {
+        if (app()->request->route() && app()->request->route()->getName() !== 'login') {
             return;
         }
 

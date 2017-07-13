@@ -229,7 +229,7 @@ class PageController extends Controller
             foreach ($resources as $r) {
                 switch ($r->resourceType) {
                     case 'definition':
-                        $this->addMapEntry($root, route('definition', $r->uniqueId), [
+                        $this->addMapEntry($root, route('definition.show', $r->uniqueId), [
                             'changefreq'    => 'weekly',
                             'priority'      => '1.0',
                         ]);
