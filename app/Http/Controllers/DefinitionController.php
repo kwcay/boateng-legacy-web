@@ -93,6 +93,17 @@ class DefinitionController extends Controller
             abort(501, 'Unsupported Definition Type.');
         }
 
+        // Translations
+        $practical  = isset($definition->translationData->eng->practical)
+            ? $definition->translationData->eng->practical
+            : '';
+        $literal    = isset($definition->translationData->eng->literal)
+            ? $definition->translationData->eng->literal
+            : '';
+        $meaning    = isset($definition->translationData->eng->meaning)
+            ? $definition->translationData->eng->meaning
+            : '';
+
         // TODO: use helper to generate select field.
         $subTypes = [];
         switch ($definition->type) {
@@ -112,17 +123,42 @@ class DefinitionController extends Controller
                 break;
         }
 
-        return view('definition.'.$definition->type.'.edit', [
+        return view('definition.'.$definition->type.'.form', [
             'definition'    => $definition,
+            'id'            => $definition->uniqueId,
             'subTypes'      => $subTypes,
+            'practical'     => $practical,
+            'literal'       => $literal,
+            'meaning'       => $meaning,
+        ]);
+    }
+
+    /**
+     * Updates a definition on the API.
+     *
+     * @param  string $id
+     * @return Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        dd([
+            'TODO: save definition',
+            'id' => $id,
+            'title' => $this->request->get('title'),
+            'subType' => $this->request->get('subType'),
+            'languages' => $this->request->get('languages'),
+            'practical' => $this->request->get('practical'),
+            'literal' => $this->request->get('literal'),
+            'meaning' => $this->request->get('meaning'),
+            'tags' => $this->request->get('tags'),
         ]);
     }
 
     /**
      * Retrieves a definition by ID.
      *
-     * @param  int $id
-     * @return stdClass|null
+     * @param  int  $id
+     * @return stdClass
      */
     protected function getDefinition($id)
     {

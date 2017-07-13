@@ -1,10 +1,10 @@
-@extends('definition.edit-layout')
+@extends('definition.form-layout')
 
 @section('form')
 
     {{-- Word --}}
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-8 col-lg-offset-2">
             <input
                 type="text"
                 name="title"
@@ -23,7 +23,7 @@
     {{-- Sub type --}}
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
-            <select class="text-center en-text-input" name="subType">
+            <select class="text-center en-text-input" id="subType" name="subType">
                 @foreach ($subTypes as $subType)
                     @if ($loop->first)
                         <option disabled value="">
@@ -44,7 +44,7 @@
 
     {{-- Languages --}}
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-8 col-lg-offset-2">
             <input
                 type="text"
                 id="languages"
@@ -62,14 +62,14 @@
 
     {{-- Practical translation --}}
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-8 col-lg-offset-2">
             <input
                 type="text"
                 id="practical"
                 name="practical"
                 class="en-text-input center"
                 placeholder="e.g. love"
-                value=""
+                value="{{ $practical }}"
                 autocomplete="off"
                 required>
             <label for="practical">
@@ -87,7 +87,7 @@
                 name="meaning"
                 class="en-text-input center"
                 placeholder="e.g. intence feeling of affection"
-                value=""
+                value="{{ $meaning }}"
                 autocomplete="off"
                 required>
             <label for="meaning">
@@ -98,17 +98,16 @@
 
     {{-- Literal translation --}}
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-8 col-lg-offset-2">
             <input
                 type="text"
-                id="literalTranslation"
-                name="literalTranslation"
+                id="literal"
+                name="literal"
                 class="en-text-input center"
                 placeholder="e.g. love"
-                value=""
-                autocomplete="off"
-                required>
-            <label for="literalTranslation">
+                value="{{ $literal }}"
+                autocomplete="off">
+            <label for="literal">
                 what the definition literally translates to in <em>English</em>
             </label>
         </div>
@@ -116,7 +115,7 @@
 
     {{-- Tags --}}
     <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-8 col-lg-offset-2">
             <input
                 type="text"
                 id="tags"
@@ -124,8 +123,7 @@
                 class="text-input center"
                 placeholder="e.g. emotion"
                 value="{{ implode(',', $definition->tagList) }}"
-                autocomplete="off"
-                required>
+                autocomplete="off">
             <label for="tags">
                 tags
             </label>

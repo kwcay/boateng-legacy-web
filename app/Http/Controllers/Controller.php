@@ -80,6 +80,66 @@ class Controller extends BaseController
     }
 
     /**
+     * @return Illuminate\Http\Response
+     */
+    public function index()
+    {
+        abort(501);
+    }
+
+    /**
+     * @return Illuminate\Http\Response
+     */
+    public function create()
+    {
+        abort(501);
+    }
+
+    /**
+     * @return Illuminate\Http\Response
+     */
+    public function store()
+    {
+        abort(501);
+    }
+
+    /**
+     * @param  string $id
+     * @return Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        abort(501);
+    }
+
+    /**
+     * @param  string $id
+     * @return Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        abort(501);
+    }
+
+    /**
+     * @param  string $id
+     * @return Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        abort(501);
+    }
+
+    /**
+     * @param  string $id
+     * @return Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        abort(501);
+    }
+
+    /**
      * Retrieves search results.
      *
      * @param  string $langCode

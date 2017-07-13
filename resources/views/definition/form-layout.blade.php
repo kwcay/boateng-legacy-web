@@ -3,7 +3,7 @@
 @section('hero')
 
     <h1>
-        @yield('page-title', 'Update '. $definition->mainTitle)
+        <small>edit</small> {{ $definition->mainTitle }}
     </h1>
 
     <h4>
@@ -18,19 +18,16 @@
         class="edit form"
         method="post"
         name="definition"
-        action="">
+        action="{{ $id ? route('definition.update', $id) : route('definition.create') }}">
 
         {!! csrf_field() !!}
-        <input type="hidden" name="type" value="{{ $definition->resourceType }}">
-        <input type="hidden" name="languages[]" value="{{ implode(',', array_keys((array) $definition->languageList)) }}">
+        {{ $id ? method_field('PATCH') : '' }}
+        <input type="hidden" name="type" value="definition">
 
         @yield('form')
 
-        {{-- Form actions --}}
-        <br>
-        <br>
         <div class="row center">
-            <input type="submit" name="return" value="save">
+            <input type="submit" name="submit" value="save">
             <input
                 type="button"
                 name="cancel"
