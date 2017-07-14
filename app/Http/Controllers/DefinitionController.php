@@ -10,6 +10,46 @@ use Illuminate\Http\Request;
 class DefinitionController extends Controller
 {
     /**
+     *
+     */
+    public function create()
+    {
+        $type       = 'word';
+        $subType    = '';
+        $languages  = [];
+        $tags       = [];
+
+        if ($this->request->has('languages')) {
+            // TODO: validate languages
+        }
+
+        if ($this->request->has('tags')) {
+            // TODO: add tags
+        }
+
+        return $this->form([
+            'id'            => null,
+            'type'          => $type,
+            'subType'       => $subType,
+            'title'         => '',
+            'titleStr'      => $this->request->get('title', ''),
+            'practical'     => $this->request->get('translation', ''),
+            'literal'       => $this->request->get('literally', ''),
+            'meaning'       => $this->request->get('meaning'),
+            'languages'     => $languages,
+            'tags'          => $tags,
+        ]);
+    }
+
+    /**
+     *
+     */
+    public function store()
+    {
+        return $this->save();
+    }
+
+    /**
      * Renders the definition view for the given ID.
      *
      * @param  string $id
@@ -64,6 +104,17 @@ class DefinitionController extends Controller
     }
 
     /**
+     * Updates a definition on the API.
+     *
+     * @param  string $id
+     * @return Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        return $this->save($id);
+    }
+
+    /**
      * Dispays the form to edit a defintion.
      *
      * @param  string  $id
@@ -105,7 +156,7 @@ class DefinitionController extends Controller
         ]);
     }
 
-    public function form(array $details)
+    protected function form(array $details)
     {
         // TODO: handle this more gracefully
         if (! in_array($details['type'], ['word', 'expression'])) {
@@ -139,24 +190,25 @@ class DefinitionController extends Controller
     }
 
     /**
-     * Updates a definition on the API.
+     * Saves a definition resource on the API.
      *
      * @param  string $id
      * @return Illuminate\Http\Response
      */
-    public function update($id)
+    protected function save($id = null)
     {
-        dd([
-            'TODO: save definition',
-            'id' => $id,
-            'title' => $this->request->get('title'),
-            'subType' => $this->request->get('subType'),
-            'languages' => $this->request->get('languages'),
-            'practical' => $this->request->get('practical'),
-            'literal' => $this->request->get('literal'),
-            'meaning' => $this->request->get('meaning'),
-            'tags' => $this->request->get('tags'),
+        $this->validate($this->request, [
+            'title'     => 'required|min:1',
+            'type'      => 'required',
+            'subType'   => '',
+            'languages' => 'required',
+            'practical' => 'required',
+            'literal'   => '',
+            'meaning'   => '',
+            'tags'      => '',
         ]);
+
+        dd($this->request);
     }
 
     /**

@@ -3,7 +3,11 @@
 @section('hero')
 
     <h1>
-        <small>edit</small> {{ $title }}
+        @if ($id)
+            <small>edit</small> {{ $title }}
+        @else
+            Add a Gem
+        @endif
     </h1>
 
     <h4>
@@ -27,7 +31,7 @@
         @yield('form')
 
         <div class="row center">
-            <input type="submit" name="submit" value="save">
+            <input type="submit" name="submit" value="{{ $id ? 'save' : 'add' }}">
             <input
                 type="button"
                 name="cancel"
