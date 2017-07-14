@@ -2,7 +2,7 @@
 
 @section('form')
 
-    {{-- Word --}}
+    {{-- Expression --}}
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
             <input

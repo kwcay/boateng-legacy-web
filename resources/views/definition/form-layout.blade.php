@@ -3,7 +3,7 @@
 @section('hero')
 
     <h1>
-        <small>edit</small> {{ $definition->mainTitle }}
+        <small>edit</small> {{ $title }}
     </h1>
 
     <h4>

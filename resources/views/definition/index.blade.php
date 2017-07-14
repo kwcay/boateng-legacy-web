@@ -43,7 +43,7 @@
                 @if ($formTemplate)
                     @include($formTemplate)
                 @endif
-
+                <a href="{{ route('definition.edit', $definition->uniqueId) }}" class="form-like">edit</a>
                 <input type="button" class="form-like" value="delete">
             </div>
         </div>

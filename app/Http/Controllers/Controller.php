@@ -77,6 +77,8 @@ class Controller extends BaseController
         $this->api      = $api;
         $this->cache    = $cache;
         $this->request  = $request;
+
+        $this->boot();
     }
 
     /**
@@ -178,4 +180,9 @@ class Controller extends BaseController
             return $this->api->getLanguageOfTheWeek();
         });
     }
+
+    /**
+     * The boot method can be used by child controllers for bootstrapping and setup.
+     */
+    protected function boot() {}
 }

@@ -64,22 +64,20 @@ class DefinitionController extends Controller
     }
 
     /**
+     * Dispays the form to edit a defintion.
      *
+     * @param  string  $id
+     * @return Illuminate\Http\Response
      */
     public function edit($id)
     {
-        // TODO
+        // TODO: use authorization flow
         if (! Auth::check()) {
             abort(404);
         }
 
         if (! $definition = $this->getdefinition($id)) {
             abort(404);
-        }
-
-        // TODO
-        if (! in_array($definition->type, array('word'))) {
-            abort(501, 'Unsupported Definition Type.');
         }
 
         // Translations
@@ -93,11 +91,32 @@ class DefinitionController extends Controller
             ? $definition->translationData->eng->meaning
             : '';
 
-        // TODO: use helper to generate select field.
-        $subTypes = [];
-        switch ($definition->type) {
+        return $this->form([
+            'id'            => $definition->uniqueId,
+            'type'          => $definition->type,
+            'subType'       => $definition->subType,
+            'title'         => $definition->mainTitle,
+            'titleStr'      => $definition->titleString,
+            'practical'     => $practical,
+            'literal'       => $literal,
+            'meaning'       => $meaning,
+            'languages'     => (array) $definition->languageList,
+            'tags'          => (array) $definition->tagList,
+        ]);
+    }
+
+    public function form(array $details)
+    {
+        // TODO: handle this more gracefully
+        if (! in_array($details['type'], ['word', 'expression'])) {
+            abort(501, 'Unsupported Definition Type.');
+        }
+
+        // NOTE: this will be handled by a JS framework on the frontend.
+        $details['subTypes'] = [];
+        switch ($details['type']) {
             case 'word':
-                $subTypes = [
+                $details['subTypes'] = [
                     '[ part of speech ]',
                     'adjective',
                     'adverb',
@@ -110,16 +129,13 @@ class DefinitionController extends Controller
                     'intransitive verb',
                 ];
                 break;
+
+            case 'expression':
+                $details['subTypes'] = [];
+                break;
         }
 
-        return view('definition.'.$definition->type.'.form', [
-            'definition'    => $definition,
-            'id'            => $definition->uniqueId,
-            'subTypes'      => $subTypes,
-            'practical'     => $practical,
-            'literal'       => $literal,
-            'meaning'       => $meaning,
-        ]);
+        return view('definition.'.$details['type'].'.form', $details);
     }
 
     /**
@@ -161,5 +177,10 @@ class DefinitionController extends Controller
                 'tagList',
             ]);
         });
+    }
+
+    protected function boot()
+    {
+        $this->middleware('auth')->only('create', 'edit', 'store', 'update', 'destroy');
     }
 }
