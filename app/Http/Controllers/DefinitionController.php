@@ -5,6 +5,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use Rule;
 use Illuminate\Http\Request;
 
 class DefinitionController extends Controller
@@ -211,13 +212,13 @@ class DefinitionController extends Controller
     protected function save($id = null)
     {
         $this->validate($this->request, [
-            'title'     => 'required|min:1',
-            'type'      => 'required',
-            'subType'   => 'required',
+            'title'     => 'string|required|max:400',
+            'type'      => ['string', 'required', Rule::in($this->supportedTypes)],
+            'subType'   => 'string|required',
             'languages' => 'required',
-            'practical' => 'required',
-            'literal'   => '',
-            'meaning'   => '',
+            'practical' => 'string|required',
+            'literal'   => 'string',
+            'meaning'   => 'string',
             'tags'      => '',
         ]);
 
