@@ -122,11 +122,6 @@ class DefinitionController extends Controller
      */
     public function edit($id)
     {
-        // TODO: use authorization flow
-        if (! Auth::check()) {
-            abort(404);
-        }
-
         if (! $definition = $this->getdefinition($id)) {
             abort(404);
         }
@@ -163,7 +158,7 @@ class DefinitionController extends Controller
             abort(501, 'Unsupported Definition Type.');
         }
 
-        // NOTE: this will be handled by a JS framework on the frontend.
+        // NOTE: this will be handled by a JS framework on the frontend some day.
         $details['subTypes'] = [];
         switch ($details['type']) {
             case 'word':
@@ -200,7 +195,7 @@ class DefinitionController extends Controller
         $this->validate($this->request, [
             'title'     => 'required|min:1',
             'type'      => 'required',
-            'subType'   => '',
+            'subType'   => 'required',
             'languages' => 'required',
             'practical' => 'required',
             'literal'   => '',
@@ -208,7 +203,33 @@ class DefinitionController extends Controller
             'tags'      => '',
         ]);
 
-        dd($this->request);
+        $data = [
+            'titleString'   => $this->request->get('title'),
+            'subType'       => $this->request->get('subType'),
+            'translationData' => [
+                'eng' => [
+                    'practical' => $this->request->get('practical'),
+                    'literal'   => $this->request->get('literal'),
+                    'meaning'   => $this->request->get('meaning'),
+                ]
+            ],
+            'languageList'  => explode(',', $this->request->get('languages')),
+            'tagList'       => explode(',', $this->request->get('tags')),
+        ];
+
+        $updated = $this->api->patch(
+            $this->request->user()->getAccessToken(),
+            'definitions/'.$id,
+            $data
+        );
+
+        $response = redirect(route('definition.show', $id));
+
+        if (! $updated) {
+            $response->withErrors('Could not save definition');
+        }
+
+        return $response;
     }
 
     /**

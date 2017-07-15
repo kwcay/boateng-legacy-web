@@ -8,6 +8,21 @@ use Illuminate\Contracts\Auth\Authenticatable;
 class User implements Authenticatable
 {
     /**
+     * @const string
+     */
+    const SESSION_USER = '';
+
+    /**
+     * @const string
+     */
+    const SESSION_ACCESS_TOKEN  = 'doraboateng.access-token';
+
+    /**
+     * @const string
+     */
+    const SESSION_REFRESH_TOKEN = 'doraboateng.refresh-token';
+
+    /**
      * @var string
      */
     public $urn;
@@ -21,6 +36,11 @@ class User implements Authenticatable
      * @var string
      */
     public $name;
+
+    /**
+     * @var string
+     */
+    public $accessToken;
 
     /**
      * @var string
@@ -46,7 +66,9 @@ class User implements Authenticatable
             return null;
         }
 
-        return (new static((array) $userData))->setRememberToken($data['refresh_token']);
+        return (new static((array) $userData))
+            ->setRememberToken($data['refresh_token'])
+            ->setAccessToken($data['access_token']);
     }
 
     /**
@@ -54,15 +76,21 @@ class User implements Authenticatable
      */
     public static function retrieveFromSession()
     {
-        if (! $properties = session('doraboateng.user')) {
+        if (! $properties = session(static::SESSION_USER)) {
             return null;
         }
 
-        if (! $refreshToken = session('doraboateng.refresh-token')) {
+        if (! $accessToken = session(static::SESSION_ACCESS_TOKEN)) {
             return null;
         }
 
-        return (new static(json_decode($properties, true)))->setRememberToken($refreshToken);
+        if (! $refreshToken = session(static::SESSION_REFRESH_TOKEN)) {
+            return null;
+        }
+
+        return (new static(json_decode($properties, true)))
+            ->setRememberToken($refreshToken)
+            ->setAccessToken($accessToken);
     }
 
     /**
@@ -77,12 +105,15 @@ class User implements Authenticatable
 
     /**
      * Stores the user data in session.
+     *
+     * @return \DoraBoateng\Laravel\User
      */
     public function persist()
     {
         // Store user data in session
-        session(['doraboateng.user' => json_encode((array) $this)]);
-        session(['doraboateng.refresh-token' => $this->getRememberToken()]);
+        session([static::SESSION_USER           => json_encode((array) $this)]);
+        session([static::SESSION_REFRESH_TOKEN  => $this->getRememberToken()]);
+        session([static::SESSION_ACCESS_TOKEN   => $this->getAccessToken()]);
 
         return $this;
     }
@@ -94,8 +125,9 @@ class User implements Authenticatable
      */
     public function logout()
     {
-        session(['doraboateng.user' => null]);
-        session(['doraboateng.refresh-token' => null]);
+        session([static::SESSION_USER           => null]);
+        session([static::SESSION_REFRESH_TOKEN  => null]);
+        session([static::SESSION_ACCESS_TOKEN   => null]);
 
         // TODO: nullify on API?
     }
@@ -113,11 +145,34 @@ class User implements Authenticatable
     /**
      * Get the unique identifier for the user.
      *
-     * @return mixed
+     * @return string
      */
     public function getAuthIdentifier()
     {
-        return $this->email;
+        return $this->{$this->getAuthIdentifierName()};
+    }
+
+    /**
+     * Retrieves the access token associated with this user.
+     *
+     * @return string
+     */
+    public function getAccessToken()
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * Stores the access token associated with this user.
+     *
+     * @param  string  $value
+     * @return \DoraBoateng\Laravel\User
+     */
+    public function setAccessToken($value)
+    {
+        $this->accessToken = $value;
+
+        return $this;
     }
 
     /**
@@ -127,7 +182,17 @@ class User implements Authenticatable
      */
     public function getAuthPassword()
     {
-        return null;
+        return $this->getAccessToken();
+    }
+
+    /**
+     * Get the column name for the "remember me" token.
+     *
+     * @return string
+     */
+    public function getRememberTokenName()
+    {
+        return 'refreshToken';
     }
 
     /**
@@ -137,7 +202,7 @@ class User implements Authenticatable
      */
     public function getRememberToken()
     {
-        return $this->refreshToken;
+        return $this->{$this->getRememberTokenName()};
     }
 
     /**
@@ -151,15 +216,5 @@ class User implements Authenticatable
         $this->{$this->getRememberTokenName()} = $value;
 
         return $this;
-    }
-
-    /**
-     * Get the column name for the "remember me" token.
-     *
-     * @return string
-     */
-    public function getRememberTokenName()
-    {
-        return 'refreshToken';
     }
 }

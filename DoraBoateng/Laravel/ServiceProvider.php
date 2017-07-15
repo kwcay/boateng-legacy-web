@@ -39,6 +39,7 @@ class ServiceProvider extends BaseServiceProvider
                 'secret'    => config('doraboateng.secret'),
                 'timeout'   => config('doraboateng.timeout', 4.0),
                 'api_host'  => config('doraboateng.host', 'https://api.doraboateng.com'),
+                'debug'     => config('doraboateng.debug', app()->environment() === 'local'),
             ]);
 
             // Store access token
@@ -51,9 +52,10 @@ class ServiceProvider extends BaseServiceProvider
                 return app('cache')->store()->get('doraboateng.accesstoken');
             });
 
-            // Track response time
-            // TODO: decouple from Sentry or move to API
+
             if (app()->environment() != 'local') {
+                // Track response time
+                // TODO: decouple from Sentry or move to API
                 $client->addListener(Client::EVENT_RESPONSE, function($stats) {
                     if (! $stats instanceof \GuzzleHttp\TransferStats ||
                         $stats->getTransferTime() <= 4.0
@@ -67,6 +69,15 @@ class ServiceProvider extends BaseServiceProvider
                             'transfer-time' => $stats->getTransferTime()
                         ],
                     ]);
+                });
+
+                // Track exceptions
+                // TODO: decouple from Sentry
+                $client->addListener(Client::EVENT_CLIENT_EXCEPTION, function(\Exception $e) {
+                    // This is how you get the status code.
+                    $statusCode = $e->getResponse()->getStatusCode();
+
+                    Sentry::captureException($e);
                 });
             }
 

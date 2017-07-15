@@ -14,6 +14,7 @@ use DoraBoateng\Api\Exceptions\InvalidRequest   as InvalidRequestException;
 class Client
 {
     const API_VERSION               = '0.4';
+    const API_HOST                  = 'https://api.doraboateng.com';
 
     const ERROR_INVALID_ID          = 10;
     const ERROR_INVALID_CODE        = 11;
@@ -23,6 +24,7 @@ class Client
     const EVENT_SET_ACCESS_TOKEN    = 'accesstoken.store';
     const EVENT_GET_ACCESS_TOKEN    = 'accesstoken.retrieve';
     const EVENT_RESPONSE            = 'response';
+    const EVENT_EXCEPTION           = 'exception';
 
     const RESOURCE_TYPES = [
         'culture',
@@ -34,33 +36,40 @@ class Client
     ];
 
     /**
-     *
+     * @var GuzzleHttp\Client
      */
-    public $client;
-
-    /**
-     *
-     */
-    protected $clientId;
-
-    /**
-     *
-     */
-    protected $secret;
+    protected $client;
 
     /**
      * @var array
      */
-    protected $events = [];
+    protected $events   = [];
 
     /**
-     *
+     * @var array
      */
-    protected $errors = [];
+    protected $errors   = [];
 
     /**
-     * @param  array $config
+     * @var bool
+     */
+    protected $debug    = false;
+
+    /**
+     * @var string
+     */
+    private $clientId;
+
+    /**
+     * @var string
+     */
+    private $secret;
+
+    /**
+     * @param  array $config Configures the Guzzle client.
      * @return void
+     *
+     * @throws \DoraBoateng\Api\Exceptions\Configuration
      */
     public function __construct(array $config = [])
     {
@@ -71,14 +80,55 @@ class Client
 
         $this->clientId = $config['id'];
         $this->secret   = $config['secret'];
+        $this->debug    = isset($config['debug']) && $config['debug'];
 
         // Configure base URI
-        $endpoint = isset($config['api_host']) ? $config['api_host'] : 'https://api.doraboateng.com';
-        $endpoint .= '/'.static::API_VERSION.'/';
+        $config['base_uri'] = (@$config['api_host'] ?: static::API_HOST).'/'.static::API_VERSION.'/';
 
-        $config['base_uri'] = $endpoint;
+        // TODO: array_except is a Laravel helper method
+        $this->client   = new GuzzleClient(array_except($config, ['api_host', 'id', 'secret']));
+    }
 
-        $this->client = new GuzzleClient(array_except($config, ['api_host', 'id', 'secret']));
+    /**
+     * @param  string $token
+     * @param  string $method
+     * @param  string $endpoint
+     * @param  array  $options
+     * @return stdClass
+     *
+     * @throws \GuzzleHttp\Exception\ClientException
+     * @throws \Exception
+     */
+    public function request($token, $endpoint, $method, array $options)
+    {
+        $token = $token ?: $this->getAccessToken();
+
+        // Set required headers.
+        $options['headers']['Accept'] = 'application/json';
+        $options['headers']['Authorization'] = "Bearer {$token}";
+        $options['on_stats'] = array($this, 'handleTransferStats');
+
+        try {
+            $response = $this->client->request($method, $endpoint, $options);
+        } catch (ClientException $e) {
+            return $this->handleClientException($e);
+        } catch (Exception $e) {
+            return $this->handleGeneralException($e);
+        }
+
+        if (! $response->hasHeader('Content-Type') ||
+            ! in_array('application/json', $response->getHeader('Content-Type'))
+        ) {
+            throw new ApiException('Invalid Content-Type');
+        }
+
+        $data = json_decode((string) $response->getBody());
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return $this->addError(json_last_error_msg());
+        }
+
+        return $data;
     }
 
     /**
@@ -91,56 +141,66 @@ class Client
      */
     public function get($endpoint, array $query = [], $token = null)
     {
-        // TODO: we shouldn't have to specify the token to use.
-        $token = $token ?: $this->getAccessToken();
+        return $this->request($token, $endpoint, 'GET', [
+            'query' => $query,
+        ]);
+    }
 
-        try {
-            $response = $this->client->get($endpoint, [
-                'query'     => $query,
-                'headers'   => [
-                    'Accept'        => 'application/json',
-                    'Authorization' => "Bearer {$token}",
-                ],
-                'on_stats' => array($this, 'handleTransferStats'),
-            ]);
-        } catch (ClientException $e) {
-            switch ($e->getResponse()->getStatusCode()) {
-                case 401:
-                case 500:
-                case 503:
-                    Sentry::captureException($e);
-                    return null;
-                    break;
+    /**
+     * Performs a POST request on the API.
+     *
+     * @param  string  $token
+     * @param  string  $endpoint
+     * @param  array   $data
+     * @return stdClass
+     */
+    public function post($token, $endpoint, array $data)
+    {
+        return $this->request($token, $endpoint, 'POST', [
+            'form_params' => $data
+        ]);
+    }
 
-                // Unhandled exception
-                default:
-                    throw $e;
-            }
-        } catch (Exception $e) {
-            // TODO: handle
-            throw $e;
-        }
+    /**
+     * Performs a PUT request on the API.
+     *
+     * @param  string  $token
+     * @param  string  $endpoint
+     * @param  array   $data
+     * @return stdClass
+     */
+    public function put($token, $endpoint, array $data = [])
+    {
+        return $this->request($token, $endpoint, 'PUT', [
+            'form_params' => $data
+        ]);
+    }
 
-        if ($response->getStatusCode() !== 200) {
-            // TODO: handle
-            throw new \Exception('HTTP Error: '. $response->getStatusCode());
-        }
+    /**
+     * Performs a PATCH request on the API.
+     *
+     * @param  string  $token
+     * @param  string  $endpoint
+     * @param  array   $data
+     * @return stdClass
+     */
+    public function patch($token, $endpoint, array $data = [])
+    {
+        return $this->request($token, $endpoint, 'PATCH', [
+            'form_params' => $data
+        ]);
+    }
 
-        if (! $response->hasHeader('Content-Type') ||
-            ! in_array('application/json', $response->getHeader('Content-Type'))
-        ) {
-            // TODO: handle
-            throw new \Exception('Invalid Content-Type');
-        }
-
-        $data = json_decode((string) $response->getBody());
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            // TODO: handle
-            throw new \Exception('JSON Error: '. json_last_error_msg());
-        }
-
-        return $data;
+    /**
+     * Performs a DELETE request on the API.
+     *
+     * @param  string  $token
+     * @param  string  $endpoint
+     * @return stdClass
+     */
+    public function destroy($token, $endpoint)
+    {
+        return $this->request($token, $endpoint, 'DELETE');
     }
 
     /**
@@ -148,8 +208,9 @@ class Client
      *
      * @param  int   $id     Definition ID
      * @param  array $embed  Relations to include with definition
-     * @throws InvalidRequestException
      * @return stdClass
+     *
+     * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
     public function getDefinition($id, array $embed = [])
     {
@@ -167,19 +228,20 @@ class Client
      *
      * @param  string  $query
      * @param  string  $langCode
-     * @throws InvalidRequest
      * @return stdClass
+     *
+     * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
     public function searchDefinitions($query, $langCode = null)
     {
         $query = trim($query);
 
         if (strlen($query) < 1) {
-            throw new InvalidRequest('Query string too short', static::ERROR_INVALID_QUERY);
+            throw new InvalidRequestException('Query string too short', static::ERROR_INVALID_QUERY);
         }
 
         if ($langCode && ! $this->isValidLanguageCode($langCode)) {
-            throw new InvalidRequest('Invalid language code', static::ERROR_INVALID_CODE);
+            throw new InvalidRequestException('Invalid language code', static::ERROR_INVALID_CODE);
         }
 
         return $this->get('definitions/search/'.urlencode($query), [
@@ -190,16 +252,17 @@ class Client
     /**
      * @param  int|string  $langId
      * @param  array       $embed
-     * @throws InvalidRequest
      * @return stdClass
+     *
+     * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
     public function getRandomDefinition($langId = null, array $embed = [])
     {
         if ($langId) {
             if (is_numeric($langId) && ! $this->isValidId($langId)) {
-                throw new InvalidRequest('Invalid language identifier', static::ERROR_INVALID_ID);
+                throw new InvalidRequestException('Invalid language identifier', static::ERROR_INVALID_ID);
             } elseif (! $this->isValidLanguageCode($langId)) {
-                throw new InvalidRequest('Invalid language code', static::ERROR_INVALID_CODE);
+                throw new InvalidRequestException('Invalid language code', static::ERROR_INVALID_CODE);
             }
         } else {
             $langId = '';
@@ -213,13 +276,14 @@ class Client
     /**
      * @param  int|string  $id
      * @param  array       $embed
-     * @throws InvalidRequest
      * @return stdClass
+     *
+     * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
     public function getLanguage($id, array $embed = [])
     {
         if (! $this->isValidId($id) && ! $this->isValidLanguageCode($id)) {
-            throw new InvalidRequest('Invalid language code', static::ERROR_INVALID_CODE);
+            throw new InvalidRequestException('Invalid language code', static::ERROR_INVALID_CODE);
         }
 
         return $this->get('languages/'.$id, [
@@ -228,6 +292,7 @@ class Client
     }
 
     /**
+     * @param  array $embed
      * @return stdClass
      */
     public function getLanguageOfTheWeek(array $embed = [])
@@ -239,24 +304,27 @@ class Client
 
     /**
      * @param  string $query
-     * @throws InvalidRequest
      * @return array
+     *
+     * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
     public function search($query)
     {
         $query = trim($query);
 
         if (strlen($query) < 1) {
-            throw new InvalidRequest('Query string too short', static::ERROR_INVALID_QUERY);
+            throw new InvalidRequestException('Query string too short', static::ERROR_INVALID_QUERY);
         }
 
-        return $this->get('search/'.$query);
+        return $this->get('search/'.urlencode($query));
     }
 
     /**
      * @param  string  $name
      * @param  mixed   $callback
      * @return static
+     *
+     * @throws \DoraBoateng\Api\Exceptions\Configuration
      */
     public function addListener($name, $callback)
     {
@@ -283,23 +351,67 @@ class Client
      */
     public function getPasswordAccessToken($username, $password, $scope = 'user-read')
     {
-        try {
-            $response = $this->client->post('/oauth/token', [
-                'form_params' => [
-                    'grant_type'    => 'password',
-                    'client_id'     => $this->clientId,
-                    'client_secret' => $this->secret,
-                    'username'      => $username,
-                    'password'      => $password,
-                    'scope'         => $scope,
-                ],
-                'on_stats' => array($this, 'handleTransferStats'),
-            ]);
-        } catch (Exception $e) {
-            return $this->addError($e->getMessage());
+        return $this->getRawTokenData([
+            'grant_type'    => 'password',
+            'client_id'     => $this->clientId,
+            'client_secret' => $this->secret,
+            'username'      => $username,
+            'password'      => $password,
+            'scope'         => $scope,
+        ]);
+    }
+
+    /**
+     * Retrieves an access token based on the client credentials grant.
+     *
+     * @return string|null
+     */
+    protected function getAccessToken()
+    {
+        if ($token = $this->fireEvent(static::EVENT_GET_ACCESS_TOKEN)) {
+            return $token;
         }
 
-        $data = json_decode((string) $response->getBody(), true);
+        // Retrieve a new access token from the API.
+        $data = $this->getRawTokenData([
+            'grant_type'    => 'client_credentials',
+            'client_id'     => $this->clientId,
+            'client_secret' => $this->secret,
+            'scope'         => 'resource-read resource-write',
+        ]);
+
+        if (! $data) {
+            return null;
+        }
+
+        // Fire the access token event.
+        $this->fireEvent(static::EVENT_SET_ACCESS_TOKEN, [
+            'token-type'    => $data->token_type,
+            'expires'       => $data->expires_in,
+            'access-token'  => $token = $data->access_token,
+        ]);
+
+        return $token;
+    }
+
+    /**
+     * @param  array  $data
+     * @return stdClass|null
+     */
+    private function getRawTokenData(array $params)
+    {
+        try {
+            $response = $this->client->post('/oauth/token', [
+                'form_params'   => $params,
+                'on_stats'      => array($this, 'handleTransferStats'),
+            ]);
+        } catch (ClientException $e) {
+            return $this->handleClientException($e);
+        } catch (Exception $e) {
+            return $this->handleGeneralException($e);
+        }
+
+        $data = json_decode((string) $response->getBody());
 
         if (json_last_error() !== JSON_ERROR_NONE) {
             return $this->addError(json_last_error_msg());
@@ -308,50 +420,15 @@ class Client
         return $data;
     }
 
-    protected function getAccessToken()
-    {
-        if (! $token = $this->fireEvent(static::EVENT_GET_ACCESS_TOKEN)) {
-            try {
-                $response = $this->client->post('/oauth/token', [
-                    'form_params' => [
-                        'grant_type'    => 'client_credentials',
-                        'client_id'     => $this->clientId,
-                        'client_secret' => $this->secret,
-                        'scope'         => 'resource-read resource-write',
-                    ],
-                    'on_stats' => array($this, 'handleTransferStats'),
-                ]);
-            } catch (Exception $e) {
-                // TODO: handle
-                throw $e;
-            }
-
-            $data = json_decode((string) $response->getBody());
-
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                // TODO: handle
-                throw new ApiException('JSON Error: '. json_last_error_msg());
-            }
-
-            $this->fireEvent(static::EVENT_SET_ACCESS_TOKEN, [
-                'token-type'    => $data->token_type,
-                'expires'       => $data->expires_in,
-                'access-token'  => $token = $data->access_token,
-            ]);
-        }
-
-        return $token;
-    }
-
     /**
      * @param  string $msg
-     * @return false
+     * @return null
      */
     protected function addError($msg)
     {
         $this->errors[] = $msg;
 
-        return false;
+        return null;
     }
 
     /**
@@ -368,6 +445,14 @@ class Client
     public function getLastError()
     {
         return end($this->errors);
+    }
+
+    /**
+     * @param \GuzzleHttp\TransferStats $stats
+     */
+    public function handleTransferStats(TransferStats $stats)
+    {
+        $this->fireEvent(static::EVENT_RESPONSE, [$stats]);
     }
 
     /**
@@ -429,6 +514,47 @@ class Client
     }
 
     /**
+     * @param  \GuzzleHttp\Exception\ClientException $exception
+     * @return null
+     */
+    protected function handleClientException(ClientException $exception)
+    {
+        return $this->handleException(static::EVENT_CLIENT_EXCEPTION, $exception);
+    }
+
+    /**
+     * @param  \Exception $exception
+     * @return null
+     */
+    protected function handleGeneralException(Exception $exception)
+    {
+        return $this->handleException(static::EVENT_EXCEPTION, $exception);
+    }
+
+    /**
+     * @param  string     $event
+     * @param  \Exception $exception
+     * @return null
+     * @throws \Exception
+     */
+    protected function handleException($event, Exception $exception)
+    {
+        // Default behaviour if no handlers are defined
+        if (! isset($this->events[$event]) || ! $this->events[$event]) {
+            if ($this->debug === true) {
+                throw $exception;
+            } else {
+                return $this->addError($exception->getMessage());
+            }
+        }
+
+        // TODO: pass in `$this->addError` as an callable argument
+        $this->fireEvent($event, [$exception]);
+
+        return null;
+    }
+
+    /**
      * @param  string  $name
      * @param  array   $arguments
      * @return mixed
@@ -446,18 +572,10 @@ class Client
                 continue;
             }
 
+            // TODO: pass in the current `$result` as the first argument
             $result = call_user_func_array($callable, $arguments);
         }
 
         return $result;
-    }
-
-    /**
-     * @param  TransferStats  $stats
-     * @return void
-     */
-    public function handleTransferStats(TransferStats $stats)
-    {
-        $this->fireEvent(static::EVENT_RESPONSE, [$stats]);
     }
 }

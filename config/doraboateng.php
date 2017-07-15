@@ -15,4 +15,7 @@ return [
     // API timeout
     'timeout'   => env('DORA_BOATENG_TIMEOUT', 4.0),
 
+    // Debug mode
+    'debug'     => (bool) env('DORA_BOATENG_DEBUG', false),
+
 ];
