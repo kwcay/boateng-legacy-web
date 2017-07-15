@@ -24,20 +24,20 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
             <select class="text-center en-text-input" id="subType" name="subType">
-                @foreach ($subTypes as $subTypeOption)
+                @foreach ($subTypes as $subTypeOption => $subTypeName)
                     @if ($loop->first)
                         <option disabled value="">
-                            {{ $subType }}
+                            {{ $subTypeName }}
                         </option>
                     @else
                         <option value="{{ $subTypeOption }}"{{ $subTypeOption == $subType ? ' selected' : '' }}>
-                            {{ $subType }}
+                            {{ $subTypeName }}
                         </option>
                     @endif
                 @endforeach
             </select>
             <label for="subType">
-                part of speech
+                type of expression
             </label>
         </div>
     </div>

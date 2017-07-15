@@ -10,7 +10,19 @@ use Illuminate\Http\Request;
 class DefinitionController extends Controller
 {
     /**
+     * Supported definition types.
      *
+     * @var array
+     */
+    protected $supportedTypes = [
+        'word',
+        'expression',
+    ];
+
+    /**
+     * Displays the form to add a new definition.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -42,7 +54,9 @@ class DefinitionController extends Controller
     }
 
     /**
+     * Stores a new definition on the API.
      *
+     * @return \Illluminate\Http\RedirectResponse
      */
     public function store()
     {
@@ -53,7 +67,7 @@ class DefinitionController extends Controller
      * Renders the definition view for the given ID.
      *
      * @param  string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -88,7 +102,7 @@ class DefinitionController extends Controller
      * page.
      *
      * @param  string $lang
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function random($lang = null)
     {
@@ -104,21 +118,10 @@ class DefinitionController extends Controller
     }
 
     /**
-     * Updates a definition on the API.
-     *
-     * @param  string $id
-     * @return Illuminate\Http\Response
-     */
-    public function update($id)
-    {
-        return $this->save($id);
-    }
-
-    /**
      * Dispays the form to edit a defintion.
      *
      * @param  string  $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
@@ -151,10 +154,20 @@ class DefinitionController extends Controller
         ]);
     }
 
+    /**
+     * Updates a definition on the API.
+     *
+     * @param  string $id
+     * @return Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        return $this->save($id);
+    }
+
     protected function form(array $details)
     {
-        // TODO: handle this more gracefully
-        if (! in_array($details['type'], ['word', 'expression'])) {
+        if (! in_array($details['type'], $this->supportedTypes)) {
             abort(501, 'Unsupported Definition Type.');
         }
 
@@ -177,7 +190,12 @@ class DefinitionController extends Controller
                 break;
 
             case 'expression':
-                $details['subTypes'] = [];
+                $details['subTypes'] = [
+                    '[ expression types ]',
+                    'expression'    => 'common expression',
+                    'phrase'        => 'simple phrase',
+                    'proverb'       => 'proverb or saying',
+                ];
                 break;
         }
 
