@@ -24,6 +24,7 @@ class Client
     const EVENT_SET_ACCESS_TOKEN    = 'accesstoken.store';
     const EVENT_GET_ACCESS_TOKEN    = 'accesstoken.retrieve';
     const EVENT_RESPONSE            = 'response';
+    const EVENT_CLIENT_EXCEPTION    = 'client-exception';
     const EVENT_EXCEPTION           = 'exception';
 
     const RESOURCE_TYPES = [
