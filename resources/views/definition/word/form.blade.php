@@ -88,8 +88,7 @@
                 class="en-text-input center"
                 placeholder="e.g. intence feeling of affection"
                 value="{{ $meaning }}"
-                autocomplete="off"
-                required>
+                autocomplete="off">
             <label for="meaning">
                 <em>English</em> meaning
             </label>
