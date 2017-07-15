@@ -73,7 +73,7 @@ class UserProvider implements Contract
             return null;
         }
 
-        return User::make($token)->persist();
+        return User::make((array) $token)->persist();
     }
 
     /**
