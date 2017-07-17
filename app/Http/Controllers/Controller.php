@@ -182,6 +182,17 @@ class Controller extends BaseController
     }
 
     /**
+     * Builds a name-spaced cache key.
+     *
+     * @param  string $id
+     * @return string
+     */
+    protected function getCacheKey($id)
+    {
+        return $this->name.'.'.$id;
+    }
+
+    /**
      * The boot method can be used by child controllers for bootstrapping and setup.
      */
     protected function boot() {}

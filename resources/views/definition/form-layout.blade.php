@@ -26,7 +26,7 @@
 
         {!! csrf_field() !!}
         {{ $id ? method_field('PATCH') : '' }}
-        <input type="hidden" name="type" value="definition">
+        <input type="hidden" name="type" value="{{ $type }}">
 
         @yield('form')
 

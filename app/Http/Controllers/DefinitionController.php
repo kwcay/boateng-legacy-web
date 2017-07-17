@@ -5,8 +5,8 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use Rule;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class DefinitionController extends Controller
 {
@@ -178,15 +178,15 @@ class DefinitionController extends Controller
             case 'word':
                 $details['subTypes'] = [
                     '[ part of speech ]',
-                    'adjective',
-                    'adverb',
-                    'connective',
-                    'exclamation',
-                    'preposition',
-                    'pronoun',
-                    'noun',
-                    'verb',
-                    'intransitive verb',
+                    'adj'   => 'adjective',
+                    'adv'   => 'adverb',
+                    'conn'  => 'connective',
+                    'ex'    => 'exclamation',
+                    'prep'  => 'preposition',
+                    'pro'   => 'pronoun',
+                    'n'     => 'noun',
+                    'v'     => 'verb',
+                    'intv'  => 'intransitive verb',
                 ];
                 break;
 
@@ -198,6 +198,23 @@ class DefinitionController extends Controller
                     'proverb'       => 'proverb or saying',
                 ];
                 break;
+        }
+
+        // Temp hack: fix definition subtype.
+        $subTypesAbbreviations = [
+            'adjective'     => 'adj',
+            'adverb'        => 'adv',
+            'connective'    => 'conn',
+            'exclamation'   => 'ex',
+            'preposition'   => 'pre',
+            'pronoun'       => 'pro',
+            'noun'          => 'n',
+            'verb'          => 'v',
+            'intransitive verb' => 'intv',
+        ];
+
+        if (array_key_exists($details['subType'], $subTypesAbbreviations)) {
+            $details['subType'] = $subTypesAbbreviations[$details['subType']];
         }
 
         return view('definition.'.$details['type'].'.form', $details);
@@ -212,19 +229,20 @@ class DefinitionController extends Controller
     protected function save($id = null)
     {
         $this->validate($this->request, [
-            'title'     => 'string|required|max:400',
-            'type'      => ['string', 'required', Rule::in($this->supportedTypes)],
-            'subType'   => 'string|required',
+            'title'     => 'required|max:400',
+            'type'      => ['required', Rule::in($this->supportedTypes)],
+            'subType'   => 'required',
             'languages' => 'required',
-            'practical' => 'string|required',
-            'literal'   => 'string',
-            'meaning'   => 'string',
+            'practical' => 'required',
+            'literal'   => '',
+            'meaning'   => '',
             'tags'      => '',
         ]);
 
         $data = [
+            'type'          => $this->request->get('type'),
+            'sub_type'      => $this->request->get('subType'),
             'titleString'   => $this->request->get('title'),
-            'subType'       => $this->request->get('subType'),
             'translationData' => [
                 'eng' => [
                     'practical' => $this->request->get('practical'),
@@ -236,6 +254,7 @@ class DefinitionController extends Controller
             'tagList'       => explode(',', $this->request->get('tags')),
         ];
 
+        // TODO: wrap in try-catch block
         $updated = $this->api->patch(
             $this->request->user()->getAccessToken(),
             'definitions/'.$id,
@@ -246,6 +265,8 @@ class DefinitionController extends Controller
 
         if (! $updated) {
             $response->withErrors('Could not save definition');
+        } elseif ($id) {
+            $this->cache->forget($this->getCacheKey($id));
         }
 
         return $response;
@@ -259,7 +280,7 @@ class DefinitionController extends Controller
      */
     protected function getDefinition($id)
     {
-        return $this->cache->remember('definition.'.$id, 60, function() use ($id) {
+        return $this->cache->remember($this->getCacheKey($id), 60, function() use ($id) {
             return $this->api->getDefinition($id, [
                 'languageList',
                 'mainTitle',
