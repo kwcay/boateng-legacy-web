@@ -107,12 +107,9 @@ class DefinitionController extends Controller
      */
     public function random($lang = null)
     {
-        $definition = $this->api->getRandomDefinition($lang);
-
-        if (is_int($definition)) {
-            // TODO: handle errors
-
-            return redirect(route('home'));
+        if (! $definition = $this->api->getRandomDefinition($lang)) {
+            // TODO
+            return redirect(route('home'))->withErrors($this->api->getErrors());
         }
 
         return redirect(route('definition.show', $definition->uniqueId));
