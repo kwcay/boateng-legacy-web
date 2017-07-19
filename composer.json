@@ -10,8 +10,7 @@
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "mcamara/laravel-localization": "^1.2",
-        "sentry/sentry": "^1.6",
-        "sentry/sentry-laravel": "^0.6.1"
+        "sentry/sentry-laravel": "^0.7.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
