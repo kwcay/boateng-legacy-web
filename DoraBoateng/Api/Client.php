@@ -95,12 +95,13 @@ class Client
      * @param  string $method
      * @param  string $endpoint
      * @param  array  $options
+     * @param  int    $tries
      * @return stdClass
      *
      * @throws \GuzzleHttp\Exception\ClientException
      * @throws \Exception
      */
-    public function request($token, $endpoint, $method, array $options)
+    public function request($token, $endpoint, $method, array $options, $tries = 2)
     {
         $token = $token ?: $this->getAccessToken();
 
@@ -112,6 +113,16 @@ class Client
         try {
             $response = $this->client->request($method, $endpoint, $options);
         } catch (ClientException $e) {
+            // Retrieve a new access token and try again.
+            // TODO: need a cleaner way to do this, other than checking the $method to know
+            // whether we had a client credentials token or a password grant token.
+            if ($e->getResponse()->getStatusCode() === 401
+                && $tries > 0
+                && $method === 'GET'
+            ) {
+                return $this->request($this->getAccessToken(true), $endpoing, $method, $options, --$tries);
+            }
+
             return $this->handleClientException($e);
         } catch (Exception $e) {
             return $this->handleGeneralException($e);
@@ -365,11 +376,12 @@ class Client
     /**
      * Retrieves an access token based on the client credentials grant.
      *
+     * @param  bool $forceNew
      * @return string|null
      */
-    protected function getAccessToken()
+    protected function getAccessToken($forceNew = false)
     {
-        if ($token = $this->fireEvent(static::EVENT_GET_ACCESS_TOKEN)) {
+        if (! $forceNew && $token = $this->fireEvent(static::EVENT_GET_ACCESS_TOKEN)) {
             return $token;
         }
 
