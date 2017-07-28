@@ -108,7 +108,6 @@ class DefinitionController extends Controller
     public function random($lang = null)
     {
         if (! $definition = $this->api->getRandomDefinition($lang)) {
-            // TODO
             return redirect(route('home'))->withErrors($this->api->getErrors());
         }
 
@@ -126,6 +125,8 @@ class DefinitionController extends Controller
         if (! $definition = $this->getdefinition($id)) {
             abort(404);
         }
+
+        return response('TODO: handle v0.5 format', 501);
 
         // Translations
         $practical  = isset($definition->translationData->eng->practical)
@@ -225,6 +226,8 @@ class DefinitionController extends Controller
      */
     protected function save($id = null)
     {
+        return response('TODO: handle v0.5 format', 501);
+
         $this->validate($this->request, [
             'title'     => 'required|max:400',
             'type'      => ['required', Rule::in($this->supportedTypes)],
@@ -279,12 +282,12 @@ class DefinitionController extends Controller
     {
         return $this->cache->remember($this->getCacheKey($id), 60, function() use ($id) {
             return $this->api->getDefinition($id, [
-                'languageList',
-                'mainTitle',
+                'titles',
                 'titleString',
-                'mainLanguage',     // DEPRECATED
-                'translationData',
-                'tagList',
+                'translations',
+                'languages',
+                'tags',
+                'authors',
             ]);
         });
     }

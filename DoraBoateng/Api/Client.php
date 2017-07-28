@@ -13,7 +13,7 @@ use DoraBoateng\Api\Exceptions\InvalidRequest   as InvalidRequestException;
 
 class Client
 {
-    const API_VERSION               = '0.4';
+    const API_VERSION               = '0.5';
     const API_HOST                  = 'https://api.doraboateng.com';
 
     const ERROR_INVALID_ID          = 10;

@@ -1,32 +1,31 @@
 @extends('layouts.half-hero')
 
-@section('title', $definition->mainTitle .' meaning in '. $definition->mainLanguage->name)
+@section('title', $definition->titleString .' meaning in '. array_first($definition->languages)->name)
 
 @section('hero')
 
-    {{-- TODO: use languageList instead, through helper --}}
     <h1 class="definition-title">
-        {{ $definition->mainTitle }}
+        {{ $definition->titleString }}
     </h1>
     <h4>
         @if ($definition->type == 'word')
             means
             <em>
                 <a href="{{ route('definition.show', $definition->uniqueId) }}">
-                    {{ $definition->translationData->eng->practical }}
+                    {{ \App\Utilities\DefinitionHelper::trans($definition) }}
                 </a>
             </em>
 
             in
             <em>
-                <a href="{{ route('language', $definition->mainLanguage->code) }}">
-                    {{ $definition->mainLanguage->name }}
+                <a href="{{ route('language', array_first($definition->languages)->code) }}">
+                    {{ array_first($definition->languages)->name }}
                 </a>
             </em>
         @else
             <em>
                 <a href="{{ route('definition.show', $definition->uniqueId) }}">
-                    {{ $definition->translationData->eng->practical }}
+                    {{ \App\Utilities\DefinitionHelper::trans($definition) }}
                 </a>
             </em>
         @endif
@@ -59,7 +58,7 @@
                 </div>
                 <div class="col-sm-8 meta-value definition-title">
                     <a href="{{ route('definition.show', $definition->uniqueId) }}">
-                        {{ $definition->titleString ?: $definition->mainTitle }}
+                        {{ $definition->titleString }}
                     </a>
                 </div>
             </div>
@@ -70,7 +69,7 @@
                     translation :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    {{ $definition->translationData->eng->practical }}
+                    {{ \App\Utilities\DefinitionHelper::trans($definition) }}
                     <code>
                         {{ $definition->subType }}
                     </code>
@@ -78,25 +77,25 @@
             </div>
 
             {{-- Meaning --}}
-            @if ($definition->translationData->eng->meaning)
+            @if (\App\Utilities\DefinitionHelper::trans($definition, 'meaning'))
             <div class="row">
                 <div class="col-sm-4 meta-param">
                     meaning :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    {{ $definition->translationData->eng->meaning }}
+                    {{ \App\Utilities\DefinitionHelper::trans($definition, 'meaning') }}
                 </div>
             </div>
             @endif
 
             {{-- Literal meaning --}}
-            @if ($definition->translationData->eng->literal)
+            @if (\App\Utilities\DefinitionHelper::trans($definition, 'literal'))
             <div class="row">
                 <div class="col-sm-4 meta-param">
                     literally :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    {{ $definition->translationData->eng->literal }}
+                    {{ \App\Utilities\DefinitionHelper::trans($definition, 'literal') }}
                 </div>
             </div>
             @endif
@@ -107,12 +106,12 @@
                     language :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    <a href="{{ route('language', $definition->mainLanguageCode) }}">
-                        {{ $definition->mainLanguage->name }}
+                    <a href="{{ route('language', array_first($definition->languages)->code) }}">
+                        {{ array_first($definition->languages)->name }}
                     </a>
 
-                    @if ($definition->mainLanguage->altNames)
-                        ({{ trim($definition->mainLanguage->altNames) }})
+                    @if (array_first($definition->languages)->altNames)
+                        ({{ trim(array_first($definition->languages)->altNames) }})
                     @endif
                 </div>
             </div>
@@ -158,10 +157,10 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
             <div class="shaded-well" style="background-image:url(/img/bg/9ad291d387f72a04a57e2b4c8945f945-640x480.jpg);">
-                <a href="{{ route('language', $definition->mainLanguageCode) }}" class="card-btn shade-50">
+                <a href="{{ route('language', array_first($definition->languages)->code) }}" class="card-btn shade-50">
                     Learn more about
 
-                    <h3>{{ $definition->mainLanguage->name }}</h3>
+                    <h3>{{ array_first($definition->languages)->name }}</h3>
                 </a>
             </div>
         </div>
@@ -169,7 +168,7 @@
         <!-- <div class="col-md-6">
             <div class="shaded-well" style="background-image:url(/img/bg/9ad291d387f72a04a57e2b4c8945f945-640x480.jpg);">
                 <a href="/" class="card-btn shade-50">
-                    Know a thing or two in <em>{{ $definition->mainLanguage->name }}</em>?
+                    Know a thing or two in <em>{{ array_first($definition->languages)->name }}</em>?
                     <br>
                     <br>
 
