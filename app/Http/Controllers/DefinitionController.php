@@ -242,7 +242,7 @@ class DefinitionController extends Controller
 
         // Check titles
         $titles = [];
-        foreach ($this->request->get('title') as $str) {
+        foreach (explode(',', $this->request->get('title')) as $str) {
             $titles[] = ['title' => trim($str)];
         }
 
