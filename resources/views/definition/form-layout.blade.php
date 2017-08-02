@@ -4,7 +4,7 @@
 
     <h1>
         @if ($id)
-            <small>edit</small> {{ $title }}
+            <small>edit</small> {{ $titleString }}
         @else
             Add a Gem
         @endif

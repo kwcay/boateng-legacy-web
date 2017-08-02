@@ -44,8 +44,7 @@ class DefinitionController extends Controller
             'id'            => null,
             'type'          => $type,
             'subType'       => $subType,
-            'title'         => '',
-            'titleStr'      => $this->request->get('title', ''),
+            'titleString'   => $this->request->get('title', ''),
             'practical'     => $this->request->get('translation', ''),
             'literal'       => $this->request->get('literally', ''),
             'meaning'       => $this->request->get('meaning'),
@@ -126,30 +125,33 @@ class DefinitionController extends Controller
             abort(404);
         }
 
-        return response('TODO: handle v0.5 format', 501);
+        // Find 1st English translation
+        $translation = null;
 
-        // Translations
-        $practical  = isset($definition->translationData->eng->practical)
-            ? $definition->translationData->eng->practical
-            : '';
-        $literal    = isset($definition->translationData->eng->literal)
-            ? $definition->translationData->eng->literal
-            : '';
-        $meaning    = isset($definition->translationData->eng->meaning)
-            ? $definition->translationData->eng->meaning
-            : '';
+        foreach ($definition->translations as $data) {
+            if ($data->language === 'eng' || strpos($data->language, 'en-') === 0) {
+                $translation = $data;
+                break;
+            }
+        }
+
+        // Languages
+        $languages = [];
+
+        foreach ($definition->languages as $lang) {
+            $languages[$lang->code] = $lang->name;
+        }
 
         return $this->form([
             'id'            => $definition->uniqueId,
             'type'          => $definition->type,
             'subType'       => $definition->subType,
-            'title'         => $definition->mainTitle,
-            'titleStr'      => $definition->titleString,
-            'practical'     => $practical,
-            'literal'       => $literal,
-            'meaning'       => $meaning,
-            'languages'     => (array) $definition->languageList,
-            'tags'          => (array) $definition->tagList,
+            'titleString'   => $definition->titleString,
+            'practical'     => @$translation->practical ?: '',
+            'literal'       => @$translation->literal ?: '',
+            'meaning'       => @$translation->meaning ?: '',
+            'languages'     => $languages,
+            'tags'          => [],
         ]);
     }
 
@@ -226,10 +228,9 @@ class DefinitionController extends Controller
      */
     protected function save($id = null)
     {
-        return response('TODO: handle v0.5 format', 501);
-
+        // TODO: improve validation to avoid unecessary API calls.
         $this->validate($this->request, [
-            'title'     => 'required|max:400',
+            'title'     => 'required',
             'type'      => ['required', Rule::in($this->supportedTypes)],
             'subType'   => 'required',
             'languages' => 'required',
@@ -239,19 +240,25 @@ class DefinitionController extends Controller
             'tags'      => '',
         ]);
 
+        // Check titles
+        $titles = [];
+        foreach ($this->request->get('title') as $str) {
+            $titles[] = ['title' => trim($str)];
+        }
+
         $data = [
             'type'          => $this->request->get('type'),
-            'sub_type'      => $this->request->get('subType'),
-            'titleString'   => $this->request->get('title'),
-            'translationData' => [
-                'eng' => [
+            'subType'       => $this->request->get('subType'),
+            'titles'        => $titles,
+            'translations'  => [
+                [
+                    'language'  => 'eng',
                     'practical' => $this->request->get('practical'),
                     'literal'   => $this->request->get('literal'),
                     'meaning'   => $this->request->get('meaning'),
                 ]
             ],
-            'languageList'  => explode(',', $this->request->get('languages')),
-            'tagList'       => explode(',', $this->request->get('tags')),
+            'languages'     => explode(',', $this->request->get('languages')),
         ];
 
         // TODO: wrap in try-catch block

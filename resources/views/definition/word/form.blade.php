@@ -11,7 +11,7 @@
                 id="title"
                 class="text-input center"
                 placeholder="e.g. kasha"
-                value="{{ $titleStr }}"
+                value="{{ $titleString }}"
                 autocomplete="off"
                 required>
             <label for="title">
