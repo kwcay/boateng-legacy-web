@@ -12,8 +12,8 @@
 */
 
 Route::group([
-    'prefix' => Localization::setLocale(),
-    'middleware' => [ 'localeSessionRedirect', 'localizationRedirect' ]
+    'prefix'     => Localization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect']
 ], function() {
     // General routes
     Route::get('/',         'PageController@home')->name('home');

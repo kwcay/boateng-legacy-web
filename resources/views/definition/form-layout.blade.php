@@ -22,7 +22,7 @@
         class="edit form"
         method="post"
         name="definition"
-        action="{{ $id ? route('definition.update', $id) : route('definition.create') }}">
+        action="{{ $id ? route('definition.update', $id) : route('definition.store') }}">
 
         {!! csrf_field() !!}
         {{ $id ? method_field('PATCH') : '' }}

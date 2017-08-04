@@ -261,22 +261,40 @@ class DefinitionController extends Controller
             'languages'     => explode(',', $this->request->get('languages')),
         ];
 
-        // TODO: wrap in try-catch block
-        $updated = $this->api->patch(
-            $this->request->user()->getAccessToken(),
-            'definitions/'.$id,
-            $data
-        );
+        $failRoute = $id
+            ? route('definition.show', $id)
+            : route('definition.create');
+
+        try {
+            if ($id) {
+                $saved = $this->api->patch(
+                    $this->request->user()->getAccessToken(),
+                    'definitions/'.$id,
+                    $data
+                );
+            } else {
+                $saved = $this->api->post(
+                    $this->request->user()->getAccessToken(),
+                    'definitions',
+                    $data
+                );
+            }
+        } catch (\Exception $e) {
+            return redirect($failRoute)->withErrors('Could not save definition');
+        }
 
         $response = redirect(route('definition.show', $id));
 
-        if (! $updated) {
-            $response->withErrors('Could not save definition');
-        } elseif ($id) {
+        if (! $saved) {
+            return redirect($failRoute)->withErrors('Could not save definition');
+        }
+
+        // Clear local cache
+        if ($id) {
             $this->cache->forget($this->getCacheKey($id));
         }
 
-        return $response;
+        return redirect(route('definition.show', $saved->uniqueId));
     }
 
     /**
