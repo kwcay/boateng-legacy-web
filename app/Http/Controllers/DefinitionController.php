@@ -75,6 +75,17 @@ class DefinitionController extends Controller
             abort(404);
         }
 
+        // List of languages
+        $namedLanguages  = [];
+        $linkedLanguages = [];
+
+        foreach ($definition->languages as $lang) {
+            $fullName = $lang->name.($lang->altNames ? ' ('.trim($lang->altNames).')' : '');
+
+            $namedLanguages[]   = '<a href="'.route('language', $lang->code).'">'.$fullName.'</a>';
+            $linkedLanguages[]  = '<em><a href="'.route('language', $lang->code).'">'.$lang->name.'</a></em>';
+        }
+
         // Template path for edit form
         // TODO: use authorization flow instead.
         $form = null;
@@ -92,8 +103,10 @@ class DefinitionController extends Controller
         }
 
         return view('definition.index')->with([
-            'definition'    => $definition,
-            'formTemplate'  => $form,
+            'definition'        => $definition,
+            'namedLanguages'    => $definition->listToString($namedLanguages, 'and'),
+            'linkedLanguages'   => $definition->listToString($linkedLanguages, 'and'),
+            'formTemplate'      => $form,
         ]);
     }
 
@@ -301,11 +314,11 @@ class DefinitionController extends Controller
      * Retrieves a definition by ID.
      *
      * @param  int  $id
-     * @return stdClass
+     * @return App\Resources\Definition
      */
     protected function getDefinition($id)
     {
-        return $this->cache->remember($this->getCacheKey($id), 60, function() use ($id) {
+        $definition = $this->cache->remember($this->getCacheKey($id), 60, function() use ($id) {
             return $this->api->getDefinition($id, [
                 'titles',
                 'titleString',
@@ -315,8 +328,28 @@ class DefinitionController extends Controller
                 'authors',
             ]);
         });
+
+        if (! $definition) {
+            return $definition;
+        }
+
+        switch ($definition->type) {
+            case 'word':
+            case 'expression':
+                $className  = '\\App\\Resources\\'.ucfirst($definition->type);
+                $definition = new $className($definition);
+                break;
+
+            default:
+                $definition = new \App\Resources\Definition($definition);
+        }
+
+        return $definition;
     }
 
+    /**
+     *
+     */
     protected function boot()
     {
         $this->middleware('auth')->only('create', 'edit', 'store', 'update', 'destroy');

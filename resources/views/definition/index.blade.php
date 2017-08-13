@@ -1,6 +1,6 @@
 @extends('layouts.half-hero')
 
-@section('title', $definition->titleString .' meaning in '. array_first($definition->languages)->name)
+@section('title', $definition->summarize().' - '.trans('branding.title'))
 
 @section('hero')
 
@@ -8,27 +8,7 @@
         {{ $definition->titleString }}
     </h1>
     <h4>
-        @if ($definition->type == 'word')
-            means
-            <em>
-                <a href="{{ route('definition.show', $definition->uniqueId) }}">
-                    {{ \App\Utilities\DefinitionHelper::trans($definition) }}
-                </a>
-            </em>
-
-            in
-            <em>
-                <a href="{{ route('language', array_first($definition->languages)->code) }}">
-                    {{ array_first($definition->languages)->name }}
-                </a>
-            </em>
-        @else
-            <em>
-                <a href="{{ route('definition.show', $definition->uniqueId) }}">
-                    {{ \App\Utilities\DefinitionHelper::trans($definition) }}
-                </a>
-            </em>
-        @endif
+        @includeIf('definition.'.$definition->type.'.sub-title')
     </h4>
 
 @stop
@@ -39,9 +19,6 @@
     @if (Auth::check())
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1 well">
-                @if ($formTemplate)
-                    @include($formTemplate)
-                @endif
                 <a href="{{ route('definition.edit', $definition->uniqueId) }}" class="form-like">edit</a>
                 <input type="button" class="form-like" value="delete">
             </div>
@@ -69,7 +46,7 @@
                     translation :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    {{ \App\Utilities\DefinitionHelper::trans($definition) }}
+                    {{ $definition->getTranslation()->practical }}
                     <code>
                         {{ $definition->subType }}
                     </code>
@@ -77,25 +54,25 @@
             </div>
 
             {{-- Meaning --}}
-            @if (\App\Utilities\DefinitionHelper::trans($definition, 'meaning'))
+            @if ($definition->getTranslation()->meaning)
             <div class="row">
                 <div class="col-sm-4 meta-param">
                     meaning :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    {{ \App\Utilities\DefinitionHelper::trans($definition, 'meaning') }}
+                    {{ $definition->getTranslation()->meaning }}
                 </div>
             </div>
             @endif
 
             {{-- Literal meaning --}}
-            @if (\App\Utilities\DefinitionHelper::trans($definition, 'literal'))
+            @if ($definition->getTranslation()->literal)
             <div class="row">
                 <div class="col-sm-4 meta-param">
                     literally :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    {{ \App\Utilities\DefinitionHelper::trans($definition, 'literal') }}
+                    {{ $definition->getTranslation()->literal }}
                 </div>
             </div>
             @endif
@@ -103,16 +80,10 @@
             {{-- Language --}}
             <div class="row">
                 <div class="col-sm-4 meta-param">
-                    language :
+                    {{ count($definition->languages) <= 1 ? 'language' : 'languages' }} :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    <a href="{{ route('language', array_first($definition->languages)->code) }}">
-                        {{ array_first($definition->languages)->name }}
-                    </a>
-
-                    @if (array_first($definition->languages)->altNames)
-                        ({{ trim(array_first($definition->languages)->altNames) }})
-                    @endif
+                    {!! $namedLanguages !!}
                 </div>
             </div>
 
