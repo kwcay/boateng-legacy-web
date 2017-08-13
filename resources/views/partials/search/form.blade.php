@@ -11,6 +11,7 @@
                     name="clear"
                     type="button"
                     value="&#10005;"
+                    onclick="document.dictionary.q.value = ''; return false;"
                     class="remove-btn-style">
 
                 <input

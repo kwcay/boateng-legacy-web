@@ -3,7 +3,9 @@
 @section('hero')
 
     <h1 class="hero-title">Dora Boateng</h1>
-    <h4 class="hero-subtitle">Lookup proverbs, stories, and other cultural gems.</h4>
+    <h4 class="hero-subtitle">
+        Lookup <a href="/?q=%23proverbs">proverbs</a>, <a href="/?q=%23stories">stories</a>, and other cultural gems.
+    </h4>
 
     @include('partials.search.form')
 

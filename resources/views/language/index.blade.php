@@ -116,10 +116,10 @@
             </div>
             <div class="row text-muted">
                 <div class="col-sm-4 meta-param">
-                    id :
+                    code :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    {{ $lang->uniqueId }}
+                    {{ $lang->code }}
                 </div>
             </div>
         </div>
