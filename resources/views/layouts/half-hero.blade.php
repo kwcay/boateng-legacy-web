@@ -6,8 +6,6 @@
 <body class="half-hero" id="boateng-app">
     @include('partials.css')
     @include('partials.js')
-    @inject('vue', 'App\Utilities\Vue')
-    {{ $vue->load('modal') }}
 
     <div class="hero half-hero" style="background-image:url({{ App\Utilities::bgSrc() }});">
         <div class="jumbotron">
