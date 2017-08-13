@@ -86,27 +86,10 @@ class DefinitionController extends Controller
             $linkedLanguages[]  = '<em><a href="'.route('language', $lang->code).'">'.$lang->name.'</a></em>';
         }
 
-        // Template path for edit form
-        // TODO: use authorization flow instead.
-        $form = null;
-
-        if ($this->request->user()) {
-            switch ($definition->type) {
-                case 'word':
-                    $form = 'forms.definition.word.modal';
-                    break;
-
-                case 'expression':
-                    $form = 'forms.definition.expression.modal';
-                    break;
-            }
-        }
-
         return view('definition.index')->with([
             'definition'        => $definition,
             'namedLanguages'    => $definition->listToString($namedLanguages, 'and'),
             'linkedLanguages'   => $definition->listToString($linkedLanguages, 'and'),
-            'formTemplate'      => $form,
         ]);
     }
 
