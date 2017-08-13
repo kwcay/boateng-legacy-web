@@ -113,6 +113,7 @@
 
     # Build front-end assets.
     {{ Out::green('Building frontend assets...') }}
+    {{ Out::yellow('TODO: weigh pros and cons of building assets in prod') }}
     gulp --production &> /dev/null
 
 @endtask
