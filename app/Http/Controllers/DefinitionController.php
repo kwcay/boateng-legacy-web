@@ -121,16 +121,6 @@ class DefinitionController extends Controller
             abort(404);
         }
 
-        // Find 1st English translation
-        $translation = null;
-
-        foreach ($definition->translations as $data) {
-            if ($data->language === 'eng' || strpos($data->language, 'en-') === 0) {
-                $translation = $data;
-                break;
-            }
-        }
-
         // Languages
         $languages = [];
 
@@ -142,10 +132,10 @@ class DefinitionController extends Controller
             'id'            => $definition->uniqueId,
             'type'          => $definition->type,
             'subType'       => $definition->subType,
-            'titleString'   => $definition->titleString,
-            'practical'     => @$translation->practical ?: '',
-            'literal'       => @$translation->literal ?: '',
-            'meaning'       => @$translation->meaning ?: '',
+            'titleString'   => implode(', ', array_pluck($definition->titles, 'title')),
+            'practical'     => $definition->getTranslation()->practical,
+            'literal'       => $definition->getTranslation()->literal,
+            'meaning'       => $definition->getTranslation()->meaning,
             'languages'     => $languages,
             'tags'          => [],
         ]);

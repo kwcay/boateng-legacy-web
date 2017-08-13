@@ -35,6 +35,14 @@ class Definition extends Contract
     /**
      * @return string
      */
+    public function getTitleString()
+    {
+        return $this->getFirstTitle();
+    }
+
+    /**
+     * @return string
+     */
     public function getLanguageString($concat = 'and')
     {
         return $this->listToString(array_pluck($this->data->languages, 'name'), $concat);
@@ -59,7 +67,7 @@ class Definition extends Contract
         // TODO: find a better fallback
         if (! $this->translation) {
             if (! $this->translation = array_first($this->data->translations)) {
-                $this->translation = new stdClass;
+                $this->translation = new \stdClass;
                 $this->translation->practical   = '';
                 $this->translation->literal     = '';
                 $this->translation->meaning     = '';

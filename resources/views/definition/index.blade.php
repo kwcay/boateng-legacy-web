@@ -5,7 +5,7 @@
 @section('hero')
 
     <h1 class="definition-title">
-        {{ $definition->titleString }}
+        {{ $definition->getFirstTitle() }}
     </h1>
     <h4>
         @includeIf('definition.'.$definition->type.'.sub-title')
@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-sm-8 meta-value definition-title">
                     <a href="{{ route('definition.show', $definition->uniqueId) }}">
-                        {{ $definition->titleString }}
+                        {{ $definition->getTitleString() }}
                     </a>
                 </div>
             </div>
