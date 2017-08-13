@@ -14,7 +14,7 @@ Suggested:
 - [Laravel Homestead](https://laravel.com/docs/homestead)
     - [VirtualBox](https://www.virtualbox.org) + [Vagrant](https://www.vagrantup.com)
 
-Clone the web repository: `git clone git@github.com:doraboateng/web.git`
+Clone the web repository: `git clone https://github.com/doraboateng/web.git`
 
 `cd` into the cloned repository and install the project dependencies:
 
