@@ -107,15 +107,6 @@
     #composer self-update &> /dev/null;
     composer install --prefer-dist --no-scripts --no-dev -q -o &> /dev/null;
 
-    # Update npm dependencies.
-    {{ Out::green('Installing node dependencies...') }}
-    npm install --production &> /dev/null
-
-    # Build front-end assets.
-    {{ Out::green('Building frontend assets...') }}
-    {{ Out::yellow('TODO: weigh pros and cons of building assets in prod') }}
-    gulp --production &> /dev/null
-
 @endtask
 
 @task('update-permissions')
