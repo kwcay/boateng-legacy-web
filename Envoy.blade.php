@@ -1,35 +1,24 @@
 @setup
 
-    # Load .env file.
+    # Initial setup
+
     require __DIR__.'/vendor/autoload.php';
     (new \Dotenv\Dotenv(__DIR__, '.env'))->load();
+    use DoraBoateng\Deployer\Output as Out;
 
-    # Setup variables.
-    $repository     = 'git@deployer-web:doraboateng/web.git';
-    $baseDir        = env('ENVOY_BASE_DIR', '/var/www/apps');
-    $releasesDir    = "{$baseDir}/releases";
-    $liveDir        = env('ENVOY_LIVE_DIR', '/var/www/live');
-    $newReleaseName = date('Ymd-His');
-    $localDir       = dirname(__FILE__);
+    # Configuration
 
+    $gitHost            = env('ENVOY_GIT_HOST', 'deployer');
+    $repository         = "git@{$gitHost}:doraboateng/web.git";
+    $baseDir            = env('ENVOY_BASE_DIR', '/var/www/apps');
+    $releasesDir        = "{$baseDir}/releases";
+    $liveDir            = env('ENVOY_LIVE_DIR', '/var/www/live');
+    $newReleaseName     = date('Ymd-His');
+    $localDir           = dirname(__FILE__);
     $productionServer   = env('ENVOY_PRODUCTION', '127.0.0.1');
     $localServer        = env('ENVOY_LOCAL', '127.0.0.1');
 
-    /**
-     * Logs a message to the console.
-     * Credits: ?
-     *
-     * @param string $message
-     * @return string
-     */
-    function msg($message) {
-        return "echo '\033[32m" . $message . "\033[0m';\n";
-    }
 @endsetup
-
-
-
-{{-- Servers --}}
 
 @servers(['local' => $localServer, 'production' => $productionServer])
 
@@ -41,44 +30,40 @@
 {{-- Credits: https://dyrynda.com.au/blog/an-envoyer-like-deployment-script-using-envoy --}}
 {{-- Credits: https://murze.be/2015/11/zero-downtime-deployments-with-envoy --}}
 
-
-
 @story('deploy', ['on' => 'production'])
 
+    unit-tests
     git-clone
     setup-app
-    composer-install
+    install-dependencies
     update-permissions
-    update-symlinks
     optimize
+    update-symlinks
     purge-releases
 
 @endstory
 
-@story('deploy-migrate', ['on' => 'production'])
 
-    git-clone
-    setup-app
-    composer-install
-    update-permissions
-    update-symlinks
-    down
-    migrate
-    up
-    optimize
-    purge-releases
 
-@endstory
+{{-- Helper tasks --}}
 
-@task('deploy-code', ['on' => 'production'])
+@task('check-prod', ['on' => 'production'])
 
-    cd {{ $liveDir }} && git pull origin master
+    {{ Out::green('Checking production server...') }}
+    ssh -T git@<?= $gitHost ?>
+
+@endtask
+
+@task('unit-tests', ['on' => 'local'])
+
+    {{ Out::green('Running unit tests...') }}
+    {{ Out::yellow('To do: run tests from Envoy and quit on fail') }}
 
 @endtask
 
 @task('git-clone')
 
-    {{ msg('Cloning git repository...') }}
+    {{ Out::green('Cloning git repository...') }}
 
     # Check if the release directory exists. If it doesn't, create one.
     [ -d {{ $releasesDir }} ] || mkdir -p {{ $releasesDir }};
@@ -100,7 +85,7 @@
 
 @task('setup-app')
 
-    {{ msg('Setting up app...') }}
+    {{ Out::green('Copying environment file...') }}
 
     # cd into new folder.
     cd {{ $releasesDir }}/{{ $newReleaseName }};
@@ -110,36 +95,31 @@
 
 @endtask
 
-@task('composer-install')
+@task('install-dependencies')
 
-    {{ msg('Installing composer dependencies...') }}
+    {{ Out::green('Installing composer dependencies...') }}
 
     # cd into new folder.
     cd {{ $releasesDir }}/{{ $newReleaseName }};
 
     # Install composer dependencies.
-    # TODO: `composer self-update` requires root access
+    {{ Out::yellow('NOTE: composer self-update requires root access') }}
     #composer self-update &> /dev/null;
     composer install --prefer-dist --no-scripts --no-dev -q -o &> /dev/null;
 
-@endtask
+    # Update npm dependencies.
+    {{ Out::green('Installing node dependencies...') }}
+    npm install --production &> /dev/null
 
-@task('composer-update')
-
-    {{ msg('Updating composer dependencies...') }}
-
-    # cd into live folder.
-    cd {{ $liveDir }};
-
-    # Update composer dependencies.
-    composer self-update &> /dev/null;
-    composer update --prefer-dist --no-scripts --no-dev -q -o &> /dev/null;
+    # Build front-end assets.
+    {{ Out::green('Building frontend assets...') }}
+    gulp --production &> /dev/null
 
 @endtask
 
 @task('update-permissions')
 
-    {{ msg('Updating directory owner and permissions...') }}
+    {{ Out::green('Updating directory owner and permissions...') }}
 
     # cd into releases folder
     cd {{ $releasesDir }};
@@ -153,7 +133,7 @@
 
 @task('update-symlinks')
 
-    {{ msg('Updating symbolic links...') }}
+    {{ Out::green('Updating symbolic links...') }}
 
     # Make sure the persistent storage directory exists.
     #[ -d {{ $baseDir }}/storage ] || mkdir -p {{ $baseDir }}/storage;
@@ -174,7 +154,7 @@
 
 @task('optimize', ['on' => 'production'])
 
-    {{ msg('Optimizing...') }}
+    {{ Out::green('Optimizing...') }}
 
     cd {{ $liveDir }};
 
@@ -186,51 +166,15 @@
     # php artisan route:cache;
 
     # Clear the OPCache
+    {{ Out::white('Clearing OPCache...') }}
+    {{ Out::blue('TODO: requires root access') }}
     # sudo service php5-fpm restart
-
-@endtask
-
-@task('down', ['on' => 'production'])
-
-    {{ msg('Putting app in maintenance mode...') }}
-
-    cd {{ $liveDir }} && php artisan down;
-
-@endtask
-
-@task('migrate', ['on' => 'production'])
-
-    {{ msg('Running migrations...') }}
-
-    cd {{ $liveDir }} && php artisan migrate --force;
-
-@endtask
-
-@task('rollback', ['on' => 'production'])
-
-    {{ msg('Rolling back last migration...') }}
-
-    cd {{ $liveDir }} && php artisan migrate:rollback --force;
-
-@endtask
-
-@task('refresh', ['on' => 'production'])
-
-    {{ msg('Refreshing database migrations...') }}
-
-    cd {{ $liveDir }} && php artisan migrate:refresh --force;
-
-@endtask
-
-@task('up', ['on' => 'production'])
-
-    cd {{ $liveDir }} && php artisan up;
 
 @endtask
 
 @task('purge-releases', ['on' => 'production'])
 
-    {{ msg('Purging old releases...') }}
+    {{ Out::green('Purging old releases...') }}
 
     # This will list our releases by modification time and delete all but the 5 most recent.
     purging=$(ls -dt {{ $releasesDir }}/* | tail -n +5);
@@ -244,64 +188,18 @@
 
 @endtask
 
-@task('backup', ['on' => 'production'])
-
-    {{ msg('Creating backup...') }}
-
-    cd {{ $liveDir }};
-
-    # Run backup command.
-    php artisan backup
-
-@endtask
-
-
-
-{{-- Local tasks --}}
-
-@task('build', ['on' => 'local'])
-
-    cd {{ $localDir }}
-
-    # Update bower dependencies.
-    {{ msg('Updating bower dependencies...') }}
-    npm install bower -g &> /dev/null
-    bower update &> /dev/null
-
-    # Update npm dependencies.
-    {{ msg('Updating node dependencies...') }}
-    npm install npm -g &> /dev/null
-    npm update &> /dev/null
-
-    # Build front-end assets.
-    {{ msg('Building assets...') }}
-    gulp --production &> /dev/null
-    gulp --production --back &> /dev/null
-
-@endtask
-
 
 
 {{-- Testing Envoy --}}
 
 @story('test')
 
-    test-local
-    test-prod
-
-@endstory
-
-@task('test-local', ['on' => 'local'])
-
-    {{ msg('Testing Envoy on localhost...') }}
+    {{ Out::green('Testing Envoy locally...') }}
 
     ls
 
-@endtask
+    {{ Out::purple('Ok') }}
 
-@task('test-prod', ['on' => 'production'])
+    check-prod
 
-    {{ msg('Testing Envoy on production server...') }}
-    ssh -T git@deployer-web
-
-@endtask
+@endstory
