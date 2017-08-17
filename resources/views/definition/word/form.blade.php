@@ -51,7 +51,7 @@
                 name="languages"
                 class="text-input center"
                 placeholder="e.g. Gonja"
-                value="{{ implode(', ', array_keys($languages)) }}"
+                value="{{ implode(', ', $languages) }}"
                 autocomplete="off"
                 required>
             <label for="languages">

@@ -25,6 +25,16 @@
         </div>
     @endif
 
+    {{-- New definition --}}
+    @if (Request::get('saved'))
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1 well">
+            Add a new <a href="{{ $definition->createRoute() }}">word</a> or
+            <a href="{{ $definition->createRoute('expression') }}">expression</a>
+        </div>
+    </div>
+    @endif
+
     <div class="row">
         <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3 definition-meta">
 

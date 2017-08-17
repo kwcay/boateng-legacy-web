@@ -23,17 +23,23 @@ class DefinitionController extends Controller
     /**
      * Displays the form to add a new definition.
      *
+     * @param  string  $type
+     * @param  string  $lang
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($type = 'word', $lang = '')
     {
-        $type       = 'word';
         $subType    = '';
         $languages  = [];
         $tags       = [];
+        $type       = in_array($type, ['word', 'expression']) ? $type : 'word';
 
-        if ($this->request->has('languages')) {
-            // TODO: validate languages
+        foreach (explode(',', $lang) as $code) {
+            $code = preg_replace('/[^a-z-]/', '', strtolower($code));
+
+            if (in_array(strlen($code), [3, 7])) {
+                $languages[] = $code;
+            }
         }
 
         if ($this->request->has('tags')) {
@@ -280,7 +286,7 @@ class DefinitionController extends Controller
             $this->cache->forget($this->getCacheKey($id));
         }
 
-        return redirect(route('definition.show', $saved->uniqueId));
+        return redirect(route('definition.show', ['id' => $saved->uniqueId, 'saved' => 1]));
     }
 
     /**

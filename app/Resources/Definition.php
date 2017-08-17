@@ -41,6 +41,16 @@ class Definition extends Contract
     }
 
     /**
+     * Retrieves language codes
+     *
+     * @return string[]
+     */
+    public function getLangCodes()
+    {
+        return array_pluck($this->data->languages, 'code');
+    }
+
+    /**
      * @return string
      */
     public function getLanguageString($concat = 'and')
@@ -83,6 +93,17 @@ class Definition extends Contract
     public function summarize()
     {
         return $this->getFirstTitle().' - '.$this->getLanguageString();
+    }
+
+    /**
+     * Creates a route to the new definition form.
+     *
+     * @param  string $type
+     * @return string
+     */
+    public function createRoute($type = 'word')
+    {
+        return route('definition.create', ['type' => $type, 'lang' => implode(',', $this->getLangCodes())]);
     }
 
     /**
