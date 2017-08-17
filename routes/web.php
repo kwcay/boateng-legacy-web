@@ -21,7 +21,7 @@ Route::group([
     Route::get('/about',    'PageController@about')->name('about');
 
     // Definition routes
-    Route::get('/gem/+', 'DefinitionController@create')->name('definition.create');
+    Route::get('/gem/+/{type?}/{lang?}', 'DefinitionController@create')->name('definition.create');
     Route::get('/random/{lang?}', 'DefinitionController@random')->name('definition.random');
     Route::resource('gem', 'DefinitionController', [
         'except' => ['index', 'create'],
