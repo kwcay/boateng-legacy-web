@@ -7,8 +7,8 @@ var gulp          = require('gulp'),
     del           = require('del'),
     combine       = require('gulp-concat'),
     jshint        = require('gulp-jshint'),
-    // eslint        = require('gulp-eslint'),
-    // babel         = require('gulp-babel'),
+    eslint        = require('gulp-eslint'),
+    babel         = require('gulp-babel'),
     minifyJS      = require('gulp-uglify'),
     sass          = require('gulp-sass'),
     minifyCSS     = require('gulp-clean-css'),
@@ -86,6 +86,7 @@ gulp.task('user-css', ['user-sass'], function() {
 
 //
 // JS
+// TODO: https://jonsuh.com/blog/integrating-react-with-gulp/
 //////////////////////
 
 // Paths to javascript files.
@@ -117,10 +118,21 @@ gulp.task('clear-js', function(done) {
 gulp.task('combine-app-src', function() {
   return gulp.src(js.src.app)
 
-    // JS Hint
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'))
-    .pipe(jshint.reporter('fail'))
+    // ES6 Linter
+    .pipe(eslint({
+      baseConfig: {
+        ecmaFeatures: {
+           jsx: true
+         }
+      }
+    }))
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError())
+
+    // ES5 Linter
+    // .pipe(jshint())
+    // .pipe(jshint.reporter('jshint-stylish'))
+    // .pipe(jshint.reporter('fail'))
 
     // Combine & minify
     .pipe(sourcemaps.init())
@@ -152,14 +164,14 @@ gulp.task('combine-user-src', function() {
 });
 
 // Converts ES6 javascript to regular javascript.
-// gulp.task('babel', ['eslint'], function() {
-//     return gulp.src(js.dev)
-//         .pipe(sourcemaps.init())
-//             .pipe(babel({presets: ['es2015']}))
-//             .pipe(combine('app.js'))
-//         .pipe(sourcemaps.write('./'))
-//         .pipe(gulp.dest('resources/assets/build/js'));
-// });
+gulp.task('babel', ['eslint'], function() {
+    return gulp.src(js.src.app)
+        .pipe(sourcemaps.init())
+            .pipe(babel({presets: ['es2015']}))
+            .pipe(combine('app.js'))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('resources/assets/build/js'));
+});
 
 // Builds app javascript files for production.
 gulp.task('app-js', ['combine-app-src'], function() {

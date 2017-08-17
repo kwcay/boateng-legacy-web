@@ -33,6 +33,7 @@
 @story('deploy', ['on' => 'production'])
 
     unit-tests
+    build
     git-clone
     setup-app
     install-dependencies
@@ -47,17 +48,17 @@
 
 {{-- Helper tasks --}}
 
-@task('check-prod', ['on' => 'production'])
-
-    {{ Out::green('Checking production server...') }}
-    ssh -T git@<?= $gitHost ?>
-
-@endtask
-
 @task('unit-tests', ['on' => 'local'])
 
     {{ Out::green('Running unit tests...') }}
     {{ Out::yellow('To do: run tests from Envoy and quit on fail') }}
+
+@endtask
+
+@task('build', ['on' => 'local'])
+
+    {{ Out::green('Building frontend assets') }}
+    gulp --production
 
 @endtask
 
@@ -159,7 +160,7 @@
 
     # Clear the OPCache
     {{ Out::white('Clearing OPCache...') }}
-    {{ Out::blue('TODO: requires root access') }}
+    {{ Out::yellow('TODO: clearing OPCache requires root access') }}
     # sudo service php5-fpm restart
 
 @endtask
