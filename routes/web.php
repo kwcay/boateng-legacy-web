@@ -37,10 +37,12 @@ Route::group([
     // Language routes
     Route::get('/lang/{code}', 'LanguageController@show')->name('language');
 
-    // User routes
+    // Member routes
     Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
     Route::post('/login', 'Auth\LoginController@login')->name('login.post');
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::get('member', 'MemberController@index');
+    Route::get('member/settings', 'MemberController@settings');
 });
 
 // Miscellaneous

@@ -53,14 +53,35 @@
 
     .form {
       position: absolute;
-      top: 35%;
+      top: 27%;
     }
 
     .hero-text {
       display: inline-block;
       position: absolute;
-      bottom: 20%;
+      bottom: 18%;
       left: 0;
+      font-size: 1.3em;
+      line-height: 1.5em;
+
+      h3 small {
+        display: block;
+        margin: 0 0 20px;
+        color: $primary-color-light;
+      }
+    }
+  }
+}
+
+@media (min-width: $screen-lg-min) {
+
+  .hero.full-hero {
+    .form {
+      top: 30%;
+    }
+
+    .hero-text {
+      bottom: 20%;
     }
   }
 }

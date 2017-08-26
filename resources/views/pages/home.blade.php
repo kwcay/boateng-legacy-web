@@ -3,17 +3,17 @@
 @section('hero')
 
     <h1 class="hero-title">Dora Boateng</h1>
-    <h4 class="hero-subtitle">
+    <!-- <h4 class="hero-subtitle">
         Lookup <a href="/?q=%23proverbs">proverbs</a>, <a href="/?q=%23stories">stories</a>, and other cultural gems.
-    </h4>
+    </h4> -->
 
     @include('partials.search.form')
 
     <div class="hero-text">
-        <h4>
-            Let us know what you think.
-        </h4>
+        @lang('branding.pitch')
+
         <h3>
+            <small>Let us know what you think.</small>
             <a href="http://goo.gl/WcthaE">Take our survey</a>
         </h3>
     </div>
@@ -32,7 +32,7 @@
         </div>
     @endif
 
-    <div class="row">
+    <div class="row hidden-md hidden-lg">
         <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
             @lang('branding.pitch')
             <hr>
