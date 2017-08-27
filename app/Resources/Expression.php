@@ -5,14 +5,15 @@ namespace App\Resources;
 class Expression extends Definition
 {
     /**
+     * @todo   Use localization string
      * @return string
      */
     public function summarize()
     {
         return sprintf(
-            '&quot;%s&quot; is an expression in %s',
+            '%s is an expression in %s',
             $this->getFirstTitle(),
-            $this->getLanguageString('or')
+            $this->getLanguageString()
         );
     }
 }

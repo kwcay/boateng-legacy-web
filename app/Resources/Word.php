@@ -24,14 +24,15 @@ class Word extends Definition
     }
 
     /**
+     * @todo   Use localization string
      * @return string
      */
     public function summarize()
     {
         return sprintf(
-            '%s is &quot;%s&quot; in %s',
-            $this->getTranslation()->practical,
+            '%s means %s in %s',
             $this->getFirstTitle(),
+            $this->getTranslation()->practical,
             $this->getLanguageString()
         );
     }
