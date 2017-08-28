@@ -4,6 +4,8 @@ return [
 
     'title'         => 'Dora Boateng',
     'tag_line'      => 'A reference of cultures past and present.',
+    'short-pitch'   => 'Dora Boateng is a free tool to lookup proverbs, stories, and other gems '.
+                        'that exist in lesser known cultures.',
     'pitch'         => 'Dora Boateng is a free tool to lookup proverbs, stories, and other gems '.
                         'that exist in lesser known cultures. The goal is to help <em>preserve</em> '.
                         'and <em>promote</em> our identities, and re-connect with our heritage.',

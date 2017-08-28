@@ -54,6 +54,8 @@ class PageController extends Controller
      */
     public function about($topic = '')
     {
+        return $this->notImplemented();
+
         $data = [];
 
         switch ($topic) {
@@ -180,7 +182,7 @@ class PageController extends Controller
         $txt .=
             "\tLanguage: English\n".
             "\tDoctype: HTML5\n".
-            "\tIDE: Atom, cmder, Vagrant, Homestead\n";
+            "\tIDE: Atom, Sublime, cmder, Vagrant, Homestead\n";
 
         // Set some cache-busting headers, set the response content, and send everything to client.
         return $response
@@ -189,6 +191,71 @@ class PageController extends Controller
             ->header('Cache-Control', 'public, must-revalidate, post-check=0, pre-check=0')
             ->header('Content-Type', 'text/plain')
             ->setContent($txt);
+    }
+
+    /**
+     * OpenSearch description.
+     *
+     * @see    http://www.opensearch.org/Specifications/OpenSearch/1.1#OpenSearch_description_document
+     * @param  Illuminate\Http\Response $response
+     * @return Illuminate\Http\Response
+     */
+    public function openSearchDescription(Response $response)
+    {
+        // Root element.
+        $root = new \SimpleXMLElement('<OpenSearchDescription></OpenSearchDescription>');
+        $root->addAttribute('xmlns', 'http://a9.com/-/spec/opensearch/1.1/');
+
+        $root->addChild('ShortName', trans('branding.title'));
+        $root->addChild('LongName', trans('branding.title').': '.trans('branding.tag_line'));
+        $root->addChild('Description', trans('branding.short-pitch'));
+        $root->addChild('Tags', 'Dora Boateng cultural culture language reference dictionary encyclopedia');
+        $root->addChild('Developer', 'Francis Amankrah (frank@doraboateng.com)');
+        $root->addChild('Contact', 'frank@doraboateng.com');
+        $root->addChild('Attribution', 'Search data Copyright '.date('Y').', '.trans('branding.title').', All Rights Reserved');
+        $root->addChild('SyndicationRight', 'open');
+        $root->addChild('AdultContent', 'false');
+        $root->addChild('OutputEncoding', 'UTF-8');
+        $root->addChild('InputEncoding', 'UTF-8');
+
+        // Sample search
+        $sample = $root->addChild('Query');
+        $sample->addAttribute('role', 'example');
+        $sample->addAttribute('searchTerms', 'hello');
+
+        $searchUri = route('search').'?q={searchTerms}&amp;limit={count}&amp;offset={startIndex}&amp;format=%s';
+
+        // URI for Atom format
+        $atom = $root->addChild('Url');
+        $atom->addAttribute('type', 'application/atom+xml');
+        $atom->addAttribute('rel', 'results');
+        $atom->addAttribute('template', sprintf($searchUri, 'atom'));
+
+        // URI for RSS format
+        $rss = $root->addChild('Url');
+        $rss->addAttribute('type', 'application/rss+xml');
+        $rss->addAttribute('rel', 'results');
+        $rss->addAttribute('template', sprintf($searchUri, 'rss'));
+
+        // URI for JSON format
+        $json = $root->addChild('Url');
+        $json->addAttribute('type', 'application/json');
+        $json->addAttribute('rel', 'results');
+        $json->addAttribute('template', sprintf($searchUri, 'json'));
+
+        // URI for HTML format
+        $html = $root->addChild('Url');
+        $html->addAttribute('type', 'text/html');
+        $html->addAttribute('rel', 'results');
+        $html->addAttribute('template', route('search').'?q={searchTerms}');
+
+        // Set some cache-busting headers, set the response content, and send everything to client.
+        return $response
+            ->header('Pragma', 'public')
+            ->header('Expires', '-1')
+            ->header('Cache-Control', 'public, must-revalidate, post-check=0, pre-check=0')
+            ->header('Content-Type', 'application/opensearchdescription+xml')
+            ->setContent($root->asXML());
     }
 
     /**

@@ -18,6 +18,7 @@ Route::group([
     // General routes
     Route::get('/',         'PageController@home')->name('home');
     Route::get('/search',   'PageController@search')->name('search');
+    Route::get('/search.xml',   'PageController@openSearchDescription');
     Route::get('/about',    'PageController@about')->name('about');
 
     // Definition routes
