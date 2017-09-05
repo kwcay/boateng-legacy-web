@@ -106,8 +106,7 @@
     cd {{ $releasesDir }}/{{ $newReleaseName }};
 
     # Copy .env file
-    #cp -f ./.env.production ./.env;
-    touch .env;
+    cp -f ./.env.production ./.env;
 
     # Add some environment variables
     echo "" >> .env;
