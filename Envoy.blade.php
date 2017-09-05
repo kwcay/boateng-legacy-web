@@ -98,24 +98,6 @@
 
 @endtask
 
-@task('test-env')
-
-    {{ Out::green('Creating environment file...') }}
-
-    # cd into new folder.
-    cd {{ $releasesDir }}/{{ $newReleaseName }};
-
-    # Copy .env file
-    cp -f ./.env.production ./.env.test;
-
-    # Add some environment variables
-    echo "APP_KEY={{ $envAppKey }}" >> .env.test;
-    echo "DORA_BOATENG_ID={{ $envBoatengID }}" >> .env.test;
-    echo "DORA_BOATENG_SECRET={{ $envBoatengSecret }}" >> .env.test;
-    echo "SENTRY_DSN={{ $envSentryDSN }}" >> .env.test;
-
-@endtask
-
 @task('setup-app')
 
     {{ Out::green('Creating environment file...') }}
@@ -128,6 +110,8 @@
     touch .env;
 
     # Add some environment variables
+    echo "" >> .env;
+    echo "# Other variables" >> .env;
     echo "APP_KEY={{ $envAppKey }}" >> .env;
     echo "DORA_BOATENG_ID={{ $envBoatengID }}" >> .env;
     echo "DORA_BOATENG_SECRET={{ $envBoatengSecret }}" >> .env;
