@@ -18,6 +18,13 @@
     $productionServer   = env('ENVOY_PRODUCTION', '127.0.0.1');
     $localServer        = env('ENVOY_LOCAL', '127.0.0.1');
 
+    # Environment variables
+
+    $envAppKey          = env('PROD_APP_KEY');
+    $envBoatengID       = env('PROD_DORA_BOATENG_ID');
+    $envBoatengSecret   = env('PROD_DORA_BOATENG_SECRET');
+    $envSentryDSN       = env('PROD_SENTRY_DSN');
+
 @endsetup
 
 @servers(['local' => $localServer, 'production' => $productionServer])
@@ -41,6 +48,13 @@
     optimize
     update-symlinks
     purge-releases
+
+@endstory
+
+@story('deploy-test-env', ['on' => 'production'])
+
+    git-clone
+    test-env
 
 @endstory
 
@@ -84,15 +98,40 @@
 
 @endtask
 
-@task('setup-app')
+@task('test-env')
 
-    {{ Out::green('Copying environment file...') }}
+    {{ Out::green('Creating environment file...') }}
 
     # cd into new folder.
     cd {{ $releasesDir }}/{{ $newReleaseName }};
 
     # Copy .env file
-    cp -f ./.env.production ./.env;
+    cp -f ./.env.production ./.env.test;
+
+    # Add some environment variables
+    echo "APP_KEY={{ $envAppKey }}" >> .env.test;
+    echo "DORA_BOATENG_ID={{ $envBoatengID }}" >> .env.test;
+    echo "DORA_BOATENG_SECRET={{ $envBoatengSecret }}" >> .env.test;
+    echo "SENTRY_DSN={{ $envSentryDSN }}" >> .env.test;
+
+@endtask
+
+@task('setup-app')
+
+    {{ Out::green('Creating environment file...') }}
+
+    # cd into new folder.
+    cd {{ $releasesDir }}/{{ $newReleaseName }};
+
+    # Copy .env file
+    #cp -f ./.env.production ./.env;
+    touch .env;
+
+    # Add some environment variables
+    echo "APP_KEY={{ $envAppKey }}" >> .env;
+    echo "DORA_BOATENG_ID={{ $envBoatengID }}" >> .env;
+    echo "DORA_BOATENG_SECRET={{ $envBoatengSecret }}" >> .env;
+    echo "SENTRY_DSN={{ $envSentryDSN }}" >> .env;
 
 @endtask
 
