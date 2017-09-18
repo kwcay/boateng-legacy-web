@@ -2,6 +2,24 @@
 
 @section('form')
 
+    {{-- Languages --}}
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <input
+                type="text"
+                id="languages"
+                name="languages"
+                class="text-input center"
+                placeholder="e.g. Gonja"
+                value="{{ implode(', ', $languages) }}"
+                autocomplete="off"
+                required>
+            <label for="languages">
+                language or languages
+            </label>
+        </div>
+    </div>
+
     {{-- Word --}}
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
@@ -13,6 +31,7 @@
                 placeholder="e.g. kasha"
                 value="{{ $titleString }}"
                 autocomplete="off"
+                onblur="return FormHelper.checkTitle(this, document.forms.definition.languages.value)"
                 required>
             <label for="title">
                 title
@@ -42,24 +61,6 @@
         </div>
     </div>
 
-    {{-- Languages --}}
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
-            <input
-                type="text"
-                id="languages"
-                name="languages"
-                class="text-input center"
-                placeholder="e.g. Gonja"
-                value="{{ implode(', ', $languages) }}"
-                autocomplete="off"
-                required>
-            <label for="languages">
-                languages
-            </label>
-        </div>
-    </div>
-
     {{-- Practical translation --}}
     <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
@@ -73,7 +74,7 @@
                 autocomplete="off"
                 required>
             <label for="practical">
-                practical <em>English</em> translation
+                <em>practical</em> English translation
             </label>
         </div>
     </div>
@@ -90,7 +91,7 @@
                 value="{{ $meaning }}"
                 autocomplete="off">
             <label for="meaning">
-                <em>English</em> meaning
+                English <em>meaning</em>
             </label>
         </div>
     </div>
@@ -107,7 +108,7 @@
                 value="{{ $literal }}"
                 autocomplete="off">
             <label for="literal">
-                what the definition literally translates to in <em>English</em>
+                what the definition <em>literally</em> translates to in English
             </label>
         </div>
     </div>

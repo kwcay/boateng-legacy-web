@@ -72,6 +72,7 @@
 @task('build', ['on' => 'local'])
 
     {{ Out::green('Building frontend assets') }}
+    {{ Out::yellow('To do: build assets') }}
     # gulp --production
 
 @endtask
