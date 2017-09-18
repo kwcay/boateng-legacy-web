@@ -6,9 +6,11 @@
         Dora Boateng
     </h1>
 
-    <h4 class="hero-subtitle">
-        Lookup proverbs, stories, and other cultural gems.
-    </h4>
+    @unless($query)
+        <h4 class="hero-subtitle">
+            Lookup proverbs, stories, and other cultural gems.
+        </h4>
+    @endunless
 
     @include('partials.search.form')
 
