@@ -256,8 +256,9 @@ class Client
             throw new InvalidRequestException('Invalid language code', static::ERROR_INVALID_CODE);
         }
 
-        return $this->get('definitions/search/'.urlencode($query), [
-            'lang' => $langCode,
+        return $this->get('definitions/search', [
+            'lang'  => $langCode,
+            'q'     => urlencode($query),
         ]);
     }
 
