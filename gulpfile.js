@@ -102,7 +102,11 @@ var js = {
     admin: [],
   },
   prodDependencies: {
-    app: ['node_modules/vue/dist/vue.min.js'],
+    app: [
+      'node_modules/promise-polyfill/promise.min.js',
+      'node_modules/whatwg-fetch/fetch.js',
+      'node_modules/vue/dist/vue.min.js',
+    ],
     user: ['node_modules/vue-resource/dist/vue-resource.min.js'],
     admin: [],
   }

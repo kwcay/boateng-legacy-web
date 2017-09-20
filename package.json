@@ -28,5 +28,7 @@
     "react-dom": "^15.6.1",
     "yargs": "^8.0.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "whatwg-fetch": "^2.0.3"
+  }
 }
