@@ -44,6 +44,9 @@ Route::group([
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('member', 'MemberController@index');
     Route::get('member/settings', 'MemberController@settings');
+
+    // TEST: API helper routes
+    Route::get('/api/check-title/{lang}/{title}', 'ApiController@checkTitle');
 });
 
 // Miscellaneous

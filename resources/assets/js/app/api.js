@@ -4,20 +4,28 @@ window.ApiHelper = (function (csrf, logger) {
   var token = csrf && csrf.content && csrf.content.length ? csrf.content : null;
 
   /**
-   * @param  {string} endpoint
-   * @param  {string} method
+   * @param  {string}  endpoint
+   * @return {Promise}
    */
-  var makeRequest = function(endpoint, method) {
-    if (! token)
-      return logger.error("Invalid token.");
+  var getResource = function(endpoint) {
+    return new Promise(function(resolve, reject) {
+      var request = new XMLHttpRequest();
 
-    method = (method || "GET").toUpperCase();
+      request.open("get", endpoint);
+      request.setRequestHeader("Accept", "application/json");
+      request.onload = function() {
+        return resolve(JSON.parse(request.responseText));
+      };
+      request.onerror = function() {
+        return reject(xhr.statusText);
+      };
 
-    logger.log("TODO: " + method + " request to " + endpoint);
+      request.send();
+    });
   };
 
   return {
-    req: makeRequest,
+    get: getResource,
     log: logger.log,
     warn: logger.warn,
     error: logger.error

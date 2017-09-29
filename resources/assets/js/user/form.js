@@ -1,7 +1,9 @@
 /**
  *
  */
-window.FormHelper = (function() {
+window.FormHelper = (function(api) {
+  "use strict";
+
   /**
    * @param  {object}  element
    * @return {boolean}
@@ -10,12 +12,17 @@ window.FormHelper = (function() {
     if (! element || ! element.value || ! element.value.trim || ! element.value.trim().length)
       return false;
 
-    var title = element.value.trim();
-
-    console.log(title + " / " + languages);
+    ApiHelper
+      .get("/en/api/check-title/" + languages + "/" + encodeURIComponent(element.value.trim()))
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(reason) {
+        console.log(reason);
+      });
   };
 
   return {
     checkTitle: checkTitle
   };
-})();
+})(window.ApiHelper);
