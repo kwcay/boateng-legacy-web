@@ -37,7 +37,7 @@ class Client
     ];
 
     /**
-     * @var GuzzleHttp\Client
+     * @var \GuzzleHttp\Client
      */
     protected $client;
 
@@ -68,8 +68,6 @@ class Client
 
     /**
      * @param  array $config Configures the Guzzle client.
-     * @return void
-     *
      * @throws \DoraBoateng\Api\Exceptions\Configuration
      */
     public function __construct(array $config = [])
@@ -97,7 +95,6 @@ class Client
      * @param  array  $options
      * @param  int    $tries
      * @return stdClass
-     *
      * @throws \GuzzleHttp\Exception\ClientException
      * @throws \Exception
      */
@@ -106,7 +103,7 @@ class Client
         $token = $token ?: $this->getAccessToken();
 
         // Set required headers.
-        $options['headers']['Accept'] = 'application/json';
+        $options['headers']['Accept'] = 'application/json,text/html';
         $options['headers']['Authorization'] = "Bearer {$token}";
         $options['on_stats'] = array($this, 'handleTransferStats');
 
@@ -120,7 +117,7 @@ class Client
                 && $tries > 0
                 && $method === 'GET'
             ) {
-                return $this->request($this->getAccessToken(true), $endpoing, $method, $options, --$tries);
+                return $this->request($this->getAccessToken(true), $endpoint, $method, $options, --$tries);
             }
 
             return $this->handleClientException($e);

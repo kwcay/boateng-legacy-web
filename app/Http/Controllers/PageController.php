@@ -17,7 +17,7 @@ class PageController extends Controller
     /**
      * Main landing page.
      *
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function home()
     {
@@ -33,7 +33,7 @@ class PageController extends Controller
     /**
      * Search page.
      *
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function search()
     {
@@ -50,7 +50,7 @@ class PageController extends Controller
      * About the app.
      *
      * @param string $topic
-     * @return View
+     * @return \Illuminate\Http\Response
      */
     public function about($topic = '')
     {
@@ -160,7 +160,8 @@ class PageController extends Controller
     /**
      * humans.txt.
      *
-     * @param Illuminate\Http\Response $response
+     * @param  \Illuminate\Http\Response $response
+     * @return \Illuminate\Http\Response
      */
     public function humans(Response $response)
     {
@@ -197,8 +198,8 @@ class PageController extends Controller
      * OpenSearch description.
      *
      * @see    http://www.opensearch.org/Specifications/OpenSearch/1.1#OpenSearch_description_document
-     * @param  Illuminate\Http\Response $response
-     * @return Illuminate\Http\Response
+     * @param  \Illuminate\Http\Response $response
+     * @return \Illuminate\Http\Response
      */
     public function openSearchDescription(Response $response)
     {
@@ -269,8 +270,8 @@ class PageController extends Controller
     /**
      * Sitemap pages.
      *
-     * @param Illuminate\Http\Response $response
-     * @return View
+     * @param  \Illuminate\Http\Response $response
+     * @return \Illuminate\Http\Response
      */
     public function sitemap(Response $response)
     {

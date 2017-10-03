@@ -19,17 +19,17 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * @var Illuminate\Http\Request
+     * @var \Illuminate\Http\Request
      */
     protected $request;
 
     /**
-     * @var Illuminate\Contracts\Cache\Repository
+     * @var \Illuminate\Contracts\Cache\Repository
      */
     protected $cache;
 
     /**
-     * @var DoraBoateng\Api\Client
+     * @var \DoraBoateng\Api\Client
      */
     protected $api;
 
@@ -61,10 +61,9 @@ class Controller extends BaseController
     protected $defaultOrderDirection = 'desc';
 
     /**
-     * @param  Illuminate\Http\Request                  $request
-     * @param  Illuminate\Contracts\Cache\Repository    $cache
-     * @param  DoraBoateng\Api\Client                   $api
-     * @return void
+     * @param  \Illuminate\Http\Request                  $request
+     * @param  \Illuminate\Contracts\Cache\Repository    $cache
+     * @param  \DoraBoateng\Api\Client                   $api
      */
     public function __construct(Request $request, Cache $cache, Client $api)
     {
@@ -82,7 +81,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -90,7 +89,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -98,7 +97,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function store()
     {
@@ -107,7 +106,7 @@ class Controller extends BaseController
 
     /**
      * @param  string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
@@ -116,7 +115,7 @@ class Controller extends BaseController
 
     /**
      * @param  string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
@@ -125,7 +124,7 @@ class Controller extends BaseController
 
     /**
      * @param  string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function update($id)
     {
@@ -134,7 +133,7 @@ class Controller extends BaseController
 
     /**
      * @param  string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
@@ -173,12 +172,21 @@ class Controller extends BaseController
         return $search;
     }
 
+    /**
+     * @return stdClass|null
+     */
     protected function getWeeklyLanguage()
     {
+        try {
+            $language = $this->api->getLanguageOfTheWeek();
+        } catch (\Exception $e) {
+            return null;
+        }
+
         // Cache language of the week for 3 hours
-        return $this->cache->remember('language.weekly', 180, function() {
-            return $this->api->getLanguageOfTheWeek();
-        });
+        $this->cache->add('language.weekly', $language, 180);
+
+        return $language;
     }
 
     /**
