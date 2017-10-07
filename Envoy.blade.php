@@ -51,13 +51,6 @@
 
 @endstory
 
-@story('deploy-test-env', ['on' => 'production'])
-
-    git-clone
-    test-env
-
-@endstory
-
 
 
 {{-- Helper tasks --}}
