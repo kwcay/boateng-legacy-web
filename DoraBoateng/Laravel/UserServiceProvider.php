@@ -2,9 +2,7 @@
 
 namespace DoraBoateng\Laravel;
 
-use DoraBoateng\Api\Client;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider;
 
 class UserServiceProvider extends AuthServiceProvider

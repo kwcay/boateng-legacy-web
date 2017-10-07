@@ -8,8 +8,6 @@ class Logout
 {
     /**
      * Create the event listener.
-     *
-     * @return void
      */
     public function __construct()
     {
@@ -19,12 +17,11 @@ class Logout
     /**
      * Handle the event.
      *
-     * @param  OrderShipped  $event
-     * @return void
+     * @param  Authenticatable $user
      */
     public function handle(Authenticatable $user)
     {
-        if ($user instanceof DoraBoateng\Laravel\User) {
+        if ($user instanceof \DoraBoateng\Laravel\User) {
             $user->logout();
         }
     }

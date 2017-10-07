@@ -1,7 +1,5 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- */
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;

@@ -62,18 +62,17 @@ class UserProvider implements Contract
      */
     public function retrieveByCredentials(array $credentials)
     {
-        $token = $this->api()->getPasswordAccessToken(
-            $credentials['email'],
-            $credentials['password'],
-            'resource-read resource-write user-read user-write'
-        );
-
-        if (! $token) {
-            // TODO: log $this->api()->getLastError()
+        try {
+            $token = $this->api()->getPasswordAccessToken(
+                $credentials['email'],
+                $credentials['password'],
+                'resource-read resource-write user-read user-write'
+            );
+        } catch (\Exception $e) {
             return null;
         }
 
-        return User::make((array) $token)->persist();
+        return $token ? User::make((array) $token)->persist() : null;
     }
 
     /**
@@ -90,7 +89,7 @@ class UserProvider implements Contract
     }
 
     /**
-     * @return Doraboateng\Api\Client
+     * @return \Doraboateng\Api\Client
      */
     private function api()
     {
