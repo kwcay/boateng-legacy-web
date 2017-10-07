@@ -216,6 +216,4 @@
 
     {{ Out::purple('Ok') }}
 
-    check-prod
-
 @endstory
