@@ -25,6 +25,16 @@
     $envBoatengSecret   = env('PROD_DORA_BOATENG_SECRET');
     $envSentryDSN       = env('PROD_SENTRY_DSN');
 
+    if (! $envAppKey) {
+        exit(Out::red('Missing production app key'));
+    } elseif (! $envBoatengID) {
+        exit(Out::red('Missing API client ID'));
+    } elseif (! $envBoatengSecret) {
+        exit(Out::red('Missing API client secret'));
+    } elseif (! $envSentryDSN) {
+        exit(Out::red('Missing Sentry DSN'));
+    }
+
 @endsetup
 
 @servers(['local' => $localServer, 'production' => $productionServer])
