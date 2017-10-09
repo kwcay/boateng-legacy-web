@@ -55,7 +55,7 @@ class TrackRequests
             'params'        => $params,
             'fingerprint'   => $fingerprint,
             'ip'            => $request->ip(),
-            'user-agent'    => $request->headers->get('user-agent'),
+            'user_agent'    => $request->headers->get('user-agent'),
             'response'      => [
                 'time' => microtime(true) - $this->startTime,
                 'code' => $response->getStatusCode(),
@@ -68,6 +68,11 @@ class TrackRequests
                         'name'   => 'keen:ip_to_geo',
                         'output' => 'geo_data',
                         'input'  => ['ip' => 'ip'],
+                    ],
+                    [
+                        'name'   => 'keen:ua_parser',
+                        'output' => 'user_data',
+                        'input'  => ['ua_string' => 'user_agent'],
                     ]
                 ]
             ]
