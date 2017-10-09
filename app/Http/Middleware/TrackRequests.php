@@ -65,11 +65,9 @@ class TrackRequests
             'keen' => [
                 'addons' => [
                     [
-                        'name'  => 'keen:ip_to_geo',
+                        'name'   => 'keen:ip_to_geo',
                         'output' => 'geo_data',
-                        'input' => [
-                            'ip' => $request->ip(),
-                        ],
+                        'input'  => ['ip' => 'ip'],
                     ]
                 ]
             ]
