@@ -60,6 +60,18 @@ class TrackRequests
                 'time' => microtime(true) - $this->startTime,
                 'code' => $response->getStatusCode(),
             ],
+
+            // Keen add-ons
+            'keen' => [
+                'addons' => [
+                    [
+                        'name'  => 'keen:ip_to_geo',
+                        'input' => [
+                            'ip' => $request->ip(),
+                        ]
+                    ]
+                ]
+            ]
         ]);
 
         return $response;
