@@ -35,8 +35,7 @@ class TrackerServiceProvider extends ServiceProvider
             return new Tracker(
                 config('services.keen.id'),
                 config('services.keen.master'),
-                config('services.keen.write'),
-                config('services.keen.read')
+                config('services.keen.write')
             );
         });
     }

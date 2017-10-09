@@ -23,6 +23,9 @@
     $envAppKey          = env('PROD_APP_KEY');
     $envBoatengID       = env('PROD_DORA_BOATENG_ID');
     $envBoatengSecret   = env('PROD_DORA_BOATENG_SECRET');
+    $envKeenId          = env('PROD_KEEN_PROJECT_ID');
+    $envKeenMasterKey   = env('PROD_KEEN_MASTER_KEY');
+    $envKeenWriteKey    = env('PROD_KEEN_WRITE_KEY');
     $envSentryDSN       = env('PROD_SENTRY_DSN');
 
     if (! $envAppKey) {
@@ -31,6 +34,12 @@
         exit(Out::red('Missing API client ID'));
     } elseif (! $envBoatengSecret) {
         exit(Out::red('Missing API client secret'));
+    } elseif (! $envKeenId) {
+        exit(Out::red('Missing Keen project ID'));
+    } elseif (! $envKeenMasterKey) {
+        exit(Out::red('Missing Keen master key'));
+    } elseif (! $envKeenWriteKey) {
+        exit(Out::red('Missing Keen write key'));
     } elseif (! $envSentryDSN) {
         exit(Out::red('Missing Sentry DSN'));
     }
@@ -118,6 +127,9 @@
     echo "APP_KEY={{ $envAppKey }}" >> .env;
     echo "DORA_BOATENG_ID={{ $envBoatengID }}" >> .env;
     echo "DORA_BOATENG_SECRET={{ $envBoatengSecret }}" >> .env;
+    echo "KEEN_PROJECT_ID={{ $envKeenId }}" >> .env;
+    echo "KEEN_MASTER_KEY={{ $envKeenMasterKey }}" >> .env;
+    echo "KEEN_WRITE_KEY={{ $envKeenWriteKey }}" >> .env;
     echo "SENTRY_DSN={{ $envSentryDSN }}" >> .env;
 
 @endtask

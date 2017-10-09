@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Illuminate\Support\Facades\Storage;
 use KeenIO\Client\KeenIOClient;
 
 class Tracker
@@ -21,16 +20,16 @@ class Tracker
      * @param string $projectId
      * @param string $masterKey
      * @param string $writeKey
-     * @param string $readKey
      */
-    public function __construct($projectId, $masterKey, $writeKey, $readKey)
+    public function __construct($projectId = null, $masterKey = null, $writeKey = null)
     {
-        $this->keen = KeenIOClient::factory([
-            'projectId' => $projectId,
-            'masterKey' => $masterKey,
-            'writeKey'  => $writeKey,
-            'readKey'   => $readKey,
-        ]);
+        if ($projectId && ($masterKey || $writeKey)) {
+            $this->keen = KeenIOClient::factory([
+                'projectId' => $projectId,
+                'masterKey' => $masterKey,
+                'writeKey'  => $writeKey,
+            ]);
+        }
     }
 
     /**
@@ -54,7 +53,7 @@ class Tracker
      */
     public function persist()
     {
-        if (! $this->trackedEvents) {
+        if (! $this->trackedEvents || ! $this->keen) {
             return;
         }
 
@@ -65,8 +64,5 @@ class Tracker
         } catch (\Throwable $t) {
             $result = $t->getMessage();
         }
-
-        // For debugging
-//        Storage::put('tracker.json', json_encode($result));
     }
 }
