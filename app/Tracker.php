@@ -3,6 +3,7 @@
 namespace App;
 
 use KeenIO\Client\KeenIOClient;
+use Illuminate\Support\Facades\Storage;
 
 class Tracker
 {
@@ -64,5 +65,8 @@ class Tracker
         } catch (\Throwable $t) {
             $result = $t->getMessage();
         }
+
+        // For debugging
+        Storage::put('tracker.json', json_encode($result));
     }
 }
