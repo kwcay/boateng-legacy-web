@@ -192,8 +192,8 @@
     # Optimize installation.
     php artisan cache:clear;
     php artisan clear-compiled;
-    php artisan optimize;
     php artisan config:cache;
+    {{ Out::yellow('TODO: cache routes') }}
     # php artisan route:cache;
 
     # Clear the OPCache

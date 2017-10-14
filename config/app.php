@@ -167,10 +167,11 @@ return [
          */
         DoraBoateng\Laravel\UserServiceProvider::class,
         DoraBoateng\Laravel\ServiceProvider::class,
-        // Laravel\Dusk\DuskServiceProvider::class,
-        Laravel\Tinker\TinkerServiceProvider::class,
-        Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
-        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
+//        Frnkly\LaravelKeen\ServiceProvider::class,
+//        Laravel\Dusk\DuskServiceProvider::class,
+//        Laravel\Tinker\TinkerServiceProvider::class,
+//        Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
+//        Sentry\SentryLaravel\SentryLaravelServiceProvider::class,
 
         /*
          * Application Service Providers...

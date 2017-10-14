@@ -42,7 +42,7 @@ class DefinitionController extends Controller
             }
         }
 
-        if ($this->request->has('tags')) {
+        if ($this->request->filled('tags')) {
             // TODO: add tags
         }
 

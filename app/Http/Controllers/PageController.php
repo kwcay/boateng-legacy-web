@@ -22,7 +22,7 @@ class PageController extends Controller
     public function home()
     {
         // Redirect searches to search page.
-        if ($this->request->has('q')) {
+        if ($this->request->filled('q')) {
             return redirect(route('search', ['q' => $this->request->get('q')]));
         }
 
