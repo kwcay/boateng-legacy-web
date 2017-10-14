@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c1ef17ac13a87dc73dcce93014df7869",
-    "content-hash": "7b0a2c1ddfa64433de54e5d9758c43d4",
+    "hash": "5f438fb87d833a746110c38be6081cb7",
+    "content-hash": "7ec1fa76f7bd65836d1cb2e524f73fde",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -200,16 +200,16 @@
         },
         {
             "name": "frnkly/laravel-keen",
-            "version": "v0.2",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/frnkly/laravel-keen.git",
-                "reference": "924c1611ec067eeb1e55a01fdc20e99c0ad081a5"
+                "reference": "227aa90d111fa568a626ab14771e3a561bfaeb26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/frnkly/laravel-keen/zipball/924c1611ec067eeb1e55a01fdc20e99c0ad081a5",
-                "reference": "924c1611ec067eeb1e55a01fdc20e99c0ad081a5",
+                "url": "https://api.github.com/repos/frnkly/laravel-keen/zipball/227aa90d111fa568a626ab14771e3a561bfaeb26",
+                "reference": "227aa90d111fa568a626ab14771e3a561bfaeb26",
                 "shasum": ""
             },
             "require": {
@@ -252,7 +252,7 @@
                 "keen io",
                 "laravel"
             ],
-            "time": "2017-10-12 00:58:23"
+            "time": "2017-10-14 00:47:25"
         },
         {
             "name": "guzzlehttp/command",
@@ -637,16 +637,16 @@
         },
         {
             "name": "keen-io/keen-io",
-            "version": "2.5.11",
+            "version": "2.5.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keenlabs/KeenClient-PHP.git",
-                "reference": "8d4e3b93720a903eac8711d0f357574388bbc75e"
+                "reference": "9edb90f81fec41d3690aabd4a310151dcdd2df90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keenlabs/KeenClient-PHP/zipball/8d4e3b93720a903eac8711d0f357574388bbc75e",
-                "reference": "8d4e3b93720a903eac8711d0f357574388bbc75e",
+                "url": "https://api.github.com/repos/keenlabs/KeenClient-PHP/zipball/9edb90f81fec41d3690aabd4a310151dcdd2df90",
+                "reference": "9edb90f81fec41d3690aabd4a310151dcdd2df90",
                 "shasum": ""
             },
             "require": {
@@ -691,7 +691,7 @@
                 "analytics",
                 "keen io"
             ],
-            "time": "2017-10-09 21:45:56"
+            "time": "2017-10-13 17:07:30"
         },
         {
             "name": "laravel/dusk",
