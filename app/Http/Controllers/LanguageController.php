@@ -1,11 +1,6 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- */
-namespace App\Http\Controllers;
 
-use Cache;
-use Illuminate\Http\Request;
+namespace App\Http\Controllers;
 
 class LanguageController extends Controller
 {
@@ -37,5 +32,27 @@ class LanguageController extends Controller
             'query'     => $search['query'],
             'results'   => $search['results'],
         ]);
+    }
+
+    /**
+     * Displays the form to add a new language.
+     */
+    public function create()
+    {
+        return $this->form([
+            'id'    => null,
+            'name'  => '',
+        ]);
+    }
+
+    /**
+     * Helper method for the "form" view.
+     *
+     * @param  array $details
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    protected function form(array $details)
+    {
+        return view('language.form', $details);
     }
 }

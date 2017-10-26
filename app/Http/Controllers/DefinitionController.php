@@ -158,6 +158,10 @@ class DefinitionController extends Controller
         return $this->save($id);
     }
 
+    /**
+     * @param  array $details
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     protected function form(array $details)
     {
         if (! in_array($details['type'], $this->supportedTypes)) {
