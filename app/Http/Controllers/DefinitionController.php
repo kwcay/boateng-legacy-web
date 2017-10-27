@@ -318,7 +318,7 @@ class DefinitionController extends Controller
             ]);
         });
 
-        if (!$definition) {
+        if (! $definition) {
             return $definition;
         }
 

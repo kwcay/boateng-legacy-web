@@ -26,14 +26,16 @@
 
     @include('partials.search.results')
 
-    {{-- Edit form --}}
-    @if (Auth::check())
+    {{-- Admin links --}}
+    @auth
         <div class="row">
-            <div class="">
-                @include('forms.language.modal')
+            <div class="col-lg-8 col-lg-offset-2 col-sm-10 col-sm-offset-1 well">
+                <a href="{{ route('language.edit', $lang->code) }}" class="form-like">
+                    edit
+                </a>
             </div>
         </div>
-    @endif
+    @endauth
 
     {{-- Quick info --}}
     <div class="row">

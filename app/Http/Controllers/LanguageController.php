@@ -19,15 +19,7 @@ class LanguageController extends Controller
      */
     public function show($code)
     {
-        $language = $this->cache->remember('language.'.$code, 60, function() use ($code) {
-            return $this->api->getLanguage($code, [
-                'definitionCount',
-                'parentName',
-                'randomDefinition'
-            ]);
-        });
-
-        if (! $language) {
+        if (! $language = $this->getLanguage($code)) {
             abort(404);
         }
 
@@ -50,9 +42,23 @@ class LanguageController extends Controller
     {
         return $this->form([
             'id'        => null,
-            'code'      => strtoupper(trim($this->request->get('code', ''))),
+            'code'      => strtolower(trim($this->request->get('code', ''))),
             'name'      => trim($this->request->get('name', '')),
-            'parent'    => strtoupper(trim($this->request->get('parent', ''))),
+            'parent'    => strtolower(trim($this->request->get('parent', ''))),
+        ]);
+    }
+
+    public function edit($code)
+    {
+        if (! $language = $this->getLanguage($code)) {
+            abort(404);
+        }
+
+        return $this->form([
+            'id'        => $language->id,
+            'code'      => $language->code,
+            'name'      => $language->name,
+            'parent'    => $language->parent,
         ]);
     }
 
@@ -138,5 +144,28 @@ class LanguageController extends Controller
         }
 
         return redirect(route('language.show', ['code' => $saved->code, 'saved' => 1]));
+    }
+
+    /**
+     * Retrieves a language by code.
+     *
+     * @param  string $code
+     * @return object|null
+     */
+    protected function getLanguage($code)
+    {
+        $language = $this->cache->remember('language.'.$code, 60, function() use ($code) {
+            return $this->api->getLanguage($code, [
+                'definitionCount',
+                'parentName',
+                'randomDefinition'
+            ]);
+        });
+
+        if (! $language) {
+            return $language;
+        }
+
+        return $language;
     }
 }
