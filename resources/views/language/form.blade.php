@@ -43,7 +43,7 @@
                     autocomplete="off"
                     required>
                 <label for="name">
-                    language name
+                    language name(s), separated by commas
                 </label>
             </div>
         </div>
@@ -65,7 +65,7 @@
                     name="code"
                     class="en-text-input center"
                     placeholder="e.g. fat"
-                    value=""
+                    value="{{ $code }}"
                     autocomplete="off"
                     required>
                 <label for="code">
@@ -87,7 +87,7 @@
                     name="parent"
                     class="en-text-input center"
                     placeholder="e.g. Twi"
-                    value=""
+                    value="{{ $parent }}"
                     autocomplete="off"
                     required>
                 <label for="code">

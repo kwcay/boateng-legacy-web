@@ -10,6 +10,12 @@ use Illuminate\Validation\Rule;
 
 class DefinitionController extends Controller
 {
+    protected function boot()
+    {
+        $this->middleware('auth')
+            ->only('create', 'edit', 'store', 'update', 'destroy');
+    }
+
     /**
      * Supported definition types.
      *
@@ -301,7 +307,7 @@ class DefinitionController extends Controller
      */
     protected function getDefinition($id)
     {
-        $definition = $this->cache->remember($this->getCacheKey($id), 60, function() use ($id) {
+        $definition = $this->cache->remember($this->getCacheKey($id), 60, function () use ($id) {
             return $this->api->getDefinition($id, [
                 'titles',
                 'titleString',
@@ -312,14 +318,14 @@ class DefinitionController extends Controller
             ]);
         });
 
-        if (! $definition) {
+        if (!$definition) {
             return $definition;
         }
 
         switch ($definition->type) {
             case 'word':
             case 'expression':
-                $className  = '\\App\\Resources\\'.ucfirst($definition->type);
+                $className = '\\App\\Resources\\' . ucfirst($definition->type);
                 $definition = new $className($definition);
                 break;
 
@@ -328,13 +334,5 @@ class DefinitionController extends Controller
         }
 
         return $definition;
-    }
-
-    /**
-     *
-     */
-    protected function boot()
-    {
-        $this->middleware('auth')->only('create', 'edit', 'store', 'update', 'destroy');
     }
 }

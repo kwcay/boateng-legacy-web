@@ -4,8 +4,18 @@ namespace App\Http\Controllers;
 
 class LanguageController extends Controller
 {
+    protected function boot()
+    {
+        // Set the "auth" middleware on create/destroy endpoints.
+        $this->middleware('auth')
+            ->only('create', 'edit', 'store', 'update', 'destroy');
+    }
+
     /**
+     * Displays the language page.
      *
+     * @param  string $code
+     * @return \Illuminate\View\View
      */
     public function show($code)
     {
@@ -18,9 +28,6 @@ class LanguageController extends Controller
         });
 
         if (! $language) {
-            // TODO: handle errors
-            // ...
-
             abort(404);
         }
 
@@ -36,12 +43,16 @@ class LanguageController extends Controller
 
     /**
      * Displays the form to add a new language.
+     *
+     * @return \Illuminate\View\View
      */
     public function create()
     {
         return $this->form([
-            'id'    => null,
-            'name'  => '',
+            'id'        => null,
+            'code'      => strtoupper(trim($this->request->get('code', ''))),
+            'name'      => trim($this->request->get('name', '')),
+            'parent'    => strtoupper(trim($this->request->get('parent', ''))),
         ]);
     }
 
@@ -49,10 +60,83 @@ class LanguageController extends Controller
      * Helper method for the "form" view.
      *
      * @param  array $details
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\View\View
      */
     protected function form(array $details)
     {
         return view('language.form', $details);
+    }
+
+    /**
+     * Stores a new definition on the API.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store()
+    {
+        return $this->save();
+    }
+
+    /**
+     * Updates a language record on the API.
+     *
+     * @param  string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update($id)
+    {
+        return $this->save($id);
+    }
+
+    /**
+     * @param  string $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function save($id = null)
+    {
+        $this->validate($this->request, [
+            'name'      => 'required',
+            'code'      => ['required', 'regex:/\s*[A-z]{3}(-[A-z]{3})?\s*/'],
+            'parent'    => 'string',
+        ]);
+
+        $data = [
+            'code'      => strtolower(trim($this->request->get('code'))),
+            'name'      => trim($this->request->get('name')),
+            'parent'    => strtolower(trim($this->request->get('parent', ''))),
+        ];
+
+        $failRoute = $id
+            ? route('language.show', $id)
+            : route('language.create', $data);
+
+        try {
+            if ($id) {
+                $saved = $this->api->patch(
+                    $this->request->user()->getAccessToken(),
+                    'languages/'.$id,
+                    $data
+                );
+            } else {
+                $saved = $this->api->post(
+                    $this->request->user()->getAccessToken(),
+                    'languages',
+                    $data
+                );
+            }
+        } catch (\Exception $e) {
+            return redirect($failRoute)->withErrors('Could not save Language');
+        }
+
+        if (! $saved) {
+            return redirect($failRoute)->withErrors('Could not save Language');
+        }
+
+        // Clear local cache
+        if ($id) {
+            $this->cache->forget($this->getCacheKey($id));
+        }
+
+        return redirect(route('language.show', ['code' => $saved->code, 'saved' => 1]));
     }
 }
