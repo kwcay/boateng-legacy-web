@@ -84,10 +84,10 @@
             <div class="col-sm-6 col-sm-offset-3 col-lg-4 col-lg-offset-4">
                 <input
                     type="text"
-                    name="parent"
+                    name="parent_code"
                     class="en-text-input center"
                     placeholder="e.g. Twi"
-                    value="{{ $parent }}"
+                    value="{{ $parentCode }}"
                     autocomplete="off">
                 <label for="code">
                     parent language

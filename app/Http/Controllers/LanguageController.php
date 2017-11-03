@@ -50,10 +50,10 @@ class LanguageController extends Controller
     public function create()
     {
         return $this->form([
-            'isNew'     => true,
-            'code'      => strtolower(trim($this->request->get('code', ''))),
-            'name'      => trim($this->request->get('name', '')),
-            'parent'    => strtolower(trim($this->request->get('parent', ''))),
+            'isNew'         => true,
+            'code'          => strtolower(trim($this->request->get('code', ''))),
+            'name'          => trim($this->request->get('name', '')),
+            'parentCode'    => strtolower(trim($this->request->get('parent_code', ''))),
         ]);
     }
 
@@ -70,10 +70,10 @@ class LanguageController extends Controller
         }
 
         return $this->form([
-            'isNew'     => false,
-            'code'      => $language->code,
-            'name'      => $language->name,
-            'parent'    => $language->parentCode,
+            'isNew'         => false,
+            'code'          => $language->code,
+            'name'          => $language->name,
+            'parentCode'    => $language->parentCode,
         ]);
     }
 
@@ -116,15 +116,15 @@ class LanguageController extends Controller
     protected function save($code = null)
     {
         $this->validate($this->request, [
-            'name'      => 'required',
-            'code'      => ['required', 'regex:/\s*[A-z]{3}(-[A-z]{3})?\s*/'],
-            'parent'    => 'string|nullable',
+            'name'          => 'required',
+            'code'          => ['required', 'regex:/\s*[A-z]{3}(-[A-z]{3})?\s*/'],
+            'parent_code'   => 'string|nullable',
         ]);
 
         $data = [
-            'code'      => strtolower(trim($this->request->get('code'))),
-            'name'      => trim($this->request->get('name')),
-            'parent'    => strtolower(trim($this->request->get('parent', ''))),
+            'code'          => strtolower(trim($this->request->get('code'))),
+            'name'          => trim($this->request->get('name')),
+            'parent_code'   => strtolower(trim($this->request->get('parent_code', ''))),
         ];
 
         $failRoute = $code
@@ -146,7 +146,13 @@ class LanguageController extends Controller
                 );
             }
         } catch (\Exception $e) {
-            return redirect($failRoute)->withErrors('Could not save Language');
+            $errors = ['Could not save Language'];
+
+            if (app()->environment() == 'local') {
+                $errors[] = $e->getMessage();
+            }
+
+            return redirect($failRoute)->withErrors($errors);
         }
 
         if (! $saved) {
