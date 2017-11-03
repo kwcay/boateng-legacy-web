@@ -19,9 +19,18 @@ class LanguageController extends Controller
      */
     public function show($code)
     {
-        if (! $language = $this->getLanguage($code)) {
-            abort(404);
+        try {
+            if (! $language = $this->getLanguage($code)) {
+                abort(404);
+            }
+        } catch (\DoraBoateng\Api\Exceptions\Exception $e) {
+            if (app()->environment() == 'local') {
+                throw $e;
+            } else {
+                abort(404);
+            }
         }
+
 
         // Retrieve search results if a query we have a search query.
         $search = $this->getSearchResults($code);
@@ -48,6 +57,12 @@ class LanguageController extends Controller
         ]);
     }
 
+    /**
+     * Displays the form to edit an existing language.
+     *
+     * @param  string $code
+     * @return \Illuminate\View\View
+     */
     public function edit($code)
     {
         if (! $language = $this->getLanguage($code)) {
@@ -55,10 +70,10 @@ class LanguageController extends Controller
         }
 
         return $this->form([
-            'id'        => $language->id,
+            'id'        => null,
             'code'      => $language->code,
             'name'      => $language->name,
-            'parent'    => $language->parent,
+            'parent'    => $language->parentCode,
         ]);
     }
 
@@ -150,22 +165,26 @@ class LanguageController extends Controller
      * Retrieves a language by code.
      *
      * @param  string $code
-     * @return object|null
+     * @return \App\Resources\Language|null
      */
     protected function getLanguage($code)
     {
-        $language = $this->cache->remember('language.'.$code, 60, function() use ($code) {
-            return $this->api->getLanguage($code, [
-                'definitionCount',
-                'parentName',
-                'randomDefinition'
-            ]);
-        });
+        try {
+            $language = $this->cache->remember('language.'.$code, 60, function() use ($code) {
+                return $this->api->getLanguage($code, [
+                    'definitionCount',
+                    'parentName',
+                    'randomDefinition'
+                ]);
+            });
+        } catch (\DoraBoateng\Api\Exceptions\Exception $exception) {
+            return null;
+        }
 
         if (! $language) {
             return $language;
         }
 
-        return $language;
+        return new \App\Resources\Language($language);
     }
 }

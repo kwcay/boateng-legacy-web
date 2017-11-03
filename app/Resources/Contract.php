@@ -5,12 +5,12 @@ namespace App\Resources;
 abstract class Contract
 {
     /**
-     * @var stdClass
+     * @var \stdClass
      */
     protected $data;
 
     /**
-     * @param stdClass $data
+     * @param \stdClass $data
      */
     public function __construct($data)
     {
@@ -40,5 +40,16 @@ abstract class Contract
         }
 
         return $string;
+    }
+
+    /**
+     * @param  string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        return property_exists($this->data, $name)
+            ? $this->data->$name
+            : null;
     }
 }

@@ -23,14 +23,14 @@
 @section('body')
 
     {{-- Admin tools --}}
-    @if (Auth::check())
+    @auth
         <div class="row">
             <div class="col-lg-6 col-lg-offset-3 col-sm-10 col-sm-offset-1 well">
                 Temporary shortcuts:
-                <input type="button" class="form-like" value="new language">
+                <a href="{{ route('language.create') }}">new language</a>
             </div>
         </div>
-    @endif
+    @endauth
 
     <div class="row hidden-md hidden-lg">
         <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
