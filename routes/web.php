@@ -36,7 +36,18 @@ Route::group([
     ]);
 
     // Language routes
-    Route::get('/lang/{code}', 'LanguageController@show')->name('language');
+    Route::get('/lang/+',       'LanguageController@create')->name('language.create');
+    Route::get('/lang/{code}',  'LanguageController@show')->name('language');
+    Route::resource('lang', 'LanguageController', [
+        'except' => ['index', 'create'],
+        'names' => [
+            'store' => 'language.store',
+            'show' => 'language.show',
+            'edit' => 'language.edit',
+            'update' => 'language.update',
+            'destroy' => 'language.destroy',
+        ]
+    ]);
 
     // Member routes
     Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');

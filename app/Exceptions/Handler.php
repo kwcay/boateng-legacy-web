@@ -33,7 +33,9 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
         // Report exceptions to Sentry
-        if ($this->shouldReport($exception)) {
+        if ($this->shouldReport($exception) &&
+            app()->environment() !== 'local'
+        ) {
             app('sentry')->captureException($exception);
         }
 

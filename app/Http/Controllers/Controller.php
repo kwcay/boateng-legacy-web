@@ -1,9 +1,5 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- *
- * @brief   This controller serves as an abstract for all other controllers.
- */
+
 namespace App\Http\Controllers;
 
 use DoraBoateng\Api\Client;

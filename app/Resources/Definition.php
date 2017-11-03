@@ -105,16 +105,4 @@ class Definition extends Contract
     {
         return route('definition.create', ['type' => $type, 'lang' => implode(',', $this->getLangCodes())]);
     }
-
-    /**
-     * @param string $name
-     */
-    public function __get($name)
-    {
-        if (property_exists($this->data, $name)) {
-            return $this->data->$name;
-        }
-
-        throw new \Exception('Property "'.$name.'" does not exist in '.get_called_class());
-    }
 }
