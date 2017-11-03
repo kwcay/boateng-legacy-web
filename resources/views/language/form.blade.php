@@ -3,10 +3,10 @@
 @section('hero')
 
     <h1>
-        @if ($id)
-            <small>edit</small> {{ $titleString }}
-        @else
+        @if ($isNew)
             Add a Language
+        @else
+            <small>edit</small> {{ $name }}
         @endif
     </h1>
 
@@ -22,10 +22,10 @@
         class="edit form"
         method="post"
         name="language"
-        action="{{ $id ? route('language.update', $id) : route('language.store') }}">
+        action="{{ $isNew ? route('language.store') : route('language.update', $code) }}">
 
         {!! csrf_field() !!}
-        {{ $id ? method_field('PATCH') : '' }}
+        {{ $isNew ? '' : method_field('PATCH') }}
 
         <div class="row center">
             Add a language named
@@ -88,8 +88,7 @@
                     class="en-text-input center"
                     placeholder="e.g. Twi"
                     value="{{ $parent }}"
-                    autocomplete="off"
-                    required>
+                    autocomplete="off">
                 <label for="code">
                     parent language
                 </label>
@@ -103,7 +102,7 @@
         <br>
 
         <div class="row center">
-            <input type="submit" name="submit" value="{{ $id ? 'save' : 'add' }}">
+            <input type="submit" name="submit" value="{{ $isNew ? 'add' : 'save' }}">
             <input
                 type="button"
                 name="cancel"

@@ -50,7 +50,7 @@ class LanguageController extends Controller
     public function create()
     {
         return $this->form([
-            'id'        => null,
+            'isNew'     => true,
             'code'      => strtolower(trim($this->request->get('code', ''))),
             'name'      => trim($this->request->get('name', '')),
             'parent'    => strtolower(trim($this->request->get('parent', ''))),
@@ -70,7 +70,7 @@ class LanguageController extends Controller
         }
 
         return $this->form([
-            'id'        => null,
+            'isNew'     => false,
             'code'      => $language->code,
             'name'      => $language->name,
             'parent'    => $language->parentCode,
@@ -110,15 +110,15 @@ class LanguageController extends Controller
     }
 
     /**
-     * @param  string $id
+     * @param  string $code
      * @return \Illuminate\Http\RedirectResponse
      */
-    protected function save($id = null)
+    protected function save($code = null)
     {
         $this->validate($this->request, [
             'name'      => 'required',
             'code'      => ['required', 'regex:/\s*[A-z]{3}(-[A-z]{3})?\s*/'],
-            'parent'    => 'string',
+            'parent'    => 'string|nullable',
         ]);
 
         $data = [
@@ -127,15 +127,15 @@ class LanguageController extends Controller
             'parent'    => strtolower(trim($this->request->get('parent', ''))),
         ];
 
-        $failRoute = $id
-            ? route('language.show', $id)
+        $failRoute = $code
+            ? route('language.show', $code)
             : route('language.create', $data);
 
         try {
-            if ($id) {
+            if ($code) {
                 $saved = $this->api->patch(
                     $this->request->user()->getAccessToken(),
-                    'languages/'.$id,
+                    'languages/'.$code,
                     $data
                 );
             } else {
@@ -154,8 +154,8 @@ class LanguageController extends Controller
         }
 
         // Clear local cache
-        if ($id) {
-            $this->cache->forget($this->getCacheKey($id));
+        if ($code) {
+            $this->cache->forget($this->getCacheKey($code));
         }
 
         return redirect(route('language.show', ['code' => $saved->code, 'saved' => 1]));
