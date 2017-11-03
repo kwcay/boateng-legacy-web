@@ -16,6 +16,7 @@ class LanguageController extends Controller
      *
      * @param  string $code
      * @return \Illuminate\View\View
+     * @throws \DoraBoateng\Api\Exceptions\Exception
      */
     public function show($code)
     {
@@ -30,7 +31,6 @@ class LanguageController extends Controller
                 abort(404);
             }
         }
-
 
         // Retrieve search results if a query we have a search query.
         $search = $this->getSearchResults($code);

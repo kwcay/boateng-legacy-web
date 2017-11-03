@@ -76,7 +76,7 @@
             </div>
             @endif
 
-            @if (isset($lang->parentName) && $lang->parentName)
+            @if ($lang->parentName)
             <div class="row">
                 <div class="col-sm-4 meta-param">
                     child language of :
