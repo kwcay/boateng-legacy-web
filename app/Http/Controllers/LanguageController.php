@@ -16,20 +16,22 @@ class LanguageController extends Controller
      *
      * @param  string $code
      * @return \Illuminate\View\View
-     * @throws \DoraBoateng\Api\Exceptions\Exception
      */
     public function show($code)
     {
-        try {
-            if (! $language = $this->getLanguage($code)) {
-                abort(404);
+        if (! $language = $this->getLanguage($code)) {
+            $code = strtolower(trim($code));
+
+            // Redirect to language form.
+            // TODO: localize message.
+            // TODO: message gets lost on login redirect.
+            if (strlen($code) === 3 || strlen($code) === 7) {
+                return redirect(route('language.create', [
+                    'code' => $code,
+                ]))->withErrors('We could not find that language :( Help us improve Dora Boateng by adding it to our database.');
             }
-        } catch (\DoraBoateng\Api\Exceptions\Exception $e) {
-            if (app()->environment() == 'local') {
-                throw $e;
-            } else {
-                abort(404);
-            }
+
+            abort(404);
         }
 
         // Retrieve search results if a query we have a search query.
@@ -183,8 +185,20 @@ class LanguageController extends Controller
                     'randomDefinition'
                 ]);
             });
-        } catch (\DoraBoateng\Api\Exceptions\Exception $exception) {
-            return null;
+        } catch (\DoraBoateng\Api\Exceptions\Exception $apiException) {
+            if (app()->environment() === 'local') {
+                throw $apiException;
+            } else {
+                return null;
+            }
+        } catch (\GuzzleHttp\Exception\ClientException $clientException) {
+            if ($clientException->getCode() === 404) {
+                return null;
+            } elseif (app()->environment() === 'local') {
+                throw $clientException;
+            } else {
+                return null;
+            }
         }
 
         if (! $language) {
