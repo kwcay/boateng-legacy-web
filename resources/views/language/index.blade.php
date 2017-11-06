@@ -13,6 +13,9 @@
 
     <h4>
         @lang('language.lookup-definitions')
+        <a href="{{ route('language.learn', $lang->code) }}">
+            @lang('language.or-learn', ['name' => $lang->name])
+        </a>
     </h4>
 
     {{-- Only include search form if language has definitions to show --}}

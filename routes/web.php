@@ -48,6 +48,7 @@ Route::group([
             'destroy' => 'language.destroy',
         ]
     ]);
+    Route::get('/learn/{code?}', 'LanguageController@learn')->name('language.learn');
 
     // Member routes
     Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
