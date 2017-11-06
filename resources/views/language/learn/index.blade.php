@@ -1,10 +1,11 @@
 @extends('layouts.half-hero')
 
+@section('title', trans('language.learn-with', ['name' => $lang->name, 'with' => trans('branding.title')]))
+
 @section('hero')
 
     <h1 class="hero-title">
-        <small>Learn</small>
-        {{ $lang->name }}
+        @lang('language.learn-emphasized', ['name' => $lang->getFirstName()])
     </h1>
 
 @stop
