@@ -45,6 +45,27 @@ class LanguageController extends Controller
     }
 
     /**
+     * Landing page for language learning.
+     *
+     * @param  string $code
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function learn($code = null)
+    {
+        // Language learning landing page.
+        if (! $code) {
+            return view('language.learn.landing');
+        }
+
+        // Language-specific page
+        if ($lang = $this->getLanguage($code)) {
+            return view('language.learn.index', ['lang' => $lang]);
+        }
+
+        return redirect(route('language.learn'));
+    }
+
+    /**
      * Displays the form to add a new language.
      *
      * @return \Illuminate\View\View
