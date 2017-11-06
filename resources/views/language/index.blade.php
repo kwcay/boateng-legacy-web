@@ -8,13 +8,13 @@
 @section('hero')
 
     <h1 class="definition-title">
-        {{ $lang->name }}
+        {{ $lang->getFirstName() }}
     </h1>
 
     <h4>
         @lang('language.lookup-definitions')
         <a href="{{ route('language.learn', $lang->code) }}">
-            @lang('language.or-learn', ['name' => $lang->name])
+            @lang('language.or-learn', ['name' => $lang->getFirstName()])
         </a>
     </h4>
 

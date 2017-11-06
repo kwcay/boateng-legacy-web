@@ -9,5 +9,12 @@ namespace App\Resources;
  */
 class Language extends Contract
 {
+    public function getFirstName()
+    {
+        if (! trim($this->name) || strpos($this->name, ',') === false) {
+            return $this->name;
+        }
 
+        return trim(substr($this->name, 0, strpos($this->name, ',')));
+    }
 }
