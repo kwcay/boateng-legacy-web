@@ -9,6 +9,10 @@ namespace App\Resources;
  */
 class Language extends Contract
 {
+    /**
+     * @todo   Temporary, the API shouldn't return language names with commas in them.
+     * @return string
+     */
     public function getFirstName()
     {
         if (! trim($this->name) || strpos($this->name, ',') === false) {

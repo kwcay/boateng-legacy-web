@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
             We're building a language learning tool for
-            <a href="{{ route('language.show', $lang->code) }}">{{ $lang->name }}</a>.
+            <a href="{{ route('language.show', $lang->code) }}">{{ $lang->getFirstName() }}</a>.
             Sign up to receive updates on our progress, or if you'd like to help!
             <br>
             <br>
