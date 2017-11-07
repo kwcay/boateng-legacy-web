@@ -72,7 +72,9 @@
                     literally :
                 </div>
                 <div class="col-sm-8 meta-value">
-                    {{ $definition->getTranslation()->literal }}
+                    <em>
+                        &quot;{{ $definition->getTranslation()->literal }}&quot;
+                    </em>
                 </div>
             </div>
             @endif
