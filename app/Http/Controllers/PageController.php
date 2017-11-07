@@ -304,6 +304,10 @@ class PageController extends Controller
                         break;
 
                     case 'language':
+                        $this->addMapEntry($root, route('language.learn', $r->code), [
+                            'changefreq'    => 'weekly',
+                            'priority'      => '0.9',
+                        ]);
                         $this->addMapEntry($root, route('language', $r->code), [
                             'changefreq'    => 'daily',
                             'priority'      => '0.9',

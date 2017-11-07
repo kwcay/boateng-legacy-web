@@ -20,7 +20,10 @@
             <br>
             <br>
 
-            @include('language.learn.signup', ['name' => $lang->name])
+            @include('language.learn.signup', [
+                'name' => $lang->name,
+                'altNames' => $lang->altNames
+            ])
             <hr>
         </div>
     </div>

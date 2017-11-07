@@ -60,7 +60,7 @@
                 id="mce-MMERGE4"
                 class="text-input center"
                 placeholder="languages of interest"
-                value="{{ $name }}"
+                value="{{ $name.($altNames ? ', '.$altNames : '') }}"
                 required>
             <label for="mce-MMERGE4">
                 languages of interest
