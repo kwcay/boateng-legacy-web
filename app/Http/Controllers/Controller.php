@@ -169,7 +169,7 @@ class Controller extends BaseController
     }
 
     /**
-     * @return stdClass|null
+     * @return \stdClass|null
      */
     protected function getWeeklyLanguage()
     {
@@ -183,6 +183,32 @@ class Controller extends BaseController
         $this->cache->add('language.weekly', $language, 180);
 
         return $language;
+    }
+
+    /**
+     * Shortcut to return a redirect response with some error messages.
+     *
+     * @param  string     $route
+     * @param  string     $errorMsg
+     * @param  \Exception $exception
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function redirectWithErrors(
+        $route,
+        $errorMsg = null,
+        \Exception $exception = null
+    ) {
+        $errors = [];
+
+        if ($errorMsg) {
+            $errors[] = $errorMsg;
+        }
+
+        if ($exception && app()->environment() === 'local') {
+            $errors[] = $exception->getMessage();
+        }
+
+        return redirect($route)->withErrors($errors);
     }
 
     /**

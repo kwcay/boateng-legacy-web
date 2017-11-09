@@ -31,7 +31,7 @@ class DefinitionController extends Controller
      *
      * @param  string  $type
      * @param  string  $lang
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function create($type = 'word', $lang = '')
     {
@@ -68,7 +68,7 @@ class DefinitionController extends Controller
     /**
      * Stores a new definition on the API.
      *
-     * @return \Illluminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store()
     {
@@ -125,7 +125,7 @@ class DefinitionController extends Controller
      * Dispays the form to edit a defintion.
      *
      * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\View\View
      */
     public function edit($id)
     {
@@ -157,7 +157,7 @@ class DefinitionController extends Controller
      * Updates a definition on the API.
      *
      * @param  string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id)
     {
@@ -166,7 +166,7 @@ class DefinitionController extends Controller
 
     /**
      * @param  array $details
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\View\View
      */
     protected function form(array $details)
     {
@@ -226,7 +226,7 @@ class DefinitionController extends Controller
      * Saves a definition resource on the API.
      *
      * @param  string $id
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     protected function save($id = null)
     {
@@ -282,10 +282,12 @@ class DefinitionController extends Controller
                 );
             }
         } catch (\Exception $e) {
-            return redirect($failRoute)->withErrors('Could not save definition');
+            return $this->redirectWithErrors(
+                $failRoute,
+                'Could not save definition',
+                $e
+            );
         }
-
-        $response = redirect(route('definition.show', $id));
 
         if (! $saved) {
             return redirect($failRoute)->withErrors('Could not save definition');

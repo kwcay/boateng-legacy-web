@@ -94,7 +94,7 @@ class Client
      * @param  string $endpoint
      * @param  array  $options
      * @param  int    $tries
-     * @return stdClass
+     * @return \stdClass
      * @throws \GuzzleHttp\Exception\ClientException
      * @throws \Exception
      */
@@ -146,7 +146,7 @@ class Client
      * @param  string  $endpoint
      * @param  array   $query
      * @param  string  $token
-     * @return stdClass
+     * @return \stdClass
      */
     public function get($endpoint, array $query = [], $token = null)
     {
@@ -303,7 +303,7 @@ class Client
 
     /**
      * @param  array $embed
-     * @return stdClass
+     * @return \stdClass
      */
     public function getLanguageOfTheWeek(array $embed = [])
     {

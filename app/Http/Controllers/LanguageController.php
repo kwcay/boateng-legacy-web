@@ -169,13 +169,11 @@ class LanguageController extends Controller
                 );
             }
         } catch (\Exception $e) {
-            $errors = ['Could not save Language'];
-
-            if (app()->environment() == 'local') {
-                $errors[] = $e->getMessage();
-            }
-
-            return redirect($failRoute)->withErrors($errors);
+            return $this->redirectWithErrors(
+                $failRoute,
+                'Could not save Language',
+                $e
+            );
         }
 
         if (! $saved) {
