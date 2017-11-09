@@ -11,7 +11,7 @@
                 name="languages"
                 class="text-input center"
                 placeholder="e.g. Gonja"
-                value="{{ implode(', ', $languages) }}"
+                value="{{ implode(', ', array_keys($languages)) }}"
                 autocomplete="off"
                 required>
             <label for="languages">
@@ -46,7 +46,7 @@
                 @foreach ($subTypes as $subTypeValue => $subTypeOption)
                     @if ($loop->first)
                         <option disabled value="">
-                            {{ $subType }}
+                            {{ $subTypeOption }}
                         </option>
                     @else
                         <option value="{{ $subTypeValue }}"{{ $subTypeValue == $subType ? ' selected' : '' }}>
