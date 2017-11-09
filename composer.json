@@ -4,7 +4,7 @@
   "keywords": ["Dora Boateng"],
   "type": "project",
   "require": {
-    "frnkly/laravel-keen": "~0.4",
+    "frnkly/laravel-keen": "~0.5",
     "guzzlehttp/guzzle": "~6.3",
     "keen-io/keen-io": "^2.5",
     "laravel/dusk": "^1.0",

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "140f548d77ec001238fef2f06d9de8b6",
-    "content-hash": "6761863e746433f0604222e1d928f493",
+    "hash": "d97cc98d301054a3587ae1abd0e0176c",
+    "content-hash": "613b8e2e13ad3e2062cbbe288fe2d154",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -314,16 +314,16 @@
         },
         {
             "name": "frnkly/laravel-keen",
-            "version": "v0.4.1",
+            "version": "v0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/frnkly/laravel-keen.git",
-                "reference": "722cf0d5b5a2a9c82ee3eb846208057efb1095ed"
+                "reference": "f364b61718de5df727525f6dafbeb78e7ac3b42d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/frnkly/laravel-keen/zipball/722cf0d5b5a2a9c82ee3eb846208057efb1095ed",
-                "reference": "722cf0d5b5a2a9c82ee3eb846208057efb1095ed",
+                "url": "https://api.github.com/repos/frnkly/laravel-keen/zipball/f364b61718de5df727525f6dafbeb78e7ac3b42d",
+                "reference": "f364b61718de5df727525f6dafbeb78e7ac3b42d",
                 "shasum": ""
             },
             "require": {
@@ -366,7 +366,7 @@
                 "keen io",
                 "laravel"
             ],
-            "time": "2017-11-08 13:44:31"
+            "time": "2017-11-09 00:40:36"
         },
         {
             "name": "guzzlehttp/command",
