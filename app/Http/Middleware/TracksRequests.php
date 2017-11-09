@@ -24,7 +24,7 @@ class TracksRequests extends \Frnkly\LaravelKeen\Middleware
         }
 
         // Skip tracking for some users
-        if (strrpos($user->email, '@doraboateng.com') === 0) {
+        if (strpos($user->email, '@doraboateng.com') !== false) {
             return false;
         }
 
