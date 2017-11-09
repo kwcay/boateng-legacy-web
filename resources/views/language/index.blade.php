@@ -9,8 +9,6 @@
 
     <h1 class="definition-title">
         {{ $lang->getFirstName() }}
-
-        <a href="{{ route('language.create', ) }}"></a>
     </h1>
 
     <h4>
