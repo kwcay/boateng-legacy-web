@@ -24,9 +24,11 @@
     "appSrc": "resources/assets/js/app/*.js"
   },
   "scripts": {
-    "test": "echo TODO: use a testing framework",
-    "prebuild:js": "del-cli public/assets/js/*.js",
+    "test": "echo TODO",
+    "prebuild:js": "eslint resources/assets/js/*.js && del-cli public/assets/js/*.js",
     "build:js": "echo TODO",
+    "prebuild:css": "del-cli public/assets/css/*.css",
+    "build:css": "echo TODO",
     "lint": "eslint *.js"
   },
   "dependencies": {}
