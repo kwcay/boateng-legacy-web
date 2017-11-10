@@ -118,9 +118,7 @@
 
         {{-- New definition --}}
         <div class="col-md-10 col-md-offset-1 col-lg-3 well">
-            Know a thing or two in {{ $definition->getLanguageString('or') }}?
-            Add a new <a href="{{ $definition->createRoute() }}">word</a> or
-            <a href="{{ $definition->createRoute('expression') }}">expression</a>.
+            @include('partials.definition.create', ['definition' => $definition])
         </div>
     </div>
 

@@ -42,7 +42,7 @@
 
     {{-- Quick info --}}
     <div class="row">
-        <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3 definition-meta">
+        <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-2 definition-meta">
 
             {{-- Language name --}}
             <div class="row">
@@ -131,9 +131,7 @@
 
         {{-- New definition --}}
         <div class="col-md-10 col-md-offset-1 col-lg-3 well">
-            Know a thing or two in {{ $lang->getFirstName() }}?
-            Add a new <a href="{{ route('definition.create', ['lang' => $lang->code]) }}">word</a> or
-            <a href="{{ route('definition.create', ['lang' => $lang->code, 'type' => 'expression']) }}">expression</a>.
+            @include('partials.definition.create', ['language' => $lang])
         </div>
     </div>
 
