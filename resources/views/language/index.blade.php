@@ -128,6 +128,13 @@
                 </div>
             </div>
         </div>
+
+        {{-- New definition --}}
+        <div class="col-md-10 col-md-offset-1 col-lg-3 well">
+            Know a thing or two in {{ $lang->getFirstName() }}?
+            Add a new <a href="{{ route('definition.create', ['lang' => $lang->code]) }}">word</a> or
+            <a href="{{ route('definition.create', ['lang' => $lang->code, 'type' => 'expression']) }}">expression</a>.
+        </div>
     </div>
 
     @include('partials.ui.divider')

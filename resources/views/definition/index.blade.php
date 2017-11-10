@@ -116,7 +116,6 @@
             </div>
         </div>
 
-
         {{-- New definition --}}
         <div class="col-md-10 col-md-offset-1 col-lg-3 well">
             Know a thing or two in {{ $definition->getLanguageString('or') }}?

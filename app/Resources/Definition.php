@@ -103,6 +103,9 @@ class Definition extends Contract
      */
     public function createRoute($type = 'word')
     {
-        return route('definition.create', ['type' => $type, 'lang' => implode(',', $this->getLangCodes())]);
+        return route('definition.create', [
+            'type' => $type,
+            'lang' => implode(',', $this->getLangCodes())
+        ]);
     }
 }
