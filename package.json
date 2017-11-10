@@ -1,32 +1,33 @@
 {
   "private": true,
-  "scripts": {},
   "name": "boateng-web",
-  "version": "0.8.0",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "bootstrap-sass": "^3.3.7",
     "concat": "~1.0.0",
     "del": "^2.2.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.1",
-    "gulp-clean-css": "~3.0.2",
-    "gulp-concat": "~2.6.1",
-    "gulp-eslint": "~3.0.1",
-    "gulp-if": "^2.0.2",
-    "gulp-jshint": "~2.0.4",
-    "gulp-jslint": "~1.0.10",
-    "gulp-rename": "~1.2.2",
-    "gulp-rev": "~7.1.2",
-    "gulp-sass": "~3.1.0",
-    "gulp-sourcemaps": "~2.4.1",
-    "gulp-strip-css-comments": "~1.2.0",
-    "gulp-uglify": "~2.0.1",
+    "del-cli": "^1.1.0",
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "hashmark": "^5.0.0",
     "jquery": "~3.1.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "yargs": "^8.0.1"
+  },
+  "config": {
+    "appSrc": "resources/assets/js/app/*.js"
+  },
+  "scripts": {
+    "test": "echo TODO: use a testing framework",
+    "prebuild:js": "del-cli public/assets/js/*.js",
+    "build:js": "echo TODO",
+    "lint": "eslint *.js"
   },
   "dependencies": {}
 }

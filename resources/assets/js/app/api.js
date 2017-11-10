@@ -7,7 +7,7 @@ window.ApiHelper = (function (csrf, logger) {
    * @param  {string} endpoint
    * @param  {string} method
    */
-  var makeRequest = function(endpoint, method) {
+  var makeRequest = function (endpoint, method) {
     if (! token)
       return logger.error("Invalid token.");
 

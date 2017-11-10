@@ -4,7 +4,7 @@ window.boateng = (function() {
     /**
      *
      */
-    var openModal = function() {
+    let openModal = function() {
         console.log("Todo: open modal");
 
         return false;
