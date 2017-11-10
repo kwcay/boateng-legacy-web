@@ -25,11 +25,11 @@
   },
   "scripts": {
     "test": "echo TODO",
-    "prebuild:js": "eslint resources/assets/js/*.js && del-cli public/assets/js/*.js",
+    "lint": "eslint resources/assets/js/**/*.js",
+    "prebuild:js": "npm run lint && del-cli public/assets/js/*.js",
     "build:js": "echo TODO",
     "prebuild:css": "del-cli public/assets/css/*.css",
-    "build:css": "echo TODO",
-    "lint": "eslint *.js"
+    "build:css": "echo TODO"
   },
   "dependencies": {}
 }
