@@ -28,7 +28,7 @@ class Utilities
     ];
 
     /**
-     * Retrieves the revisioned asset file.
+     * Retrieves the versioned asset file.
      *
      * @param string $filename
      * @return string
@@ -37,7 +37,7 @@ class Utilities
     {
         // Find manifest file.
         list($name, $ext) = explode('.', $filename);
-        $manifestPath = base_path('resources/assets/build/'.$ext.'/'.$name.'/rev-manifest.json');
+        $manifestPath = base_path('resources/assets/build/'.$ext.'/manifest.'.$name.'.json');
         if (! file_exists($manifestPath)) {
             return '';
         }
@@ -47,12 +47,7 @@ class Utilities
             return '';
         }
 
-        // Check that asset has a mapping.
-        if (! array_key_exists($filename, $manifest)) {
-            return '';
-        }
-
-        return '/assets/'.$ext.'/'.$manifest[$filename];
+        return '/assets/'.$ext.'/'.basename(array_first($manifest));
     }
 
     /**

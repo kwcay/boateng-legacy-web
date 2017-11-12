@@ -1,11 +1,8 @@
-/**
- * Copyright Dora Boateng(TM) 2017. All rights reserved.
- */
 
 // Base
 @import 'common/mixins';
 @import 'common/variables';
-@import 'node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
+@import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
 
 // Main styles
 @import 'app/scaffolding';

@@ -18,19 +18,23 @@
     "jquery": "~3.1.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "shelljs": "^0.7.8",
-    "yargs": "^8.0.1"
+    "sass": "^1.0.0-beta.3",
+    "sass-lint": "^1.12.1"
   },
   "config": {
     "appSrc": "resources/assets/js/app/*.js"
   },
   "scripts": {
-    "test": "echo TODO",
-    "lint": "eslint resources/assets/js/**/*.js",
-    "prebuild:js": "npm run lint && del-cli public/assets/js/*.js",
-    "build:js": "cat",
-    "prebuild:css": "del-cli public/assets/css/*.css",
-    "build:css": "echo TODO"
+    "test:js": "echo TODO",
+    "lint:js": "eslint resources/assets/js/**/*.js",
+    "lint:css": "sass-lint 'resources/assets/sass/app.scss, resources/assets/sass/**/*.scss' --verbose",
+    "clear:js": "del-cli public/assets/js/*.js",
+    "clear:css": "del-cli public/assets/css/*.css",
+    "prebuild:js": "echo npm run lint:js && npm run clear:js",
+    "build:js": "babel resources/assets/js/app | hashmark -l 10 'public/assets/js/app.{hash}.js' --asset-map resources/assets/build/js/manifest.app.json",
+    "postbuild:js": "echo Can we sourcemaps here?",
+    "prebuild:css": "echo npm run lint:css && npm run clear:css",
+    "build:css": "sass resources/assets/sass/app.scss | hashmark -l 10 'public/assets/css/app.{hash}.css' --asset-map resources/assets/build/css/manifest.app.json --silent"
   },
   "dependencies": {}
 }
