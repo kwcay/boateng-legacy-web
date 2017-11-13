@@ -25,16 +25,22 @@
     "appSrc": "resources/assets/js/app/*.js"
   },
   "scripts": {
-    "test:js": "echo TODO",
+    "_test:js": "echo JS test suite",
+    "test:js": "echo TODO: run js tests",
     "lint:js": "eslint resources/assets/js/**/*.js",
+    "_lint:css": "echo TODO: support other sass files through cli argument.",
     "lint:css": "sass-lint 'resources/assets/sass/app.scss, resources/assets/sass/**/*.scss' --verbose",
+    "_clear": "echo TODO: support different directories through cli argument.",
     "clear:js": "del-cli public/assets/js/*.js",
     "clear:css": "del-cli public/assets/css/*.css",
     "prebuild:js": "echo npm run lint:js && npm run clear:js",
+    "_build:js": "echo TODO: write shortcut for Hashmark + support different files through cli argument.",
     "build:js": "babel resources/assets/js/app | hashmark -l 10 'public/assets/js/app.{hash}.js' --asset-map resources/assets/build/js/manifest.app.json",
-    "postbuild:js": "echo Can we sourcemaps here?",
+    "postbuild:js": "echo Sourcemaps?",
     "prebuild:css": "echo npm run lint:css && npm run clear:css",
-    "build:css": "sass resources/assets/sass/app.scss | hashmark -l 10 'public/assets/css/app.{hash}.css' --asset-map resources/assets/build/css/manifest.app.json --silent"
+    "build:css": "sass resources/assets/sass/app.scss | hashmark -l 10 'public/assets/css/app.{hash}.css' --asset-map resources/assets/build/css/manifest.app.json --silent",
+    "postbuild:css": "echo Sourcemaps?",
+    "build": "npm run build:css & npm run build:js"
   },
   "dependencies": {}
 }
