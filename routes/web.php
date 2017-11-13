@@ -23,7 +23,7 @@ Route::group([
 
     // Definition routes
     Route::get('/gem/+/{type?}/{lang?}', 'DefinitionController@create')->name('definition.create');
-    Route::get('/gem/batch', 'DefinitionBatchController@create')->name('definition.batch.create');
+    Route::get('/gem/batch/{lang?}', 'DefinitionBatchController@create')->name('definition.batch.create');
     Route::post('/gem/batch', 'DefinitionBatchController@store')->name('definition.batch.store');
     Route::patch('/gem/batch', 'DefinitionBatchController@update')->name('definition.batch.update');
     Route::get('/random/{lang?}', 'DefinitionController@random')->name('definition.random');

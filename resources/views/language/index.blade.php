@@ -154,7 +154,7 @@
                     edit
                 </a>
 
-                <a href="#" class="form-like">
+                <a href="{{ route('definition.batch.create', $lang->code) }}" class="form-like">
                     batch definitions
                 </a>
             </div>

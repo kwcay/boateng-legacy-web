@@ -3,7 +3,7 @@
 @section('hero')
 
     <h1>
-        Batch
+        Batch Edit
     </h1>
 
     <h4>
