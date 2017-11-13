@@ -18,7 +18,7 @@
         class="edit form"
         method="post"
         name="definition"
-        action="{{ route('definition.batch') }}">
+        action="{{ false ? route('definition.batch.update') : route('definition.batch.store') }}">
 
         {!! csrf_field() !!}
         {{ false ? method_field('PATCH') : '' }}
