@@ -102,8 +102,13 @@ class Client
      * @throws \GuzzleHttp\Exception\ClientException
      * @throws \Exception
      */
-    public function request($token, $endpoint, $method, array $options, $tries = 2)
-    {
+    public function request(
+        $token,
+        $endpoint,
+        $method,
+        array $options = [],
+        $tries = 2
+    ) {
         $token = $token ?: $this->getAccessToken();
 
         // Set required headers.
@@ -115,8 +120,6 @@ class Client
             $response = $this->client->request($method, $endpoint, $options);
         } catch (ClientException $e) {
             // Retrieve a new access token and try again.
-            // TODO: need a cleaner way to do this, other than checking the $method to know
-            // whether we had a client credentials token or a password grant token.
             if ($e->getResponse()->getStatusCode() === 401
                 && $tries > 0
                 && $method === 'GET'
@@ -165,7 +168,7 @@ class Client
      * @param  string  $token
      * @param  string  $endpoint
      * @param  array   $data
-     * @return stdClass
+     * @return \stdClass
      */
     public function post($token, $endpoint, array $data)
     {
@@ -180,7 +183,7 @@ class Client
      * @param  string  $token
      * @param  string  $endpoint
      * @param  array   $data
-     * @return stdClass
+     * @return \stdClass
      */
     public function put($token, $endpoint, array $data = [])
     {
@@ -195,7 +198,7 @@ class Client
      * @param  string  $token
      * @param  string  $endpoint
      * @param  array   $data
-     * @return stdClass
+     * @return \stdClass
      */
     public function patch($token, $endpoint, array $data = [])
     {
@@ -209,7 +212,7 @@ class Client
      *
      * @param  string  $token
      * @param  string  $endpoint
-     * @return stdClass
+     * @return \stdClass
      */
     public function destroy($token, $endpoint)
     {
@@ -221,7 +224,7 @@ class Client
      *
      * @param  int   $id     Definition ID
      * @param  array $embed  Relations to include with definition
-     * @return stdClass
+     * @return \stdClass
      *
      * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
@@ -241,7 +244,7 @@ class Client
      *
      * @param  string  $query
      * @param  string  $langCode
-     * @return stdClass
+     * @return \stdClass
      *
      * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
@@ -266,7 +269,7 @@ class Client
     /**
      * @param  int|string  $langId
      * @param  array       $embed
-     * @return stdClass
+     * @return \stdClass
      *
      * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
@@ -290,7 +293,7 @@ class Client
     /**
      * @param  int|string  $id
      * @param  array       $embed
-     * @return stdClass
+     * @return \stdClass
      *
      * @throws \DoraBoateng\Api\Exceptions\InvalidRequest
      */
@@ -410,8 +413,8 @@ class Client
     }
 
     /**
-     * @param  array  $data
-     * @return stdClass|null
+     * @param  array  $params
+     * @return \stdClass|null
      */
     private function getRawTokenData(array $params)
     {
