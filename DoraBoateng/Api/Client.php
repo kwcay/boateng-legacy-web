@@ -84,8 +84,12 @@ class Client
         // Configure base URI
         $config['base_uri'] = (@$config['api_host'] ?: static::API_HOST).'/'.static::API_VERSION.'/';
 
-        // TODO: array_except is a Laravel helper method
-        $this->client   = new GuzzleClient(array_except($config, ['api_host', 'id', 'secret', 'debug']));
+        $this->client = new GuzzleClient(array_diff_key($config, array_flip([
+            'api_host',
+            'id',
+            'secret',
+            'debug'
+        ])));
     }
 
     /**
