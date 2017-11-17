@@ -193,6 +193,8 @@ class LanguageController extends Controller
      *
      * @param  string $code
      * @return \App\Resources\Language|null
+     * @throws \DoraBoateng\Api\Exceptions\Exception
+     * @throws \GuzzleHttp\Exception\ClientException
      */
     protected function getLanguage($code)
     {

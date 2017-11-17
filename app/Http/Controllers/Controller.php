@@ -179,8 +179,8 @@ class Controller extends BaseController
             return null;
         }
 
-        // Cache language of the week for 3 hours
-        $this->cache->add('language.weekly', $language, 180);
+        // Cache language of the week for 24 hours
+        $this->cache->add('language.weekly', $language, 1440);
 
         return $language;
     }

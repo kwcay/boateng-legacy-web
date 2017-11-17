@@ -1,9 +1,5 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2015, all rights reserved.
- *
- * @brief   Serves the mostly static app pages.
- */
+
 namespace App\Http\Controllers;
 
 use DB;
