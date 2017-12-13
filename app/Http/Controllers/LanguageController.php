@@ -16,6 +16,8 @@ class LanguageController extends Controller
      *
      * @param  string $code
      * @return \Illuminate\View\View
+     * @throws \DoraBoateng\Api\Exceptions\Exception
+     * @throws \GuzzleHttp\Exception\ClientException
      */
     public function show($code)
     {
@@ -49,6 +51,8 @@ class LanguageController extends Controller
      *
      * @param  string $code
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @throws \DoraBoateng\Api\Exceptions\Exception
+     * @throws \GuzzleHttp\Exception\ClientException
      */
     public function learn($code = null)
     {
@@ -85,6 +89,8 @@ class LanguageController extends Controller
      *
      * @param  string $code
      * @return \Illuminate\View\View
+     * @throws \DoraBoateng\Api\Exceptions\Exception
+     * @throws \GuzzleHttp\Exception\ClientException
      */
     public function edit($code)
     {
