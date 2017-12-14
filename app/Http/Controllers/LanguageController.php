@@ -209,7 +209,8 @@ class LanguageController extends Controller
                 return $this->api->getLanguage($code, [
                     'definitionCount',
                     'parentName',
-                    'randomDefinition'
+                    'randomDefinition',
+                    'children',
                 ]);
             });
         } catch (\DoraBoateng\Api\Exceptions\Exception $apiException) {

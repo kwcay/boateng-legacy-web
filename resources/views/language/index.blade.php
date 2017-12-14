@@ -1,3 +1,5 @@
+<?php /** @var \App\Resources\Language $lang */ ?>
+
 @extends('layouts.half-hero')
 
 {{-- Page meta --}}
@@ -88,6 +90,17 @@
                     <a href="{{ route('language', $lang->parentCode) }}">
                         {{ $lang->parentName }}
                     </a>
+                </div>
+            </div>
+            @endif
+
+            @if ($lang->children)
+            <div class="row">
+                <div class="col-sm-4 meta-param">
+                    a parent language of :
+                </div>
+                <div class="col-sm-8 meta-value">
+                    {!! $lang->listChildren() !!}
                 </div>
             </div>
             @endif

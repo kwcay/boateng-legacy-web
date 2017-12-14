@@ -2,7 +2,7 @@
 
 namespace App\Resources;
 
-abstract class Contract
+abstract class Resource
 {
     /**
      * @var \stdClass
@@ -34,7 +34,6 @@ abstract class Contract
                 break;
 
             default:
-                $names = array_pluck($this->data->languages, 'name');
                 $string = implode(', ', array_slice($list, 0, count($list) - 1));
                 $string .= ' '.$concat.' '.array_last($list);
         }

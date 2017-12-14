@@ -2,7 +2,7 @@
 
 namespace App\Resources;
 
-class Definition extends Contract
+class Definition extends Resource
 {
     /**
      * @var string
@@ -20,7 +20,7 @@ class Definition extends Contract
     protected $languageString;
 
     /**
-     * @var stdClass
+     * @var \stdClass
      */
     protected $translation;
 
@@ -60,7 +60,7 @@ class Definition extends Contract
 
     /**
      * @todo   Localize
-     * @return stdClass
+     * @return \stdClass
      */
     public function getTranslation()
     {
