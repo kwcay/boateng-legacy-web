@@ -20,8 +20,8 @@
     <div class="row">
         @foreach ($languages as $lang)
             <div class="col-md-4">
-                <div class="shaded-well">
-                    <a href="{{ route('language.learn', $lang['code']) }}" class="card-btn shade-50">
+                <div class="shaded-well" style="background-color: #9f90b6;">
+                    <a href="{{ route('language.learn', $lang['code']) }}" class="card-btn">
                         <h3>{{ $lang['name'] }}</h3>
 
                         {{ $lang['regions'] }}
