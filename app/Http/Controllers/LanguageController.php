@@ -58,7 +58,40 @@ class LanguageController extends Controller
     {
         // Language learning landing page.
         if (! $code) {
-            return view('language.learn.landing');
+            return view('language.learn.landing', [
+                'languages' => [
+                    [
+                        'code' => 'hau',
+                        'name' => 'Hausa',
+                        'regions' => 'Western Africa',
+                    ],
+                    [
+                        'code' => 'swa',
+                        'name' => 'Swahili',
+                        'regions' => 'Eastern Africa',
+                    ],
+                    [
+                        'code' => 'amh',
+                        'name' => 'Amharic',
+                        'regions' => 'Ethiopia',
+                    ],
+                    [
+                        'code' => 'twi',
+                        'name' => 'Twi',
+                        'regions' => 'Ghana &amp; C&ocirc;te d’Ivoire',
+                    ],
+                    [
+                        'code' => 'xho',
+                        'name' => 'Xhosa',
+                        'regions' => 'South African, Botswana &amp; Zimbabwe',
+                    ],
+                    [
+                        'code' => 'wol',
+                        'name' => 'Wolof',
+                        'regions' => 'Ethiopia',
+                    ],
+                ]
+            ]);
         }
 
         // Language-specific page
