@@ -1,5 +1,7 @@
 @extends('layouts.half-hero')
 
+@section('title', trans('language.learn-with', ['name' => 'an African language', 'with' => trans('branding.title')]))
+
 @section('hero')
 
     <h1 class="hero-title">

@@ -13,8 +13,9 @@
         @lang('branding.pitch')
 
         <h3>
-            <small>Let us know what you think.</small>
-            <a href="http://goo.gl/WcthaE">Take our survey</a>
+            {{--<small>Let us know what you think.</small>--}}
+            {{--<a href="http://goo.gl/WcthaE">Take our survey</a>--}}
+            <a href="{{ route('language.learn') }}">Learn an African language</a>
         </h3>
     </div>
 
