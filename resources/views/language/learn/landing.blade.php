@@ -12,7 +12,7 @@
 
     <div class="row">
         <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
-            We're building free language learning tools.
+            Pick a language you'd like to learn <strong>for free</strong>.
             <hr>
         </div>
     </div>
@@ -20,7 +20,7 @@
     <div class="row">
         @foreach ($languages as $lang)
             <div class="col-md-4">
-                <div class="shaded-well" style="background-image:url(/img/bg/9ad291d387f72a04a57e2b4c8945f945-640x480.jpg);">
+                <div class="shaded-well">
                     <a href="{{ route('language.learn', $lang['code']) }}" class="card-btn shade-50">
                         <h3>{{ $lang['name'] }}</h3>
 
@@ -30,5 +30,16 @@
             </div>
         @endforeach
     </div>
+
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 col-lg-6 col-lg-offset-3">
+            <br>
+
+            Or find other languages below
+            <hr>
+        </div>
+    </div>
+
+    @include('partials.search.form')
 
 @stop

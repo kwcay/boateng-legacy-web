@@ -88,7 +88,7 @@ class LanguageController extends Controller
                     [
                         'code' => 'wol',
                         'name' => 'Wolof',
-                        'regions' => 'Ethiopia',
+                        'regions' => 'Senegal, the Gambia and Mauritania',
                     ],
                 ]
             ]);
