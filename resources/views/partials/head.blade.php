@@ -16,10 +16,10 @@
     <meta property="og:desc" content="@yield('description', trans('branding.tag_line'))">
     <meta property="og:type" content="website">
     <link type="text/plain" rel="author" href="{{ str_replace('http:', '', Request::root()) }}/humans.txt" />
-    <!-- <link
+    <link
         rel="search"
         type="application/opensearchdescription+xml"
-        href=" route('api.os') " title="Di Nkɔmɔ Cultural Reference"> -->
+        href="{{ route('search.osd') }}" title="{{ trans('branding.title') }}">
 @show
 
 @include('partials.analytics')

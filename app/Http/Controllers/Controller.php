@@ -145,8 +145,8 @@ class Controller extends BaseController
     protected function getSearchResults($langCode = null)
     {
         $search = [
-            'query'     => trim($this->request->get('q')),
-            'results'   => null,
+            'query' => trim($this->request->get('q')),
+            'results' => null,
         ];
 
         if (! $search['query']) {

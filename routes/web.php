@@ -1,30 +1,19 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+/** @var \Illuminate\Routing\Router $router */
 
-Route::group([
+$router->group([
     'prefix'     => Localization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect']
-], function() {
+], function() use ($router) {
     // General routes
-    Route::get('/',         'PageController@home')->name('home');
-    Route::get('/search',   'PageController@search')->name('search');
-    Route::get('/search.xml',   'PageController@openSearchDescription');
-    Route::get('/about',    'PageController@about')->name('about');
+    $router->get('/', 'PageController@home')->name('home');
+    $router->get('/about', 'PageController@about')->name('about');
 
     // Definition routes
-    Route::get('/gem/+/{type?}/{lang?}', 'DefinitionController@create')->name('definition.create');
-    Route::get('/random/{lang?}', 'DefinitionController@random')->name('definition.random');
-    Route::resource('gem', 'DefinitionController', [
+    $router->get('/gem/+/{type?}/{lang?}', 'DefinitionController@create')->name('definition.create');
+    $router->get('/random/{lang?}', 'DefinitionController@random')->name('definition.random');
+    $router->resource('gem', 'DefinitionController', [
         'except' => ['index', 'create'],
         'names' => [
             'store' => 'definition.store',
@@ -36,9 +25,9 @@ Route::group([
     ]);
 
     // Language routes
-    Route::get('/lang/+',       'LanguageController@create')->name('language.create');
-    Route::get('/lang/{code}',  'LanguageController@show')->name('language');
-    Route::resource('lang', 'LanguageController', [
+    $router->get('/lang/+', 'LanguageController@create')->name('language.create');
+    $router->get('/lang/{code}', 'LanguageController@show')->name('language');
+    $router->resource('lang', 'LanguageController', [
         'except' => ['index', 'create'],
         'names' => [
             'store' => 'language.store',
@@ -48,17 +37,22 @@ Route::group([
             'destroy' => 'language.destroy',
         ]
     ]);
-    Route::get('/learn/{code?}', 'LanguageController@learn')->name('language.learn');
+    $router->get('/learn/{code?}', 'LanguageController@learn')->name('language.learn');
 
     // Member routes
-    Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
-    Route::post('/login', 'Auth\LoginController@login')->name('login.post');
-    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
-    Route::get('member', 'MemberController@index');
-    Route::get('member/settings', 'MemberController@settings');
+    $router->get('/login', 'Auth\LoginController@showLoginForm')->name('login');
+    $router->post('/login', 'Auth\LoginController@login')->name('login.post');
+    $router->get('/logout', 'Auth\LoginController@logout')->name('logout');
+    $router->get('/member', 'MemberController@index');
+    $router->get('/member/settings', 'MemberController@settings');
+
+    // Search routes
+    $router->get('/search', 'PageController@index')->name('search');
 });
 
 // Miscellaneous
-Route::get('/auth/{service}', 'PageController@notImplemented')->name('oauth');
-Route::get('/map', 'PageController@sitemap')->name('sitemap');
-Route::get('/_noga', 'PageController@setNoTrackingCookie');
+$router->get('/osd.xml', 'SearchController@openSearchDescription')->name('search.osd');
+$router->get('/suggest.{format}', 'SearchController@suggest')->name('search.suggest');
+$router->get('/auth/{service}', 'PageController@notImplemented')->name('oauth');
+$router->get('/map', 'PageController@sitemap')->name('sitemap');
+$router->get('/_noga', 'PageController@setNoTrackingCookie');
