@@ -2,6 +2,9 @@
 
 namespace App\Resources;
 
+/**
+ * @property int $uniqueId
+ */
 class Definition extends Resource
 {
     /**
@@ -23,6 +26,25 @@ class Definition extends Resource
      * @var \stdClass
      */
     protected $translation;
+
+    /**
+     * @param  \stdClass $data
+     * @return static
+     */
+    public static function from($data)
+    {
+        if (! $data || empty($data->type)) {
+            return new static($data);
+        }
+
+        switch ($data->type) {
+            case 'word':
+                return new Definition\Word($data);
+
+            default:
+                return new static($data);
+        }
+    }
 
     /**
      * @return string

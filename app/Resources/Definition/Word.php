@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Resources;
+namespace App\Resources\Definition;
+
+use App\Resources\Definition;
 
 class Word extends Definition
 {

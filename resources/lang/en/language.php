@@ -2,6 +2,7 @@
 
 return [
     'title'                 => ':language Dictionary & Reference',
+    'summary'               => ':language is a language',
     'description'           => 'Lookup words, proverbs and concepts in :language',
     'lookup-definitions'    => 'Lookup words, proverbs and concepts.',
     'learn'                 => 'Learn :name',

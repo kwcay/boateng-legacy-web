@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use SimpleXMLElement;
+use App\Resources\Language;
 use DoraBoateng\Api\Client;
 use Illuminate\Http\Request;
+use App\Resources\Definition;
 use Illuminate\Http\Response;
 use Illuminate\Contracts\Cache\Repository as Cache;
 
@@ -53,20 +54,29 @@ class SearchController extends Controller
         }
 
         // Format results
-        $results = [];
-        foreach ($this->getSearchResults()['results'] as $result) {
-            $formatted = [];
-
-            switch ($result['type']) {
-                case 'word':
-                case 'expression':
+        $search  = $this->getSearchResults();
+        $results = $search['results'] ? array_filter(array_map(function ($result) {
+            switch ($result->resourceType) {
                 case 'definition':
+                    $definition     = Definition::from($result);
+                    $title          = $definition->getTitleString();
+                    $description    = $definition->summarize();
+                    $link           = route('definition.show', $result->uniqueId);
                     break;
 
                 case 'language':
+                    $language       = new Language($result);
+                    $title          = $language->getFirstName();
+                    $description    = $language->summarize();
+                    $link           = route('language', $result->code);
                     break;
+
+                default:
+                    return null;
             }
-        }
+
+            return compact('title', 'description', 'link');
+        }, $search['results'])) : [];
 
         switch ($format) {
             case 'atom':
@@ -110,7 +120,7 @@ class SearchController extends Controller
      */
     private function toJson(array $results)
     {
-        return response('Not Implemented.', 501);
+        return response($results, 200);
     }
 
     /**

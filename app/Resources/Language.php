@@ -6,6 +6,7 @@ namespace App\Resources;
  * @property string $code
  * @property string $parentCode
  * @property string $name
+ * @property string $altNames
  * @property array  $children
  */
 class Language extends Resource
@@ -21,6 +22,14 @@ class Language extends Resource
     }
 
     /**
+     * @return string
+     */
+    public function summarize()
+    {
+        return trans('language.summary', ['language' => $this->getFullName()]);
+    }
+
+    /**
      * @todo   Temporary, the API shouldn't return language names with commas in them.
      * @return string
      */
@@ -31,6 +40,14 @@ class Language extends Resource
         }
 
         return trim(substr($this->name, 0, strpos($this->name, ',')));
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->name.($this->altNames ? ' ('.trim($this->altNames).')' : '');
     }
 
     /**
