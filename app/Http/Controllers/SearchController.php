@@ -62,7 +62,7 @@ class SearchController extends Controller
                 'description' => $resource->summarize(),
                 'link'        => $resource->route(),
             ] : null;
-        }, $search['results'])) : [];
+        }, array_slice($search['results'], 0, 10))) : [];
 
         switch ($format) {
             case 'atom':
