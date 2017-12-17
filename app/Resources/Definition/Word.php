@@ -26,16 +26,14 @@ class Word extends Definition
     }
 
     /**
-     * @todo   Use localization string
      * @return string
      */
-    public function summarize()
+    public function summarize() : string
     {
-        return sprintf(
-            '%s means %s in %s',
-            $this->getFirstTitle(),
-            $this->getTranslation()->practical,
-            $this->getLanguageString()
-        );
+        return trans('definition.summary', [
+            'title'         => $this->getTitleString(),
+            'translation'   => $this->getTranslation()->practical,
+            'language'      => $this->getLanguageString(),
+        ]);
     }
 }

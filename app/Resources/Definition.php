@@ -28,6 +28,8 @@ class Definition extends Resource
     protected $translation;
 
     /**
+     * Wraps a definition object in its related Definition class.
+     *
      * @param  \stdClass $data
      * @return static
      */
@@ -41,9 +43,27 @@ class Definition extends Resource
             case 'word':
                 return new Definition\Word($data);
 
+            case 'expression':
+                return new Definition\Expression($data);
+
             default:
                 return new static($data);
         }
+    }
+
+    public function summarize() : string
+    {
+        return $this->getFirstTitle().' ('.$this->getLanguageString().')';
+    }
+
+    public function getTitle (): string
+    {
+        return $this->getTitleString();
+    }
+
+    public function route (): string
+    {
+        return route('definition.show', $this->data->uniqueId);
     }
 
     /**
@@ -107,14 +127,6 @@ class Definition extends Resource
         }
 
         return $this->translation;
-    }
-
-    /**
-     * @return string
-     */
-    public function summarize()
-    {
-        return $this->getFirstTitle().' - '.$this->getLanguageString();
     }
 
     /**

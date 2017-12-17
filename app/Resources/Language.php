@@ -21,12 +21,19 @@ class Language extends Resource
         }, $this->data->children);
     }
 
-    /**
-     * @return string
-     */
-    public function summarize()
+    public function summarize() : string
     {
         return trans('language.summary', ['language' => $this->getFullName()]);
+    }
+
+    public function getTitle() : string
+    {
+        return $this->getFullName();
+    }
+
+    public function route() : string
+    {
+        return route('language', $this->code);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Resources\Language;
+use App\Resources\Resource;
 use DoraBoateng\Api\Client;
 use Illuminate\Http\Request;
 use App\Resources\Definition;
@@ -56,26 +57,11 @@ class SearchController extends Controller
         // Format results
         $search  = $this->getSearchResults();
         $results = $search['results'] ? array_filter(array_map(function ($result) {
-            switch ($result->resourceType) {
-                case 'definition':
-                    $definition     = Definition::from($result);
-                    $title          = $definition->getTitleString();
-                    $description    = $definition->summarize();
-                    $link           = route('definition.show', $result->uniqueId);
-                    break;
-
-                case 'language':
-                    $language       = new Language($result);
-                    $title          = $language->getFirstName();
-                    $description    = $language->summarize();
-                    $link           = route('language', $result->code);
-                    break;
-
-                default:
-                    return null;
-            }
-
-            return compact('title', 'description', 'link');
+            return ($resource = Resource::from($result)) ? [
+                'title'       => $resource->getTitle(),
+                'description' => $resource->summarize(),
+                'link'        => $resource->route(),
+            ] : null;
         }, $search['results'])) : [];
 
         switch ($format) {
@@ -165,18 +151,18 @@ class SearchController extends Controller
             ])
 
             // URI for Atom format
-            ->child('Url', null, 0, [
-                'type' => 'application/atom+xml',
-                'rel' => 'results',
-                'template' => sprintf($searchUri, 'atom'),
-            ])
+//            ->child('Url', null, 0, [
+//                'type' => 'application/atom+xml',
+//                'rel' => 'results',
+//                'template' => sprintf($searchUri, 'atom'),
+//            ])
 
             // URI for RSS format
-            ->child('Url', null, 0, [
-                'type' => 'application/rss+xml',
-                'rel' => 'results',
-                'template' => sprintf($searchUri, 'rss'),
-            ])
+//            ->child('Url', null, 0, [
+//                'type' => 'application/rss+xml',
+//                'rel' => 'results',
+//                'template' => sprintf($searchUri, 'rss'),
+//            ])
 
             // URI for JSON format
             ->child('Url', null, 0, [
@@ -186,11 +172,11 @@ class SearchController extends Controller
             ])
 
             // URI for HTML format
-            ->child('Url', null, 0, [
-                'type' => 'text/html',
-                'rel' => 'results',
-                'template' => route('search').'?q={searchTerms}',
-            ])
+//            ->child('Url', null, 0, [
+//                'type' => 'text/html',
+//                'rel' => 'results',
+//                'template' => route('search').'?q={searchTerms}',
+//            ])
 
             // Self-reference
             ->child('Url', null, 0, [
