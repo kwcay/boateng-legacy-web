@@ -1,6 +1,7 @@
 @extends('layouts.half-hero')
 
 @section('title', $definition->summarize().' - '.trans('branding.title'))
+@section('description', $definition->summarize())
 
 @section('hero')
 
