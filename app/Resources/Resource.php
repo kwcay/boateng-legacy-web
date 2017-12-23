@@ -2,6 +2,11 @@
 
 namespace App\Resources;
 
+/**
+ * @property string $resourceType
+ * @property string $createdAt
+ * @property string $updatedAt
+ */
 abstract class Resource
 {
     /**

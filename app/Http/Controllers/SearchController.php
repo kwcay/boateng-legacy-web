@@ -59,6 +59,7 @@ class SearchController extends Controller
         $results = $search['results'] ? array_filter(array_map(function ($result) {
             return ($resource = Resource::from($result)) ? [
                 'id'          => $resource->uniqueId,
+                'type'        => $resource->resourceType,
                 'title'       => $resource->getTitle(),
                 'description' => $resource->summarize(),
                 'link'        => $resource->route(),
