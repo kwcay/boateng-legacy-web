@@ -55,7 +55,7 @@
       "url": "https://www.doraboateng.com/",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "{{ route('search') }}?q={search_term_string}",
+        "target": "{{ route('search') }}?q={search_term_string}&utm_source=sitelinks_searchbox&utm_medium=sitelinks_searchbox&utm_campaign=sitelinks_searchbox",
         "query-input": "required name=search_term_string"
       }
     }
