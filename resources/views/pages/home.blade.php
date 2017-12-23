@@ -1,5 +1,11 @@
 @extends('layouts.hero')
 
+@section('head')
+    @parent
+
+    <link rel="canonical" href="{{ route('home') }}">
+@endsection
+
 @section('hero')
 
     <h1 class="hero-title">Dora Boateng</h1>
@@ -41,5 +47,18 @@
     </div>
 
     @include('partials.language.weekly')
+
+    <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "https://www.doraboateng.com/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "{{ route('search') }}?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
 @stop
