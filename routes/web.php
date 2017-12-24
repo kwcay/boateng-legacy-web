@@ -1,9 +1,8 @@
 <?php
 
 /** @var \Illuminate\Routing\Router $router */
-
 $router->group([
-    'prefix'     => Localization::setLocale(),
+    'prefix'     => \App\Utilities\Locale::set(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect']
 ], function() use ($router) {
     // General routes
