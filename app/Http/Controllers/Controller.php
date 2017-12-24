@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Resources\Language;
 use DoraBoateng\Api\Client;
 use Illuminate\Http\Request;
+use App\Resources\Definition;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Contracts\Cache\Repository as Cache;
 use Illuminate\Routing\Controller as BaseController;
@@ -254,7 +255,29 @@ class Controller extends BaseController
             return $language;
         }
 
-        return new \App\Resources\Language($language);
+        return new Language($language);
+    }
+
+    /**
+     * Retrieves a definition by ID.
+     *
+     * @param  int $id
+     * @return \App\Resources\Definition|null
+     */
+    protected function getDefinition($id)
+    {
+        $definition = $this->cache->remember($this->getCacheKey($id), 60, function () use ($id) {
+            return $this->api->getDefinition($id, [
+                'titles',
+                'titleString',
+                'translations',
+                'languages',
+                'tags',
+                'authors',
+            ]);
+        });
+
+        return $definition ? Definition::from($definition) : $definition;
     }
 
     /**

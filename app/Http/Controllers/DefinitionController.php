@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Resources\Definition;
 use Illuminate\Validation\Rule;
 
 class DefinitionController extends Controller
@@ -297,42 +298,5 @@ class DefinitionController extends Controller
         }
 
         return redirect(route('definition.show', ['id' => $saved->uniqueId, 'saved' => 1]));
-    }
-
-    /**
-     * Retrieves a definition by ID.
-     *
-     * @param  int  $id
-     * @return \App\Resources\Definition
-     */
-    protected function getDefinition($id)
-    {
-        $definition = $this->cache->remember($this->getCacheKey($id), 60, function () use ($id) {
-            return $this->api->getDefinition($id, [
-                'titles',
-                'titleString',
-                'translations',
-                'languages',
-                'tags',
-                'authors',
-            ]);
-        });
-
-        if (! $definition) {
-            return $definition;
-        }
-
-        switch ($definition->type) {
-            case 'word':
-            case 'expression':
-                $className = '\\App\\Resources\\' . ucfirst($definition->type);
-                $definition = new $className($definition);
-                break;
-
-            default:
-                $definition = new \App\Resources\Definition($definition);
-        }
-
-        return $definition;
     }
 }
