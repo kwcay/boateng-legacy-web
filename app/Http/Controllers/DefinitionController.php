@@ -1,30 +1,26 @@
 <?php
-/**
- * Copyright Dora Boateng(TM) 2017, all rights reserved.
- */
+
 namespace App\Http\Controllers;
 
-use Auth;
-use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
 class DefinitionController extends Controller
 {
+    /**
+     * Supported definition types.
+     *
+     * @const array
+     */
+    const SUPPORTED_TYPES = [
+        'word',
+        'expression',
+    ];
+
     protected function boot()
     {
         $this->middleware('auth')
             ->only('create', 'edit', 'store', 'update', 'destroy');
     }
-
-    /**
-     * Supported definition types.
-     *
-     * @var array
-     */
-    protected $supportedTypes = [
-        'word',
-        'expression',
-    ];
 
     /**
      * Displays the form to add a new definition.
@@ -43,9 +39,11 @@ class DefinitionController extends Controller
         foreach (explode(',', $lang) as $code) {
             $code = preg_replace('/[^a-z-]/', '', strtolower($code));
 
-            if (in_array(strlen($code), [3, 7])) {
-                $languages[] = $code;
-            }
+            try {
+                if ($language = $this->getLanguage($code)) {
+                    $languages[$language->code] = $language->name;
+                }
+            } catch (\Exception $e) {}
         }
 
         if ($this->request->filled('tags')) {
@@ -170,7 +168,7 @@ class DefinitionController extends Controller
      */
     protected function form(array $details)
     {
-        if (! in_array($details['type'], $this->supportedTypes)) {
+        if (! in_array($details['type'], self::SUPPORTED_TYPES)) {
             abort(501, 'Unsupported Definition Type.');
         }
 
@@ -233,7 +231,7 @@ class DefinitionController extends Controller
         // TODO: improve validation to avoid unecessary API calls.
         $this->validate($this->request, [
             'title'     => 'required',
-            'type'      => ['required', Rule::in($this->supportedTypes)],
+            'type'      => ['required', Rule::in(self::SUPPORTED_TYPES)],
             'subType'   => 'required',
             'languages' => 'required',
             'practical' => 'required',
@@ -305,7 +303,7 @@ class DefinitionController extends Controller
      * Retrieves a definition by ID.
      *
      * @param  int  $id
-     * @return App\Resources\Definition
+     * @return \App\Resources\Definition
      */
     protected function getDefinition($id)
     {
