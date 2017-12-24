@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Resources\Language;
 use DoraBoateng\Api\Client;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -137,15 +138,16 @@ class Controller extends BaseController
     }
 
     /**
-     * Retrieves search results.
+     * Performs a search on the API.
      *
-     * @param  string $langCode
+     * @param  string $query
+     * @param  string|\App\Resources\Language $language
      * @return array
      */
-    protected function getSearchResults($langCode = null)
+    protected function search(string $query, $language = null) : array
     {
         $search = [
-            'query' => trim($this->request->get('q')),
+            'query'   => trim($query),
             'results' => null,
         ];
 
@@ -153,8 +155,24 @@ class Controller extends BaseController
             return $search;
         }
 
-        $cacheKey = ($langCode ? 'search.'.$langCode : 'search.all').'-'.base64_encode($search['query']);
+        // Determine language code and cache key
+        switch (true) {
+            case $language instanceof Language:
+                $langCode = $language->code;
+                $cacheKey = 'search.'.$language->code;
+                break;
 
+            case is_string($language) && strlen($language):
+                $langCode = $language;
+                $cacheKey = 'search.'.$language;
+                break;
+
+            default:
+                $langCode = null;
+                $cacheKey = 'search.all';
+        }
+
+        $cacheKey .= '-'.base64_encode($search['query']);
         $response = $this->cache->remember($cacheKey, 5, function() use ($search, $langCode) {
             return $langCode
                 ? $this->api->searchDefinitions($search['query'], $langCode)
@@ -166,6 +184,18 @@ class Controller extends BaseController
         }
 
         return $search;
+    }
+
+    /**
+     * Retrieves search results.
+     *
+     * @deprecated Use $this->search instead
+     * @param  string $langCode
+     * @return array
+     */
+    protected function getSearchResults($langCode = null)
+    {
+        return $this->search($this->request->get('q'), $langCode);
     }
 
     /**
@@ -183,6 +213,48 @@ class Controller extends BaseController
         $this->cache->add('language.weekly', $language, 1440);
 
         return $language;
+    }
+
+    /**
+     * Retrieves a language by code.
+     *
+     * @param  string $code
+     * @return \App\Resources\Language|null
+     * @throws \DoraBoateng\Api\Exceptions\Exception
+     * @throws \GuzzleHttp\Exception\ClientException
+     */
+    protected function getLanguage($code)
+    {
+        try {
+            $language = $this->cache->remember('language.'.$code, 60, function() use ($code) {
+                return $this->api->getLanguage($code, [
+                    'definitionCount',
+                    'parentName',
+                    'randomDefinition',
+                    'children',
+                ]);
+            });
+        } catch (\DoraBoateng\Api\Exceptions\Exception $apiException) {
+            if (app()->environment() === 'local') {
+                throw $apiException;
+            } else {
+                return null;
+            }
+        } catch (\GuzzleHttp\Exception\ClientException $clientException) {
+            if ($clientException->getCode() === 404) {
+                return null;
+            } elseif (app()->environment() === 'local') {
+                throw $clientException;
+            } else {
+                return null;
+            }
+        }
+
+        if (! $language) {
+            return $language;
+        }
+
+        return new \App\Resources\Language($language);
     }
 
     /**

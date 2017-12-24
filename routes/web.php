@@ -47,7 +47,7 @@ $router->group([
     $router->get('/member/settings', 'MemberController@settings');
 
     // Search routes
-    $router->get('/search', 'PageController@search')->name('search');
+    $router->get('/search', 'PageController@getSearchPage')->name('search');
 });
 
 // Miscellaneous

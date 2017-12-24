@@ -226,46 +226,4 @@ class LanguageController extends Controller
 
         return redirect(route('language.show', ['code' => $saved->code, 'saved' => 1]));
     }
-
-    /**
-     * Retrieves a language by code.
-     *
-     * @param  string $code
-     * @return \App\Resources\Language|null
-     * @throws \DoraBoateng\Api\Exceptions\Exception
-     * @throws \GuzzleHttp\Exception\ClientException
-     */
-    protected function getLanguage($code)
-    {
-        try {
-            $language = $this->cache->remember('language.'.$code, 60, function() use ($code) {
-                return $this->api->getLanguage($code, [
-                    'definitionCount',
-                    'parentName',
-                    'randomDefinition',
-                    'children',
-                ]);
-            });
-        } catch (\DoraBoateng\Api\Exceptions\Exception $apiException) {
-            if (app()->environment() === 'local') {
-                throw $apiException;
-            } else {
-                return null;
-            }
-        } catch (\GuzzleHttp\Exception\ClientException $clientException) {
-            if ($clientException->getCode() === 404) {
-                return null;
-            } elseif (app()->environment() === 'local') {
-                throw $clientException;
-            } else {
-                return null;
-            }
-        }
-
-        if (! $language) {
-            return $language;
-        }
-
-        return new \App\Resources\Language($language);
-    }
 }

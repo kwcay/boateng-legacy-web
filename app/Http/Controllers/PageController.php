@@ -31,9 +31,9 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function search()
+    public function getSearchPage()
     {
-        $search = $this->getSearchResults();
+        $search = $this->search($this->request->get('q'));
 
         return view('pages.search', [
             'query'     => $search['query'],
