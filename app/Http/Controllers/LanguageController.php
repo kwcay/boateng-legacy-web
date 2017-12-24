@@ -37,7 +37,7 @@ class LanguageController extends Controller
         }
 
         // Retrieve search results if a query we have a search query.
-        $search = $this->getSearchResults($code);
+        $search = $this->search($this->request->get('q', ''), $code);
 
         return view('language.index', [
             'lang'      => $language,
