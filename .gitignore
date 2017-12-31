@@ -10,3 +10,4 @@ Homestead.yaml
 .sublime-workspace
 .tags*
 .tags_swap
+npm-debug.log
