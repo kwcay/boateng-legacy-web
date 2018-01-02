@@ -1,1 +1,0 @@
-{"version":3,"sources":["test.js"],"names":["window","userTest"],"mappings":"AAAAA,OAAOC,UAAW","file":"user.js","sourcesContent":["window.userTest = true;\n"]}

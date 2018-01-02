@@ -5,7 +5,6 @@
 </head>
 <body class="half-hero" id="boateng-app">
     @include('partials.css')
-    @include('partials.js')
 
     <div class="hero full-hero" style="background-image:url({{ App\Utilities::bgSrc() }});">
         <div class="jumbotron">
@@ -48,5 +47,6 @@
         </div>
     </div>
 
+    @include('partials.js')
 </body>
 </html>

@@ -31,7 +31,6 @@
                 placeholder="e.g. kasha"
                 value="{{ $titleString }}"
                 autocomplete="off"
-                onblur="return FormHelper.checkTitle(this, document.forms.definition.languages.value)"
                 required>
             <label for="title">
                 title
