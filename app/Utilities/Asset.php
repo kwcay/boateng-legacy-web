@@ -2,7 +2,7 @@
 
 namespace App\Utilities;
 
-class Assets
+class Asset
 {
     /**
      * @const string
