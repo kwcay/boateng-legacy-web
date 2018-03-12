@@ -333,7 +333,9 @@ class Client
             throw new InvalidRequestException('Query string too short', static::ERROR_INVALID_QUERY);
         }
 
-        return $this->get('search/'.urlencode($query));
+        return $this->get('search', [
+            'q' => urlencode($query),
+        ]);
     }
 
     /**
